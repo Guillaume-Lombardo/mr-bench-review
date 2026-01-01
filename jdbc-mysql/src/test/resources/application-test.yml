@@ -1,0 +1,38 @@
+datasources:
+  mysql:
+    url: jdbc:mysql://localhost:3306/kestra_unit
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: kestra
+    password: k3str4
+    dialect: MYSQL
+
+flyway:
+  datasources:
+    mysql:
+      enabled: true
+      locations:
+        - classpath:migrations/mysql
+      ignore-migration-patterns: "*:missing,*:future"
+      out-of-order: true
+
+kestra:
+  server-type: STANDALONE
+  queue:
+    type: mysql
+  repository:
+    type: mysql
+  storage:
+    type: local
+    local:
+      base-path: /tmp/unittest
+  jdbc:
+    queues:
+      min-poll-interval: 10ms
+      max-poll-interval: 100ms
+      poll-switch-interval: 5s
+      message-protection:
+        enabled: true
+        limit: 1048576
+  worker:
+    liveness:
+      enabled: false

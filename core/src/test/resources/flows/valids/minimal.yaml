@@ -1,0 +1,11 @@
+id: minimal
+namespace: io.kestra.tests
+revision: 2
+
+labels:
+  system.readOnly: "true"
+
+tasks:
+- id: date
+  type: io.kestra.plugin.core.debug.Return
+  format: "{{taskrun.startDate}}"

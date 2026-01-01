@@ -1,0 +1,21 @@
+plugins {
+    id 'com.github.node-gradle.node'
+}
+
+node {
+    download = true
+    version = '22.11.0'
+}
+
+
+tasks.register('installFrontend', NpmTask) {
+    description = 'Installs dependencies'
+    args = ['install']
+}
+
+tasks.register('assembleFrontend', NpmTask) {
+    dependsOn installFrontend
+    description = 'Builds the frontend'
+    args = ['run', 'build']
+    outputs.dir('../webserver/src/main/resources/ui')
+}
