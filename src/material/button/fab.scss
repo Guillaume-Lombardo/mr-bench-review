@@ -1,0 +1,183 @@
+@use 'sass:map';
+@use '@material/fab' as mdc-fab;
+@use '@material/fab/extended-fab-theme' as mdc-extended-fab-theme;
+@use '@material/fab/fab-theme' as mdc-fab-theme;
+@use '@material/fab/fab-small-theme' as mdc-fab-small-theme;
+@use '@material/typography/typography' as mdc-typography;
+@use '@material/theme/custom-properties' as mdc-custom-properties;
+
+@use './button-base';
+@use '../core/mdc-helpers/mdc-helpers';
+@use '../core/tokens/token-utils';
+@use '../core/style/private' as style-private;
+@use '../core/focus-indicators/private' as focus-indicators-private;
+@use '../core/tokens/m2/mdc/extended-fab' as tokens-mdc-extended-fab;
+@use '../core/tokens/m2/mdc/fab' as tokens-mdc-fab;
+@use '../core/tokens/m2/mat/fab' as tokens-mat-fab;
+@use '../core/tokens/m2/mdc/fab-small' as tokens-mdc-fab-small;
+@use '../core/tokens/m2/mat/fab-small' as tokens-mat-fab-small;
+
+@include mdc-custom-properties.configure($emit-fallback-values: false, $emit-fallback-vars: false) {
+  $mdc-fab-token-slots: tokens-mdc-fab.get-token-slots();
+  $mdc-fab-small-token-slots: tokens-mdc-fab-small.get-token-slots();
+  $mdc-extended-fab-token-slots: tokens-mdc-extended-fab.get-token-slots();
+  $exclude-tokens: (
+    // Exclude the elevation tokens here since we output them manually below.
+    container-elevation: null,
+    focus-container-elevation: null,
+    hover-container-elevation: null,
+    pressed-container-elevation: null,
+    container-shadow-color: null,
+  );
+
+  // Note: it's important to pass the query here, otherwise MDC generates
+  // some unnecessary typography styles for the extended FAB.
+  @include mdc-fab.static-styles($query: mdc-helpers.$mdc-base-styles-query);
+
+  .mat-mdc-fab {
+    @include mdc-fab-theme.theme-styles(map.merge($mdc-fab-token-slots, $exclude-tokens));
+  }
+
+  .mat-mdc-mini-fab {
+    @include mdc-fab-small-theme.theme-styles(
+      map.merge($mdc-fab-small-token-slots, $exclude-tokens));
+  }
+
+  .mat-mdc-extended-fab {
+    // Before tokens MDC included the font smoothing automatically, but with
+    // tokens it doesn't. We add it since it can cause tiny differences in
+    // screenshot tests and it generally looks better.
+    @include mdc-typography.smooth-font();
+    @include mdc-extended-fab-theme.theme-styles(
+      map.merge($mdc-extended-fab-token-slots, $exclude-tokens));
+  }
+}
+
+.mat-mdc-fab, .mat-mdc-mini-fab {
+  @include button-base.mat-private-button-interactive();
+  @include style-private.private-animation-noop();
+  flex-shrink: 0; // Prevent the button from shrinking since it's always supposed to be a circle.
+
+  // MDC adds some styles to fab and mini-fab that conflict with some of our focus indicator
+  // styles and don't actually do anything. This undoes those conflicting styles.
+  &:not(.mdc-ripple-upgraded):focus::before {
+    background: transparent;
+    opacity: 1;
+  }
+
+  // MDC expects the fab icon to contain this HTML content:
+  // ```html
+  //   <span class="mdc-fab__icon material-icons">favorite</span>
+  // ```
+  // However, Angular Material expects a `mat-icon` instead. The following
+  // mixin will style the icons appropriately.
+  // stylelint-disable-next-line selector-class-pattern
+  .mat-icon, .material-icons {
+    @include mdc-fab.icon_();
+  }
+
+  .mat-mdc-focus-indicator::before {
+    $default-border-width: focus-indicators-private.$default-border-width;
+    $border-width: var(--mat-mdc-focus-indicator-border-width, #{$default-border-width});
+    $offset: calc(#{$border-width} + 2px);
+    margin: calc(#{$offset} * -1);
+  }
+
+  @include button-base.mat-private-button-disabled {
+    // Necessary for interactive disabled buttons.
+    &, &:focus {
+      box-shadow: none;
+    }
+  }
+}
+
+@mixin _fab-elevation($mdc-tokens) {
+  @include token-utils.use-tokens($mdc-tokens...) {
+    @include button-base.mat-private-button-elevation(container-elevation);
+
+    &:hover {
+      @include button-base.mat-private-button-elevation(hover-container-elevation);
+    }
+
+    &:focus {
+      @include button-base.mat-private-button-elevation(focus-container-elevation);
+    }
+
+    &:active, &:focus:active {
+      @include button-base.mat-private-button-elevation(pressed-container-elevation);
+    }
+  }
+}
+
+@mixin _fab-structure($mdc-tokens, $mat-tokens) {
+  @include button-base.mat-private-button-touch-target(true, $mat-tokens...);
+  @include button-base.mat-private-button-ripple($mat-tokens...);
+
+  @include mdc-helpers.disable-mdc-fallback-declarations {
+    @include token-utils.use-tokens($mat-tokens...) {
+      @include token-utils.create-token-slot(color, foreground-color, inherit);
+    }
+  }
+
+  @include _fab-elevation($mdc-tokens);
+
+  @include button-base.mat-private-button-disabled {
+    @include token-utils.use-tokens($mat-tokens...) {
+      @include token-utils.create-token-slot(color, disabled-state-foreground-color);
+      @include token-utils.create-token-slot(background-color, disabled-state-container-color);
+    }
+  }
+}
+
+.mat-mdc-fab {
+  @include _fab-structure(
+    (tokens-mdc-fab.$prefix, tokens-mdc-fab.get-token-slots()),
+    (tokens-mat-fab.$prefix, tokens-mat-fab.get-token-slots()),
+  );
+}
+
+.mat-mdc-mini-fab {
+  @include _fab-structure(
+    (tokens-mdc-fab-small.$prefix, tokens-mdc-fab-small.get-token-slots()),
+    (tokens-mat-fab-small.$prefix, tokens-mat-fab-small.get-token-slots()),
+  );
+}
+
+.mat-mdc-extended-fab {
+  @include _fab-elevation((tokens-mdc-extended-fab.$prefix,
+    tokens-mdc-extended-fab.get-token-slots()));
+
+  @include button-base.mat-private-button-disabled {
+    // Necessary for interactive disabled buttons.
+    &, &:focus {
+      box-shadow: none;
+    }
+  }
+
+  & > .mat-icon,
+  & > .material-icons {  // stylelint-disable-line selector-class-pattern
+    @include mdc-fab.extended-icon-padding(
+      mdc-fab.$extended-icon-padding,
+      mdc-fab.$extended-label-padding
+    );
+  }
+
+  // All FABs are square except the extended ones so we
+  // need to set the touch target back to full-width.
+  .mat-mdc-button-touch-target {
+    width: 100%;
+  }
+
+  // For Extended FAB with text label followed by icon.
+  // We are checking for the a button class because white this is a FAB it
+  // uses the same template as button.
+  // stylelint-disable-next-line selector-class-pattern
+  .mdc-button__label + .mat-icon, .mdc-button__label + .material-icons {
+    @include mdc-fab.extended-icon-padding(
+      mdc-fab.$extended-icon-padding,
+      mdc-fab.$extended-label-padding,
+      $is-icon-at-end: true
+    );
+  }
+}
+
