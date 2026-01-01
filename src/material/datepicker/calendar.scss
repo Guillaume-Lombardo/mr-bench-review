@@ -1,0 +1,152 @@
+@use '@angular/cdk';
+
+@use '../core/focus-indicators/private';
+@use '../core/tokens/m2/mat/datepicker' as tokens-mat-datepicker;
+@use '../core/tokens/token-utils';
+
+$calendar-padding: 8px !default;
+$calendar-header-divider-width: 1px !default;
+$calendar-controls-vertical-padding: 5%;
+// We use the same padding as the month / year label, but subtract 16px since there is padding
+// between the edge of the button and the text. This ensures that the button text lines up with
+// the month / year label text.
+$calendar-controls-side-margin: calc(33% / 7 - 16px);
+
+$calendar-arrow-size: 5px !default;
+$calendar-arrow-disabled-opacity: 0.5 !default;
+
+$_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots();
+
+.mat-calendar {
+  display: block;
+
+  // Prevents layout issues if the line height bleeds in from the body (see #29756).
+  line-height: normal;
+
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(font-family, calendar-text-font);
+    @include token-utils.create-token-slot(font-size, calendar-text-size);
+  }
+}
+
+.mat-calendar-header {
+  padding: $calendar-padding $calendar-padding 0 $calendar-padding;
+}
+
+.mat-calendar-content {
+  padding: 0 $calendar-padding $calendar-padding $calendar-padding;
+  outline: none;
+}
+
+.mat-calendar-controls {
+  display: flex;
+  align-items: center;
+  margin: $calendar-controls-vertical-padding $calendar-controls-side-margin;
+}
+
+.mat-calendar-spacer {
+  flex: 1 1 auto;
+}
+
+.mat-calendar-period-button {
+  min-width: 0;
+  margin: 0 8px;
+
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(font-size, calendar-period-button-text-size);
+    @include token-utils.create-token-slot(font-weight, calendar-period-button-text-weight);
+    @include token-utils.create-token-slot(--mdc-text-button-label-text-color,
+      calendar-period-button-text-color);
+  }
+}
+
+.mat-calendar-arrow {
+  display: inline-block;
+  width: $calendar-arrow-size * 2;
+  height: $calendar-arrow-size;
+  margin: 0 0 0 $calendar-arrow-size;
+  vertical-align: middle;
+
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(fill, calendar-period-button-icon-color);
+  }
+
+  &.mat-calendar-invert {
+    transform: rotate(180deg);
+  }
+
+  [dir='rtl'] & {
+    margin: 0 $calendar-arrow-size 0 0;
+  }
+
+  @include cdk.high-contrast {
+    // Setting the fill to `currentColor` doesn't work on Chromium browsers.
+    fill: CanvasText;
+  }
+}
+
+.mat-calendar-previous-button,
+.mat-calendar-next-button {
+  @include token-utils.use-tokens($_tokens...) {
+    // Needs need a bit more specificity to avoid being overwritten by the .mat-icon-button.
+    .mat-datepicker-content &:not(.mat-mdc-button-disabled) {
+      @include token-utils.create-token-slot(color, calendar-navigation-button-icon-color);
+    }
+  }
+
+  [dir='rtl'] & {
+    transform: rotate(180deg);
+  }
+}
+
+.mat-calendar-table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.mat-calendar-table-header th {
+  text-align: center;
+  padding: 0 0 $calendar-padding 0;
+
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(color, calendar-header-text-color);
+    @include token-utils.create-token-slot(font-size, calendar-header-text-size);
+    @include token-utils.create-token-slot(font-weight, calendar-header-text-weight);
+  }
+}
+
+.mat-calendar-table-header-divider {
+  position: relative;
+  height: $calendar-header-divider-width;
+
+  // We use an absolutely positioned pseudo-element as the divider line for the table header so we
+  // can extend it all the way to the edge of the calendar.
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -$calendar-padding;
+    right: -$calendar-padding;
+    height: $calendar-header-divider-width;
+
+    @include token-utils.use-tokens($_tokens...) {
+      @include token-utils.create-token-slot(background, calendar-header-divider-color);
+    }
+  }
+}
+
+// For the calendar element, default inset/offset values are necessary to ensure that
+// the focus indicator is sufficiently contrastive and renders appropriately.
+.mat-calendar-body-cell-content::before {
+  $border-width: var(--mat-focus-indicator-border-width, #{private.$default-border-width});
+  $offset: calc(#{$border-width} + 3px);
+  margin: calc(#{$offset} * -1);
+}
+
+// For calendar cells, render the focus indicator when the parent cell is
+// focused.
+.mat-calendar-body-cell:focus .mat-focus-indicator::before {
+  content: '';
+}
+

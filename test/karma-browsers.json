@@ -1,0 +1,9 @@
+{
+  "BROWSERSTACK_SAFARI16": {
+    "base": "BrowserStack",
+    "browser": "Safari",
+    "browser_version": "16.0",
+    "os": "OS X",
+    "os_version": "Ventura"
+  }
+}
