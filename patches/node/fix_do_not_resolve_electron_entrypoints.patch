@@ -1,0 +1,61 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Samuel Attard <marshallofsound@electronjs.org>
+Date: Wed, 26 Jul 2023 17:03:15 -0700
+Subject: fix: do not resolve electron entrypoints
+
+This wastes fs cycles and can result in strange behavior if this path actually exists on disk
+
+diff --git a/lib/internal/modules/esm/translators.js b/lib/internal/modules/esm/translators.js
+index 49aacb6262502ced54e817f99dd596db85b9659c..f9f065bb743275e9b2ce71375e6a9f06e00c0f36 100644
+--- a/lib/internal/modules/esm/translators.js
++++ b/lib/internal/modules/esm/translators.js
+@@ -291,6 +291,9 @@ function cjsPreparseModuleExports(filename, source, isMain, format) {
+   if (module && module[kModuleExportNames] !== undefined) {
+     return { module, exportNames: module[kModuleExportNames] };
+   }
++  if (filename === 'electron') {
++    return { module, exportNames: new SafeSet(['default', ...Object.keys(module.exports)]) };
++  }
+   const loaded = Boolean(module);
+   if (!loaded) {
+     module = new CJSModule(filename);
+diff --git a/lib/internal/modules/run_main.js b/lib/internal/modules/run_main.js
+index 02ba43adc2c8e92a78942bbb04023a16f5870ee9..bbf1ab69b884a9325bebdd07b2c4fd354eee946b 100644
+--- a/lib/internal/modules/run_main.js
++++ b/lib/internal/modules/run_main.js
+@@ -2,6 +2,7 @@
+ 
+ const {
+   StringPrototypeEndsWith,
++  StringPrototypeStartsWith,
+   globalThis,
+ } = primordials;
+ 
+@@ -26,6 +27,13 @@ const {
+  * @param {string} main - Entry point path
+  */
+ function resolveMainPath(main) {
++  // For built-in modules used as the main entry point we _never_
++  // want to waste cycles resolving them to file paths on disk
++  // that actually might exist
++  if (typeof main === 'string' && StringPrototypeStartsWith(main, 'electron/js2c')) {
++    return main;
++  }
++
+   const defaultType = getOptionValue('--experimental-default-type');
+   /** @type {string} */
+   let mainPath;
+@@ -62,6 +70,13 @@ function resolveMainPath(main) {
+  * @param {string} mainPath - Absolute path to the main entry point
+  */
+ function shouldUseESMLoader(mainPath) {
++  // For built-in modules used as the main entry point we _never_
++  // want to waste cycles resolving them to file paths on disk
++  // that actually might exist
++  if (typeof mainPath === 'string' && StringPrototypeStartsWith(mainPath, 'electron/js2c')) {
++    return false;
++  }
++
+   if (getOptionValue('--experimental-default-type') === 'module') { return true; }
+ 
+   /**
