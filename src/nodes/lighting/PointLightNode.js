@@ -90,6 +90,8 @@ class PointLightNode extends AnalyticLightNode {
 
 	/**
 	 * Overwritten to setup point light specific shadow.
+	 *
+	 * @return {Node}
 	 */
 	setupShadowNode() {
 
