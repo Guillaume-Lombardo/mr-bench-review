@@ -1,0 +1,21 @@
+[package]
+edition      = { workspace = true }
+license-file = { workspace = true }
+name         = "scroll-verifier"
+repository   = { workspace = true }
+version      = "0.1.0"
+
+[lints]
+workspace = true
+
+[package.metadata.crane]
+test-include = ["lib/scroll-verifier/tests"]
+
+[dependencies]
+evm-storage-verifier      = { workspace = true }
+rlp                       = { workspace = true }
+scroll-codec              = { workspace = true }
+scroll-light-client-types = { workspace = true }
+thiserror                 = { workspace = true }
+unionlabs                 = { workspace = true }
+zktrie                    = { workspace = true }

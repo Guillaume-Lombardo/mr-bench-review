@@ -1,0 +1,18 @@
+[package]
+description = "A small command line utility to ensure that blocks are produced on both sepolia and union."
+edition     = "2021"
+name        = "ensure-blocks"
+publish     = false
+repository  = { workspace = true }
+version     = "0.0.0"
+
+[lints]
+workspace = true
+
+[dependencies]
+alloy              = { workspace = true, features = ["rpc", "rpc-types", "transports", "transport-http", "transport-ws", "reqwest", "provider-ws"] }
+clap               = { workspace = true, features = ["default", "derive"] }
+futures.workspace  = true
+tendermint-rpc     = { workspace = true, features = ["http-client", "websocket-client"] }
+tokio              = { workspace = true, features = ["full"] }
+tracing-subscriber = { workspace = true }

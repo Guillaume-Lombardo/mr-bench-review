@@ -1,0 +1,96 @@
+import type { ChainId } from "./types.ts"
+import { err, ok, Result } from "neverthrow"
+import { offchainQuery } from "./query/offchain/hubble.ts"
+
+export const createPfmMemo: (_args: {
+  port: string
+  channel: string
+  receiver: string
+}) => Result<string, Error> = Result.fromThrowable(
+  ({
+    port,
+    channel,
+    receiver
+  }: {
+    port: string
+    channel: string
+    receiver: string
+  }): string =>
+    JSON.stringify({
+      forward: {
+        port,
+        channel,
+        receiver: receiver.startsWith("0x") ? receiver.slice(2) : receiver
+      }
+    }),
+  error => new Error("Failed to create PFM memo", { cause: error })
+)
+
+export async function getHubbleChainDetails({
+  sourceChainId,
+  destinationChainId
+}: {
+  sourceChainId: ChainId | (string & {})
+  destinationChainId: ChainId | (string & {})
+}): Promise<
+  Result<
+    {
+      port?: string
+      sourceChannel: string
+      destinationChannel: string
+      destinationChainId: ChainId
+      relayContractAddress: string
+      transferType: "direct" | "pfm"
+    },
+    Error
+  >
+> {
+  if (sourceChainId === destinationChainId) {
+    return err(new Error("Source and destination chains cannot be the same"))
+  }
+
+  const { data: chains } = await offchainQuery.chains({
+    includeContracts: true,
+    includeEndpoints: true
+  })
+
+  const chain = chains.find(c => c.chain_id === sourceChainId)
+
+  const transferType = [sourceChainId, destinationChainId].includes("union-testnet-8")
+    ? "direct"
+    : "pfm"
+
+  if (!chain) return err(new Error("Chain not found in hubble"))
+
+  const checkAgainst = sourceChainId === "union-testnet-8" ? destinationChainId : "union-testnet-8"
+  const ucsConfiguration = chain.ucs1_configurations
+    ?.filter(config => config.destination_chain.chain_id === checkAgainst)
+    .at(0)
+
+  if (!ucsConfiguration) return err(new Error("UCS configuration not found"))
+
+  if (transferType === "direct") {
+    return ok({
+      transferType,
+      memo: undefined,
+      sourceChannel: ucsConfiguration.channel_id,
+      destinationChannel: ucsConfiguration.channel_id,
+      relayContractAddress: ucsConfiguration.contract_address,
+      destinationChainId: ucsConfiguration.destination_chain.chain_id
+    })
+  }
+
+  const forward = ucsConfiguration.forwards.find(
+    item => item.destination_chain.chain_id === destinationChainId
+  )
+
+  if (!forward) return err(new Error("Forward configuration not found"))
+  return ok({
+    transferType,
+    port: forward.port_id,
+    destinationChannel: forward.channel_id,
+    sourceChannel: ucsConfiguration.channel_id,
+    relayContractAddress: ucsConfiguration.contract_address,
+    destinationChainId: ucsConfiguration.destination_chain.chain_id
+  })
+}

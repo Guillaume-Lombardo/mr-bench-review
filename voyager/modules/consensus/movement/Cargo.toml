@@ -1,0 +1,16 @@
+[package]
+edition = "2021"
+name    = "voyager-consensus-module-movement"
+version = "0.1.0"
+
+[dependencies]
+aptos-move-ibc    = { workspace = true }
+aptos-rest-client = { workspace = true }
+chain-utils       = { workspace = true }
+jsonrpsee         = { workspace = true, features = ["macros", "server", "tracing"] }
+serde             = { workspace = true, features = ["derive"] }
+thiserror         = { workspace = true }
+tokio             = { workspace = true }
+tracing           = { workspace = true }
+unionlabs         = { workspace = true }
+voyager-message   = { workspace = true }

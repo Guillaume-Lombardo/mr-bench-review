@@ -1,0 +1,18 @@
+[package]
+edition      = { workspace = true }
+license-file = { workspace = true }
+name         = "tidy"
+publish      = false
+repository   = { workspace = true }
+version      = "0.1.0"
+
+[lints]
+workspace = true
+
+[dependencies]
+cargo-util-schemas = "0.1.0"
+cargo_metadata     = "0.18.1"
+clap               = { workspace = true, features = ["derive", "default"] }
+toml               = { workspace = true }
+tracing            = { workspace = true }
+tracing-subscriber = { workspace = true, features = ["fmt"] }

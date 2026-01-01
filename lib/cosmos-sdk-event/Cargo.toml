@@ -1,0 +1,11 @@
+[package]
+edition = "2021"
+name    = "cosmos-sdk-event"
+version = "0.1.0"
+
+[dependencies]
+cometbft-types = { workspace = true }
+enumorph       = { workspace = true }
+serde          = { workspace = true }
+thiserror      = { workspace = true }
+unionlabs      = { workspace = true }

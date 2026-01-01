@@ -1,0 +1,15 @@
+[package]
+edition = "2021"
+name    = "voyager-periodic-client-update-plugin"
+version = "0.1.0"
+
+[dependencies]
+clap            = { workspace = true, features = ["derive"] }
+jsonrpsee       = { workspace = true, features = ["macros", "server", "tracing"] }
+macros          = { workspace = true }
+serde           = { workspace = true, features = ["derive"] }
+tokio           = { workspace = true }
+tracing         = { workspace = true }
+unionlabs       = { workspace = true }
+voyager-message = { workspace = true }
+voyager-vm      = { workspace = true }

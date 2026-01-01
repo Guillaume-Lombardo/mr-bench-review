@@ -1,0 +1,29 @@
+[package]
+authors      = ["Hussein Ait Lahcen <hussein.aitlahcen@gmail.com>"]
+edition      = { workspace = true }
+license-file = { workspace = true }
+name         = "ucs02-nft"
+repository   = "https://github.com/unionlabs/union"
+version      = "1.0.0"
+
+[lints]
+workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+library = []
+
+[dependencies]
+cosmwasm-schema = { version = "1.5" }
+cosmwasm-std    = { version = "1.5.4", features = ["stargate"] }
+cw-storage-plus = { version = "1.2" }
+ethabi          = { workspace = true }
+ics721          = { git = "https://github.com/hussein-aitlahcen/cw-ics721", rev = "dd5b7add6fdc81e633084031f8512e5e909dd42a" }
+ics721-base     = { git = "https://github.com/hussein-aitlahcen/cw-ics721", rev = "dd5b7add6fdc81e633084031f8512e5e909dd42a", features = ["library"] }
+thiserror       = { workspace = true }
+unionlabs       = { workspace = true }
+
+[dev-dependencies]
+serde_json = { workspace = true }

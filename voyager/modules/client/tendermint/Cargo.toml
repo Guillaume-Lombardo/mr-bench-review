@@ -1,0 +1,16 @@
+[package]
+edition = "2021"
+name    = "voyager-client-module-tendermint"
+version = "0.1.0"
+
+[dependencies]
+jsonrpsee                     = { workspace = true, features = ["macros", "server", "tracing"] }
+macros                        = { workspace = true }
+serde                         = { workspace = true, features = ["derive"] }
+serde_json                    = { workspace = true }
+tendermint-light-client-types = { workspace = true, features = ["proto"] }
+tokio                         = { workspace = true }
+tracing                       = { workspace = true }
+unionlabs                     = { workspace = true }
+voyager-message               = { workspace = true }
+voyager-vm                    = { workspace = true }

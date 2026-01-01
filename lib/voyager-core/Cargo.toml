@@ -1,0 +1,24 @@
+[package]
+edition      = { workspace = true }
+license-file = { workspace = true }
+name         = "voyager-core"
+repository   = { workspace = true }
+resolver     = "2"
+version      = "0.1.0"
+
+[lints]
+workspace = true
+
+[dependencies]
+macros     = { workspace = true }
+schemars   = { workspace = true, optional = true }
+serde      = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+unionlabs  = { workspace = true }
+
+[dev-dependencies]
+hex-literal = { workspace = true }
+
+[features]
+default  = []
+schemars = ["dep:schemars"]

@@ -1,0 +1,24 @@
+[package]
+edition = "2021"
+name    = "voyager-plugin-transaction-batch"
+version = "0.1.0"
+
+[dependencies]
+alloy                      = { workspace = true, features = ["sol-types"] }
+either                     = { workspace = true }
+enumorph                   = { workspace = true }
+futures                    = { workspace = true }
+ibc-classic-spec.workspace = true
+ibc-solidity.workspace     = true
+ibc-union-spec.workspace   = true
+itertools                  = "0.13.0"
+jsonrpsee                  = { workspace = true, features = ["macros", "server", "tracing"] }
+macros                     = { workspace = true }
+serde                      = { workspace = true, features = ["derive"] }
+serde_json                 = { workspace = true }
+subset-of                  = { workspace = true }
+tokio                      = { workspace = true }
+tracing                    = { workspace = true }
+unionlabs                  = { workspace = true }
+voyager-message            = { workspace = true }
+voyager-vm                 = { workspace = true }

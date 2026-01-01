@@ -1,0 +1,16 @@
+[package]
+edition = "2021"
+name    = "scroll-light-client-types"
+version = "0.1.0"
+
+[dependencies]
+ethereum-light-client-types = { workspace = true }
+serde                       = { workspace = true, optional = true, features = ["derive"] }
+unionlabs                   = { workspace = true }
+
+[features]
+default = []
+serde   = ["dep:serde", "ethereum-light-client-types/serde"]
+
+[dev-dependencies]
+hex-literal = { workspace = true }

@@ -1,0 +1,16 @@
+[package]
+edition = "2021"
+name    = "voyager-client-module-ethereum"
+version = "0.1.0"
+
+[dependencies]
+beacon-api-types            = { workspace = true, features = ["serde"] }
+ethereum-light-client-types = { workspace = true, features = ["serde", "ethabi"] }
+jsonrpsee                   = { workspace = true, features = ["macros", "server", "tracing"] }
+serde                       = { workspace = true, features = ["derive"] }
+serde_json                  = { workspace = true }
+tokio                       = { workspace = true }
+tracing                     = { workspace = true }
+unionlabs                   = { workspace = true }
+voyager-message             = { workspace = true }
+voyager-vm                  = { workspace = true }

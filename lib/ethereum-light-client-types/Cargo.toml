@@ -1,0 +1,24 @@
+[package]
+edition = "2021"
+name    = "ethereum-light-client-types"
+version = "0.1.0"
+
+[dependencies]
+alloy            = { workspace = true, features = ["sol-types"], optional = true }
+beacon-api-types = { workspace = true }
+serde            = { workspace = true, optional = true, features = ["derive"] }
+thiserror        = { workspace = true }
+unionlabs        = { workspace = true }
+
+[features]
+default = ["serde"]
+ethabi = ["unionlabs/ethabi", "dep:alloy"]
+serde = [
+  # TODO: Feature gate serde in unionlabs
+  # "unionlabs/serde",
+  "beacon-api-types/serde",
+  "dep:serde",
+]
+
+[dev-dependencies]
+hex-literal = { workspace = true }

@@ -1,0 +1,24 @@
+[package]
+edition = "2021"
+name    = "voyager-client-update-plugin-movement"
+version = "0.1.0"
+
+[dependencies]
+aptos-move-ibc              = { workspace = true }
+aptos-rest-client           = { workspace = true }
+chain-utils                 = { workspace = true }
+enumorph                    = { workspace = true }
+ethereum-light-client-types = { workspace = true }
+jsonrpsee                   = { workspace = true, features = ["macros", "server", "tracing"] }
+macros                      = { workspace = true }
+movement-light-client-types = { workspace = true, features = ["serde"] }
+reqwest                     = { workspace = true, features = ["json"] }
+serde                       = { workspace = true, features = ["derive"] }
+serde_json                  = { workspace = true }
+subset-of                   = { workspace = true }
+thiserror                   = { workspace = true }
+tokio                       = { workspace = true }
+tracing                     = { workspace = true }
+unionlabs                   = { workspace = true }
+voyager-message             = { workspace = true }
+voyager-vm                  = { workspace = true }

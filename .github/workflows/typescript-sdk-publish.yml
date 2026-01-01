@@ -1,0 +1,48 @@
+name: 'Publish TypeScript SDK'
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'typescript-sdk/**'
+    tags:
+      - 'typescript-sdk-v*'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  NODE_OPTIONS: '--no-warnings'
+  ACTIONS_RUNNER_DEBUG: true
+
+jobs:
+  publish-jsr:
+    # manually temporarily disabled
+    if: false
+    name: 'Publish JSR'
+    runs-on: ['ubuntu-latest']
+    permissions:
+      contents: read
+      # The OIDC ID token is used for authentication with JSR. 
+      id-token: write
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Setup bun'
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 'latest'
+
+      - name: 'Publish to JSR'
+        working-directory: './typescript-sdk'
+        run: |
+          bun install
+          bun scripts/publish.ts --period patch

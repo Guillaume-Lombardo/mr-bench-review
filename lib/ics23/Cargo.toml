@@ -1,0 +1,23 @@
+[package]
+edition = "2021"
+name    = "ics23"
+version = "0.1.0"
+
+[lints]
+workspace = true
+
+[dependencies]
+prost       = { workspace = true, features = ["std"] }
+ripemd      = { workspace = true }
+serde-utils = { workspace = true }
+sha2        = { workspace = true }
+thiserror   = { workspace = true }
+unionlabs   = { workspace = true }
+
+[dev-dependencies]
+anyhow      = "1.0.79"
+hex         = { workspace = true, features = ["serde"] }
+hex-literal = { workspace = true }
+protos      = { workspace = true, features = ["cosmos+ics23+v1", "serde"] }
+serde       = { workspace = true, features = ["derive"] }
+serde_json  = { workspace = true }

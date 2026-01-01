@@ -1,0 +1,18 @@
+[package]
+edition = "2021"
+name    = "voyager-client-bootstrap-module-cometbls"
+version = "0.1.0"
+
+[dependencies]
+cometbft-rpc                = { workspace = true }
+cometbls-light-client-types = { workspace = true }
+jsonrpsee                   = { workspace = true, features = ["macros", "server", "tracing"] }
+protos                      = { workspace = true }
+serde                       = { workspace = true, features = ["derive"] }
+serde_json                  = { workspace = true }
+thiserror                   = { workspace = true }
+tokio                       = { workspace = true }
+tracing                     = { workspace = true }
+unionlabs                   = { workspace = true }
+voyager-message             = { workspace = true }
+voyager-vm                  = { workspace = true }

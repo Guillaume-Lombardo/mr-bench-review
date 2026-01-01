@@ -1,0 +1,18 @@
+[package]
+edition = "2021"
+name    = "ucs01-relay-api"
+version = "0.1.0"
+
+[lints]
+workspace = true
+
+[dependencies]
+cosmwasm-schema   = { workspace = true }
+cosmwasm-std      = { workspace = true, features = ["stargate", "std"] }
+ethabi            = { workspace = true }
+go-parse-duration = { workspace = true }
+serde             = { workspace = true }
+serde-json-wasm   = { workspace = true }
+serde-utils       = { workspace = true }
+thiserror         = { workspace = true }
+unionlabs         = { workspace = true }

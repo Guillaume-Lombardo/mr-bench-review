@@ -1,0 +1,325 @@
+[workspace]
+resolver = "2"
+# NOTE: All paths must be listed out (i.e. no globs) since ifd is still broken in nix (still can't import the output of `cargo metadata` :( ). See crane.nix for where this is used.
+members = [
+  "cosmwasm/token-factory-api",
+  "cosmwasm/ucs00-pingpong",
+  "cosmwasm/union-ibc/app/ucs00-pingpong",
+  "cosmwasm/ucs01-relay",
+  "cosmwasm/ucs01-relay-api",
+  "cosmwasm/ucs02-nft",
+  "cosmwasm/multicall",
+
+  "cosmwasm/union-ibc/core",
+  "cosmwasm/union-ibc/core/msg",
+  "cosmwasm/union-ibc/core/light-client-interface",
+
+  "devnet-compose",
+
+  "e2e/ensure-blocks",
+
+  "generated/rust/protos",
+  "generated/rust/aptos-move-ibc",
+
+  "hubble",
+
+  "lib/beacon-api",
+  "lib/cometbft-rpc",
+  "lib/cometbft-types",
+
+  "lib/chain-utils",
+  "lib/gnark-key-parser",
+  "lib/gnark-mimc",
+  # "lib/ibc-vm-rs",
+  "cosmwasm/ics08-light-clients/interface",
+  "lib/ics23",
+  "lib/linea-verifier",
+  "lib/linea-zktrie",
+  "lib/macros",
+  "lib/pg-queue",
+  "lib/poseidon-rs",
+  "lib/voyager-vm",
+  "lib/subset-of-derive",
+  "lib/scroll-api",
+  "lib/scroll-codec",
+  "lib/scroll-rpc",
+  "lib/serde-utils",
+  "lib/ssz",
+  "lib/ssz/tests-generator",
+  "lib/ssz-derive",
+  "lib/unionlabs",
+  "lib/zktrie-rs",
+  "lib/voyager-message",
+  "lib/voyager-core",
+  "lib/galois-rpc",
+  "lib/cosmos-sdk-event",
+
+  # "lib/near/near-ibc",
+  # "lib/near/near-light-client",
+  # "lib/near/dummy-ibc-app",
+  # "lib/near/near-ibc-tests",
+
+  "lib/ibc-solidity",
+
+  "lib/arbitrum-verifier",
+  "lib/cometbls-groth16-verifier",
+  "lib/ethereum-sync-protocol",
+  "lib/evm-storage-verifier",
+  "lib/scroll-verifier",
+  "lib/tendermint-verifier",
+
+  "lib/ethereum-light-client-types",
+  "lib/arbitrum-light-client-types",
+  "lib/berachain-light-client-types",
+  "lib/cometbls-light-client-types",
+  "lib/scroll-light-client-types",
+  "lib/tendermint-light-client-types",
+  "lib/linea-light-client-types",
+  "lib/movement-light-client-types",
+
+  # these will all be re enabled and updated once ethereum-light-client is updated
+
+  "cosmwasm/union-ibc/light-clients/ethereum",
+  "cosmwasm/union-ibc/light-clients/arbitrum",
+  "cosmwasm/union-ibc/light-clients/berachain",
+  "cosmwasm/union-ibc/light-clients/cometbls",
+  # "cosmwasm/union-ibc/light-clients/evm-in-cosmos",
+  # "cosmwasm/union-ibc/light-clients/scroll",
+  "cosmwasm/union-ibc/light-clients/tendermint",
+  # "cosmwasm/union-ibc/light-clients/linea",
+
+  "cosmwasm/union-ibc/light-clients/movement",
+
+  "tools/devnet-utils",
+  "tools/parse-wasm-client-type",
+  "tools/tidy",
+  "tools/move-bindgen",
+  "lib/move-bindgen-derive",
+
+  "unionvisor",
+
+  "voyager",
+
+  "voyager/modules/state/cosmos-sdk",
+  "voyager/modules/state/cosmos-sdk-union",
+  "voyager/modules/state/ethereum",
+  "voyager/modules/state/movement",
+
+  "voyager/modules/proof/cosmos-sdk",
+  "voyager/modules/proof/cosmos-sdk-union",
+  "voyager/modules/proof/ethereum",
+  "voyager/modules/proof/movement",
+
+  "voyager/modules/client/cometbls",
+  "voyager/modules/client/ethereum",
+  "voyager/modules/client/movement",
+  "voyager/modules/client/tendermint",
+
+  "voyager/modules/client-bootstrap/cometbls",
+  "voyager/modules/client-bootstrap/ethereum",
+  "voyager/modules/client-bootstrap/movement",
+  "voyager/modules/client-bootstrap/tendermint",
+
+  "voyager/modules/consensus/cometbls",
+  "voyager/modules/consensus/ethereum",
+  "voyager/modules/consensus/movement",
+  "voyager/modules/consensus/tendermint",
+
+  "voyager/plugins/client-update/cometbls",
+  "voyager/plugins/client-update/ethereum",
+  "voyager/plugins/client-update/movement",
+  "voyager/plugins/client-update/tendermint",
+
+  "voyager/plugins/periodic-client-update",
+
+  "voyager/plugins/event-source/cosmos-sdk",
+  "voyager/plugins/event-source/ethereum",
+  "voyager/plugins/event-source/movement",
+
+  "voyager/plugins/transaction/cosmos-sdk",
+  "voyager/plugins/transaction/ethereum",
+  "voyager/plugins/transaction/aptos",
+
+  "voyager/plugins/packet-filter",
+  "voyager/plugins/transaction-batch",
+
+  "drip",
+
+  "lib/aptos-verifier",
+
+  "lib/reconnecting-jsonrpc-ws-client",
+  "lib/voyager-core",
+  "lib/subset-of",
+  "lib/cometbft-types",
+  "lib/galois-rpc",
+  "lib/beacon-api-types",
+
+  "mpc/shared",
+  "mpc/client",
+  "mpc/coordinator",
+
+  "lib/ibc-union-spec",
+  "lib/ibc-classic-spec",
+]
+
+[workspace.package]
+edition      = "2021"
+license-file = "LICENSE"
+repository   = "https://github.com/unionlabs/union"
+
+[workspace.lints.clippy]
+disallowed_types        = "deny"
+module_inception        = "allow" # it's useful sometimes
+module_name_repetitions = "allow" # dumb lint
+
+[workspace.lints.rustdoc]
+broken-intra-doc-links = "deny"
+
+[profile.release]
+lto       = "thin"
+opt-level = 3
+
+[workspace.dependencies]
+aptos-move-ibc   = { path = "generated/rust/aptos-move-ibc", default-features = false }
+aptos-verifier   = { path = "lib/aptos-verifier", default-features = false }
+beacon-api       = { path = "lib/beacon-api", default-features = false }
+beacon-api-types = { path = "lib/beacon-api-types", default-features = false }
+chain-utils      = { path = "lib/chain-utils", default-features = false }
+cometbft-rpc     = { path = "lib/cometbft-rpc", default-features = false }
+cometbft-types   = { path = "lib/cometbft-types", default-features = false }
+
+arbitrum-light-client-types = { path = "lib/arbitrum-light-client-types", default-features = false }
+arbitrum-verifier           = { path = "lib/arbitrum-verifier", default-features = false }
+
+cometbls-groth16-verifier   = { path = "lib/cometbls-groth16-verifier", default-features = false }
+cometbls-light-client-types = { path = "lib/cometbls-light-client-types", default-features = false }
+
+scroll-light-client-types = { path = "lib/scroll-light-client-types", default-features = false }
+
+ethereum-light-client       = { path = "cosmwasm/union-ibc/light-clients/ethereum", default-features = false }
+ethereum-light-client-types = { path = "lib/ethereum-light-client-types", default-features = false }
+ethereum-sync-protocol      = { path = "lib/ethereum-sync-protocol", default-features = false }
+evm-storage-verifier        = { path = "lib/evm-storage-verifier", default-features = false }
+
+berachain-light-client-types = { path = "lib/berachain-light-client-types", default-features = false }
+scroll-api                   = { path = "lib/scroll-api", default-features = false }
+scroll-codec                 = { path = "lib/scroll-codec", default-features = false }
+scroll-rpc                   = { path = "lib/scroll-rpc", default-features = false }
+
+tendermint-light-client       = { path = "cosmwasm/union-ibc/light-clients/tendermint", default-features = false }
+tendermint-light-client-types = { path = "lib/tendermint-light-client-types", default-features = false }
+tendermint-verifier           = { path = "lib/tendermint-verifier", default-features = false }
+
+linea-light-client-types = { path = "lib/linea-light-client-types", default-features = false }
+linea-zktrie             = { path = "lib/linea-zktrie", default-features = false }
+
+ibc-solidity           = { path = "lib/ibc-solidity", default-features = false }
+union-ibc              = { path = "cosmwasm/union-ibc/core", default-features = false }
+union-ibc-light-client = { path = "cosmwasm/union-ibc/core/light-client-interface", default-features = false }
+union-ibc-msg          = { path = "cosmwasm/union-ibc/core/msg", default-features = false }
+
+gnark-key-parser               = { path = "lib/gnark-key-parser", default-features = false }
+gnark-mimc                     = { path = "lib/gnark-mimc", default-features = false }
+ics23                          = { path = "lib/ics23", default-features = false }
+macros                         = { path = "lib/macros", default-features = false }
+move-bindgen                   = { path = "tools/move-bindgen", default-features = false }
+move-bindgen-derive            = { path = "lib/move-bindgen-derive", default-features = false }
+mpc-shared                     = { path = "mpc/shared", default-features = false }
+pg-queue                       = { path = "lib/pg-queue", default-features = false }
+poseidon-rs                    = { path = "lib/poseidon-rs", default-features = false }
+protos                         = { path = "generated/rust/protos", default-features = false }
+reconnecting-jsonrpc-ws-client = { path = "lib/reconnecting-jsonrpc-ws-client", default-features = false }
+
+ibc-classic-spec = { path = "lib/ibc-classic-spec", default-features = false }
+ibc-union-spec   = { path = "lib/ibc-union-spec", default-features = false }
+
+movement-light-client-types = { path = "lib/movement-light-client-types", default-features = false }
+
+cosmos-sdk-event = { path = "lib/cosmos-sdk-event", default-features = false }
+
+serde-utils      = { path = "lib/serde-utils", default-features = false }
+ssz              = { path = "lib/ssz", default-features = false }
+ssz-derive       = { path = "lib/ssz-derive", default-features = false }
+subset-of        = { path = "lib/subset-of", default-features = false }
+subset-of-derive = { path = "lib/subset-of-derive", default-features = false }
+
+token-factory-api = { path = "cosmwasm/token-factory-api", default-features = false }
+ucs01-relay-api   = { path = "cosmwasm/ucs01-relay-api", default-features = false }
+unionlabs         = { path = "lib/unionlabs", default-features = false }
+zktrie            = { path = "lib/zktrie-rs", default-features = false }
+
+galois-rpc = { path = "lib/galois-rpc", default-features = false }
+
+voyager-core    = { path = "lib/voyager-core", default-features = false }
+voyager-message = { path = "lib/voyager-message", default-features = false }
+voyager-vm      = { path = "lib/voyager-vm", default-features = false }
+
+# external dependencies
+milagro_bls    = { git = "https://github.com/Snowfork/milagro_bls", rev = "bc2b5b5e8d48b7e2e1bfaa56dc2d93e13cb32095", default-features = false }
+tendermint-rpc = { git = "https://github.com/unionlabs/tendermint-rs", branch = "v0.39.1-bn254", default-features = false }
+
+alloy = { version = "0.6", default-features = false }
+
+# https://github.com/aptos-labs/aptos-core/pull/12636
+aptos-crypto             = { git = "https://github.com/unionlabs/aptos-core" }
+aptos-rest-client        = { git = "https://github.com/unionlabs/aptos-core" }
+aptos-types              = { git = "https://github.com/unionlabs/aptos-core" }
+axum                     = { version = "0.6.20", default-features = false }
+base64                   = { version = "0.21", default-features = false }
+bcs                      = { version = "0.1.6", default-features = false }
+bip32                    = { version = "0.5.0", default-features = false }
+bitvec                   = { version = "1.0.1", default-features = false }
+borsh                    = { version = "1.5.0", default-features = false }
+chrono                   = { version = "0.4.26", default-features = false }
+clap                     = { version = "4.3.0", default-features = false, features = ["std"] }       # clap has a fake std feature that is required to be enabled by default
+color-eyre               = { version = "0.6.2", default-features = false }
+cosmwasm-schema          = { version = "2.1.4", default-features = false }
+cosmwasm-std             = { version = "2.1.4", default-features = false }
+crossbeam-queue          = { version = "0.3.8", default-features = false }
+cw-storage-plus          = { version = "2.0.0", default-features = false }
+dashmap                  = { version = "5.5.3", default-features = false }
+derive_more              = { version = "0.99.17", default-features = false }
+either                   = { version = "1.9.0", default-features = false }
+enumorph                 = { version = "0.1.2", default-features = false }
+ethabi                   = { version = "18.0.0", default-features = false }
+frame-support-procedural = { version = "30.0.0", default-features = false }
+futures                  = { version = "0.3.28", default-features = false }
+go-parse-duration        = { version = "0.1.1", default-features = false }
+hex                      = { version = "0.4.3", default-features = false }
+hex-literal              = { version = "0.4.1", default-features = false }
+jsonrpsee                = { version = "0.24.2", default-features = false }
+lazy_static              = { version = "1.4.0", default-features = false }
+move-core-types          = { git = "https://github.com/unionlabs/aptos-core" }
+near-sdk                 = { version = "5.1.0", default-features = false }
+num-bigint               = { version = "0.4", default-features = false }
+primitive-types          = { version = "0.12.1", default-features = false }
+prost                    = { version = "0.12.3", default-features = false }
+reqwest                  = { version = "0.11.17", default-features = false }
+ripemd                   = { version = "0.1.3", default-features = false }
+rlp                      = { version = "0.5.2", default-features = false }
+schemars                 = { version = "0.8.3", default-features = false }
+serde                    = { version = "1.0.0", default-features = false }
+serde-json-wasm          = { version = "1.0.0", default-features = false }
+serde_json               = { version = "1.0.0", default-features = false, features = ["alloc"] }     # serde-json requires one of "std" or "alloc"
+serde_with               = { version = "3.7.0", default-features = false, features = ["macros"] }
+sha2                     = { version = "0.10.7", default-features = false }
+sha3                     = { version = "0.10.8", default-features = false }
+sqlx                     = { version = "0.7.2", default-features = false }
+static_assertions        = { git = "https://github.com/nvzqz/static-assertions" }                    # https://github.com/nvzqz/static-assertions/pull/28
+subtle-encoding          = { version = "0.5.1", default-features = false }
+thiserror                = { version = "1.0.0", default-features = false }
+time                     = { version = "0.3.36", default-features = false }                          # Pinning to 0.3.36 here since they introduced a new trait in the minor version of semver..
+tokio                    = { version = "1.33.0", default-features = false }
+toml                     = { version = "0.8.8", default-features = false }
+tonic                    = { version = "0.10", default-features = false }
+tracing                  = { version = "0.1.40", default-features = false }
+tracing-subscriber       = { version = "0.3", default-features = false, features = ["fmt", "ansi"] }
+typenum                  = { version = "1.17.0", default-features = false }
+
+[patch."crates-io"]
+arbitrary = { git = "https://github.com/unionlabs/arbitrary" }
+# parity-secp256k1 = { git = "https://github.com/paritytech/rust-secp256k1" }
+
+# https://aptos.dev/en/build/sdks/rust-sdk
+merlin       = { git = "https://github.com/aptos-labs/merlin" }
+x25519-dalek = { git = "https://github.com/aptos-labs/x25519-dalek", branch = "zeroize_v1" }
