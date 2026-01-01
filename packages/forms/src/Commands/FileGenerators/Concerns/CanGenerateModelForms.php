@@ -8,6 +8,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Toggle;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -89,6 +90,7 @@ trait CanGenerateModelForms
             $componentData['type'] = match (true) {
                 $type['name'] === 'boolean' => Toggle::class,
                 $type['name'] === 'date' => DatePicker::class,
+                $type['name'] === 'time' => TimePicker::class,
                 in_array($type['name'], ['datetime', 'timestamp']) => DateTimePicker::class,
                 $type['name'] === 'text' => Textarea::class,
                 $componentName === 'image', str($componentName)->startsWith('image_'), str($componentName)->contains('_image_'), str($componentName)->endsWith('_image') => FileUpload::class,
