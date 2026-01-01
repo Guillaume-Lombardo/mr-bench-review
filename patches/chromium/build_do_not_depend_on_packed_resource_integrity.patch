@@ -1,0 +1,84 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Samuel Attard <sattard@slack-corp.com>
+Date: Thu, 27 May 2021 17:21:07 -0700
+Subject: build: do not depend on packed_resource_integrity
+
+This ensures we do not depend on a target that does not exist when
+building Electron, electron generates its own .pak files via
+electron_repack and therefore this integrity target which is generated
+by the chrome_paks target does not exist.  This can not be upstreamed,
+if we ever align our .pak file generation with Chrome we can remove this
+patch.
+
+diff --git a/chrome/BUILD.gn b/chrome/BUILD.gn
+index 84fab7fcdb1a7ded880c0ff4867e09c740e7a5d2..f03f0e67c083880dc13f8f90d9375ff62717ba00 100644
+--- a/chrome/BUILD.gn
++++ b/chrome/BUILD.gn
+@@ -197,11 +197,16 @@ if (!is_android && !is_mac) {
+         "common/crash_keys.h",
+       ]
+ 
++      if (!is_electron_build) {
++        deps = [
++          ":packed_resources_integrity_header",
++        ]
++      }
++
+       deps += [
+         ":chrome_dll",
+         ":chrome_exe_version",
+         ":copy_first_run",
+-        ":packed_resources_integrity_header",
+         ":visual_elements_resources",
+         "//base",
+         "//build:branding_buildflags",
+diff --git a/chrome/browser/BUILD.gn b/chrome/browser/BUILD.gn
+index ed639e1fd384ce325f56df99d5fcf72f00aaf2b1..ea7919d5a9dd2699822facb47ae974a7a4e87172 100644
+--- a/chrome/browser/BUILD.gn
++++ b/chrome/browser/BUILD.gn
+@@ -4633,7 +4633,7 @@ static_library("browser") {
+           [ "//chrome/browser/ui/webui/signin:profile_impl" ]
+     }
+ 
+-    if (!is_win) {
++    if (!is_win && !is_electron_build) {
+       # On Windows, the hashes are embedded in //chrome:chrome_initial rather
+       # than here in :chrome_dll.
+       deps += [ "//chrome:packed_resources_integrity_header" ]
+diff --git a/chrome/test/BUILD.gn b/chrome/test/BUILD.gn
+index dd82cb96686234350a078536bce94a47aeb96ef8..2cb71c9c12ad89aa6a16c538f97979b3094b9cda 100644
+--- a/chrome/test/BUILD.gn
++++ b/chrome/test/BUILD.gn
+@@ -7210,9 +7210,12 @@ test("unit_tests") {
+       "//chrome/notification_helper",
+     ]
+ 
++    if (!is_electron_build) {
++      deps += [ "//chrome:packed_resources_integrity_header" ]
++    }
++
+     deps += [
+       "//chrome:other_version",
+-      "//chrome:packed_resources_integrity_header",
+       "//chrome//services/util_win:unit_tests",
+       "//chrome/app:chrome_dll_resources",
+       "//chrome/app:win_unit_tests",
+@@ -8170,6 +8173,10 @@ test("unit_tests") {
+       "../browser/performance_manager/policies/background_tab_loading_policy_unittest.cc",
+     ]
+ 
++    if (!is_electron_build) {
++      deps += [ "//chrome:packed_resources_integrity_header" ]
++    }
++
+     sources += [
+       # The importer code is not used on Android.
+       "../common/importer/firefox_importer_utils_unittest.cc",
+@@ -8225,7 +8232,6 @@ test("unit_tests") {
+     # Non-android deps for "unit_tests" target.
+     deps += [
+       "../browser/screen_ai:screen_ai_install_state",
+-      "//chrome:packed_resources_integrity_header",
+       "//chrome/browser/apps:icon_standardizer",
+       "//chrome/browser/apps/app_service",
+       "//chrome/browser/apps/app_service:app_registry_cache_waiter",
