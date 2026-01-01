@@ -17,7 +17,7 @@ var (
 	stream = false
 	req    = [2]api.GenerateRequest{
 		{
-			Model:  "orca-mini",
+			Model:  "llama3.2:1b",
 			Prompt: "why is the ocean blue?",
 			Stream: &stream,
 			Options: map[string]interface{}{
@@ -25,7 +25,7 @@ var (
 				"temperature": 0.0,
 			},
 		}, {
-			Model:  "orca-mini",
+			Model:  "llama3.2:1b",
 			Prompt: "what is the origin of the us thanksgiving holiday?",
 			Stream: &stream,
 			Options: map[string]interface{}{
@@ -40,7 +40,7 @@ var (
 	}
 )
 
-func TestIntegrationSimpleOrcaMini(t *testing.T) {
+func TestIntegrationSimple(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*120)
 	defer cancel()
 	GenerateTestHelper(ctx, t, req[0], resp[0])
