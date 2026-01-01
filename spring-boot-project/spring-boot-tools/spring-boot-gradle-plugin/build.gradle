@@ -1,0 +1,214 @@
+plugins {
+	id "java-gradle-plugin"
+	id "maven-publish"
+	id "org.asciidoctor.jvm.convert"
+	id "org.springframework.boot.conventions"
+	id "org.springframework.boot.maven-repository"
+	id "org.springframework.boot.optional-dependencies"
+}
+
+description = "Spring Boot Gradle Plugins"
+
+configurations {
+	documentation
+	"testCompileClasspath" {
+		// Downgrade SLF4J is required for tests to run in Eclipse
+		resolutionStrategy.force("org.slf4j:slf4j-api:1.7.36")
+	}
+	modernGradleRuntimeClasspath {
+		extendsFrom runtimeClasspath
+		canBeConsumed = false
+		canBeResolved = true
+	}
+	modernGradleRuntimeElements {
+		extendsFrom configurations.implementation, configurations.runtimeOnly
+		canBeConsumed = true
+		canBeResolved = false
+		attributes {
+			attribute(Category.CATEGORY_ATTRIBUTE, project.objects.named(Category, Category.LIBRARY))
+			attribute(Bundling.BUNDLING_ATTRIBUTE, project.objects.named(Bundling, Bundling.EXTERNAL))
+			attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 17)
+			attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, project.objects.named(LibraryElements, LibraryElements.JAR))
+			attribute(Usage.USAGE_ATTRIBUTE, project.objects.named(Usage, Usage.JAVA_RUNTIME))
+			attribute(GradlePluginApiVersion.GRADLE_PLUGIN_API_VERSION_ATTRIBUTE, project.objects.named(GradlePluginApiVersion, "8.7"))
+		}
+		outgoing.artifacts.addAll(configurations.runtimeElements.outgoing.artifacts)
+	}
+	runtimeElements {
+		attributes {
+			attribute(GradlePluginApiVersion.GRADLE_PLUGIN_API_VERSION_ATTRIBUTE, project.objects.named(GradlePluginApiVersion, "7.5"))
+		}
+	}
+	all { configuration ->
+		if (configuration.name == 'modernGradleRuntimeClasspath') {
+			return
+		}
+		resolutionStrategy {
+			eachDependency { dependency ->
+				// Downgrade Jackson as Gradle cannot cope with 2.15.0's multi-version
+				// jar files with bytecode in META-INF/versions/19
+				if (dependency.requested.group.startsWith("com.fasterxml.jackson")) {
+					dependency.useVersion("2.14.2")
+				}
+				// Downgrade Spring Framework as Gradle cannot cope with 6.1.0-M1's
+				// multi-version jar files with bytecode in META-INF/versions/21
+				if (dependency.requested.group.equals("org.springframework")) {
+					dependency.useVersion("$springFramework60xVersion")
+				}
+				// We manage the version of commons-compress here rather than
+				// in spring-boot-parent to minimize conflicts with Testcontainers
+				if (dependency.requested.group.equals("org.apache.commons")
+						&& dependency.requested.name.equals("commons-compress")) {
+					dependency.useVersion("$commonsCompressVersion")
+				}
+				// Downgrade Testcontainers for compatibility with the managed
+				// version of Commons Compress.
+				if (dependency.requested.group.equals("org.testcontainers")) {
+					dependency.useVersion("1.19.3")
+				}
+			}
+		}
+	}
+}
+
+components.java.addVariantsFromConfiguration(configurations.modernGradleRuntimeElements) {
+	mapToMavenScope("runtime")
+}
+
+dependencies {
+	asciidoctorExtensions("io.spring.asciidoctor:spring-asciidoctor-extensions-section-ids")
+
+	implementation(project(":spring-boot-project:spring-boot-tools:spring-boot-buildpack-platform"))
+	implementation(project(":spring-boot-project:spring-boot-tools:spring-boot-loader-tools"))
+	implementation("io.spring.gradle:dependency-management-plugin")
+	implementation("org.apache.commons:commons-compress:$commonsCompressVersion")
+	implementation("org.springframework:spring-core")
+
+	optional("org.graalvm.buildtools:native-gradle-plugin")
+	optional("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion") {
+		exclude(group: "commons-logging", module: "commons-logging")
+	}
+
+	testImplementation(project(":spring-boot-project:spring-boot-tools:spring-boot-test-support"))
+	testImplementation(project(":spring-boot-project:spring-boot-tools:spring-boot-gradle-test-support"))
+	testImplementation("com.tngtech.archunit:archunit-junit5:0.22.0")
+	testImplementation("org.assertj:assertj-core")
+	testImplementation("org.junit.jupiter:junit-jupiter")
+	testImplementation("org.mockito:mockito-core")
+	testImplementation("org.testcontainers:junit-jupiter")
+	testImplementation("org.testcontainers:testcontainers")
+}
+
+gradlePlugin {
+	plugins {
+		springBootPlugin {
+			id = "org.springframework.boot"
+			displayName = "Spring Boot Gradle Plugin"
+			description = "Spring Boot Gradle Plugin"
+			implementationClass = "org.springframework.boot.gradle.plugin.SpringBootPlugin"
+		}
+		springBootAotPlugin {
+			id = "org.springframework.boot.aot"
+			displayName = "Spring Boot AOT Gradle Plugin"
+			description = "Spring Boot AOT Gradle Plugin"
+			implementationClass = "org.springframework.boot.gradle.plugin.SpringBootAotPlugin"
+		}
+	}
+}
+
+task preparePluginValidationClasses(type: Copy) {
+	destinationDir = layout.buildDirectory.dir("classes/java/pluginValidation").get().asFile
+	from(sourceSets.main.output.classesDirs) {
+		exclude "**/CreateBootStartScripts.class"
+	}
+}
+
+validatePlugins {
+	classes.setFrom preparePluginValidationClasses
+	enableStricterValidation = true
+}
+
+task dependencyVersions(type: org.springframework.boot.build.constraints.ExtractVersionConstraints) {
+	enforcedPlatform(":spring-boot-project:spring-boot-dependencies")
+}
+
+tasks.withType(org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask) {
+	dependsOn dependencyVersions
+	inputs.dir('src/docs/gradle').withPathSensitivity(PathSensitivity.RELATIVE).withPropertyName('buildScripts')
+	doFirst {
+		attributes "dependency-management-plugin-version": dependencyVersions.versionConstraints["io.spring.gradle:dependency-management-plugin"]
+	}
+}
+
+tasks.named('test') {
+	inputs.dir('src/docs/gradle').withPathSensitivity(PathSensitivity.RELATIVE).withPropertyName('buildScripts')
+}
+
+asciidoctor {
+	sources {
+		include "index.adoc"
+	}
+}
+
+task asciidoctorPdf(type: org.asciidoctor.gradle.jvm.AsciidoctorTask) {
+	sources {
+		include "index.adoc"
+	}
+}
+
+tasks.withType(org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask) {
+	attributes "native-build-tools-version": nativeBuildToolsVersion
+}
+
+javadoc {
+	options {
+		author = true
+		docTitle = "Spring Boot Gradle Plugin ${project.version} API"
+		encoding = "UTF-8"
+		memberLevel = "protected"
+		outputLevel = "quiet"
+		splitIndex = true
+		use = true
+		windowTitle = "Spring Boot Gradle Plugin ${project.version} API"
+		links "https://docs.gradle.org/$gradle.gradleVersion/javadoc/"
+		links "https://docs.oracle.com/en/java/javase/17/docs/api/"
+	}
+}
+
+task zip(type: Zip) {
+	dependsOn asciidoctor, asciidoctorPdf
+	duplicatesStrategy "fail"
+	from(asciidoctorPdf.outputDir) {
+		into "reference/pdf"
+		rename "index.pdf", "${project.name}-reference.pdf"
+	}
+	from(asciidoctor.outputDir) {
+		into "reference/htmlsingle"
+	}
+	from(javadoc) {
+		into "api"
+	}
+}
+
+artifacts {
+	"documentation" zip
+}
+
+toolchain {
+	maximumCompatibleJavaVersion = JavaLanguageVersion.of(20)
+}
+
+publishing {
+	publications.matching { it.name == 'pluginMaven' }.configureEach {
+		versionMapping {
+			allVariants {
+				fromResolutionOf(JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME)
+			}
+		}
+		versionMapping {
+			variant(GradlePluginApiVersion.GRADLE_PLUGIN_API_VERSION_ATTRIBUTE, project.objects.named(GradlePluginApiVersion, "8.7")) {
+				fromResolutionOf("modernGradleRuntimeClasspath")
+			}
+		}
+	}
+}
