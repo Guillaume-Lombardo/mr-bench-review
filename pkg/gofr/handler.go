@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"go.opentelemetry.io/otel/trace"
 
 	"gofr.dev/pkg/gofr/container"
 	gofrHTTP "gofr.dev/pkg/gofr/http"
@@ -44,17 +43,15 @@ type handler struct {
 }
 
 type ErrorLogEntry struct {
-	TraceID string `json:"trace_id,omitempty"`
-	Error   string `json:"error,omitempty"`
+	Error string `json:"error,omitempty"`
 }
 
 func (el *ErrorLogEntry) PrettyPrint(writer io.Writer) {
-	fmt.Fprintf(writer, "\u001B[38;5;8m%s \u001B[38;5;%dm%s \n", el.TraceID, colorCodeError, el.Error)
+	fmt.Fprintf(writer, "\u001B[38;5;%dm%s\n", colorCodeError, el.Error)
 }
 
 func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	c := newContext(gofrHTTP.NewResponder(w, r.Method), gofrHTTP.NewRequest(r), h.container)
-	traceID := trace.SpanFromContext(r.Context()).SpanContext().TraceID().String()
 
 	if websocket.IsWebSocketUpgrade(r) {
 		// If the request is a WebSocket upgrade, do not apply the timeout
@@ -66,6 +63,17 @@ func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		c.Context = ctx
 	}
 
+	// Developer Note:
+	// We temporarily wrap the container's logger with a ContextLogger that injects the trace ID
+	// (from the current request's context) into all logs made during this request's lifecycle.
+	//
+	// After the request is served, we restore the original logger to avoid leaking context across requests.
+	origLogger := h.container.Logger
+	ctxLogger := logging.NewContextLogger(c.Context, origLogger)
+	h.container.Logger = ctxLogger
+
+	defer func() { h.container.Logger = origLogger }()
+
 	done := make(chan struct{})
 	panicked := make(chan struct{})
 
@@ -76,11 +84,11 @@ func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	go func() {
 		defer func() {
-			panicRecoveryHandler(recover(), h.container, panicked)
+			panicRecoveryHandler(recover(), h.container.Logger, panicked)
 		}()
 		// Execute the handler function
 		result, err = h.function(c)
-		h.logError(traceID, err)
+		h.logError(h.container.Logger, err)
 		close(done)
 	}()
 
@@ -144,26 +152,26 @@ func panicRecoveryHandler(re any, log logging.Logger, panicked chan struct{}) {
 }
 
 // Log the error(if any) with traceID and errorMessage.
-func (h handler) logError(traceID string, err error) {
+func (handler) logError(logger logging.Logger, err error) {
 	if err != nil {
-		errorLog := &ErrorLogEntry{TraceID: traceID, Error: err.Error()}
+		errorLog := &ErrorLogEntry{Error: err.Error()}
 
 		// define the default log level for error
-		loggerHelper := h.container.Logger.Error
+		loggerHelper := logger.Error
 
 		switch logging.GetLogLevelForError(err) {
 		case logging.ERROR:
 			// we use the default log level for error
 		case logging.INFO:
-			loggerHelper = h.container.Logger.Info
+			loggerHelper = logger.Info
 		case logging.NOTICE:
-			loggerHelper = h.container.Logger.Notice
+			loggerHelper = logger.Notice
 		case logging.DEBUG:
-			loggerHelper = h.container.Logger.Debug
+			loggerHelper = logger.Debug
 		case logging.WARN:
-			loggerHelper = h.container.Logger.Warn
+			loggerHelper = logger.Warn
 		case logging.FATAL:
-			loggerHelper = h.container.Logger.Fatal
+			loggerHelper = logger.Fatal
 		}
 
 		loggerHelper(errorLog)
