@@ -18,6 +18,9 @@ export const useApiConfigurationHandlers = () => {
 	 * @param value - The new value for the field
 	 */
 	const handleFieldChange = <K extends keyof ApiConfiguration>(field: K, value: ApiConfiguration[K]) => {
+		const startTime = performance.now()
+		console.log(`[PERF] Frontend: Starting provider switch for field ${field}`)
+
 		const updatedConfig = {
 			...apiConfiguration,
 			[field]: value,
@@ -28,9 +31,15 @@ export const useApiConfigurationHandlers = () => {
 			UpdateApiConfigurationRequest.create({
 				apiConfiguration: protoConfig,
 			}),
-		).catch((error) => {
-			console.error(`Failed to update API configuration field ${field}:`, error)
-		})
+		)
+			.then(() => {
+				const totalTime = performance.now() - startTime
+				console.log(`[PERF] Frontend: Provider switch completed in ${totalTime}ms`)
+			})
+			.catch((error) => {
+				const totalTime = performance.now() - startTime
+				console.error(`[PERF] Frontend: Failed to update API configuration field ${field} after ${totalTime}ms:`, error)
+			})
 	}
 
 	/**
