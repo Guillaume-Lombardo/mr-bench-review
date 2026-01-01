@@ -1,0 +1,16 @@
+<div class='user-fields'>
+  <h2>{{i18n 'admin.user_fields.title'}}</h2>
+
+  <p class="desc">{{i18n 'admin.user_fields.help'}}</p>
+
+  {{#if model}}
+    {{#each model as |uf|}}
+      {{admin-user-field-item userField=uf fieldTypes=fieldTypes destroyAction="destroy"}}
+    {{/each}}
+  {{/if}}
+
+  <button {{bind-attr disabled="createDisabled"}} class='btn btn-primary' {{action "createField"}}>
+    {{fa-icon "plus"}}
+    {{i18n 'admin.user_fields.create'}}
+  </button>
+</div>
