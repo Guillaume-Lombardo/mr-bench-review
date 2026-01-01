@@ -1,0 +1,20 @@
+==========================
+Django 6.0.2 release notes
+==========================
+
+*February 3, 2026*
+
+Django 6.0.2 fixes three security issues with severity "high", two security
+issues with severity "moderate", one security issue with severity "low", and
+several bugs in 6.0.1.
+
+Bugfixes
+========
+
+* Fixed a visual regression in Django 6.0 that caused the admin filter sidebar
+  to wrap below the changelist when filter elements contained long text
+  (:ticket:`36850`).
+
+* Fixed a regression in Django 6.0 where ``auto_now_add`` field values were not
+  populated during ``INSERT`` operations, due to incorrect parameters passed to
+  ``field.pre_save()`` (:ticket:`36847`).
