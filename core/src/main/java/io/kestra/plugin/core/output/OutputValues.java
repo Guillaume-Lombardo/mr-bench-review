@@ -51,7 +51,7 @@ tasks:
     type: io.kestra.plugin.core.log.Log
     message: |
       Got the following outputs from the previous task:
-      {{ outputs.output_values.values.taskrun_data }}
+      {{ outputs.output_values.²}}
       {{ outputs.output_values.values.execution_data }}"""
         )
     }

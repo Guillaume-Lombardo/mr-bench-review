@@ -37,6 +37,7 @@ public class Property<T> {
         .copy()
         .configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false);
 
+    @Getter
     private String expression;
     private T value;
 
@@ -345,11 +346,6 @@ public class Property<T> {
     @Override
     public int hashCode() {
         return Objects.hash(expression);
-    }
-
-    // used only by the serializer
-    String getExpression() {
-        return this.expression;
     }
 
     // used only by the value extractor
