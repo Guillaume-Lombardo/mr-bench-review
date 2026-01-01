@@ -2,27 +2,21 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"gofr.dev/examples/grpc/grpc-server/server"
-	"strconv"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"gofr.dev/pkg/gofr/testutil"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"gofr.dev/pkg/gofr/testutil"
+	"gofr.dev/examples/grpc/grpc-server/server"
 )
 
 func TestGRPCServer(t *testing.T) {
-	gRPCPort := testutil.GetFreePort(t)
-	t.Setenv("GRPC_PORT", strconv.Itoa(gRPCPort))
-	host := fmt.Sprint("localhost:", gRPCPort)
-
-	port := testutil.GetFreePort(t)
-	t.Setenv("METRICS_PORT", strconv.Itoa(port))
+	configs := testutil.NewServerConfigs(t)
+	host := configs.GRPCHost
 
 	go main()
 	time.Sleep(100 * time.Millisecond)

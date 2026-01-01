@@ -1,18 +1,16 @@
 package main
 
 import (
-	"strconv"
+	"gofr.dev/pkg/gofr/testutil"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
-
 	"gofr.dev/pkg/gofr/testutil"
 )
 
 func Test_UserPurgeCron(t *testing.T) {
-	port := testutil.GetFreePort(t)
-	t.Setenv("METRICS_PORT", strconv.Itoa(port))
+	configs := testutil.NewServerConfigs(t)
 
 	go main()
 	time.Sleep(1100 * time.Millisecond)
@@ -26,4 +24,5 @@ func Test_UserPurgeCron(t *testing.T) {
 	mu.Unlock()
 
 	assert.Equal(t, expected, m)
+	t.Logf("Metrics server running at: %s", configs.MetricsHost)
 }
