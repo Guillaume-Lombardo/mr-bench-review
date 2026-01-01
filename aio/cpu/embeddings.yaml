@@ -1,0 +1,12 @@
+name: text-embedding-ada-002
+embeddings: true
+parameters:
+  model: huggingface://hugging-quants/Llama-3.2-1B-Instruct-Q4_K_M-GGUF/llama-3.2-1b-instruct-q4_k_m.gguf
+
+usage: |
+    You can test this model with curl like this:
+
+    curl http://localhost:8080/embeddings -X POST -H "Content-Type: application/json" -d '{
+      "input": "Your text string goes here",
+      "model": "text-embedding-ada-002"
+    }'

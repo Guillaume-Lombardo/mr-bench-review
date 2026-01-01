@@ -1,0 +1,131 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <base href="{{.BaseURL}}" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link
+    rel="stylesheet"
+    href="static/assets/highlightjs.css"
+  />
+  <script defer src="static/assets/highlightjs.js"></script>
+    <script
+    defer
+    src="static/assets/alpine.js"
+  ></script>
+  <script
+    defer
+    src="static/assets/marked.js"
+  ></script>
+  <script
+    defer
+    src="static/assets/purify.js"
+  ></script>
+
+  <link href="static/general.css" rel="stylesheet" />
+    <link href="static/assets/font1.css" rel="stylesheet">
+    <link
+    href="static/assets/font2.css"
+    rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="static/assets/tw-elements.css" />
+  <script src="static/assets/tailwindcss.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        fontFamily: {
+          sans: ["Roboto", "sans-serif"],
+          body: ["Roboto", "sans-serif"],
+          mono: ["ui-monospace", "monospace"],
+        },
+      },
+      corePlugins: {
+        preflight: false,
+      },
+    };
+    function copyClipboard(token) {
+      navigator.clipboard.writeText(token)
+      .then(() => {
+          console.log('Text copied to clipboard:', token);
+          alert('Text copied to clipboard!');
+      })
+      .catch(err => {
+          console.error('Failed to copy token:', err);
+      });
+    }
+  </script>
+  <link href="static/assets/fontawesome/css/fontawesome.css" rel="stylesheet" />
+  <link href="static/assets/fontawesome/css/brands.css" rel="stylesheet" />
+  <link href="static/assets/fontawesome/css/solid.css" rel="stylesheet" />
+  <script src="static/assets/flowbite.min.js"></script>
+  <script src="static/assets/htmx.js" crossorigin="anonymous"></script>
+  <!-- P2P Animation START -->
+  <style>
+    .animation-container {
+        position: relative;
+        width: 100%;
+        height: 25vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .text-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 1;
+    }
+  </style>
+  <!-- P2P Animation END -->
+  <!-- Flask and node animation -->
+  <style>
+            .fa-circle-nodes {
+           /* font-size: 100px; /* Adjust the size as needed */
+            animation: rotateCircleNodes 8s linear infinite; /* Slow and fluid rotation */
+            display: inline-block;
+        }
+
+        @keyframes rotateCircleNodes {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Animation for the warning box */
+        .fa-flask {
+         /*  font-size: 100px; /* Adjust the size as needed */
+            animation: shakeFlask 3s ease-in-out infinite; /* Smooth easing and longer duration for fluidity */
+            transform-origin: bottom center;
+        }
+
+        @keyframes shakeFlask {
+            0%, 10% { transform: rotate(0deg); } /* Start and end still */
+            20% { transform: rotate(-10deg); } /* Smooth transition to left */
+            30% { transform: rotate(10deg); } /* Smooth transition to right */
+            40% { transform: rotate(-8deg); } /* Smooth transition to left */
+            50% { transform: rotate(8deg); } /* Smooth transition to right */
+            60% { transform: rotate(-5deg); } /* Smooth transition to left */
+            70% { transform: rotate(5deg); } /* Smooth transition to right */
+            80% { transform: rotate(-2deg); } /* Smooth transition to left */
+            90% { transform: rotate(2deg); } /* Smooth transition to right */
+            100% { transform: rotate(0deg); } /* Return to center */
+        }
+  </style>
+
+  <!-- https://stackoverflow.com/questions/76051980/flowbite-component-not-working-when-loaded-via-htmx-django-project -->
+  <script>
+      htmx.onLoad(function(content) {
+          initFlowbite();
+      })
+  </script>
+</head>
