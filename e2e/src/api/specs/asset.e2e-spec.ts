@@ -6,6 +6,7 @@ import {
   LoginResponseDto,
   SharedLinkType,
   getAssetInfo,
+  getAssetStatistics,
   getConfig,
   getMyUser,
   updateConfig,
@@ -19,7 +20,7 @@ import { Socket } from 'socket.io-client';
 import { createUserDto, uuidDto } from 'src/fixtures';
 import { makeRandomImage } from 'src/generators';
 import { errorDto } from 'src/responses';
-import { app, asBearerAuth, tempDir, testAssetDir, utils } from 'src/utils';
+import { app, asBearerAuth, tempDir, testAssetDir, testAssetDirInternal, utils } from 'src/utils';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
@@ -780,6 +781,32 @@ describe('/asset', () => {
 
       const after = await utils.getAssetInfo(admin.accessToken, assetId);
       expect(after.isTrashed).toBe(true);
+    });
+
+    it('should permanently delete an asset from trash', async () => {
+      const { id: assetId } = await utils.createAsset(admin.accessToken);
+
+      {
+        const { status } = await request(app)
+          .delete('/assets')
+          .send({ ids: [assetId] })
+          .set('Authorization', `Bearer ${admin.accessToken}`);
+        expect(status).toBe(204);
+      }
+
+      const trashed = await utils.getAssetInfo(admin.accessToken, assetId);
+      expect(trashed.isTrashed).toBe(true);
+
+      {
+        const { status } = await request(app)
+          .delete('/assets')
+          .send({ ids: [assetId], force: true })
+          .set('Authorization', `Bearer ${admin.accessToken}`);
+        expect(status).toBe(204);
+      }
+
+      const after = await getAssetStatistics({ isTrashed: true }, { headers: asBearerAuth(admin.accessToken) });
+      expect(after.total).toBe(0);
     });
 
     it('should clean up live photos', async () => {
