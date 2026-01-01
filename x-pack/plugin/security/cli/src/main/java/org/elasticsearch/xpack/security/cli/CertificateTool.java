@@ -15,6 +15,7 @@ import joptsimple.OptionSpecBuilder;
 import org.bouncycastle.asn1.DERIA5String;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
+import org.bouncycastle.asn1.x509.KeyUsage;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMEncryptor;
 import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
@@ -110,6 +111,7 @@ class CertificateTool extends MultiCommand {
         "[a-zA-Z0-9!@#$%^&{}\\[\\]()_+\\-=,.~'` ]{1," + MAX_FILENAME_LENGTH + "}"
     );
     private static final int DEFAULT_KEY_SIZE = 2048;
+    static final List<String> DEFAULT_CA_KEY_USAGE = List.of("keyCertSign", "cRLSign");
 
     // Older versions of OpenSSL had a max internal password length.
     // We issue warnings when writing files with passwords that would not be usable in those versions of OpenSSL.
@@ -202,6 +204,7 @@ class CertificateTool extends MultiCommand {
         final OptionSpec<String> outputPathSpec;
         final OptionSpec<String> outputPasswordSpec;
         final OptionSpec<Integer> keysizeSpec;
+        OptionSpec<String> caKeyUsageSpec;
 
         OptionSpec<Void> pemFormatSpec;
         OptionSpec<Integer> daysSpec;
@@ -247,6 +250,7 @@ class CertificateTool extends MultiCommand {
                 .withOptionalArg();
 
             acceptsCertificateAuthorityName();
+            acceptCertificateAuthorityKeyUsage();
         }
 
         void acceptsCertificateAuthorityName() {
@@ -272,6 +276,23 @@ class CertificateTool extends MultiCommand {
 
         final void acceptInputFile() {
             inputFileSpec = parser.accepts("in", "file containing details of the instances in yaml format").withRequiredArg();
+        }
+
+        final void acceptCertificateAuthorityKeyUsage() {
+            OptionSpecBuilder builder = parser.accepts(
+                "ca-keyusage",
+                "comma separated key usages to use for the generated CA. "
+                    + "defaults to '"
+                    + Strings.collectionToCommaDelimitedString(DEFAULT_CA_KEY_USAGE)
+                    + "'"
+            );
+            if (caPkcs12PathSpec != null) {
+                builder = builder.availableUnless(caPkcs12PathSpec);
+            }
+            if (caCertPathSpec != null) {
+                builder = builder.availableUnless(caCertPathSpec);
+            }
+            caKeyUsageSpec = builder.withRequiredArg();
         }
 
         // For testing
@@ -306,6 +327,18 @@ class CertificateTool extends MultiCommand {
                 return keysizeSpec.value(options);
             } else {
                 return DEFAULT_KEY_SIZE;
+            }
+        }
+
+        final List<String> getCaKeyUsage(OptionSet options) {
+            if (options.has(caKeyUsageSpec)) {
+                String rawCaKeyUsage = caKeyUsageSpec.value(options);
+                if (Strings.isNullOrEmpty(rawCaKeyUsage)) {
+                    return DEFAULT_CA_KEY_USAGE;
+                }
+                return List.of(Strings.splitStringByCommaToArray(rawCaKeyUsage));
+            } else {
+                return DEFAULT_CA_KEY_USAGE;
             }
         }
 
@@ -396,7 +429,8 @@ class CertificateTool extends MultiCommand {
             }
             X500Principal x500Principal = new X500Principal(dn);
             KeyPair keyPair = CertGenUtils.generateKeyPair(getKeySize(options));
-            X509Certificate caCert = CertGenUtils.generateCACertificate(x500Principal, keyPair, getDays(options));
+            final KeyUsage caKeyUsage = CertGenUtils.buildKeyUsage(getCaKeyUsage(options));
+            X509Certificate caCert = CertGenUtils.generateCACertificate(x500Principal, keyPair, getDays(options), caKeyUsage);
 
             if (options.hasArgument(caPasswordSpec)) {
                 char[] password = getChars(caPasswordSpec.value(options));
@@ -933,9 +967,7 @@ class CertificateTool extends MultiCommand {
                     keyPair,
                     null,
                     null,
-                    false,
-                    days,
-                    null
+                    days
                 );
             }
             return new CertificateAndKey((X509Certificate) certificate, keyPair.getPrivate());
@@ -949,6 +981,7 @@ class CertificateTool extends MultiCommand {
             super("generate a new local certificate authority");
             acceptCertificateGenerationOptions();
             acceptsCertificateAuthorityName();
+            acceptCertificateAuthorityKeyUsage();
             super.caPasswordSpec = super.outputPasswordSpec;
         }
 
