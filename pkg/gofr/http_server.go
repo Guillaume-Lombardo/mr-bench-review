@@ -29,16 +29,21 @@ var (
 	errInvalidKeyFile         = errors.New("invalid key file")
 )
 
-func newHTTPServer(c *container.Container, port int, middlewareConfigs map[string]string) *httpServer {
+func newHTTPServer(c *container.Container, port int, middlewareConfigs middleware.MiddlewareConfig) *httpServer {
 	r := gofrHTTP.NewRouter()
 	wsManager := websocket.New()
 
 	r.Use(
 		middleware.Tracer,
-		middleware.Logging(c.Logger),
-		middleware.CORS(middlewareConfigs, r.RegisteredRoutes),
+		middleware.CORS(middlewareConfigs.CorsHeaders, r.RegisteredRoutes),
 		middleware.Metrics(c.Metrics()),
 	)
+
+	if middlewareConfigs.LogDisableProbes == "true" {
+		r.Use(middleware.LoggingWithoutProbes(c.Logger))
+	} else {
+		r.Use(middleware.Logging(c.Logger))
+	}
 
 	return &httpServer{
 		router: r,

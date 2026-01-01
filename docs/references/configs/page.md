@@ -35,6 +35,12 @@ This document lists all the configuration options supported by the GoFr framewor
 
 ---
 
+-  LOG_DISABLE_PROBES
+-  Controls whether application probes logs are disabled. Set to true to disable log probes, or false to enable them.
+-  false
+
+---
+
 -  REMOTE_LOG_URL
 -  URL to remotely change the log level
 

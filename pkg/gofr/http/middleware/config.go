@@ -9,8 +9,15 @@ import (
 	"gofr.dev/pkg/gofr/config"
 )
 
-func GetConfigs(c config.Config) map[string]string {
-	middlewareConfigs := make(map[string]string)
+type MiddlewareConfig struct {
+	CorsHeaders      map[string]string
+	LogDisableProbes string
+}
+
+func GetConfigs(c config.Config) MiddlewareConfig {
+	middlewareConfigs := MiddlewareConfig{
+		CorsHeaders: make(map[string]string),
+	}
 
 	allowedCORSHeaders := []string{
 		"ACCESS_CONTROL_ALLOW_ORIGIN",
@@ -22,10 +29,11 @@ func GetConfigs(c config.Config) map[string]string {
 
 	for _, v := range allowedCORSHeaders {
 		if val := c.Get(v); val != "" {
-			middlewareConfigs[convertHeaderNames(v)] = val
+			middlewareConfigs.CorsHeaders[convertHeaderNames(v)] = val
 		}
 	}
 
+	middlewareConfigs.LogDisableProbes = c.GetOrDefault("LOG_DISABLE_PROBES", "false")
 	return middlewareConfigs
 }
 
