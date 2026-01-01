@@ -1,0 +1,77 @@
+@if (isLaunched) {
+<div class="demo-sidenav-area">
+  @if (showHeader && !coverHeader) {
+    <mat-toolbar>Header</mat-toolbar>
+  }
+  <mat-sidenav-container [hasBackdrop]="hasBackdrop">
+    <mat-sidenav #start (opened)="myinput.focus()" [mode]="mode"
+                 [fixedInViewport]="fixed" [fixedTopGap]="fixedTop" [fixedBottomGap]="fixedBottom">
+      Start Side Sidenav
+      <br>
+      <button mat-button (click)="start.close()">Close</button>
+      <br>
+      <button mat-button (click)="end.open('keyboard')">Open End Side</button>
+      <br>
+      <button mat-button (click)="modeIndex = (modeIndex + 1) % 3">Toggle Mode</button>
+      <div>Mode: {{start.mode}}</div>
+      <br>
+      <input #myinput>
+      @for (c of fillerContent; track c) {
+        <div class="demo-filler-content">Filler Content</div>
+      }
+    </mat-sidenav>
+
+    <mat-sidenav #end position="end"
+                 [fixedInViewport]="fixed" [fixedTopGap]="fixedTop" [fixedBottomGap]="fixedBottom">
+      End Side Sidenav
+      <br>
+      <button mat-button (click)="end.close()">Close</button>
+      @for (c of fillerContent; track c) {
+        <div class="demo-filler-content">Filler Content</div>
+      }
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      @if (showHeader && coverHeader) {
+        <mat-toolbar>Header</mat-toolbar>
+      }
+      <div class="demo-sidenav-content">
+        <div>
+          <button mat-raised-button (click)="isLaunched = false">
+            Exit Fullscreen Sidenav Demo
+          </button>
+        </div>
+
+        <div>
+          <h3>Sidenav</h3>
+          <button mat-button (click)="start.toggle(undefined, 'mouse')">Toggle Start Side Sidenav</button>
+          <button mat-button (click)="end.toggle(undefined, 'mouse')">Toggle End Side Sidenav</button>
+          <mat-checkbox [(ngModel)]="hasBackdrop">Has backdrop</mat-checkbox>
+          <mat-checkbox [(ngModel)]="fixed">Fixed mode</mat-checkbox>
+          <mat-checkbox [(ngModel)]="coverHeader">Sidenav covers header/footer</mat-checkbox>
+        </div>
+
+        <div>
+          <h3>Header / Footer</h3>
+          <mat-checkbox [(ngModel)]="showHeader">Show header</mat-checkbox>
+          <mat-checkbox [(ngModel)]="showFooter">Show footer</mat-checkbox>
+        </div>
+
+        @for (c of fillerContent; track c) {
+          <div class="demo-filler-content">Filler Content</div>
+        }
+      </div>
+      @if (showFooter && coverHeader) {
+        <mat-toolbar>Footer</mat-toolbar>
+      }
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  @if (showFooter && !coverHeader) {
+    <mat-toolbar>Footer</mat-toolbar>
+  }
+</div>
+} @else {
+  <button mat-raised-button (click)="isLaunched = true" color="primary">
+    Launch Fullscreen Sidenav Demo
+  </button>
+}

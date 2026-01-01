@@ -1,0 +1,27 @@
+@use '../../theming/definition';
+@use '../../theming/color-api-backwards-compatibility';
+@use '../../theming/palettes';
+@use '../all-theme';
+@use '../../core';
+@use '../../typography/typography';
+
+@include core.app-background();
+@include core.elevation-classes();
+
+$theme: definition.define-theme((
+  color: (
+    theme-type: dark,
+    primary: palettes.$cyan-palette,
+    tertiary: palettes.$orange-palette,
+  ),
+  density: (
+    scale: 0,
+  )
+));
+
+html {
+  @include all-theme.all-component-themes($theme);
+}
+
+@include color-api-backwards-compatibility.color-variants-backwards-compatibility($theme);
+@include typography.typography-hierarchy($theme);
