@@ -1111,6 +1111,7 @@ where
                         .await
                 })
             },
+            None,
         )
         .await?;
         Ok(())
@@ -1146,6 +1147,7 @@ where
                 let action = action.clone();
                 Box::pin(async move { updater.send_chain_update(action).await })
             },
+            None,
         )
         .await?;
         ensure!(
@@ -1516,6 +1518,7 @@ where
                         .await
                 })
             },
+            None,
         )
         .await;
         let received_certificate_batches = match result {
@@ -1673,6 +1676,7 @@ where
                         .await
                 }
             },
+            None,
         )
         .await?;
 
@@ -3145,7 +3149,7 @@ where
         // deadlock, because of the issue described in
         // https://github.com/linera-io/linera-protocol/pull/1173.
 
-        // TODO(#2013): replace this lock with an asychronous communication channel
+        // TODO(#2013): replace this lock with an asynchronous communication channel
 
         let mut process_notifications = FuturesUnordered::new();
 
@@ -3170,7 +3174,7 @@ where
                     .await
                     {
                         Ok(handler) => process_notifications.push(handler),
-                        Err(error) => error!("Failed to update comittee: {error}"),
+                        Err(error) => error!("Failed to update committee: {error}"),
                     }
                 }
             }

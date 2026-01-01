@@ -271,6 +271,7 @@ where
     storage: StorageClient,
     /// Configuration options for the [`ChainWorker`]s.
     chain_worker_config: ChainWorkerConfig,
+    /// The cache of executed blocks.
     executed_block_cache: Arc<ValueCache<CryptoHash, Hashed<ExecutedBlock>>>,
     /// Chain IDs that should be tracked by a worker.
     tracked_chains: Option<Arc<RwLock<HashSet<ChainId>>>>,
@@ -350,8 +351,8 @@ where
         self
     }
 
-    #[instrument(level = "trace", skip(self, tracked_chains))]
     /// Configures the subset of chains that this worker is tracking.
+    #[instrument(level = "trace", skip(self, tracked_chains))]
     pub fn with_tracked_chains(
         mut self,
         tracked_chains: impl IntoIterator<Item = ChainId>,
