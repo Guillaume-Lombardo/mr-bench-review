@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <immediateFlush>true</immediateFlush>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>DENY</onMatch>
+        </filter>
+        <encoder>
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.err</target>
+        <immediateFlush>true</immediateFlush>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator>
+                <!--
+                    - Disabling Liquibase outOfOrder warning
+                    - Disabling JooQ POSTGRES version support warning, see https://github.com/kestra-io/kestra/issues/3321#issuecomment-2017665833
+                    - Disabling Micronaut / Micrometer executor binding warning
+                    Warning: this needs to also be done on gcp.xml and ecs.xml
+                -->
+                <expression>
+                    return message.contains("outOfOrder mode is active. Migration of schema") ||
+                        message.contains("Database version is older than what dialect POSTGRES supports") ||
+                        message.contains("Failed to bind as java.util.concurrent.Executors$AutoShutdownDelegatedExecutorService is unsupported.");
+                </expression>
+            </evaluator>
+            <OnMismatch>NEUTRAL</OnMismatch>
+            <OnMatch>DENY</OnMatch>
+        </filter>
+        <encoder>
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
+</included>
