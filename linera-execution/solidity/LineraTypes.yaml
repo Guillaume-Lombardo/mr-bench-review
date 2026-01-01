@@ -1,0 +1,247 @@
+---
+TimeoutConfig:
+  STRUCT:
+    - fast_round_duration:
+        OPTION:
+          TYPENAME: TimeDelta
+    - base_timeout:
+        TYPENAME: TimeDelta
+    - timeout_increment:
+        TYPENAME: TimeDelta
+    - fallback_duration:
+        TYPENAME: TimeDelta
+TimeDelta:
+  NEWTYPESTRUCT: U64
+ChainOwnership:
+  STRUCT:
+    - super_owners:
+        SEQ:
+          TYPENAME: AccountOwner
+    - owners:
+        MAP:
+          KEY:
+            TYPENAME: AccountOwner
+          VALUE: U64
+    - multi_leader_rounds: U32
+    - open_multi_leader_rounds: BOOL
+    - timeout_config:
+        TYPENAME: TimeoutConfig
+AccountOwner:
+  ENUM:
+    0:
+      Reserved:
+        NEWTYPE: U8
+    1:
+      Address32:
+        NEWTYPE:
+          TYPENAME: CryptoHash
+    2:
+      Address20:
+        NEWTYPE:
+          TUPLEARRAY:
+            CONTENT: U8
+            SIZE: 20
+Timestamp:
+  NEWTYPESTRUCT: U64
+Amount:
+  NEWTYPESTRUCT:
+    TUPLEARRAY:
+      CONTENT: U8
+      SIZE: 32
+AccountOwnerBalanceInner:
+  STRUCT:
+    - account_owner:
+        TYPENAME: AccountOwner
+    - balance:
+        TYPENAME: Amount
+OptionAccountOwner:
+  NEWTYPESTRUCT:
+    OPTION:
+      TYPENAME: AccountOwner
+OptionApplicationId:
+  NEWTYPESTRUCT:
+    OPTION:
+      TYPENAME: ApplicationId
+ResponseReadOwnerBalances:
+  NEWTYPESTRUCT:
+    SEQ:
+      TYPENAME: AccountOwnerBalanceInner
+ResponseReadBalanceOwners:
+  NEWTYPESTRUCT:
+    SEQ:
+      TYPENAME: AccountOwner
+CryptoHash:
+  NEWTYPESTRUCT:
+    TUPLEARRAY:
+      CONTENT: U8
+      SIZE: 32
+DataBlobHash:
+  NEWTYPESTRUCT:
+    TYPENAME: CryptoHash
+BlockHeight:
+  NEWTYPESTRUCT: U64
+ChainId:
+  NEWTYPESTRUCT:
+    TYPENAME: CryptoHash
+BlockHeight:
+  NEWTYPESTRUCT: U64
+MessageIsBouncing:
+  NEWTYPESTRUCT:
+    OPTION: BOOL
+MessageIsBouncing:
+  NEWTYPESTRUCT:
+    OPTION: BOOL
+OptionU32:
+  NEWTYPESTRUCT:
+    OPTION: U32
+OptionChainId:
+  NEWTYPESTRUCT:
+    OPTION:
+      TYPENAME: ChainId
+StreamName:
+  NEWTYPESTRUCT: BYTES
+ApplicationId:
+  STRUCT:
+    - application_description_hash:
+        TYPENAME: CryptoHash
+BaseRuntimePrecompile:
+  ENUM:
+    0:
+      ChainId: UNIT
+    1:
+      BlockHeight: UNIT
+    2:
+      ApplicationCreatorChainId: UNIT
+    3:
+      ReadSystemTimestamp: UNIT
+    4:
+      ReadChainBalance: UNIT
+    5:
+      ReadOwnerBalance:
+        NEWTYPE:
+          TYPENAME: AccountOwner
+    6:
+      ReadOwnerBalances: UNIT
+    7:
+      ReadBalanceOwners: UNIT
+    8:
+      ChainOwnership: UNIT
+    9:
+      ReadDataBlob:
+        NEWTYPE:
+          TYPENAME: DataBlobHash
+    10:
+      AssertDataBlobExists:
+        NEWTYPE:
+          TYPENAME: DataBlobHash
+ContractRuntimePrecompile:
+  ENUM:
+    0:
+      AuthenticatedSigner: UNIT
+    1:
+      MessageOriginChainId: UNIT
+    2:
+      MessageIsBouncing: UNIT
+    3:
+      AuthenticatedCallerId: UNIT
+    4:
+      SendMessage:
+        STRUCT:
+          - destination:
+              TYPENAME: ChainId
+          - message: BYTES
+    5:
+      TryCallApplication:
+        STRUCT:
+          - target:
+              TYPENAME: ApplicationId
+          - argument: BYTES
+    6:
+      Emit:
+        STRUCT:
+          - stream_name:
+              TYPENAME: StreamName
+          - value: BYTES
+    7:
+      ReadEvent:
+        STRUCT:
+          - chain_id:
+              TYPENAME: ChainId
+          - stream_name:
+              TYPENAME: StreamName
+          - index: U32
+    8:
+      SubscribeToEvents:
+        STRUCT:
+          - chain_id:
+              TYPENAME: ChainId
+          - application_id:
+              TYPENAME: ApplicationId
+          - stream_name:
+              TYPENAME: StreamName
+    9:
+      UnsubscribeFromEvents:
+        STRUCT:
+          - chain_id:
+              TYPENAME: ChainId
+          - application_id:
+              TYPENAME: ApplicationId
+          - stream_name:
+              TYPENAME: StreamName
+    10:
+      QueryService:
+        STRUCT:
+          - application_id:
+              TYPENAME: ApplicationId
+          - query: BYTES
+    11:
+      ValidationRound: UNIT
+ServiceRuntimePrecompile:
+  ENUM:
+    0:
+      TryQueryApplication:
+        STRUCT:
+          - target:
+              TYPENAME: ApplicationId
+          - argument: BYTES
+RuntimePrecompile:
+  ENUM:
+    0:
+      Base:
+        NEWTYPE:
+          TYPENAME: BaseRuntimePrecompile
+    1:
+      Contract:
+        NEWTYPE:
+          TYPENAME: ContractRuntimePrecompile
+    2:
+      Service:
+        NEWTYPE:
+          TYPENAME: ServiceRuntimePrecompile
+StreamUpdate:
+  STRUCT:
+    - chain_id:
+        TYPENAME: ChainId
+    - stream_id:
+        TYPENAME: StreamId
+    - previous_index: U32
+    - next_index: U32
+StreamId:
+  STRUCT:
+    - application_id:
+        TYPENAME: GenericApplicationId
+    - stream_name:
+        TYPENAME: StreamName
+GenericApplicationId:
+  ENUM:
+    0:
+      System: UNIT
+    1:
+      User:
+        NEWTYPE:
+          TYPENAME: ApplicationId
+StreamUpdates:
+  STRUCT:
+    - entries:
+        SEQ:
+          TYPENAME: StreamUpdate

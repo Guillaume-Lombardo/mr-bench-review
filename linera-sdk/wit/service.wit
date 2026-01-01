@@ -1,0 +1,8 @@
+package linera:app;
+
+world service {
+    import service-runtime-api;
+    import base-runtime-api;
+
+    export service-entrypoints;
+}
