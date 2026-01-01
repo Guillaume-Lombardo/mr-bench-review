@@ -1,0 +1,35 @@
+BaseB.js(2,25): error TS1005: ',' expected.
+BaseB.js(3,14): error TS2304: Cannot find name 'Class'.
+BaseB.js(4,25): error TS2304: Cannot find name 'Class'.
+
+
+==== BaseA.js (0 errors) ====
+    export default class BaseA {
+    }
+==== SubA.js (0 errors) ====
+    import BaseA from './BaseA';
+    export default class SubA extends BaseA {
+    }
+==== BaseB.js (3 errors) ====
+    import BaseA from './BaseA';
+    export default class B<T: BaseA> {
+                            ~
+!!! error TS1005: ',' expected.
+        _AClass: Class<T>;
+                 ~~~~~
+!!! error TS2304: Cannot find name 'Class'.
+        constructor(AClass: Class<T>) {
+                            ~~~~~
+!!! error TS2304: Cannot find name 'Class'.
+            this._AClass = AClass;
+        }
+    }
+==== SubB.js (0 errors) ====
+    import SubA from './SubA';
+    import BaseB from './BaseB';
+    export default class SubB extends BaseB<SubA> {
+        constructor() {
+            super(SubA);
+        }
+    }
+    
