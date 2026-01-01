@@ -1,0 +1,126 @@
+@import '@material/list/mixins.import';
+@import '@material/list/variables.import';
+@import '../mdc-helpers/mdc-helpers';
+
+@include mdc-list-without-ripple($query: $mat-base-styles-query);
+
+// MDC expects the list element to be a `<ul>`, since we use `<mat-list>` instead we need to
+// explicitly set `display: block`
+.mat-mdc-list-base {
+  display: block;
+}
+
+// .mdc-list-item__primary-text adds its own margin settings, so only reset if it doesn't have that
+// class
+.mat-mdc-list-base .mdc-list-item__text > :not(.mdc-list-item__primary-text),
+.mat-mdc-list-base .mdc-list-item__text > :not(.mdc-list-item__primary-text) {
+  margin: 0;
+
+  // Fixes the gap between the 2nd & 3rd lines.
+  &.mdc-list-item__secondary-text {
+    margin-top: -3px;
+  }
+}
+
+
+// MDC does have 2-line support, but it's a per-list setting, whereas ours applies to individual
+// items. Therefore, we need to add our own styles.
+.mat-mdc-2-line {
+  height: 72px;
+
+  .mdc-list-item__text {
+    align-self: flex-start;
+  }
+}
+
+// MDC does not support more than 2 lines, so we need to add our own styles.
+.mat-mdc-3-line {
+  height: 88px;
+
+  .mdc-list-item__text {
+    align-self: flex-start;
+  }
+}
+
+// MDC supports avatars, but it's a per-list setting, whereas ours applies to individual
+// items. Therefore, we need to add our own styles.
+.mat-mdc-list-avatar {
+  // Styles here come from `$mdc-list-graphic-size_`:
+  // https://github.com/material-components/material-components-web/blob/3ca8c4c45a3d2a654ef3cb8fc7525bcde37badf0/packages/mdc-list/_mixins.scss#L538
+  $size: 40px;
+  $margin-value: 72px - $mdc-list-side-padding - $size;
+
+  width: $size;
+  height: $size;
+  border-radius: 50%;
+
+  // Avatars that come before the text have the .mdc-list-item__graphic class.
+  // MDC's .mdc-list--avatar-list class would normally apply overrides to set the appropriate
+  // margins for avatar images, but since ours is a per-list-item setting we need to add similar
+  // styles ourselves.
+  &.mdc-list-item__graphic {
+    margin-left: 0;
+    margin-right: $margin-value;
+
+    [dir='rtl'] & {
+      margin-left: $margin-value;
+      margin-right: 0;
+    }
+  }
+}
+
+.mat-mdc-list-avatar {
+  // MDC's styles don't specify this, but they probably should. It gives a nicer experience when the
+  // image is not 1:1 aspect ratio.
+  // See https://github.com/material-components/material-components-web/issues/5897
+  object-fit: cover;
+}
+
+// MDC expects that the list items are always `<li>`, since we actually use `<button>` in some
+// cases, we need to make sure it expands to fill the available width.
+.mat-mdc-list-item,
+.mat-mdc-list-option {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+// MDC doesn't have list dividers, so we use mat-divider and style appropriately.
+.mat-mdc-list-item,
+.mat-mdc-list-option {
+  .mat-divider-inset {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  .mat-mdc-list-avatar ~ .mat-divider-inset {
+    margin-left: 72px;
+
+    [dir='rtl'] & {
+      margin-right: 72px;
+    }
+  }
+}
+
+// MDC's hover and focus state styles are included with their ripple which we don't use.
+// Instead we add the focus, hover and selected styles ourselves using this pseudo-element
+.mat-mdc-list-item-interactive::before {
+  @include mat-fill();
+  content: '';
+  opacity: 0;
+}
+
+// MDC always sets the cursor to `pointer`. We do not want to show this for non-interactive
+// lists. See: https://github.com/material-components/material-components-web/issues/6443
+.mat-mdc-list-non-interactive .mdc-list-item {
+  cursor: default;
+}
+
+// The MDC-based list items already use the `::before` pseudo element for the standard
+// focus/selected/hover state. Hence, we need to have a separate list-item spanning
+// element that can be used for strong focus indicators.
+.mat-mdc-list-item > .mat-mdc-focus-indicator {
+  @include mat-fill();
+  pointer-events: none;
+}

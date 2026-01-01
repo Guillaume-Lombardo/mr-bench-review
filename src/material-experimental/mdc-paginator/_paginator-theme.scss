@@ -1,0 +1,92 @@
+@import '@material/theme/variables.import';
+@import '@material/typography/mixins.import';
+@import '../../material/core/theming/theming';
+@import '../../material/core/density/private/compatibility';
+@import '../mdc-helpers/mdc-helpers';
+@import './paginator-variables';
+
+@mixin mat-mdc-paginator-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
+  $background: map-get($config, background);
+  $foreground: map-get($config, foreground);
+  $icon-color: rgba(mat-color($foreground, base), 0.54);
+  $disabled-color: rgba(mat-color($foreground, base), 0.12);
+
+  .mat-mdc-paginator {
+    background: mat-color($background, card);
+    color: rgba(mat-color($foreground, base), 0.87);
+  }
+
+  .mat-mdc-paginator-icon {
+    fill: $icon-color;
+  }
+
+  .mat-mdc-paginator-decrement,
+  .mat-mdc-paginator-increment {
+    border-top: 2px solid $icon-color;
+    border-right: 2px solid $icon-color;
+  }
+
+  .mat-mdc-paginator-first,
+  .mat-mdc-paginator-last {
+    border-top: 2px solid $icon-color;
+  }
+
+  .mat-mdc-icon-button[disabled] {
+    .mat-mdc-paginator-decrement,
+    .mat-mdc-paginator-increment,
+    .mat-mdc-paginator-first,
+    .mat-mdc-paginator-last {
+      border-color: $disabled-color;
+    }
+
+    .mat-mdc-paginator-icon {
+      fill: $disabled-color;
+    }
+  }
+}
+
+@mixin mat-mdc-paginator-typography($config-or-theme) {
+  $config: mat-get-typography-config($config-or-theme);
+
+  @include mat-using-mdc-typography($config) {
+    .mat-mdc-paginator {
+      @include mdc-typography(caption, $query: $mat-typography-styles-query);
+    }
+
+    .mat-mdc-paginator .mat-mdc-select-value {
+      font-size: mat-font-size($config, caption);
+    }
+  }
+}
+
+@mixin mat-mdc-paginator-density($config-or-theme) {
+  $density-scale: mat-get-density-config($config-or-theme);
+  $height: mat-private-density-prop-value(
+      $mat-mdc-paginator-density-config, $density-scale, height);
+
+  @include mat-private-density-legacy-compatibility() {
+    .mat-mdc-paginator-container {
+      min-height: $height;
+    }
+  }
+}
+
+@mixin mat-mdc-paginator-theme($theme-or-color-config) {
+  $theme: mat-private-legacy-get-theme($theme-or-color-config);
+  @include mat-private-check-duplicate-theme-styles($theme, 'mat-mdc-paginator') {
+    $color: mat-get-color-config($theme);
+    $density: mat-get-density-config($theme);
+    $typography: mat-get-typography-config($theme);
+
+    @if $color != null {
+      @include mat-mdc-paginator-color($color);
+    }
+    @if $density != null {
+      @include mat-mdc-paginator-density($density);
+    }
+    @if $typography != null {
+      @include mat-mdc-paginator-typography($typography);
+    }
+  }
+}
