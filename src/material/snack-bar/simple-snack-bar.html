@@ -1,0 +1,11 @@
+<div matSnackBarLabel>
+  {{data.message}}
+</div>
+
+@if (hasAction) {
+  <div matSnackBarActions>
+    <button mat-button matSnackBarAction (click)="action()">
+      {{data.action}}
+    </button>
+  </div>
+}
