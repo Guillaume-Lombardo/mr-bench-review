@@ -723,7 +723,7 @@ bool StdMeshers_Regular_1D::computeInternalParameters(SMESH_Mesh &     theMesh,
       ++nbParams;
     }
     if ( nbParams != segLen.size()-1 )
-      return error( SMESH_Comment("Can't divide into ") << segLen.size() << " segements");
+      return error( SMESH_Comment("Can't divide into ") << segLen.size() << " segments");
 
     compensateError( segLen[ theReverse ? segLen.size()-1 : 0 ],
                      segLen[ theReverse ? 0 : segLen.size()-1 ],
