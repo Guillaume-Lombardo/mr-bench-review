@@ -107,18 +107,22 @@ lv_obj_t * lv_animimg_create(lv_obj_t * parent)
     return obj;
 }
 
-void lv_animimg_set_src(lv_obj_t * obj, const void * dsc[], size_t num, bool reverse)
+void lv_animimg_set_src(lv_obj_t * obj, const void * dsc[], size_t num)
 {
     LV_ASSERT_OBJ(obj, MY_CLASS);
     lv_animimg_t * animimg = (lv_animimg_t *)obj;
     animimg->dsc = dsc;
     animimg->pic_count = num;
-    if(reverse) {
-        lv_anim_set_values(&animimg->anim, (int32_t)num, 0);
-    }
-    else {
-        lv_anim_set_values(&animimg->anim, 0, (int32_t)num);
-    }
+    lv_anim_set_values(&animimg->anim, 0, (int32_t)num);
+}
+
+void lv_animimg_set_src_reverse(lv_obj_t * obj, const void * dsc[], size_t num)
+{
+    LV_ASSERT_OBJ(obj, MY_CLASS);
+    lv_animimg_t * animimg = (lv_animimg_t *)obj;
+    animimg->dsc = dsc;
+    animimg->pic_count = num;
+    lv_anim_set_values(&animimg->anim, (int32_t)num, 0);
 }
 
 void lv_animimg_start(lv_obj_t * obj)
