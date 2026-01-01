@@ -1498,6 +1498,37 @@ void DrawViewPart::handleChangedPropertyType(Base::XMLReader &reader, const char
     }
 }
 
+// true if owner->element is a cosmetic vertex
+bool DrawViewPart::isCosmeticVertex(std::string element)
+{
+    auto vertexIndex = DrawUtil::getIndexFromName(element);
+    auto vertex = getProjVertexByIndex(vertexIndex);
+    if (vertex) {
+        return vertex->getCosmetic();
+    }
+    return false;
+}
+
+// true if owner->element is a cosmetic edge
+bool DrawViewPart::isCosmeticEdge(std::string element)
+{
+    auto edge = getEdge(element);
+    if (edge && edge->source() == SourceType::COSMETICEDGE && edge->getCosmetic()) {
+        return true;
+    }
+    return false;
+}
+
+// true if owner->element is a center line
+bool DrawViewPart::isCenterLine(std::string element)
+{
+    auto edge = getEdge(element);
+    if (edge && edge->source() == SourceType::CENTERLINE && edge->getCosmetic()) {
+        return true;
+    }
+    return false;
+}
+
 // debugging ----------------------------------------------------------------------------
 
 void DrawViewPart::dumpVerts(std::string text)
