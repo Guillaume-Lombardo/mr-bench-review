@@ -1,0 +1,11 @@
+@use './tabs-common';
+
+@include tabs-common.paginated-tab-header;
+
+.mat-mdc-tab-label-container {
+  @include tabs-common.paginated-tab-header-container;
+}
+
+.mat-mdc-tab-labels {
+  @include tabs-common.paginated-tab-header-item-wrapper('.mat-mdc-tab-header');
+}
