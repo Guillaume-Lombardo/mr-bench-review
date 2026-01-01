@@ -34,6 +34,7 @@ var (
 	errOnlyGGUFSupported       = errors.New("supplied file was not in GGUF format")
 	errUnknownType             = errors.New("unknown type")
 	errNeitherFromOrFiles      = errors.New("neither 'from' or 'files' was specified")
+	errFilePath                = errors.New("file path must be relative")
 )
 
 func (s *Server) CreateHandler(c *gin.Context) {
@@ -45,6 +46,16 @@ func (s *Server) CreateHandler(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	files := make(map[string]string, len(r.Files))
+	for k, v := range r.Files {
+		if err := validRelative(k); err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		files[filepath.Clean(k)] = v
+	}
+	r.Files = files
 
 	name := model.ParseName(cmp.Or(r.Model, r.Name))
 	if !name.IsValid() {
@@ -104,7 +115,7 @@ func (s *Server) CreateHandler(c *gin.Context) {
 		if r.Adapters != nil {
 			adapterLayers, err = convertModelFromFiles(r.Adapters, baseLayers, true, fn)
 			if err != nil {
-				for _, badReq := range []error{errNoFilesProvided, errOnlyOneAdapterSupported, errOnlyGGUFSupported, errUnknownType} {
+				for _, badReq := range []error{errNoFilesProvided, errOnlyOneAdapterSupported, errOnlyGGUFSupported, errUnknownType, errFilePath} {
 					if errors.Is(err, badReq) {
 						ch <- gin.H{"error": err.Error(), "status": http.StatusBadRequest}
 						return
@@ -143,6 +154,37 @@ func (s *Server) CreateHandler(c *gin.Context) {
 	}
 
 	streamResponse(c, ch)
+}
+
+// validRelative ensures a path is a valid relative path without any
+// directory traversal components or absolute path indicators.
+func validRelative(path string) error {
+	if path == "" {
+		return fmt.Errorf("%w: empty path", errFilePath)
+	}
+
+	// Don't allow paths with absolute indicators
+	if strings.HasPrefix(path, "/") {
+		return fmt.Errorf("%w: path starts with '/'", errFilePath)
+	}
+
+	// Don't allow paths with explicit current directory or parent references
+	if strings.HasPrefix(path, "./") || strings.HasPrefix(path, "../") {
+		return fmt.Errorf("%w: path starts with './' or '../'", errFilePath)
+	}
+
+	// Don't allow paths that are just "." or ".."
+	if path == "." || path == ".." {
+		return fmt.Errorf("%w: path is '.' or '..'", errFilePath)
+	}
+
+	// Check for traversal sequences anywhere in the path
+	if strings.Contains(path, "/../") || strings.Contains(path, "/./") ||
+		strings.HasSuffix(path, "/..") || strings.HasSuffix(path, "/.") {
+		return fmt.Errorf("%w: path contains directory traversal sequences", errFilePath)
+	}
+
+	return nil
 }
 
 func convertModelFromFiles(files map[string]string, baseLayers []*layerGGML, isAdapter bool, fn func(resp api.ProgressResponse)) ([]*layerGGML, error) {
@@ -221,8 +263,23 @@ func convertFromSafetensors(files map[string]string, baseLayers []*layerGGML, is
 		return nil, err
 	}
 	defer os.RemoveAll(tmpDir)
+	// Set up a root to validate paths
+	root, err := os.OpenRoot(tmpDir)
+	if err != nil {
+		return nil, err
+	}
+	defer root.Close()
 
 	for fp, digest := range files {
+		fp = filepath.Clean(fp)
+		// Try to open the file through the root first to validate containment
+		// Even for files that don't exist, this will validate the path is contained
+		f, err := root.OpenFile(fp, os.O_CREATE|os.O_WRONLY, 0o644)
+		if err != nil {
+			return nil, fmt.Errorf("%w: invalid path %s: %v", errFilePath, fp, err)
+		}
+		f.Close()
+
 		blobPath, err := GetBlobsPath(digest)
 		if err != nil {
 			return nil, err
@@ -270,6 +327,7 @@ func convertFromSafetensors(files map[string]string, baseLayers []*layerGGML, is
 	if err != nil {
 		return nil, err
 	}
+	defer bin.Close()
 
 	f, _, err := ggml.Decode(bin, 0)
 	if err != nil {
