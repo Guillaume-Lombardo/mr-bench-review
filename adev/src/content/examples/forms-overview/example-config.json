@@ -1,0 +1,6 @@
+{
+  "tests": [
+    {"cmd": "yarn", "args": ["test", "--browsers=ChromeHeadlessNoSandbox", "--no-watch"]},
+    {"cmd": "yarn", "args": ["e2e", "--configuration=production"]}
+  ]
+}

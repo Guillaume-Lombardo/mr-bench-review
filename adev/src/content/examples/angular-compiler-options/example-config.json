@@ -1,0 +1,10 @@
+{
+  "projectType": "cli",
+  "overrideBoilerplate": ["tsconfig.json", "tsconfig.app.json"],
+  "tests": [
+    {
+      "cmd": "yarn",
+      "args": ["e2e"]
+    }
+  ]
+}
