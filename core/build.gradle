@@ -1,0 +1,72 @@
+configurations {
+    tests
+    implementation.extendsFrom(micronaut)
+}
+
+tasks.register('copyGradleProperties', Copy) {
+    group = "build"
+    shouldRunAfter compileJava
+
+    from '../gradle.properties'
+    into 'src/main/resources'
+}
+
+processResources.dependsOn copyGradleProperties
+
+dependencies {
+    // Kestra
+    api project(':model')
+    annotationProcessor project(':processor')
+
+    // serializers
+    implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-ion'
+
+    // reactor
+    api "io.projectreactor:reactor-core"
+
+    // micronaut
+    api "io.micronaut.data:micronaut-data-model"
+    implementation "io.micronaut:micronaut-http-server-netty"
+
+    // utils
+    implementation 'com.github.oshi:oshi-core'
+    implementation 'io.pebbletemplates:pebble'
+    implementation group: 'co.elastic.logging', name: 'logback-ecs-encoder'
+    implementation group: 'de.focus-shift', name: 'jollyday-core'
+    implementation group: 'de.focus-shift', name: 'jollyday-jaxb'
+    implementation 'nl.basjes.gitignore:gitignore-reader'
+    implementation group: 'dev.failsafe', name: 'failsafe'
+    api 'org.apache.httpcomponents.client5:httpclient5'
+
+    // scheduler
+    implementation group: 'com.cronutils', name: 'cron-utils'
+
+    // schema
+    implementation ("com.github.victools:jsonschema-generator") {
+        exclude group: 'com.fasterxml.jackson.core'
+    }
+    implementation group: 'com.github.victools', name: 'jsonschema-module-jakarta-validation'
+    implementation group: 'com.github.victools', name: 'jsonschema-module-jackson'
+    implementation group: 'com.github.victools', name: 'jsonschema-module-swagger-2'
+
+    // Json Diff
+    implementation ('com.github.java-json-tools:json-patch') {
+        exclude group: 'com.fasterxml.jackson.core'
+    }
+
+    // test
+    testAnnotationProcessor project(':processor')
+    testImplementation project(':tests')
+
+    testImplementation project(':repository-memory')
+    testImplementation project(':runner-memory')
+    testImplementation project(':storage-local')
+
+    testImplementation "io.micronaut:micronaut-http-client"
+    testImplementation "io.micronaut:micronaut-http-server-netty"
+    testImplementation "io.micronaut:micronaut-management"
+
+    testImplementation "org.testcontainers:testcontainers:1.20.4"
+    testImplementation "org.testcontainers:junit-jupiter:1.20.4"
+    testImplementation "org.bouncycastle:bcpkix-jdk18on:1.80"
+}
