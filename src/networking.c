@@ -2765,11 +2765,15 @@ static void setProtocolError(const char *errstr, client *c) {
         char buf[256];
         buf[0] = '\0';
         if (c->querybuf && sdslen(c->querybuf) - c->qb_pos < PROTO_DUMP_LEN) {
-            snprintf(buf, sizeof(buf), "Query buffer during protocol error: '%s'", c->querybuf + c->qb_pos);
+            snprintf(buf, sizeof(buf), "Query buffer during protocol error: '%s'",
+                     server.hide_user_data_from_log ? "[hide_user_data_from_log]Redacted" : (c->querybuf + c->qb_pos));
         } else if (c->querybuf) {
-            snprintf(buf, sizeof(buf), "Query buffer during protocol error: '%.*s' (... more %zu bytes ...) '%.*s'",
-                     PROTO_DUMP_LEN / 2, c->querybuf + c->qb_pos, sdslen(c->querybuf) - c->qb_pos - PROTO_DUMP_LEN,
-                     PROTO_DUMP_LEN / 2, c->querybuf + sdslen(c->querybuf) - PROTO_DUMP_LEN / 2);
+            snprintf(buf, sizeof(buf), server.hide_user_data_from_log ?
+                     ("Query buffer during protocol error: [hide_user_data_from_log]Redacted %zu bytes",
+                      sdslen(c->querybuf) - c->qb_pos) :
+                     ("Query buffer during protocol error: '%.*s' (... more %zu bytes ...) '%.*s'",
+                      PROTO_DUMP_LEN / 2, c->querybuf + c->qb_pos, sdslen(c->querybuf) - c->qb_pos - PROTO_DUMP_LEN,
+                      PROTO_DUMP_LEN / 2, c->querybuf + sdslen(c->querybuf) - PROTO_DUMP_LEN / 2));
         }
 
         /* Remove non printable chars. */
