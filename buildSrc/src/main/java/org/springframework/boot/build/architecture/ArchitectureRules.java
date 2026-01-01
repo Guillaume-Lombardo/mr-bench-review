@@ -1,0 +1,461 @@
+/*
+ * Copyright 2012-present the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.springframework.boot.build.architecture;
+
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import com.tngtech.archunit.base.DescribedPredicate;
+import com.tngtech.archunit.core.domain.AccessTarget.CodeUnitCallTarget;
+import com.tngtech.archunit.core.domain.JavaAnnotation;
+import com.tngtech.archunit.core.domain.JavaCall;
+import com.tngtech.archunit.core.domain.JavaClass;
+import com.tngtech.archunit.core.domain.JavaClass.Predicates;
+import com.tngtech.archunit.core.domain.JavaMethod;
+import com.tngtech.archunit.core.domain.JavaModifier;
+import com.tngtech.archunit.core.domain.JavaParameter;
+import com.tngtech.archunit.core.domain.JavaType;
+import com.tngtech.archunit.core.domain.properties.CanBeAnnotated;
+import com.tngtech.archunit.core.domain.properties.HasAnnotations;
+import com.tngtech.archunit.core.domain.properties.HasName;
+import com.tngtech.archunit.core.domain.properties.HasOwner;
+import com.tngtech.archunit.core.domain.properties.HasOwner.Predicates.With;
+import com.tngtech.archunit.core.domain.properties.HasParameterTypes;
+import com.tngtech.archunit.lang.ArchCondition;
+import com.tngtech.archunit.lang.ArchRule;
+import com.tngtech.archunit.lang.ConditionEvents;
+import com.tngtech.archunit.lang.SimpleConditionEvent;
+import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
+import com.tngtech.archunit.lang.syntax.elements.ClassesShould;
+import com.tngtech.archunit.lang.syntax.elements.GivenMethodsConjunction;
+import com.tngtech.archunit.library.dependencies.SlicesRuleDefinition;
+
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Role;
+import org.springframework.util.ResourceUtils;
+
+/**
+ * Factory used to create {@link ArchRule architecture rules}.
+ *
+ * @author Andy Wilkinson
+ * @author Yanming Zhou
+ * @author Scott Frederick
+ * @author Ivan Malutin
+ * @author Phillip Webb
+ * @author Ngoc Nhan
+ */
+final class ArchitectureRules {
+
+	private ArchitectureRules() {
+	}
+
+	static List<ArchRule> noClassesShouldCallObjectsRequireNonNull() {
+		return List.of(
+				noClassesShould().callMethod(Objects.class, "requireNonNull", Object.class, String.class)
+					.because(shouldUse("org.springframework.utils.Assert.notNull(Object, String)")),
+				noClassesShould().callMethod(Objects.class, "requireNonNull", Object.class, Supplier.class)
+					.because(shouldUse("org.springframework.utils.Assert.notNull(Object, Supplier)")));
+	}
+
+	static List<ArchRule> standard() {
+		List<ArchRule> rules = new ArrayList<>();
+		rules.add(allPackagesShouldBeFreeOfTangles());
+		rules.add(allBeanPostProcessorBeanMethodsShouldBeStaticAndNotCausePrematureInitialization());
+		rules.add(allBeanFactoryPostProcessorBeanMethodsShouldBeStaticAndHaveOnlyInjectEnvironment());
+		rules.add(noClassesShouldCallStepVerifierStepVerifyComplete());
+		rules.add(noClassesShouldConfigureDefaultStepVerifierTimeout());
+		rules.add(noClassesShouldCallCollectorsToList());
+		rules.add(noClassesShouldCallURLEncoderWithStringEncoding());
+		rules.add(noClassesShouldCallURLDecoderWithStringEncoding());
+		rules.add(noClassesShouldLoadResourcesUsingResourceUtils());
+		rules.add(noClassesShouldCallStringToUpperCaseWithoutLocale());
+		rules.add(noClassesShouldCallStringToLowerCaseWithoutLocale());
+		rules.add(enumSourceShouldNotHaveValueThatIsTheSameAsTypeOfMethodsFirstParameter());
+		rules.add(conditionsShouldNotBePublic());
+		return List.copyOf(rules);
+	}
+
+	static List<ArchRule> beanMethods(String annotationClass) {
+		return List.of(allBeanMethodsShouldReturnNonPrivateType(),
+				allBeanMethodsShouldNotHaveConditionalOnClassAnnotation(annotationClass));
+	}
+
+	static List<ArchRule> conditionalOnMissingBean(String annotationClass) {
+		return List
+			.of(conditionalOnMissingBeanShouldNotSpecifyOnlyATypeThatIsTheSameAsMethodReturnType(annotationClass));
+	}
+
+	static List<ArchRule> configurationProperties(String annotationClass) {
+		return List.of(classLevelConfigurationPropertiesShouldNotSpecifyOnlyPrefixAttribute(annotationClass),
+				methodLevelConfigurationPropertiesShouldNotSpecifyOnlyPrefixAttribute(annotationClass));
+	}
+
+	static List<ArchRule> configurationPropertiesBinding(String annotationClass) {
+		return List.of(allConfigurationPropertiesBindingBeanMethodsShouldBeStatic(annotationClass));
+	}
+
+	static List<ArchRule> configurationPropertiesDeprecation(String annotationClass) {
+		return List.of(allDeprecatedConfigurationPropertiesShouldIncludeSince(annotationClass));
+	}
+
+	private static ArchRule allBeanMethodsShouldReturnNonPrivateType() {
+		return methodsThatAreAnnotatedWith("org.springframework.context.annotation.Bean").should(check(
+				"not return types declared with the %s modifier, as such types are incompatible with Spring AOT processing"
+					.formatted(JavaModifier.PRIVATE),
+				(method, events) -> {
+					JavaClass returnType = method.getRawReturnType();
+					if (returnType.getModifiers().contains(JavaModifier.PRIVATE)) {
+						addViolation(events, method, "%s returns %s which is declared as %s".formatted(
+								method.getDescription(), returnType.getDescription(), returnType.getModifiers()));
+					}
+				}))
+			.allowEmptyShould(true);
+	}
+
+	private static ArchRule allBeanMethodsShouldNotHaveConditionalOnClassAnnotation(String annotationName) {
+		return methodsThatAreAnnotatedWith("org.springframework.context.annotation.Bean").should()
+			.notBeAnnotatedWith(annotationName)
+			.because("@ConditionalOnClass on @Bean methods is ineffective - it doesn't prevent "
+					+ "the method signature from being loaded. Such condition need to be placed"
+					+ " on a @Configuration class, allowing the condition to back off before the type is loaded.")
+			.allowEmptyShould(true);
+	}
+
+	private static ArchRule allPackagesShouldBeFreeOfTangles() {
+		return SlicesRuleDefinition.slices().matching("(**)").should().beFreeOfCycles();
+	}
+
+	private static ArchRule allBeanPostProcessorBeanMethodsShouldBeStaticAndNotCausePrematureInitialization() {
+		return methodsThatAreAnnotatedWith("org.springframework.context.annotation.Bean").and()
+			.haveRawReturnType(assignableTo("org.springframework.beans.factory.config.BeanPostProcessor"))
+			.should(onlyHaveParametersThatWillNotCauseEagerInitialization())
+			.andShould()
+			.beStatic()
+			.allowEmptyShould(true);
+	}
+
+	private static ArchCondition<JavaMethod> onlyHaveParametersThatWillNotCauseEagerInitialization() {
+		return check("not have parameters that will cause eager initialization",
+				ArchitectureRules::allBeanPostProcessorBeanMethodsShouldBeStaticAndNotCausePrematureInitialization);
+	}
+
+	private static void allBeanPostProcessorBeanMethodsShouldBeStaticAndNotCausePrematureInitialization(JavaMethod item,
+			ConditionEvents events) {
+		DescribedPredicate<JavaParameter> notAnnotatedWithLazy = DescribedPredicate
+			.not(CanBeAnnotated.Predicates.annotatedWith("org.springframework.context.annotation.Lazy"));
+		DescribedPredicate<JavaClass> notOfASafeType = notAssignableTo(
+				"org.springframework.beans.factory.ObjectProvider", "org.springframework.context.ApplicationContext",
+				"org.springframework.core.env.Environment")
+			.and(notAnnotatedWithRoleInfrastructure());
+		item.getParameters()
+			.stream()
+			.filter(notAnnotatedWithLazy)
+			.filter((parameter) -> notOfASafeType.test(parameter.getRawType()))
+			.forEach((parameter) -> addViolation(events, parameter,
+					parameter.getDescription() + " will cause eager initialization as it is "
+							+ notAnnotatedWithLazy.getDescription() + " and is " + notOfASafeType.getDescription()));
+	}
+
+	private static DescribedPredicate<JavaClass> notAnnotatedWithRoleInfrastructure() {
+		return is("not annotated with @Role(BeanDefinition.ROLE_INFRASTRUCTURE", (candidate) -> {
+			if (!candidate.isAnnotatedWith(Role.class)) {
+				return true;
+			}
+			Role role = candidate.getAnnotationOfType(Role.class);
+			return role.value() != BeanDefinition.ROLE_INFRASTRUCTURE;
+		});
+	}
+
+	private static ArchRule allBeanFactoryPostProcessorBeanMethodsShouldBeStaticAndHaveOnlyInjectEnvironment() {
+		return methodsThatAreAnnotatedWith("org.springframework.context.annotation.Bean").and()
+			.haveRawReturnType(assignableTo("org.springframework.beans.factory.config.BeanFactoryPostProcessor"))
+			.should(onlyInjectEnvironment())
+			.andShould()
+			.beStatic()
+			.allowEmptyShould(true);
+	}
+
+	private static ArchCondition<JavaMethod> onlyInjectEnvironment() {
+		return check("only inject Environment", ArchitectureRules::onlyInjectEnvironment);
+	}
+
+	private static void onlyInjectEnvironment(JavaMethod item, ConditionEvents events) {
+		if (item.getParameters().stream().anyMatch(ArchitectureRules::isNotEnvironment)) {
+			addViolation(events, item, item.getDescription() + " should only inject Environment");
+		}
+	}
+
+	private static boolean isNotEnvironment(JavaParameter parameter) {
+		return !"org.springframework.core.env.Environment".equals(parameter.getType().getName());
+	}
+
+	private static ArchRule noClassesShouldCallStepVerifierStepVerifyComplete() {
+		return noClassesShould().callMethod("reactor.test.StepVerifier$Step", "verifyComplete")
+			.because("it can block indefinitely and " + shouldUse("expectComplete().verify(Duration)"));
+	}
+
+	private static ArchRule noClassesShouldConfigureDefaultStepVerifierTimeout() {
+		return noClassesShould().callMethod("reactor.test.StepVerifier", "setDefaultTimeout", "java.time.Duration")
+			.because(shouldUse("expectComplete().verify(Duration)"));
+	}
+
+	private static ArchRule noClassesShouldCallCollectorsToList() {
+		return noClassesShould().callMethod(Collectors.class, "toList")
+			.because(shouldUse("java.util.stream.Stream.toList()"));
+	}
+
+	private static ArchRule noClassesShouldCallURLEncoderWithStringEncoding() {
+		return noClassesShould().callMethod(URLEncoder.class, "encode", String.class, String.class)
+			.because(shouldUse("java.net.URLEncoder.encode(String s, Charset charset)"));
+	}
+
+	private static ArchRule noClassesShouldCallURLDecoderWithStringEncoding() {
+		return noClassesShould().callMethod(URLDecoder.class, "decode", String.class, String.class)
+			.because(shouldUse("java.net.URLDecoder.decode(String s, Charset charset)"));
+	}
+
+	private static ArchRule noClassesShouldLoadResourcesUsingResourceUtils() {
+		DescribedPredicate<JavaCall<?>> resourceUtilsGetURL = hasJavaCallTarget(ownedByResourceUtils())
+			.and(hasJavaCallTarget(hasNameOf("getURL")))
+			.and(hasJavaCallTarget(hasRawStringParameterType()));
+		DescribedPredicate<JavaCall<?>> resourceUtilsGetFile = hasJavaCallTarget(ownedByResourceUtils())
+			.and(hasJavaCallTarget(hasNameOf("getFile")))
+			.and(hasJavaCallTarget(hasRawStringParameterType()));
+		return noClassesShould().callMethodWhere(resourceUtilsGetURL.or(resourceUtilsGetFile))
+			.because(shouldUse("org.springframework.boot.io.ApplicationResourceLoader"));
+	}
+
+	private static ArchRule noClassesShouldCallStringToUpperCaseWithoutLocale() {
+		return noClassesShould().callMethod(String.class, "toUpperCase")
+			.because(shouldUse("String.toUpperCase(Locale.ROOT)"));
+	}
+
+	private static ArchRule noClassesShouldCallStringToLowerCaseWithoutLocale() {
+		return noClassesShould().callMethod(String.class, "toLowerCase")
+			.because(shouldUse("String.toLowerCase(Locale.ROOT)"));
+	}
+
+	private static ArchRule conditionalOnMissingBeanShouldNotSpecifyOnlyATypeThatIsTheSameAsMethodReturnType(
+			String annotation) {
+		return methodsThatAreAnnotatedWith(annotation)
+			.should(notSpecifyOnlyATypeThatIsTheSameAsTheMethodReturnType(annotation))
+			.allowEmptyShould(true);
+	}
+
+	private static ArchCondition<? super JavaMethod> notSpecifyOnlyATypeThatIsTheSameAsTheMethodReturnType(
+			String annotation) {
+		return check("not specify only a type that is the same as the method's return type", (item, events) -> {
+			JavaAnnotation<JavaMethod> conditionalAnnotation = item.getAnnotationOfType(annotation);
+			Map<String, Object> properties = conditionalAnnotation.getProperties();
+			if (!hasProperty("type", properties) && !hasProperty("name", properties)) {
+				conditionalAnnotation.get("value").ifPresent((value) -> {
+					if (containsOnlySingleType((JavaType[]) value, item.getReturnType())) {
+						addViolation(events, item, conditionalAnnotation.getDescription()
+								+ " should not specify only a value that is the same as the method's return type");
+					}
+				});
+			}
+		});
+	}
+
+	private static boolean hasProperty(String name, Map<String, Object> properties) {
+		Object property = properties.get(name);
+		if (property == null) {
+			return false;
+		}
+		return (property.getClass().isArray()) ? ((Object[]) property).length > 0 : !property.toString().isEmpty();
+	}
+
+	private static ArchRule enumSourceShouldNotHaveValueThatIsTheSameAsTypeOfMethodsFirstParameter() {
+		return ArchRuleDefinition.methods()
+			.that()
+			.areAnnotatedWith("org.junit.jupiter.params.provider.EnumSource")
+			.should(notHaveValueThatIsTheSameAsTheTypeOfTheMethodsFirstParameter())
+			.allowEmptyShould(true);
+	}
+
+	private static ArchCondition<? super JavaMethod> notHaveValueThatIsTheSameAsTheTypeOfTheMethodsFirstParameter() {
+		return check("not have a value that is the same as the type of the method's first parameter",
+				ArchitectureRules::notSpecifyOnlyATypeThatIsTheSameAsTheMethodParameterType);
+	}
+
+	private static void notSpecifyOnlyATypeThatIsTheSameAsTheMethodParameterType(JavaMethod item,
+			ConditionEvents events) {
+		JavaAnnotation<JavaMethod> enumSourceAnnotation = item
+			.getAnnotationOfType("org.junit.jupiter.params.provider.EnumSource");
+		enumSourceAnnotation.get("value").ifPresent((value) -> {
+			JavaType parameterType = item.getParameterTypes().get(0);
+			if (value.equals(parameterType)) {
+				addViolation(events, item, enumSourceAnnotation.getDescription()
+						+ " should not specify a value that is the same as the type of the method's first parameter");
+			}
+		});
+	}
+
+	private static ArchRule classLevelConfigurationPropertiesShouldNotSpecifyOnlyPrefixAttribute(
+			String annotationClass) {
+		return ArchRuleDefinition.classes()
+			.that()
+			.areAnnotatedWith(annotationClass)
+			.should(notSpecifyOnlyPrefixAttributeOfConfigurationProperties(annotationClass))
+			.allowEmptyShould(true);
+	}
+
+	private static ArchRule methodLevelConfigurationPropertiesShouldNotSpecifyOnlyPrefixAttribute(
+			String annotationClass) {
+		return ArchRuleDefinition.methods()
+			.that()
+			.areAnnotatedWith(annotationClass)
+			.should(notSpecifyOnlyPrefixAttributeOfConfigurationProperties(annotationClass))
+			.allowEmptyShould(true);
+	}
+
+	private static ArchCondition<? super HasAnnotations<?>> notSpecifyOnlyPrefixAttributeOfConfigurationProperties(
+			String annotationClass) {
+		return check("not specify only prefix attribute of @ConfigurationProperties", (item,
+				events) -> notSpecifyOnlyPrefixAttributeOfConfigurationProperties(annotationClass, item, events));
+	}
+
+	private static void notSpecifyOnlyPrefixAttributeOfConfigurationProperties(String annotationClass,
+			HasAnnotations<?> item, ConditionEvents events) {
+		JavaAnnotation<?> configurationPropertiesAnnotation = item.getAnnotationOfType(annotationClass);
+		Map<String, Object> properties = configurationPropertiesAnnotation.getProperties();
+		if (hasProperty("prefix", properties) && !hasProperty("value", properties)
+				&& properties.get("ignoreInvalidFields").equals(false)
+				&& properties.get("ignoreUnknownFields").equals(true)) {
+			addViolation(events, item, configurationPropertiesAnnotation.getDescription()
+					+ " should specify implicit 'value' attribute other than explicit 'prefix' attribute");
+		}
+	}
+
+	private static ArchRule conditionsShouldNotBePublic() {
+		String springBootCondition = "org.springframework.boot.autoconfigure.condition.SpringBootCondition";
+		return ArchRuleDefinition.noClasses()
+			.that()
+			.areAssignableTo(springBootCondition)
+			.and()
+			.doNotHaveModifier(JavaModifier.ABSTRACT)
+			.and()
+			.areNotAnnotatedWith(Deprecated.class)
+			.should()
+			.bePublic()
+			.allowEmptyShould(true);
+	}
+
+	private static ArchRule allConfigurationPropertiesBindingBeanMethodsShouldBeStatic(String annotationClass) {
+		return methodsThatAreAnnotatedWith("org.springframework.context.annotation.Bean").and()
+			.areAnnotatedWith(annotationClass)
+			.should()
+			.beStatic()
+			.allowEmptyShould(true);
+	}
+
+	private static ArchRule allDeprecatedConfigurationPropertiesShouldIncludeSince(String annotationName) {
+		return methodsThatAreAnnotatedWith(annotationName)
+			.should(check("include a non-empty 'since' attribute", (method, events) -> {
+				JavaAnnotation<JavaMethod> annotation = method.getAnnotationOfType(annotationName);
+				Map<String, Object> properties = annotation.getProperties();
+				Object since = properties.get("since");
+				if (!(since instanceof String) || ((String) since).isEmpty()) {
+					addViolation(events, method, annotation.getDescription()
+							+ " should include a non-empty 'since' attribute of @DeprecatedConfigurationProperty");
+				}
+			}))
+			.allowEmptyShould(true);
+	}
+
+	private static boolean containsOnlySingleType(JavaType[] types, JavaType type) {
+		return types.length == 1 && type.equals(types[0]);
+	}
+
+	private static ClassesShould noClassesShould() {
+		return ArchRuleDefinition.noClasses().should();
+	}
+
+	private static GivenMethodsConjunction methodsThatAreAnnotatedWith(String annotation) {
+		return ArchRuleDefinition.methods().that().areAnnotatedWith(annotation);
+	}
+
+	private static DescribedPredicate<HasOwner<JavaClass>> ownedByResourceUtils() {
+		return With.owner(Predicates.type(ResourceUtils.class));
+	}
+
+	private static DescribedPredicate<? super CodeUnitCallTarget> hasNameOf(String name) {
+		return HasName.Predicates.name(name);
+	}
+
+	private static DescribedPredicate<HasParameterTypes> hasRawStringParameterType() {
+		return HasParameterTypes.Predicates.rawParameterTypes(String.class);
+	}
+
+	private static DescribedPredicate<JavaCall<?>> hasJavaCallTarget(
+			DescribedPredicate<? super CodeUnitCallTarget> predicate) {
+		return JavaCall.Predicates.target(predicate);
+	}
+
+	private static DescribedPredicate<JavaClass> notAssignableTo(String... typeNames) {
+		return DescribedPredicate.not(assignableTo(typeNames));
+	}
+
+	private static DescribedPredicate<JavaClass> assignableTo(String... typeNames) {
+		DescribedPredicate<JavaClass> result = null;
+		for (String typeName : typeNames) {
+			DescribedPredicate<JavaClass> assignableTo = Predicates.assignableTo(typeName);
+			result = (result != null) ? result.or(assignableTo) : assignableTo;
+		}
+		return result;
+	}
+
+	private static DescribedPredicate<JavaClass> is(String description, Predicate<JavaClass> predicate) {
+		return new DescribedPredicate<>(description) {
+
+			@Override
+			public boolean test(JavaClass t) {
+				return predicate.test(t);
+			}
+
+		};
+	}
+
+	private static <T> ArchCondition<T> check(String description, BiConsumer<T, ConditionEvents> check) {
+		return new ArchCondition<>(description) {
+
+			@Override
+			public void check(T item, ConditionEvents events) {
+				check.accept(item, events);
+			}
+
+		};
+	}
+
+	private static void addViolation(ConditionEvents events, Object correspondingObject, String message) {
+		events.add(SimpleConditionEvent.violated(correspondingObject, message));
+	}
+
+	private static String shouldUse(String string) {
+		return string + " should be used instead";
+	}
+
+}
