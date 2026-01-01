@@ -1,0 +1,21 @@
+{
+  "schematics": {
+    "control-flow-migration": {
+      "version": "21.0.0",
+      "description": "Converts the entire application to block control flow syntax",
+      "factory": "./bundles/control-flow-migration.cjs#migrate",
+      "optional": true
+    },
+    "router-current-navigation": {
+      "version": "21.0.0",
+      "description": "Replaces usages of the deprecated Router.getCurrentNavigation method with the Router.currentNavigation signal",
+      "factory": "./bundles/router-current-navigation.cjs#migrate",
+      "optional": true
+    },
+    "router-last-successful-navigation": {
+      "version": "21.0.0",
+      "description": "Ensures that the Router.lastSuccessfulNavigation signal is now invoked",
+      "factory": "./bundles/router-last-successful-navigation.cjs#migrate"
+    }
+  }
+}
