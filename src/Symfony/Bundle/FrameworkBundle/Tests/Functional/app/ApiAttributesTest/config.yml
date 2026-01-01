@@ -1,0 +1,10 @@
+imports:
+    - { resource: ../config/default.yml }
+
+framework:
+    serializer:
+        enabled: true
+    validation: true
+    property_info:
+        enabled: true
+        with_constructor_extractor: true
