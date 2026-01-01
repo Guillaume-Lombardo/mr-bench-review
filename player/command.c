@@ -7693,8 +7693,7 @@ void mp_option_change_callback(void *ctx, struct m_config_option *co, int flags,
 {
     struct MPContext *mpctx = ctx;
     struct MPOpts *opts = mpctx->opts;
-    bool init = !co;
-    void *opt_ptr = init ? NULL : co->data; // NULL on start
+    void *opt_ptr = !co ? NULL : co->data; // NULL on start
 
     if (co)
         mp_notify_property(mpctx, co->name);
@@ -7704,216 +7703,247 @@ void mp_option_change_callback(void *ctx, struct m_config_option *co, int flags,
     if (self_update)
         return;
 
-    if (flags & UPDATE_TERM)
-        mp_update_logging(mpctx, false);
+    // Coalesce redundant updates and only keep the newest one.
+    bool drop = false;
+    for (int i = 0; i < mpctx->num_option_callbacks; i++) {
+        if (flags && flags == mpctx->option_callbacks[i].flags)
+            drop = true;
+        if (mpctx->option_callbacks[i].co && opt_ptr == mpctx->option_callbacks[i].co->data)
+            drop = true;
+        if (drop && i < mpctx->num_option_callbacks - 1)
+            mpctx->option_callbacks[i] = mpctx->option_callbacks[i + 1];
+        if (drop && i == mpctx->num_option_callbacks - 1) {
+            mpctx->option_callbacks[i].co = co;
+            mpctx->option_callbacks[i].flags = flags;
+        }
+    }
 
-    if (flags & (UPDATE_OSD | UPDATE_SUB_FILT | UPDATE_SUB_HARD)) {
-        for (int n = 0; n < num_ptracks[STREAM_SUB]; n++) {
-            struct track *track = mpctx->current_track[n][STREAM_SUB];
-            struct dec_sub *sub = track ? track->d_sub : NULL;
-            if (sub) {
-                int ret = sub_control(sub, SD_CTRL_UPDATE_OPTS,
-                                      (void *)(uintptr_t)flags);
-                if (ret == CONTROL_OK && flags & (UPDATE_SUB_FILT | UPDATE_SUB_HARD)) {
-                    sub_redecode_cached_packets(sub);
-                    sub_reset(sub);
-                    if (track->selected)
-                        reselect_demux_stream(mpctx, track, true);
+    if (!drop) {
+        struct mp_option_callback callback = { .co = co, .flags = flags};
+        MP_TARRAY_APPEND(mpctx, mpctx->option_callbacks, mpctx->num_option_callbacks, callback);
+    }
+}
+
+void mp_option_run_callbacks(struct MPContext *mpctx)
+{
+    for (int i = 0; i < mpctx->num_option_callbacks; i++) {
+        struct MPOpts *opts = mpctx->opts;
+        struct m_config_option *co = mpctx->option_callbacks[i].co;
+        void *opt_ptr = co ? co->data : NULL;
+        int flags = mpctx->option_callbacks[i].flags;
+
+        if (flags & UPDATE_TERM)
+            mp_update_logging(mpctx, false);
+
+        if (flags & (UPDATE_OSD | UPDATE_SUB_FILT | UPDATE_SUB_HARD)) {
+            for (int n = 0; n < num_ptracks[STREAM_SUB]; n++) {
+                struct track *track = mpctx->current_track[n][STREAM_SUB];
+                struct dec_sub *sub = track ? track->d_sub : NULL;
+                if (sub) {
+                    int ret = sub_control(sub, SD_CTRL_UPDATE_OPTS,
+                                          (void *)(uintptr_t)flags);
+                    if (ret == CONTROL_OK && flags & (UPDATE_SUB_FILT | UPDATE_SUB_HARD)) {
+                        sub_redecode_cached_packets(sub);
+                        sub_reset(sub);
+                        if (track->selected)
+                            reselect_demux_stream(mpctx, track, true);
+                    }
                 }
             }
+            // For subs on a still image.
+            redraw_subs(mpctx);
+            osd_changed(mpctx->osd);
         }
-        // For subs on a still image.
-        redraw_subs(mpctx);
-        osd_changed(mpctx->osd);
-    }
 
-    if (flags & UPDATE_BUILTIN_SCRIPTS)
-        mp_load_builtin_scripts(mpctx);
+        if (flags & UPDATE_BUILTIN_SCRIPTS)
+            mp_load_builtin_scripts(mpctx);
 
-    if (flags & UPDATE_IMGPAR) {
-        struct track *track = mpctx->current_track[0][STREAM_VIDEO];
-        if (track && track->dec) {
-            mp_decoder_wrapper_reset_params(track->dec);
-            mp_force_video_refresh(mpctx);
+        if (flags & UPDATE_IMGPAR) {
+            struct track *track = mpctx->current_track[0][STREAM_VIDEO];
+            if (track && track->dec) {
+                mp_decoder_wrapper_reset_params(track->dec);
+                mp_force_video_refresh(mpctx);
+            }
         }
-    }
 
-    if (flags & UPDATE_INPUT)
-        mp_input_update_opts(mpctx->input);
+        if (flags & UPDATE_INPUT)
+            mp_input_update_opts(mpctx->input);
 
-    if (flags & UPDATE_CLIPBOARD)
-        reinit_clipboard(mpctx);
+        if (flags & UPDATE_CLIPBOARD)
+            reinit_clipboard(mpctx);
 
-    if (flags & UPDATE_SUB_EXTS)
-        mp_update_subtitle_exts(mpctx->opts);
+        if (flags & UPDATE_SUB_EXTS)
+            mp_update_subtitle_exts(mpctx->opts);
 
-    if (init || opt_ptr == &opts->ipc_path || opt_ptr == &opts->ipc_client) {
-        mp_uninit_ipc(mpctx->ipc_ctx);
-        mpctx->ipc_ctx = mp_init_ipc(mpctx->clients, mpctx->global);
-    }
+        if (opt_ptr == &opts->ipc_path || opt_ptr == &opts->ipc_client) {
+            mp_uninit_ipc(mpctx->ipc_ctx);
+            mpctx->ipc_ctx = mp_init_ipc(mpctx->clients, mpctx->global);
+        }
 
-    if (flags & UPDATE_VO && mpctx->video_out) {
-        struct track *track = mpctx->current_track[0][STREAM_VIDEO];
-        uninit_video_out(mpctx);
-        handle_force_window(mpctx, true);
-        reinit_video_chain(mpctx);
-        if (track)
-            queue_seek(mpctx, MPSEEK_RELATIVE, 0.0, MPSEEK_EXACT, 0);
+        if (flags & UPDATE_VO && mpctx->video_out) {
+            struct track *track = mpctx->current_track[0][STREAM_VIDEO];
+            uninit_video_out(mpctx);
+            handle_force_window(mpctx, true);
+            reinit_video_chain(mpctx);
+            if (track)
+                queue_seek(mpctx, MPSEEK_RELATIVE, 0.0, MPSEEK_EXACT, 0);
 
-        mp_wakeup_core(mpctx);
-    }
-
-    if (flags & UPDATE_AUDIO)
-        reload_audio_output(mpctx);
-
-    if (flags & UPDATE_PRIORITY)
-        update_priority(mpctx);
-
-    if (flags & UPDATE_SCREENSAVER)
-        update_screensaver_state(mpctx);
-
-    if (flags & UPDATE_VOL)
-        audio_update_volume(mpctx);
-
-    if (flags & UPDATE_LAVFI_COMPLEX)
-        update_lavfi_complex(mpctx);
-
-    if (flags & UPDATE_VIDEO) {
-        if (mpctx->video_out) {
-            vo_control(mpctx->video_out, VOCTRL_UPDATE_RENDER_OPTS, NULL);
             mp_wakeup_core(mpctx);
         }
-    }
 
-    if (flags & UPDATE_HWDEC) {
-        struct track *track = mpctx->current_track[0][STREAM_VIDEO];
-        struct mp_decoder_wrapper *dec = track ? track->dec : NULL;
-        if (dec) {
-            mp_decoder_wrapper_control(dec, VDCTRL_REINIT, NULL);
-            double last_pts = mpctx->video_pts;
-            if (last_pts != MP_NOPTS_VALUE)
-                queue_seek(mpctx, MPSEEK_ABSOLUTE, last_pts, MPSEEK_EXACT, 0);
-        }
-    }
+        if (flags & UPDATE_AUDIO)
+            reload_audio_output(mpctx);
 
-    if (flags & UPDATE_DVB_PROG) {
-        if (!mpctx->stop_play)
-            mpctx->stop_play = PT_CURRENT_ENTRY;
-    }
+        if (flags & UPDATE_PRIORITY)
+            update_priority(mpctx);
 
-    if (flags & UPDATE_DEMUXER)
-        mpctx->demuxer_changed = true;
+        if (flags & UPDATE_SCREENSAVER)
+            update_screensaver_state(mpctx);
 
-    if (flags & UPDATE_AD && mpctx->ao_chain) {
-        uninit_audio_chain(mpctx);
-        reinit_audio_chain(mpctx);
-    }
+        if (flags & UPDATE_VOL)
+            audio_update_volume(mpctx);
 
-    if (flags & UPDATE_VD && mpctx->vo_chain) {
-        struct track *track = mpctx->current_track[0][STREAM_VIDEO];
-        uninit_video_chain(mpctx);
-        reinit_video_chain(mpctx);
-        if (track)
-            queue_seek(mpctx, MPSEEK_RELATIVE, 0.0, MPSEEK_EXACT, 0);
-    }
+        if (flags & UPDATE_LAVFI_COMPLEX)
+            update_lavfi_complex(mpctx);
 
-    if (opt_ptr == &opts->vo->android_surface_size) {
-        if (mpctx->video_out)
-            vo_control(mpctx->video_out, VOCTRL_EXTERNAL_RESIZE, NULL);
-    }
-
-    if (opt_ptr == &opts->input_commands) {
-        mpctx->command_ctx->command_opts_processed = false;
-        run_command_opts(mpctx);
-    }
-
-    if (opt_ptr == &opts->playback_speed || opt_ptr == &opts->playback_pitch) {
-        update_playback_speed(mpctx);
-        mp_wakeup_core(mpctx);
-    }
-
-    if (opt_ptr == &opts->play_dir) {
-        if (mpctx->play_dir != opts->play_dir) {
-            // The option must be set before we seek if we're at EOF.
-            if (mpctx->stop_play == AT_END_OF_FILE)
-                mpctx->play_dir = opts->play_dir;
-            queue_seek(mpctx, MPSEEK_ABSOLUTE, get_current_time(mpctx),
-                       MPSEEK_EXACT, 0);
-        }
-    }
-
-    if (opt_ptr == &opts->edition_id) {
-        struct demuxer *demuxer = mpctx->demuxer;
-        if (mpctx->playback_initialized && demuxer && demuxer->num_editions > 0) {
-            if (opts->edition_id != demuxer->edition) {
-                if (!mpctx->stop_play)
-                    mpctx->stop_play = PT_CURRENT_ENTRY;
+        if (flags & UPDATE_VIDEO) {
+            if (mpctx->video_out) {
+                vo_control(mpctx->video_out, VOCTRL_UPDATE_RENDER_OPTS, NULL);
                 mp_wakeup_core(mpctx);
             }
         }
-    }
 
-    if (opt_ptr == &opts->pause)
-        set_pause_state(mpctx, opts->pause);
-
-    if (opt_ptr == &opts->audio_delay) {
-        if (mpctx->ao_chain) {
-            mpctx->delay += mpctx->opts->audio_delay - mpctx->ao_chain->delay;
-            mpctx->ao_chain->delay = mpctx->opts->audio_delay;
+        if (flags & UPDATE_HWDEC) {
+            struct track *track = mpctx->current_track[0][STREAM_VIDEO];
+            struct mp_decoder_wrapper *dec = track ? track->dec : NULL;
+            if (dec) {
+                mp_decoder_wrapper_control(dec, VDCTRL_REINIT, NULL);
+                double last_pts = mpctx->video_pts;
+                if (last_pts != MP_NOPTS_VALUE)
+                    queue_seek(mpctx, MPSEEK_ABSOLUTE, last_pts, MPSEEK_EXACT, 0);
+            }
         }
-        mp_wakeup_core(mpctx);
-    }
 
-    if (opt_ptr == &opts->vo->window_scale)
-        update_window_scale(mpctx);
-
-    if (opt_ptr == &opts->vo->hidpi_window_scale)
-        update_hidpi_window_scale(mpctx, opts->vo->hidpi_window_scale);
-
-    if (opt_ptr == &opts->cursor_autohide_delay)
-        mpctx->mouse_timer = 0;
-
-    if (opt_ptr == &opts->loop_file) {
-        mpctx->remaining_file_loops = opts->loop_file;
-        mp_notify_property(mpctx, "remaining-file-loops");
-    }
-
-    if (opt_ptr == &opts->ab_loop[0] || opt_ptr == &opts->ab_loop[1] ||
-        opt_ptr == &opts->ab_loop_count) {
-        mpctx->remaining_ab_loops = opts->ab_loop_count;
-        mp_notify_property(mpctx, "remaining-ab-loops");
-    }
-
-    if (opt_ptr == &opts->ab_loop[0] || opt_ptr == &opts->ab_loop[1]) {
-        update_ab_loop_clip(mpctx);
-        // Update if visible
-        set_osd_bar_chapters(mpctx, OSD_BAR_SEEK);
-        mp_wakeup_core(mpctx);
-    }
-
-    if (opt_ptr == &opts->vf_settings)
-        set_filters(mpctx, STREAM_VIDEO, opts->vf_settings);
-
-    if (opt_ptr == &opts->af_settings)
-        set_filters(mpctx, STREAM_AUDIO, opts->af_settings);
-
-    for (int type = 0; type < STREAM_TYPE_COUNT; type++) {
-        for (int order = 0; order < num_ptracks[type]; order++) {
-            if (opt_ptr == &opts->stream_id[order][type])
-                update_track_switch(mpctx, order, type);
+        if (flags & UPDATE_DVB_PROG) {
+            if (!mpctx->stop_play)
+                mpctx->stop_play = PT_CURRENT_ENTRY;
         }
+
+        if (flags & UPDATE_DEMUXER)
+            mpctx->demuxer_changed = true;
+
+        if (flags & UPDATE_AD && mpctx->ao_chain) {
+            uninit_audio_chain(mpctx);
+            reinit_audio_chain(mpctx);
+        }
+
+        if (flags & UPDATE_VD && mpctx->vo_chain) {
+            struct track *track = mpctx->current_track[0][STREAM_VIDEO];
+            uninit_video_chain(mpctx);
+            reinit_video_chain(mpctx);
+            if (track)
+                queue_seek(mpctx, MPSEEK_RELATIVE, 0.0, MPSEEK_EXACT, 0);
+        }
+
+        if (opt_ptr == &opts->vo->android_surface_size) {
+            if (mpctx->video_out)
+                vo_control(mpctx->video_out, VOCTRL_EXTERNAL_RESIZE, NULL);
+        }
+
+        if (opt_ptr == &opts->input_commands) {
+            mpctx->command_ctx->command_opts_processed = false;
+            run_command_opts(mpctx);
+        }
+
+        if (opt_ptr == &opts->playback_speed || opt_ptr == &opts->playback_pitch) {
+            update_playback_speed(mpctx);
+            mp_wakeup_core(mpctx);
+        }
+
+        if (opt_ptr == &opts->play_dir) {
+            if (mpctx->play_dir != opts->play_dir) {
+                // The option must be set before we seek if we're at EOF.
+                if (mpctx->stop_play == AT_END_OF_FILE)
+                    mpctx->play_dir = opts->play_dir;
+                queue_seek(mpctx, MPSEEK_ABSOLUTE, get_current_time(mpctx),
+                           MPSEEK_EXACT, 0);
+            }
+        }
+
+        if (opt_ptr == &opts->edition_id) {
+            struct demuxer *demuxer = mpctx->demuxer;
+            if (mpctx->playback_initialized && demuxer && demuxer->num_editions > 0) {
+                if (opts->edition_id != demuxer->edition) {
+                    if (!mpctx->stop_play)
+                        mpctx->stop_play = PT_CURRENT_ENTRY;
+                    mp_wakeup_core(mpctx);
+                }
+            }
+        }
+
+        if (opt_ptr == &opts->pause)
+            set_pause_state(mpctx, opts->pause);
+
+        if (opt_ptr == &opts->audio_delay) {
+            if (mpctx->ao_chain) {
+                mpctx->delay += mpctx->opts->audio_delay - mpctx->ao_chain->delay;
+                mpctx->ao_chain->delay = mpctx->opts->audio_delay;
+            }
+            mp_wakeup_core(mpctx);
+        }
+
+        if (opt_ptr == &opts->vo->window_scale)
+            update_window_scale(mpctx);
+
+        if (opt_ptr == &opts->vo->hidpi_window_scale)
+            update_hidpi_window_scale(mpctx, opts->vo->hidpi_window_scale);
+
+        if (opt_ptr == &opts->cursor_autohide_delay)
+            mpctx->mouse_timer = 0;
+
+        if (opt_ptr == &opts->loop_file) {
+            mpctx->remaining_file_loops = opts->loop_file;
+            mp_notify_property(mpctx, "remaining-file-loops");
+        }
+
+        if (opt_ptr == &opts->ab_loop[0] || opt_ptr == &opts->ab_loop[1] ||
+            opt_ptr == &opts->ab_loop_count) {
+            mpctx->remaining_ab_loops = opts->ab_loop_count;
+            mp_notify_property(mpctx, "remaining-ab-loops");
+        }
+
+        if (opt_ptr == &opts->ab_loop[0] || opt_ptr == &opts->ab_loop[1]) {
+            update_ab_loop_clip(mpctx);
+            // Update if visible
+            set_osd_bar_chapters(mpctx, OSD_BAR_SEEK);
+            mp_wakeup_core(mpctx);
+        }
+
+        if (opt_ptr == &opts->vf_settings)
+            set_filters(mpctx, STREAM_VIDEO, opts->vf_settings);
+
+        if (opt_ptr == &opts->af_settings)
+            set_filters(mpctx, STREAM_AUDIO, opts->af_settings);
+
+        for (int type = 0; type < STREAM_TYPE_COUNT; type++) {
+            for (int order = 0; order < num_ptracks[type]; order++) {
+                if (opt_ptr == &opts->stream_id[order][type])
+                    update_track_switch(mpctx, order, type);
+            }
+        }
+
+        if (opt_ptr == &opts->vo->fullscreen && !opts->vo->fullscreen)
+            mpctx->mouse_event_ts--; // Show mouse cursor
+
+        if (opt_ptr == &opts->vo->taskbar_progress)
+            update_vo_playback_state(mpctx);
+
+        if (opt_ptr == &opts->image_display_duration && mpctx->vo_chain
+            && mpctx->vo_chain->is_sparse && !mpctx->ao_chain
+            && mpctx->video_status == STATUS_DRAINING)
+            mpctx->time_frame = opts->image_display_duration;
     }
-
-    if (opt_ptr == &opts->vo->fullscreen && !opts->vo->fullscreen)
-        mpctx->mouse_event_ts--; // Show mouse cursor
-
-    if (opt_ptr == &opts->vo->taskbar_progress)
-        update_vo_playback_state(mpctx);
-
-    if (opt_ptr == &opts->image_display_duration && mpctx->vo_chain
-        && mpctx->vo_chain->is_sparse && !mpctx->ao_chain
-        && mpctx->video_status == STATUS_DRAINING)
-        mpctx->time_frame = opts->image_display_duration;
+    mpctx->num_option_callbacks = 0;
 }
 
 void mp_notify_property(struct MPContext *mpctx, const char *property)

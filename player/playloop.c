@@ -1289,6 +1289,8 @@ void run_playloop(struct MPContext *mpctx)
 
     mp_process_input(mpctx);
 
+    mp_option_run_callbacks(mpctx);
+
     handle_chapter_change(mpctx);
 
     handle_force_window(mpctx, false);
@@ -1300,6 +1302,7 @@ void mp_idle(struct MPContext *mpctx)
     handle_clipboard_updates(mpctx);
     mp_wait_events(mpctx);
     mp_process_input(mpctx);
+    mp_option_run_callbacks(mpctx);
     handle_command_updates(mpctx);
     handle_update_cache(mpctx);
     handle_cursor_autohide(mpctx);
