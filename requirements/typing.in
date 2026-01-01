@@ -1,0 +1,7 @@
+mypy
+pyright
+pytest
+types-contextvars
+types-dataclasses
+types-setuptools
+watchdog
