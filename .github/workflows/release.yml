@@ -1,0 +1,252 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        description: Version to be released (e.g. "5.12.0-M1")
+        required: true
+      deploymentId:
+        description: ID of the Maven Central Publish Portal deployment
+        required: true
+      dryRun:
+        type: boolean
+        description: Enable dry-run mode
+        required: false
+        default: false
+
+permissions: {}
+
+env:
+  DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+  STAGING_REPO_URL: https://central.sonatype.com/api/v1/publisher/deployment/${{ inputs.deploymentId }}/download
+  RELEASE_TAG: r${{ inputs.releaseVersion }}
+  RELEASE_VERSION: ${{ inputs.releaseVersion }}
+
+jobs:
+
+  verify_reproducibility:
+    name: Verify reproducibility
+    runs-on: ubuntu-latest
+    permissions:
+      attestations: write # required for build provenance attestation
+      id-token: write # required for build provenance attestation
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 1
+          ref: "refs/tags/${{ env.RELEASE_TAG }}"
+          persist-credentials: false
+      - name: Prepare Maven Central user token
+        uses: ./.github/actions/maven-central-user-token
+        with:
+          username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+      - name: Download reference JAR from staging repository
+        id: referenceJar
+        run: |
+          curl --silent --fail --location --output /tmp/reference.jar \
+            --header "Authorization: Bearer $MAVEN_CENTRAL_USER_TOKEN" \
+            "${STAGING_REPO_URL}/org/junit/jupiter/junit-jupiter-api/${RELEASE_VERSION}/junit-jupiter-api-${RELEASE_VERSION}.jar"
+          sudo apt-get update && sudo apt-get install --yes jc
+          unzip -c /tmp/reference.jar META-INF/MANIFEST.MF | jc --jar-manifest | jq '.[0]' > /tmp/manifest.json
+          echo "createdBy=$(jq --raw-output .Created_By /tmp/manifest.json)" >> "$GITHUB_OUTPUT"
+          echo "buildTimestamp=$(jq --raw-output .Build_Date /tmp/manifest.json) $(jq --raw-output .Build_Time /tmp/manifest.json)" >> "$GITHUB_OUTPUT"
+      - name: Verify artifacts
+        uses: ./.github/actions/run-gradle
+        with:
+          encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          arguments: >-
+            --rerun-tasks
+            -Pmanifest.buildTimestamp="${{ steps.referenceJar.outputs.buildTimestamp }}"
+            -Pmanifest.createdBy="${{ steps.referenceJar.outputs.createdBy }}"
+            :verifyArtifactsInStagingRepositoryAreReproducible
+            --remote-repo-url=${{ env.STAGING_REPO_URL }}
+      - name: Generate build provenance attestations
+        if: ${{ inputs.dryRun == false }}
+        uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
+        with:
+          subject-path: build/repo/**/*.jar
+
+  verify_consumability:
+    name: Verify consumability
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 1
+          ref: "refs/tags/${{ env.RELEASE_TAG }}"
+          path: junit-framework
+          persist-credentials: false
+      - name: Check out examples repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: ${{ github.repository_owner }}/junit-examples
+          token: ${{ secrets.JUNIT_BUILDS_GITHUB_TOKEN_EXAMPLES_REPO }}
+          fetch-depth: 1
+          path: junit-examples
+          persist-credentials: false
+      - name: Set up JDK
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
+        with:
+          java-version: 25
+          distribution: temurin
+      - uses: sbt/setup-sbt@508b753e53cb6095967669e0911487d2b9bc9f41 # v1.1.22
+      - name: Update JUnit dependencies in examples
+        run: java src/Updater.java ${RELEASE_VERSION}
+        working-directory: junit-examples
+      - name: Prepare Maven Central user token
+        uses: ./junit-framework/.github/actions/maven-central-user-token
+        with:
+          username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+      - name: Inject staging repository URL
+        run: java src/StagingRepoInjector.java ${STAGING_REPO_URL}
+        working-directory: junit-examples
+      - name: Build examples
+        run: java src/Builder.java --exclude=junit-jupiter-starter-bazel,junit-jupiter-starter-sbt,junit-source-launcher
+        working-directory: junit-examples
+        env:
+          MAVEN_ARGS: --settings ${{ github.workspace }}/junit-examples/src/central-staging-maven-settings.xml --activate-profiles central-staging
+
+  close_github_milestone:
+    name: Close GitHub milestone
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Close GitHub milestone
+        if: ${{ inputs.dryRun == false }}
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          result-encoding: string
+          script: |
+            const closeGithubMilestone = require('./.github/scripts/close-github-milestone.js');
+            closeGithubMilestone({ github, context });
+
+  publish_deployment:
+    name: Publish to Maven Central
+    needs: [ verify_reproducibility, verify_consumability, close_github_milestone ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 1
+          ref: "refs/tags/${{ env.RELEASE_TAG }}"
+          persist-credentials: false
+      - name: Release staging repository
+        if: ${{ inputs.dryRun == false }}
+        uses: ./.github/actions/run-gradle
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          JRELEASER_MAVENCENTRAL_STAGE: PUBLISH
+          JRELEASER_MAVENCENTRAL_DEPLOYMENT_ID: ${{ inputs.deploymentId }}
+        with:
+          encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          arguments: jreleaserDeploy
+
+  publish_documentation:
+    name: Publish documentation
+    needs: publish_deployment
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Trigger deployment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy-docs.yml --repo junit-team/junit-framework --ref docs-site
+      - name: Install Poppler (for pdfinfo)
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes poppler-utils
+      - name: Wait for deployment
+        if: ${{ inputs.dryRun == false }}
+        id: pagesDeployment
+        timeout-minutes: 30
+        run: |
+          URL="https://docs.junit.org/${RELEASE_VERSION}/_exports/junit-user-guide-${RELEASE_VERSION}.pdf"
+          ./.github/scripts/waitForUrl.sh "$URL"
+          echo "pdfUrl=$URL" >> "$GITHUB_OUTPUT"
+      - name: Verify integrity of PDF version of User Guide
+        if: ${{ inputs.dryRun == false }}
+        run: |
+          curl --silent --fail --location --output /tmp/junit-user-guide.pdf "${PDF_URL}"
+          pdfinfo /tmp/junit-user-guide.pdf
+        env:
+          PDF_URL: ${{ steps.pagesDeployment.outputs.pdfUrl }}
+
+  update_examples:
+    name: Update examples
+    needs: publish_deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out examples repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: ${{ github.repository_owner }}/junit-examples
+          token: ${{ secrets.JUNIT_BUILDS_GITHUB_TOKEN_EXAMPLES_REPO }}
+          persist-credentials: true
+      - name: Set up JDK
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
+        with:
+          java-version: 25
+          distribution: temurin
+      - uses: sbt/setup-sbt@508b753e53cb6095967669e0911487d2b9bc9f41 # v1.1.22
+      - name: Update JUnit dependencies in examples
+        run: java src/Updater.java ${RELEASE_VERSION}
+      - name: Build examples
+        if: ${{ inputs.dryRun == false }}
+        run: java src/Builder.java
+      - name: Create release branch
+        run: |
+          git config user.name "JUnit Team"
+          git config user.email "team@junit.org"
+          git switch -c "${RELEASE_TAG}"
+          git status
+          git commit -a -m "Use ${RELEASE_VERSION}"
+      - name: Push release branch
+        if: ${{ inputs.dryRun == false }}
+        run: |
+          git push origin "${RELEASE_TAG}"
+      - name: Update main branch (only for GA releases)
+        if: ${{ inputs.dryRun == false && !contains(inputs.releaseVersion, '-') }}
+        run: |
+          git fetch origin main
+          git switch main
+          git merge --ff-only "${RELEASE_TAG}"
+          git push origin main
+
+  create_github_release:
+    name: Create GitHub release
+    if: ${{ inputs.dryRun == false }}
+    needs: [ publish_documentation, update_examples ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Create GitHub release
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const createGithubRelease = require('./.github/scripts/create-github-release.js');
+            createGithubRelease({ github, context });

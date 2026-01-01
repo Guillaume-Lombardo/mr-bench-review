@@ -1,0 +1,58 @@
+name: Run Gradle
+description: Sets up Gradle JDKs and runs Gradle
+inputs:
+  arguments:
+    required: true
+    description: Gradle arguments
+    default: build
+  broken-by-issue:
+    required: false
+    description: Expect the build to fail due the referenced GitHub issue
+    default: ""
+  encryptionKey:
+    required: true
+    description: Gradle cache encryption key
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
+      id: setup-gradle-jdk
+      with:
+        distribution: temurin
+        java-version: 25
+        check-latest: true
+    - uses: gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e # v6.1.0
+      with:
+        cache-encryption-key: ${{ inputs.encryptionKey }}
+    - uses: testlens-app/setup-testlens@0232fb63c43e5b93421545ba67bbb2981790a87f # v1.8.0
+    - shell: bash
+      env:
+        JAVA_HOME: ${{ steps.setup-gradle-jdk.outputs.path }}
+      run: | # zizmor: ignore[template-injection]
+        ./gradlew \
+        -Dorg.gradle.java.installations.auto-download=false \
+        -Pjunit.develocity.buildCache.pushEnabled=${{ github.repository == 'junit-team/junit-framework' }} \
+        -Pjunit.develocity.predictiveTestSelection.enabled=true \
+        -Pjunit.develocity.predictiveTestSelection.selectRemainingTests=${{ github.event_name != 'pull_request' }} \
+        "-Dscan.value.GitHub job=${{ github.job }}" \
+        javaToolchains \
+        ${{ inputs.arguments }} || error_code=$?
+        
+        
+        if [ -n "${{ inputs.broken-by-issue }}" ]; then
+          if [ -n "$error_code" ]; then
+            # we expected the build to fail, it failed => pass 
+            exit 0
+          else            
+            # we expected the build to fail, it didn't => fail
+            RED='\033[0;31m'
+            RESET='\033[0m' # No Color
+            echo "${RED}Build was expected to fail, but it passed. Was ${{ inputs.broken-by-issue }} resolved?${RESET}"
+            exit 1            
+          fi
+        fi
+        
+        # exit with the original error code if set
+        if [ -n "$error_code" ]; then
+          exit "$error_code"
+        fi
