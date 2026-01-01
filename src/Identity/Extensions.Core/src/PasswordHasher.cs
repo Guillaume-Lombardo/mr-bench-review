@@ -249,6 +249,8 @@ public class PasswordHasher<TUser> : IPasswordHasher<TUser> where TUser : class
 
     private static bool VerifyHashedPasswordV3(byte[] hashedPassword, string password, out int iterCount, out KeyDerivationPrf prf)
     {
+        const int MaxSaltSize = 1024 * 8; // 8 KiB
+
         iterCount = default(int);
         prf = default(KeyDerivationPrf);
 
@@ -260,7 +262,7 @@ public class PasswordHasher<TUser> : IPasswordHasher<TUser> where TUser : class
             int saltLength = (int)ReadNetworkByteOrder(hashedPassword, 9);
 
             // Read the salt: must be >= 128 bits
-            if (saltLength < 128 / 8)
+            if (saltLength < 128 / 8 || saltLength > MaxSaltSize)
             {
                 return false;
             }
