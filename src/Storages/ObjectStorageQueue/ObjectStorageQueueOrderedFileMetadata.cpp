@@ -245,17 +245,63 @@ std::pair<bool, ObjectStorageQueueIFileMetadata::FileStatus::State> ObjectStorag
 
     while (true)
     {
-        NodeMetadata processed_node;
+        std::optional<NodeMetadata> processed_node;
         Coordination::Stat processed_node_stat;
-        bool has_processed_node = getMaxProcessedFile(processed_node, &processed_node_stat, zk_client);
-        if (has_processed_node)
+        if (zk_client->isFeatureEnabled(DB::KeeperFeatureFlag::MULTI_READ))
         {
-            LOG_TEST(log, "Current max processed file {} from path: {}",
-                        processed_node.file_path, processed_node_path);
+            Coordination::Requests requests;
+            requests.push_back(zkutil::makeGetRequest(processed_node_path));
+            requests.push_back(zkutil::makeGetRequest(failed_node_path));
 
-            if (!processed_node.file_path.empty() && path <= processed_node.file_path)
+            Coordination::Responses responses;
+            const auto code = zk_client->tryMulti(requests, responses);
+
+            if (!(code == Coordination::Error::ZOK || code == Coordination::Error::ZNONODE))
+                throw zkutil::KeeperException::fromPath(code, path);
+
+            if (responses[1]->error == Coordination::Error::ZOK)
             {
-                return {false, FileStatus::State::Processed};
+                LOG_TEST(log, "File {} is Failed", path);
+                return {false, FileStatus::State::Failed};
+            }
+
+            if (responses[0]->error == Coordination::Error::ZOK)
+            {
+                const auto * get_response = dynamic_cast<const Coordination::GetResponse *>(responses[0].get());
+                if (!get_response->data.empty())
+                {
+                    processed_node.emplace(NodeMetadata::fromString(get_response->data));
+                    processed_node_stat = get_response->stat;
+
+                    LOG_TEST(log, "Current max processed file {} from path: {}",
+                             processed_node->file_path, processed_node_path);
+
+                    if (!processed_node->file_path.empty() && path <= processed_node->file_path)
+                    {
+                        return {false, FileStatus::State::Processed};
+                    }
+                }
+            }
+        }
+        else
+        {
+            NodeMetadata node_metadata;
+            if (getMaxProcessedFile(node_metadata, &processed_node_stat, zk_client))
+            {
+                if (zk_client->exists(failed_node_path))
+                {
+                    LOG_TEST(log, "File {} is Failed", path);
+                    return {false, FileStatus::State::Failed};
+                }
+
+                processed_node.emplace(node_metadata);
+                LOG_TEST(log, "Current max processed file {} from path: {}",
+                         processed_node->file_path, processed_node_path);
+
+                if (!processed_node->file_path.empty() && path <= processed_node->file_path)
+                {
+                    return {false, FileStatus::State::Processed};
+                }
             }
         }
 
@@ -290,7 +336,7 @@ std::pair<bool, ObjectStorageQueueIFileMetadata::FileStatus::State> ObjectStorag
         /// so may be remove creation and check for processing_node_id if bucket_info is set?
 
         auto check_max_processed_path = requests.size();
-        if (has_processed_node)
+        if (processed_node.has_value())
             requests.push_back(zkutil::makeCheckRequest(processed_node_path, processed_node_stat.version));
         else
             zkutil::addCheckNotExistsRequest(requests, *zk_client, processed_node_path);
@@ -385,7 +431,6 @@ void ObjectStorageQueueOrderedFileMetadata::setProcessedRequests(
 
     if (processing_id_version.has_value())
     {
-        requests.push_back(zkutil::makeCheckRequest(processing_node_id_path, processing_id_version.value()));
         requests.push_back(zkutil::makeRemoveRequest(processing_node_id_path, processing_id_version.value()));
         requests.push_back(zkutil::makeRemoveRequest(processing_node_path, -1));
     }
