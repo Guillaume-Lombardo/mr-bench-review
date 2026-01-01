@@ -155,10 +155,10 @@ describe(NotificationService.name, () => {
 
   describe('onAlbumUpdateEvent', () => {
     it('should queue notify album update event', async () => {
-      await sut.onAlbumUpdate({ id: 'album', recipientIds: ['42'] });
+      await sut.onAlbumUpdate({ id: 'album', recipientID: '42' });
       expect(mocks.job.queue).toHaveBeenCalledWith({
         name: JobName.NOTIFY_ALBUM_UPDATE,
-        data: { id: 'album', recipientIds: ['42'], delay: 300_000 },
+        data: { id: 'album', recipientID: '42', delay: 300_000 },
       });
     });
   });
@@ -491,14 +491,14 @@ describe(NotificationService.name, () => {
 
   describe('handleAlbumUpdate', () => {
     it('should skip if album could not be found', async () => {
-      await expect(sut.handleAlbumUpdate({ id: '', recipientIds: ['1'] })).resolves.toBe(JobStatus.SKIPPED);
+      await expect(sut.handleAlbumUpdate({ id: '', recipientID: '1' })).resolves.toBe(JobStatus.SKIPPED);
       expect(mocks.user.get).not.toHaveBeenCalled();
     });
 
     it('should skip if owner could not be found', async () => {
       mocks.album.getById.mockResolvedValue(albumStub.emptyWithValidThumbnail);
 
-      await expect(sut.handleAlbumUpdate({ id: '', recipientIds: ['1'] })).resolves.toBe(JobStatus.SKIPPED);
+      await expect(sut.handleAlbumUpdate({ id: '', recipientID: '1' })).resolves.toBe(JobStatus.SKIPPED);
       expect(mocks.systemMetadata.get).not.toHaveBeenCalled();
     });
 
@@ -511,7 +511,7 @@ describe(NotificationService.name, () => {
       mocks.email.renderEmail.mockResolvedValue({ html: '', text: '' });
       mocks.assetJob.getAlbumThumbnailFiles.mockResolvedValue([]);
 
-      await sut.handleAlbumUpdate({ id: '', recipientIds: [userStub.user1.id] });
+      await sut.handleAlbumUpdate({ id: '', recipientID: userStub.user1.id });
       expect(mocks.user.get).toHaveBeenCalledWith(userStub.user1.id, { withDeleted: false });
       expect(mocks.email.renderEmail).not.toHaveBeenCalled();
     });
@@ -533,7 +533,7 @@ describe(NotificationService.name, () => {
       mocks.email.renderEmail.mockResolvedValue({ html: '', text: '' });
       mocks.assetJob.getAlbumThumbnailFiles.mockResolvedValue([]);
 
-      await sut.handleAlbumUpdate({ id: '', recipientIds: [userStub.user1.id] });
+      await sut.handleAlbumUpdate({ id: '', recipientID: userStub.user1.id });
       expect(mocks.user.get).toHaveBeenCalledWith(userStub.user1.id, { withDeleted: false });
       expect(mocks.email.renderEmail).not.toHaveBeenCalled();
     });
@@ -555,7 +555,7 @@ describe(NotificationService.name, () => {
       mocks.email.renderEmail.mockResolvedValue({ html: '', text: '' });
       mocks.assetJob.getAlbumThumbnailFiles.mockResolvedValue([]);
 
-      await sut.handleAlbumUpdate({ id: '', recipientIds: [userStub.user1.id] });
+      await sut.handleAlbumUpdate({ id: '', recipientID: userStub.user1.id });
       expect(mocks.user.get).toHaveBeenCalledWith(userStub.user1.id, { withDeleted: false });
       expect(mocks.email.renderEmail).not.toHaveBeenCalled();
     });
@@ -569,21 +569,21 @@ describe(NotificationService.name, () => {
       mocks.email.renderEmail.mockResolvedValue({ html: '', text: '' });
       mocks.assetJob.getAlbumThumbnailFiles.mockResolvedValue([]);
 
-      await sut.handleAlbumUpdate({ id: '', recipientIds: [userStub.user1.id] });
+      await sut.handleAlbumUpdate({ id: '', recipientID: userStub.user1.id });
       expect(mocks.user.get).toHaveBeenCalledWith(userStub.user1.id, { withDeleted: false });
       expect(mocks.email.renderEmail).toHaveBeenCalled();
       expect(mocks.job.queue).toHaveBeenCalled();
     });
 
     it('should add new recipients for new images if job is already queued', async () => {
-      mocks.job.removeJob.mockResolvedValue({ id: '1', recipientIds: ['2', '3', '4'] } as INotifyAlbumUpdateJob);
-      await sut.onAlbumUpdate({ id: '1', recipientIds: ['1', '2', '3'] } as INotifyAlbumUpdateJob);
+      await sut.onAlbumUpdate({ id: '1', recipientID: '2' } as INotifyAlbumUpdateJob);
+      expect(mocks.job.removeJob).toHaveBeenCalledWith(JobName.NOTIFY_ALBUM_UPDATE, '1/2');
       expect(mocks.job.queue).toHaveBeenCalledWith({
         name: JobName.NOTIFY_ALBUM_UPDATE,
         data: {
           id: '1',
           delay: 300_000,
-          recipientIds: ['1', '2', '3', '4'],
+          recipientID: '2',
         },
       });
     });
