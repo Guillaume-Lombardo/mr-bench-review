@@ -1,0 +1,23 @@
+ IEclipsePreferences#org-eclipse-ui-workbench:org-jkiss-dbeaver-core {
+        preferences:
+            'org.jkiss.dbeaver.txn.color.committed.background=11,60,0'
+            'org.jkiss.dbeaver.txn.color.reverted.background=72,19,5'
+            'org.jkiss.dbeaver.txn.color.transaction.background=4,84,113'
+
+            'org.jkiss.dbeaver.hex.editor.color.caret=80,80,80'
+            'org.jkiss.dbeaver.hex.editor.color.text=255,255,255'
+
+            'org.jkiss.dbeaver.xml.editor.color.tag=0,143,207'
+            'org.jkiss.dbeaver.xml.editor.color.text=255,255,255'
+            'org.jkiss.dbeaver.xml.editor.color.comment=255,0,0'
+
+            'org.jkiss.dbeaver.color.connectionType.qa.background=0,115,0'
+            'org.jkiss.dbeaver.color.connectionType.prod.background=140,0,0'
+
+            'org.jkiss.dbeaver.ui.navigator.node.transient.foreground=71,180,65'
+            'org.jkiss.dbeaver.ui.navigator.node.new.background=41,66,0'
+            'org.jkiss.dbeaver.ui.navigator.node.modified.background=82,52,0'
+
+            'org.jkiss.dbeaver.ui.navigator.node.foreground=140,140,140'
+            'org.jkiss.dbeaver.ui.navigator.node.statistics.background=105,105,105'
+}
