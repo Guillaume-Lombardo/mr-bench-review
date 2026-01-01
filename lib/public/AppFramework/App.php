@@ -12,6 +12,7 @@ namespace OCP\AppFramework;
 use OC\AppFramework\Routing\RouteConfig;
 use OC\Route\Router;
 use OC\ServerContainer;
+use OCP\IConfig;
 use OCP\Route\IRouter;
 use Psr\Log\LoggerInterface;
 
@@ -47,7 +48,7 @@ class App {
 	 * @since 6.0.0
 	 */
 	public function __construct(string $appName, array $urlParams = []) {
-		$runIsSetupDirectly = \OC::$server->getConfig()->getSystemValueBool('debug')
+		$runIsSetupDirectly = \OCP\Server::get(IConfig::class)->getSystemValueBool('debug')
 			&& !ini_get('zend.exception_ignore_args');
 
 		if ($runIsSetupDirectly) {
