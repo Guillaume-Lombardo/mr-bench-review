@@ -454,9 +454,9 @@ void View3DInventorViewer::init()
     fillLight = new SoDirectionalLight();
     fillLight->ref();
     fillLight->setName("filllight");
-    fillLight->direction.setValue(-0.60, -0.35, -0.79);
-    fillLight->intensity.setValue(0.6);
-    fillLight->color.setValue(0.95, 0.95, 1.0);
+    fillLight->direction.setValue(-0.60f, -0.35f, -0.79f);
+    fillLight->intensity.setValue(0.6f);
+    fillLight->color.setValue(0.95f, 0.95f, 1.0f);
     fillLight->on.setValue(false); // by default off
 
     // Set up background scenegraph with image in it.
