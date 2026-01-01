@@ -1,0 +1,62 @@
+<div mat-internal-form-field [labelPosition]="labelPosition">
+  <button
+    class="mdc-switch"
+    role="switch"
+    type="button"
+    [class.mdc-switch--selected]="checked"
+    [class.mdc-switch--unselected]="!checked"
+    [class.mdc-switch--checked]="checked"
+    [class.mdc-switch--disabled]="disabled"
+    [class.mat-mdc-slide-toggle-disabled-interactive]="disabledInteractive"
+    [tabIndex]="disabled && !disabledInteractive ? -1 : tabIndex"
+    [disabled]="disabled && !disabledInteractive"
+    [attr.id]="buttonId"
+    [attr.name]="name"
+    [attr.aria-label]="ariaLabel"
+    [attr.aria-labelledby]="_getAriaLabelledBy()"
+    [attr.aria-describedby]="ariaDescribedby"
+    [attr.aria-required]="required || null"
+    [attr.aria-checked]="checked"
+    [attr.aria-disabled]="disabled && disabledInteractive ? 'true' : null"
+    (click)="_handleClick()"
+    #switch>
+    <span class="mdc-switch__track"></span>
+    <span class="mdc-switch__handle-track">
+      <span class="mdc-switch__handle">
+        <span class="mdc-switch__shadow">
+          <span class="mdc-elevation-overlay"></span>
+        </span>
+        <span class="mdc-switch__ripple">
+          <span class="mat-mdc-slide-toggle-ripple mat-focus-indicator" mat-ripple
+            [matRippleTrigger]="switch"
+            [matRippleDisabled]="disableRipple || disabled"
+            [matRippleCentered]="true"></span>
+        </span>
+        @if (!hideIcon) {
+          <span class="mdc-switch__icons">
+            <svg
+              class="mdc-switch__icon mdc-switch__icon--on"
+              viewBox="0 0 24 24"
+              aria-hidden="true">
+              <path d="M19.69,5.23L8.96,15.96l-4.23-4.23L2.96,13.5l6,6L21.46,7L19.69,5.23z" />
+            </svg>
+            <svg
+              class="mdc-switch__icon mdc-switch__icon--off"
+              viewBox="0 0 24 24"
+              aria-hidden="true">
+              <path d="M20 13H4v-2h16v2z" />
+            </svg>
+          </span>
+        }
+      </span>
+    </span>
+  </button>
+
+  <!--
+    Clicking on the label will trigger another click event from the button.
+    Stop propagation here so other listeners further up in the DOM don't execute twice.
+  -->
+  <label class="mdc-label" [for]="buttonId" [attr.id]="_labelId" (click)="$event.stopPropagation()">
+    <ng-content></ng-content>
+  </label>
+</div>
