@@ -1,0 +1,60 @@
+{{#if length}}
+
+  {{d-button label="admin.plugins.change_settings"
+             icon="gear"
+             class='settings-button pull-right'
+             action="showSettings"}}
+
+  <h3>{{i18n "admin.plugins.installed"}}</h3>
+
+  <br/>
+
+  <table class="admin-plugins">
+    <thead>
+      <tr>
+        <th>{{i18n "admin.plugins.name"}}</th>
+        <th>{{i18n "admin.plugins.version"}}</th>
+        <th>{{i18n "admin.plugins.enabled"}}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each plugin in controller}}
+        <tr>
+          <td>
+            {{#if plugin.url}}
+              <a {{bind-attr href=plugin.url}} target="_blank">{{plugin.name}}</a>
+            {{else}}
+              {{plugin.name}}
+            {{/if}}
+          </td>
+          <td>{{plugin.version}}</td>
+          <td class="col-enabled">
+            {{#if plugin.enabled_setting}}
+              {{#if plugin.enabled}}
+                {{i18n "admin.plugins.is_enabled"}}
+              {{else}}
+                {{i18n "admin.plugins.not_enabled"}}
+              {{/if}}
+            {{else}}
+              {{i18n "admin.plugins.cant_disable"}}
+            {{/if}}
+          </td>
+          <td>
+            {{#if plugin.enabled_setting}}
+              <button {{action "showSettings" plugin}} class="btn">
+                {{fa-icon "gear"}}
+                {{i18n "admin.plugins.change_settings_short"}}
+              </button>
+            {{/if}}
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p>{{i18n "admin.plugins.none_installed"}}</p>
+{{/if}}
+
+<p><a href="https://meta.discourse.org/t/install-a-plugin/19157">{{i18n "admin.plugins.howto"}}</a></p>
+
