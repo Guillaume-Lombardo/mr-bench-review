@@ -1,0 +1,29 @@
+{
+  "xpack.usage":{
+    "documentation":{
+      "url":"https://www.elastic.co/docs/api/doc/elasticsearch/group/endpoint-xpack",
+      "description":"Get usage information"
+    },
+    "stability":"stable",
+    "visibility":"public",
+    "headers":{
+      "accept": [ "application/json"]
+    },
+    "url":{
+      "paths":[
+        {
+          "path":"/_xpack/usage",
+          "methods":[
+            "GET"
+          ]
+        }
+      ]
+    },
+    "params":{
+      "master_timeout":{
+        "type":"time",
+        "description":"Specify timeout for watch write operation"
+      }
+    }
+  }
+}
