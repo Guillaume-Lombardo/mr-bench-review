@@ -1,0 +1,17 @@
+--- old.unusedImportDeclaration.js
++++ new.unusedImportDeclaration.js
+@@= skipped -16, +16 lines =@@
+
+ //// [unusedImportDeclaration_testerB.js]
+ "use strict";
+-var TesterB = /** @class */ (function () {
+-    function TesterB() {
+-    }
+-    return TesterB;
+-}());
++class TesterB {
++    me;
++}
+ module.exports = TesterB;
+ //// [unusedImportDeclaration_testerA.js]
+ "use strict";

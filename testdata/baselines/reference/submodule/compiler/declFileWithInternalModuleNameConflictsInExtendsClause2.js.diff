@@ -1,0 +1,25 @@
+--- old.declFileWithInternalModuleNameConflictsInExtendsClause2.js
++++ new.declFileWithInternalModuleNameConflictsInExtendsClause2.js
+@@= skipped -17, +17 lines =@@
+ //// [declFileWithInternalModuleNameConflictsInExtendsClause2.js]
+ var X;
+ (function (X) {
+-    var A;
++    let A;
+     (function (A) {
+-        var B;
++        let B;
+         (function (B) {
+-            var C;
++            let C;
+             (function (C) {
+-                var W = /** @class */ (function () {
+-                    function W() {
+-                    }
+-                    return W;
+-                }());
++                class W {
++                }
+                 C.W = W;
+             })(C = B.C || (B.C = {}));
+         })(B = A.B || (A.B = {}));

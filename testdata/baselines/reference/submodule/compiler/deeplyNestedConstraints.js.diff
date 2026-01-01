@@ -1,0 +1,27 @@
+--- old.deeplyNestedConstraints.js
++++ new.deeplyNestedConstraints.js
+@@= skipped -14, +14 lines =@@
+
+
+ //// [deeplyNestedConstraints.js]
+-"use strict";
+-// Repro from #41931
+-var BufferPool = /** @class */ (function () {
+-    function BufferPool() {
+-    }
+-    BufferPool.prototype.setArray2 = function (_, array) {
++class BufferPool {
++    setArray2(_, array) {
+         array.length; // Requires exploration of >5 levels of constraints
+-    };
+-    return BufferPool;
+-}());
++    }
++}
+
+
+ //// [deeplyNestedConstraints.d.ts]
++// Repro from #41931
+ type Enum = Record<string, string | number>;
+ type TypeMap<E extends Enum> = {
+     [key in E[keyof E]]: number | boolean | string | number[];

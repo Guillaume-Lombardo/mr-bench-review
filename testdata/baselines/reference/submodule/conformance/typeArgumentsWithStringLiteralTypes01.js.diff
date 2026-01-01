@@ -1,0 +1,43 @@
+--- old.typeArgumentsWithStringLiteralTypes01.js
++++ new.typeArgumentsWithStringLiteralTypes01.js
+@@= skipped -119, +119 lines =@@
+ function fun2(x, y) {
+     return randBool() ? x : y;
+ }
+-function fun3() {
+-    var args = [];
+-    for (var _i = 0; _i < arguments.length; _i++) {
+-        args[_i] = arguments[_i];
+-    }
++function fun3(...args) {
+     return args[+randBool()];
+ }
+ var n1;
+@@= skipped -103, +99 lines =@@
+ declare function fun2<T, U>(x: T, y: U): T | U;
+ declare function fun3<T>(...args: T[]): T;
+ declare namespace n1 {
++    // The following should all come back as strings.
++    // They should be assignable to/from something of a type 'string'.
++    // They should not be assignable to either "Hello" or "World".
+     let a: string;
+     let b: string;
+     let c: string;
+@@= skipped -7, +10 lines =@@
+     let e: string;
+ }
+ declare namespace n2 {
++    // The following (regardless of errors) should come back typed
++    // as "Hello" (or "Hello" | "Hello").
+     let a: "Hello";
+     let b: "Hello";
+     let c: "Hello";
+@@= skipped -7, +9 lines =@@
+     let e: "Hello";
+ }
+ declare namespace n3 {
++    // The following (regardless of errors) should come back typed
++    // as "Hello" | "World" (or "World" | "Hello").
+     let a: "Hello" | "World";
+     let b: "Hello" | "World";
+     let c: "Hello" | "World";

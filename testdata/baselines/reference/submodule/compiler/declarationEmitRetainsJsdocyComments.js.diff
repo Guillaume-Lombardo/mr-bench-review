@@ -1,0 +1,81 @@
+--- old.declarationEmitRetainsJsdocyComments.js
++++ new.declarationEmitRetainsJsdocyComments.js
+@@= skipped -48, +48 lines =@@
+ //// [declarationEmitRetainsJsdocyComments.js]
+ "use strict";
+ Object.defineProperty(exports, "__esModule", { value: true });
+-exports.someMethod = exports.Foo = exports.foo = void 0;
++exports.
++/**
++* comment5
++*/
++someMethod = exports.Foo = exports.foo = void 0;
+ /**
+  * comment1
+  * @param p
+  */
+-var foo = function (p) {
++const foo = (p) => {
+     return {
+         /**
+          * comment2
+          * @param s
+          */
+-        bar: function (s) { },
++        bar: (s) => { },
+         /**
+          * comment3
+          * @param s
+          */
+-        bar2: function (s) { },
++        bar2(s) { },
+     };
+ };
+ exports.foo = foo;
+-var Foo = /** @class */ (function () {
+-    function Foo() {
+-    }
++class Foo {
+     /**
+      * comment4
+      * @param s
+      */
+-    Foo.prototype.bar = function (s) {
+-    };
+-    return Foo;
+-}());
++    bar(s) {
++    }
++}
+ exports.Foo = Foo;
+-/**
+-* comment5
+-*/
+-exports.someMethod = null.someMethod;
++({ 
++    /**
++    * comment5
++    */
++    someMethod: exports.someMethod } = null);
+
+
+ //// [declarationEmitRetainsJsdocyComments.d.ts]
+@@= skipped -62, +64 lines =@@
+      */
+     bar(s: number): void;
+ }
+-export declare let 
+-/**
+-* comment5
+-*/
+-someMethod: any;
+-declare global {
++declare namespace global {
+     interface ExtFunc {
+         /**
+         * comment6
+@@= skipped -13, +8 lines =@@
+         someMethod(collection: any[]): boolean;
+     }
+ }
++export {};

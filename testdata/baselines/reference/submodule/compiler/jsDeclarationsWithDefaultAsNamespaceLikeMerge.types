@@ -1,0 +1,43 @@
+//// [tests/cases/compiler/jsDeclarationsWithDefaultAsNamespaceLikeMerge.ts] ////
+
+=== /helper.d.ts ===
+type Computed = () => any;
+>Computed : Computed
+
+interface Mapper<R> {
+    <Key extends string>(map: Key[]): { [K in Key]: R };
+>map : Key[]
+
+    <Map extends Record<string, string>>(map: Map): { [K in keyof Map]: R };
+>map : Map
+}
+interface NamespacedMappers {
+    mapState: Mapper<Computed>;
+>mapState : Mapper<Computed>
+}
+export declare function createNamespacedHelpers(): NamespacedMappers;
+>createNamespacedHelpers : () => NamespacedMappers
+
+=== /index.js ===
+import { createNamespacedHelpers } from './helper'
+>createNamespacedHelpers : () => import("./helper.js").NamespacedMappers
+
+const { mapState } = createNamespacedHelpers()
+>mapState : import("./helper.js").Mapper<import("./helper.js").Computed>
+>createNamespacedHelpers() : import("./helper.js").NamespacedMappers
+>createNamespacedHelpers : () => import("./helper.js").NamespacedMappers
+
+export default {
+>{    computed: {        ...mapState(['panels'])    }} : { computed: { panels: import("./helper.js").Computed; }; }
+
+    computed: {
+>computed : { panels: import("./helper.js").Computed; }
+>{        ...mapState(['panels'])    } : { panels: import("./helper.js").Computed; }
+
+        ...mapState(['panels'])
+>mapState(['panels']) : { panels: import("./helper.js").Computed; }
+>mapState : import("./helper.js").Mapper<import("./helper.js").Computed>
+>['panels'] : "panels"[]
+>'panels' : "panels"
+    }
+}

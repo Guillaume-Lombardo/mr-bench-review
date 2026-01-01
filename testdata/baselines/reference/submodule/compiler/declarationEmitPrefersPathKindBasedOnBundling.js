@@ -1,0 +1,73 @@
+//// [tests/cases/compiler/declarationEmitPrefersPathKindBasedOnBundling.ts] ////
+
+//// [scalar.ts]
+export interface Scalar {
+	(): string;
+	value: number;
+}
+
+export function scalar(value: string): Scalar {
+	return null as any;
+}
+//// [spacing.ts]
+import { scalar } from '../lib/operators/scalar';
+
+export default {
+	get xs() {
+		return scalar("14px");
+	}
+};
+
+
+//// [scalar.js]
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.scalar = scalar;
+function scalar(value) {
+    return null;
+}
+//// [spacing.js]
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const scalar_1 = require("../lib/operators/scalar");
+exports.default = {
+    get xs() {
+        return (0, scalar_1.scalar)("14px");
+    }
+};
+
+
+//// [scalar.d.ts]
+export interface Scalar {
+    (): string;
+    value: number;
+}
+export declare function scalar(value: string): Scalar;
+//// [spacing.d.ts]
+declare const _default: {
+    readonly xs: import("src/lib/operators/scalar").Scalar;
+};
+export default _default;
+
+
+//// [DtsFileErrors]
+
+
+dist/settings/spacing.d.ts(2,25): error TS2307: Cannot find module 'src/lib/operators/scalar' or its corresponding type declarations.
+
+
+==== dist/lib/operators/scalar.d.ts (0 errors) ====
+    export interface Scalar {
+        (): string;
+        value: number;
+    }
+    export declare function scalar(value: string): Scalar;
+    
+==== dist/settings/spacing.d.ts (1 errors) ====
+    declare const _default: {
+        readonly xs: import("src/lib/operators/scalar").Scalar;
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2307: Cannot find module 'src/lib/operators/scalar' or its corresponding type declarations.
+    };
+    export default _default;
+    

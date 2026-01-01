@@ -1,0 +1,13 @@
+--- old.declarationEmitTypeofRest.js
++++ new.declarationEmitTypeofRest.js
+@@= skipped -34, +34 lines =@@
+     /** r rest param */
+     a: [n: "n", a: "a"];
+ };
++//// [v2.d.ts]
++export declare const v2: (n: "n", a: "a") => {
++    /** r rest param */
++    a: [n: "n", a: "a"];
++    /** module var */
++    n: unique symbol;
++};

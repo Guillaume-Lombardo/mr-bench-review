@@ -1,0 +1,100 @@
+--- old.nodeModules1(module=node16).js
++++ new.nodeModules1(module=node16).js
+@@= skipped -338, +338 lines =@@
+ const x = 1;
+ export { x };
+ //// [index.js]
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.x = void 0;
+ // cjs format file
+ const x = 1;
+-exports.x = x;
++export { x };
+ //// [index.cjs]
+ "use strict";
+ Object.defineProperty(exports, "__esModule", { value: true });
+@@= skipped -324, +321 lines =@@
+
+
+ //// [index.d.ts]
+-declare const x = 1;
+-export { x };
+-//// [index.d.cts]
+-declare const x = 1;
+-export { x };
+-//// [index.d.mts]
+-declare const x = 1;
+-export { x };
+-//// [index.d.ts]
+-declare const x = 1;
+-export { x };
+-//// [index.d.cts]
+-declare const x = 1;
+-export { x };
+-//// [index.d.mts]
+-declare const x = 1;
+-export { x };
+-//// [index.d.ts]
+-declare const x = 1;
+-export { x };
+-//// [index.d.mts]
+-declare const x = 1;
+-export { x };
+-//// [index.d.cts]
+-declare const x = 1;
+-export { x };
+-//// [index.d.cts]
+-declare const x = 1;
+-export { x };
+-//// [index.d.ts]
+-declare const x = 1;
+-export { x };
+-//// [index.d.mts]
++// cjs format file
++declare const x = 1;
++export { x };
++//// [index.d.cts]
++// cjs format file
++declare const x = 1;
++export { x };
++//// [index.d.mts]
++// esm format file
++declare const x = 1;
++export { x };
++//// [index.d.ts]
++// cjs format file
++declare const x = 1;
++export { x };
++//// [index.d.cts]
++// cjs format file
++declare const x = 1;
++export { x };
++//// [index.d.mts]
++// esm format file
++declare const x = 1;
++export { x };
++//// [index.d.ts]
++// esm format file
++declare const x = 1;
++export { x };
++//// [index.d.mts]
++// esm format file
++declare const x = 1;
++export { x };
++//// [index.d.cts]
++// cjs format file
++declare const x = 1;
++export { x };
++//// [index.d.cts]
++// cjs format file
++declare const x = 1;
++export { x };
++//// [index.d.ts]
++// esm format file
++declare const x = 1;
++export { x };
++//// [index.d.mts]
++// esm format file
+ declare const x = 1;
+ export { x };

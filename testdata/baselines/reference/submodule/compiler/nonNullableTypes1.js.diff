@@ -1,0 +1,59 @@
+--- old.nonNullableTypes1.js
++++ new.nonNullableTypes1.js
+@@= skipped -37, +37 lines =@@
+
+
+ //// [nonNullableTypes1.js]
+-"use strict";
+ function f1(x) {
+-    var y = x || "hello"; // NonNullable<T> | string
++    let y = x || "hello"; // NonNullable<T> | string
+ }
+ function error() {
+     throw new Error();
+@@= skipped -11, +10 lines =@@
+     return x || error();
+ }
+ function f3(x) {
+-    var y = x; // {}
++    let y = x; // {}
+ }
+ function f4(obj) {
+-    if ((obj === null || obj === void 0 ? void 0 : obj.x) === "hello") {
+-        obj; // NonNullable<T>
+-    }
+-    if (obj === null || obj === void 0 ? void 0 : obj.x) {
+-        obj; // NonNullable<T>
+-    }
+-    if (typeof (obj === null || obj === void 0 ? void 0 : obj.x) === "string") {
+-        obj; // NonNullable<T>
+-    }
+-}
+-var A = /** @class */ (function () {
+-    function A() {
+-        this.x = "hello";
+-    }
+-    A.prototype.foo = function () {
+-        var zz = this === null || this === void 0 ? void 0 : this.x; // string
+-    };
+-    return A;
+-}());
++    if (obj?.x === "hello") {
++        obj; // NonNullable<T>
++    }
++    if (obj?.x) {
++        obj; // NonNullable<T>
++    }
++    if (typeof obj?.x === "string") {
++        obj; // NonNullable<T>
++    }
++}
++class A {
++    x = "hello";
++    foo() {
++        let zz = this?.x; // string
++    }
++}
+
+
+ //// [nonNullableTypes1.d.ts]

@@ -1,0 +1,40 @@
+--- old.stringLiteralTypesAsTags03.js
++++ new.stringLiteralTypesAsTags03.js
+@@= skipped -49, +49 lines =@@
+ function hasKind(entity, kind) {
+     return entity.kind === kind;
+ }
+-var x = {
++let x = {
+     kind: "A",
+     a: 100,
+ };
+ if (hasKind(x, "A")) {
+-    var a = x;
++    let a = x;
+ }
+ else {
+-    var b = x;
++    let b = x;
+ }
+ if (!hasKind(x, "B")) {
+-    var c = x;
++    let c = x;
+ }
+ else {
+-    var d = x;
++    let d = x;
+ }
+
+
+@@= skipped -31, +31 lines =@@
+     kind: "B";
+     b: string;
+ }
++// Currently (2015-12-14), we write '"A" | "A"' and '"B" | "B"' to avoid
++// interpreting respective overloads as "specialized" signatures.
++// That way, we can avoid the need to look for a compatible overload
++// signature and simply check compatibility with the implementation.
+ declare function hasKind(entity: Entity, kind: "A" | "A"): entity is A;
+ declare function hasKind(entity: Entity, kind: "B" | "B"): entity is B;
+ declare let x: A;

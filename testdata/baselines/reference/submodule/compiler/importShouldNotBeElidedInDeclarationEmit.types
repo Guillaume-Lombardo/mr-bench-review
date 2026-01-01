@@ -1,0 +1,25 @@
+//// [tests/cases/compiler/importShouldNotBeElidedInDeclarationEmit.ts] ////
+
+=== node_modules/umd.d.ts ===
+export as namespace UMD;
+>UMD : typeof import("umd.d.ts")
+
+export type Thing = {
+>Thing : Thing
+
+    a: number;
+>a : number
+}
+
+export declare function makeThing(): Thing;
+>makeThing : () => Thing
+
+=== index.ts ===
+import { makeThing } from "umd";
+>makeThing : () => import("umd.d.ts").Thing
+
+export const thing = makeThing();
+>thing : import("umd.d.ts").Thing
+>makeThing() : import("umd.d.ts").Thing
+>makeThing : () => import("umd.d.ts").Thing
+

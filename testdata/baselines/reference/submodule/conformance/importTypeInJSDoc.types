@@ -1,0 +1,77 @@
+//// [tests/cases/conformance/types/import/importTypeInJSDoc.ts] ////
+
+=== externs.d.ts ===
+declare namespace MyClass {
+    export interface Bar {
+        doer: (x: string) => void;
+>doer : (x: string) => void
+>x : string
+    }
+}
+declare class MyClass {
+>MyClass : MyClass
+
+    field: string;
+>field : string
+
+    static Bar: (x: string, y?: number) => void;
+>Bar : (x: string, y?: number) => void
+>x : string
+>y : number
+
+    constructor(x: MyClass.Bar);
+>x : import("./externs.js").Bar
+>MyClass : any
+}
+declare global {
+>global : typeof global
+
+    const Foo: typeof MyClass;
+>Foo : typeof MyClass
+>MyClass : typeof MyClass
+}
+export = MyClass;
+>MyClass : MyClass
+
+=== index.js ===
+/**
+ * @typedef {import("./externs")} Foo
+ */
+
+let a = /** @type {Foo} */(/** @type {*} */(undefined)); 
+>a : import("./externs.js")
+>(/** @type {*} */(undefined)) : import("./externs.js")
+>(undefined) : import("./externs.js")
+>(undefined) : any
+>undefined : any
+>undefined : undefined
+
+a = new Foo({doer: Foo.Bar});
+>a = new Foo({doer: Foo.Bar}) : import("./externs.js")
+>a : import("./externs.js")
+>new Foo({doer: Foo.Bar}) : import("./externs.js")
+>Foo : typeof import("./externs.js")
+>{doer: Foo.Bar} : { doer: (x: string, y?: number) => void; }
+>doer : (x: string, y?: number) => void
+>Foo.Bar : (x: string, y?: number) => void
+>Foo : typeof import("./externs.js")
+>Bar : (x: string, y?: number) => void
+
+const q = /** @type {import("./externs").Bar} */({ doer: q => q });
+>q : import("./externs.js").Bar
+>({ doer: q => q }) : import("./externs.js").Bar
+>{ doer: q => q } : import("./externs.js").Bar
+>{ doer: q => q } : { doer: (q: string) => string; }
+>doer : (q: string) => string
+>q => q : (q: string) => string
+>q : string
+>q : string
+
+const r = /** @type {typeof import("./externs").Bar} */(r => r);
+>r : (x: string, y?: number) => void
+>(r => r) : (x: string, y?: number) => void
+>r => r : (x: string, y?: number) => void
+>r => r : (r: string) => string
+>r : string
+>r : string
+

@@ -1,0 +1,43 @@
+//// [tests/cases/compiler/declarationEmitUsingTypeAlias1.ts] ////
+
+=== node_modules/some-dep/dist/inner.d.ts ===
+export declare type Other = { other: string };
+>Other : Other
+>other : string
+
+export declare type SomeType = { arg: Other };
+>SomeType : SomeType
+>arg : Other
+
+=== node_modules/some-dep/dist/index.d.ts ===
+export type OtherType = import('./inner').Other;
+>OtherType : import("./inner.js").Other
+
+export type SomeType = import('./inner').SomeType;
+>SomeType : import("./inner.js").SomeType
+
+=== src/index.ts ===
+import { SomeType } from "some-dep";
+>SomeType : any
+
+export const foo = (thing: SomeType) => {
+>foo : (thing: import("../node_modules/some-dep/dist/inner.js").SomeType) => import("../node_modules/some-dep/dist/inner.js").SomeType
+>(thing: SomeType) => {  return thing;} : (thing: import("../node_modules/some-dep/dist/inner.js").SomeType) => import("../node_modules/some-dep/dist/inner.js").SomeType
+>thing : import("../node_modules/some-dep/dist/inner.js").SomeType
+
+  return thing;
+>thing : import("../node_modules/some-dep/dist/inner.js").SomeType
+
+};
+
+export const bar = (thing: SomeType) => {
+>bar : (thing: import("../node_modules/some-dep/dist/inner.js").SomeType) => import("../node_modules/some-dep/dist/inner.js").Other
+>(thing: SomeType) => {  return thing.arg;} : (thing: import("../node_modules/some-dep/dist/inner.js").SomeType) => import("../node_modules/some-dep/dist/inner.js").Other
+>thing : import("../node_modules/some-dep/dist/inner.js").SomeType
+
+  return thing.arg;
+>thing.arg : import("../node_modules/some-dep/dist/inner.js").Other
+>thing : import("../node_modules/some-dep/dist/inner.js").SomeType
+>arg : import("../node_modules/some-dep/dist/inner.js").Other
+
+};
