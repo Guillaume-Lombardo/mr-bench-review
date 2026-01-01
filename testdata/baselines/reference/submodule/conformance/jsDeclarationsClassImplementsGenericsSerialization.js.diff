@@ -1,0 +1,26 @@
+--- old.jsDeclarationsClassImplementsGenericsSerialization.js
++++ new.jsDeclarationsClassImplementsGenericsSerialization.js
+@@= skipped -43, +43 lines =@@
+     }
+ }
+ exports.Encoder = Encoder;
+-/**
+- * @template T
+- * @typedef {import('./interface').Encoder<T>} IEncoder
+- */ 
+
+
+ //// [interface.d.ts]
+@@= skipped -15, +11 lines =@@
+  * @template T
+  * @implements {IEncoder<T>}
+  */
+-export class Encoder<T> implements IEncoder<T> {
++export declare class Encoder<T> implements IEncoder<T> {
+     /**
+      * @param {T} value
+      */
+     encode(value: T): Uint8Array<ArrayBuffer>;
+ }
+-export type IEncoder<T> = import("./interface").Encoder<T>;
++export type IEncoder<T> = import('./interface').Encoder<T>;

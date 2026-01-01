@@ -1,0 +1,10 @@
+--- old.destructureOptionalParameter.js
++++ new.destructureOptionalParameter.js
+@@= skipped -40, +40 lines =@@
+     a: number;
+     b: number;
+ }): void;
++// Repro from #8681
+ interface Type {
+     t: void;
+ }
