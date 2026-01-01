@@ -57,47 +57,52 @@ int main(void)
 
     void *ta_ctx = talloc_new(NULL);
 
-#define TEST_LANG_GUESS(filename, expected_lang, expected_start, expected_hi)  \
-    do {                                                                       \
-        int start;                                                             \
-        bool hearing_impaired;                                                 \
-        bstr lang = mp_guess_lang_from_filename(bstr0(filename), &start,       \
-                                                &hearing_impaired);            \
-        assert_string_equal(bstrto0(ta_ctx, lang), expected_lang);             \
-        assert_int_equal(start, expected_start);                               \
-        assert_true(hearing_impaired == expected_hi);                          \
+#define TEST_LANG_GUESS(filename, expected_lang, expected_start, expected_hi, expected_forced)  \
+    do {                                                                                        \
+        int start;                                                                              \
+        bool hearing_impaired;                                                                  \
+        bool forced;                                                                            \
+        bstr lang = mp_guess_lang_from_filename(bstr0(filename), &start,                        \
+                                                &hearing_impaired, &forced);                    \
+        assert_string_equal(bstrto0(ta_ctx, lang), expected_lang);                              \
+        assert_int_equal(start, expected_start);                                                \
+        assert_true(hearing_impaired == expected_hi);                                           \
+        assert_true(forced == expected_forced);                                                 \
     } while (0)
 
-    TEST_LANG_GUESS("foo.en.srt", "en", 3, false);
-    TEST_LANG_GUESS("foo.eng.srt", "eng", 3, false);
-    TEST_LANG_GUESS("foo.e.srt", "", -1, false);
-    TEST_LANG_GUESS("foo.engg.srt", "", -1, false);
-    TEST_LANG_GUESS("foo.00.srt", "", -1, false);
-    TEST_LANG_GUESS("foo.srt", "", -1, false);
-    TEST_LANG_GUESS(NULL, "", -1, false);
+    TEST_LANG_GUESS("foo.en.srt", "en", 3, false, false);
+    TEST_LANG_GUESS("foo.eng.srt", "eng", 3, false, false);
+    TEST_LANG_GUESS("foo.e.srt", "", -1, false, false);
+    TEST_LANG_GUESS("foo.engg.srt", "", -1, false, false);
+    TEST_LANG_GUESS("foo.00.srt", "", -1, false, false);
+    TEST_LANG_GUESS("foo.srt", "", -1, false, false);
+    TEST_LANG_GUESS(NULL, "", -1, false, false);
 
-    TEST_LANG_GUESS("foo.en-US.srt", "en-US", 3, false);
-    TEST_LANG_GUESS("foo.en-US.hi.srt", "en-US", 3, true);
-    TEST_LANG_GUESS("foo.en-US.sdh.srt", "en-US", 3, true);
-    TEST_LANG_GUESS("foo.en-simple.srt", "en-simple", 3, false);
-    TEST_LANG_GUESS("foo.sgn-FSL.srt", "sgn-FSL", 3, false);
-    TEST_LANG_GUESS("foo.gsw-u-sd-chzh.srt", "gsw-u-sd-chzh", 3, false);
-    TEST_LANG_GUESS("foo.en-.srt", "", -1, false);
-    TEST_LANG_GUESS("foo.en-US-.srt", "", -1, false);
-    TEST_LANG_GUESS("foo.en-aaaaaaaaa.srt", "", -1, false);
-    TEST_LANG_GUESS("foo.en-0.srt", "", -1, false);
+    TEST_LANG_GUESS("foo.en-US.srt", "en-US", 3, false, false);
+    TEST_LANG_GUESS("foo.en-US.hi.srt", "en-US", 3, true, false);
+    TEST_LANG_GUESS("foo.en-US.sdh.srt", "en-US", 3, true, false);
+    TEST_LANG_GUESS("foo.en-US.forced.srt", "en-US", 3, false, true);
+    TEST_LANG_GUESS("foo.en-simple.srt", "en-simple", 3, false, false);
+    TEST_LANG_GUESS("foo.sgn-FSL.srt", "sgn-FSL", 3, false, false);
+    TEST_LANG_GUESS("foo.gsw-u-sd-chzh.srt", "gsw-u-sd-chzh", 3, false, false);
+    TEST_LANG_GUESS("foo.en-.srt", "", -1, false, false);
+    TEST_LANG_GUESS("foo.en-US-.srt", "", -1, false, false);
+    TEST_LANG_GUESS("foo.en-aaaaaaaaa.srt", "", -1, false, false);
+    TEST_LANG_GUESS("foo.en-0.srt", "", -1, false, false);
 
-    TEST_LANG_GUESS("foo[en].srt", "en", 3, false);
-    TEST_LANG_GUESS("foo[en-US].srt", "en-US", 3, false);
-    TEST_LANG_GUESS("foo[en-US][hi].srt", "en-US", 3, true);
-    TEST_LANG_GUESS("foo[en-US][sdh].srt", "en-US", 3, true);
-    TEST_LANG_GUESS("foo[].srt", "", -1, false);
+    TEST_LANG_GUESS("foo[en].srt", "en", 3, false, false);
+    TEST_LANG_GUESS("foo[en-US].srt", "en-US", 3, false, false);
+    TEST_LANG_GUESS("foo[en-US][hi].srt", "en-US", 3, true, false);
+    TEST_LANG_GUESS("foo[en-US][sdh].srt", "en-US", 3, true, false);
+    TEST_LANG_GUESS("foo[en-US][forced].srt", "en-US", 3, false, true);
+    TEST_LANG_GUESS("foo[].srt", "", -1, false, false);
 
-    TEST_LANG_GUESS("foo(en).srt", "en", 3, false);
-    TEST_LANG_GUESS("foo(en-US).srt", "en-US", 3, false);
-    TEST_LANG_GUESS("foo(en-US)(hi).srt", "en-US", 3, true);
-    TEST_LANG_GUESS("foo(en-US)(sdh).srt", "en-US", 3, true);
-    TEST_LANG_GUESS("foo().srt", "", -1, false);
+    TEST_LANG_GUESS("foo(en).srt", "en", 3, false, false);
+    TEST_LANG_GUESS("foo(en-US).srt", "en-US", 3, false, false);
+    TEST_LANG_GUESS("foo(en-US)(hi).srt", "en-US", 3, true, false);
+    TEST_LANG_GUESS("foo(en-US)(sdh).srt", "en-US", 3, true, false);
+    TEST_LANG_GUESS("foo(en-US)(forced).srt", "en-US", 3, false, true);
+    TEST_LANG_GUESS("foo().srt", "", -1, false, false);
 
     talloc_free(ta_ctx);
 }

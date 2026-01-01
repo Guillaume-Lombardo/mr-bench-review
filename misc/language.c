@@ -297,7 +297,7 @@ done:
     return best_score;
 }
 
-bstr mp_guess_lang_from_filename(bstr name, int *lang_start, bool *hearing_impaired)
+bstr mp_guess_lang_from_filename(bstr name, int *lang_start, bool *hearing_impaired, bool *forced)
 {
     name = bstr_strip(bstr_strip_ext(name));
 
@@ -306,6 +306,9 @@ bstr mp_guess_lang_from_filename(bstr name, int *lang_start, bool *hearing_impai
 
     if (hearing_impaired)
         *hearing_impaired = false;
+
+    if (forced)
+        *forced = false;
 
     if (name.len < 2)
         return (bstr){0};
@@ -325,7 +328,8 @@ bstr mp_guess_lang_from_filename(bstr name, int *lang_start, bool *hearing_impai
     }
 
     bool *hi = hearing_impaired ? hearing_impaired : &(bool){0};
-    bool checked_hi = false;
+    bool *f = forced ? forced : &(bool){0};
+    bool checked_tag = false;
 
     while (true) {
         while (i >= 0 && mp_isalpha(name.start[i])) {
@@ -333,8 +337,8 @@ bstr mp_guess_lang_from_filename(bstr name, int *lang_start, bool *hearing_impai
             i--;
         }
 
-        if (i >= 0 && lang_length >= 2 && !checked_hi && name.start[i] == delimiter) {
-            checked_hi = true;
+        if (i >= 0 && lang_length >= 2 && !checked_tag && name.start[i] == delimiter) {
+            checked_tag = true;
             static const char *const suffixes[] = { "sdh", "hi", "cc" };
             bstr tag = { name.start + i + 1, lang_length };
             for (int n = 0; n < MP_ARRAY_SIZE(suffixes); n++) {
@@ -343,7 +347,10 @@ bstr mp_guess_lang_from_filename(bstr name, int *lang_start, bool *hearing_impai
                     break;
                 }
             }
-            if (*hi) {
+            if (!bstrcasecmp0(tag, "forced")) {
+                *f = true;
+            }
+            if (*hi || *f) {
                 lang_length = 0;
                 i -= (delimiter != '.') ? 2 : 1;
                 continue;

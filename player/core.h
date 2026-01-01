@@ -496,6 +496,7 @@ enum track_flags {
     TRACK_HEARING_IMPAIRED = 1 << 2,
     TRACK_VISUAL_IMPAIRED = 1 << 3,
     TRACK_ATTACHED_PICTURE = 1 << 4,
+    TRACK_FORCED = 1 << 5,
 };
 
 // audio.c
