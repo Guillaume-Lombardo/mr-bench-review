@@ -218,10 +218,7 @@ void lv_draw_label_iterate_characters(lv_draw_task_t * t, const lv_draw_label_ds
     }
     else {
         /*If EXPAND is enabled then not limit the text's width to the object's width*/
-        lv_point_t p;
-        lv_text_get_size(&p, dsc->text, dsc->font, dsc->letter_space, dsc->line_space, LV_COORD_MAX,
-                         dsc->flag);
-        w = p.x;
+        w = dsc->text_size.x;
     }
 
     int32_t line_height_font = lv_font_get_line_height(font);
