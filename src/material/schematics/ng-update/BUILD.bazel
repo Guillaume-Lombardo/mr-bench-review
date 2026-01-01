@@ -1,0 +1,79 @@
+load("//tools:defaults.bzl", "esbuild")
+load("//tools:defaults2.bzl", "jasmine_test", "ts_project")
+
+ts_project(
+    name = "ng_update_lib",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = [
+            "test-cases/**/*.ts",
+        ],
+    ),
+    tsconfig = "//src/material/schematics:tsconfig",
+    deps = [
+        "//:node_modules/@angular-devkit/core",
+        "//:node_modules/@angular-devkit/schematics",
+        "//:node_modules/@schematics/angular",
+        "//:node_modules/@types/node",
+        "//:node_modules/postcss",
+        "//:node_modules/postcss-scss",
+        "//:node_modules/typescript",
+        "//src/material/schematics:node_modules/@angular/cdk/schematics",
+    ],
+)
+
+esbuild(
+    name = "ng_update_index",
+    entry_point = ":index.ts",
+    external = [
+        "@angular/cdk/schematics",
+        "@schematics/angular",
+        "@angular-devkit/schematics",
+        "@angular-devkit/core",
+        "typescript",
+    ],
+    format = "cjs",
+    output = "index_bundled.js",
+    platform = "node",
+    target = "es2015",
+    visibility = ["//src/material/schematics:__pkg__"],
+    deps = [":ng_update_lib_legacy"],
+)
+
+filegroup(
+    name = "schematics_test_cases",
+    testonly = True,
+    srcs = glob([
+        "test-cases/**/*_input.ts",
+        "test-cases/**/*_expected_output.ts",
+    ]),
+)
+
+ts_project(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(["**/*.spec.ts"]),
+    tsconfig = "//src/material/schematics:tsconfig-test",
+    deps = [
+        ":ng_update_lib",
+        "//:node_modules/@angular-devkit/core",
+        "//:node_modules/@angular-devkit/schematics",
+        "//:node_modules/@bazel/runfiles",
+        "//src/cdk/schematics/testing",
+        "//src/material/schematics:node_modules/@angular/cdk/schematics",
+        "//src/material/schematics:paths",
+    ],
+)
+
+jasmine_test(
+    name = "test",
+    data = [
+        ":ng_update_index",
+        ":schematics_test_cases",
+        ":test_lib",
+        "//src/material/schematics:collection_assets",
+        "//src/material/schematics:node_modules/@angular/cdk/schematics",
+        "//src/material/schematics:package_json",
+    ],
+    shard_count = 4,
+)

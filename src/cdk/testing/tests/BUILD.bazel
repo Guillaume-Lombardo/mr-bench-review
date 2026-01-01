@@ -1,0 +1,102 @@
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "test_components",
+    testonly = True,
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = [
+            "**/*.spec.ts",
+            "harnesses/**",
+        ],
+    ),
+    assets = glob(["**/*.html"]),
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//src/cdk/keycodes",
+        "//src/cdk/platform",
+    ],
+)
+
+ts_project(
+    name = "test_harnesses",
+    srcs = glob(["harnesses/**/*.ts"]),
+    deps = [
+        "//src/cdk/testing",
+    ],
+)
+
+ts_project(
+    name = "cross_environment_specs",
+    testonly = True,
+    srcs = ["cross-environment.spec.ts"],
+    deps = [
+        ":test_harnesses",
+        "//:node_modules/@angular/core",
+        "//src/cdk/testing",
+    ],
+)
+
+ts_project(
+    name = "unit_test_sources",
+    testonly = True,
+    srcs = glob(
+        [
+            "**/*.spec.ts",
+        ],
+        exclude = [
+            "cross-environment.spec.ts",
+            "**/*.e2e.spec.ts",
+        ],
+    ),
+    deps = [
+        ":cross_environment_specs",
+        ":test_components",
+        ":test_harnesses",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/kagekiri",
+        "//src/cdk/platform",
+        "//src/cdk/testing",
+        "//src/cdk/testing/private",
+        "//src/cdk/testing/testbed",
+    ],
+)
+
+ts_project(
+    name = "e2e_test_sources",
+    testonly = True,
+    srcs = glob(
+        [
+            "**/*.e2e.spec.ts",
+        ],
+        exclude = ["webdriver.e2e.spec.ts"],
+    ),
+    deps = [
+        ":cross_environment_specs",
+        ":test_harnesses",
+        "//:node_modules/protractor",
+        "//src/cdk/testing",
+        "//src/cdk/testing/private",
+        "//src/cdk/testing/protractor",
+    ],
+)
+
+ts_project(
+    name = "webdriver_test_sources",
+    testonly = True,
+    srcs = ["webdriver.e2e.spec.ts"],
+    deps = [
+        ":cross_environment_specs",
+        ":test_harnesses",
+        "//:node_modules/@bazel/runfiles",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/selenium-webdriver",
+        "//src/cdk/testing",
+        "//src/cdk/testing/selenium-webdriver",
+    ],
+)

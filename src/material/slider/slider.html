@@ -1,0 +1,36 @@
+<!-- Inputs -->
+<ng-content></ng-content>
+
+<!-- Track -->
+<div class="mdc-slider__track">
+  <div class="mdc-slider__track--inactive"></div>
+  <div class="mdc-slider__track--active">
+    <div #trackActive class="mdc-slider__track--active_fill"></div>
+  </div>
+  @if (showTickMarks) {
+    <div class="mdc-slider__tick-marks" #tickMarkContainer>
+      @if (_cachedWidth) {
+        @for (tickMark of _tickMarks; track i; let i = $index) {
+          <div
+            [class]="tickMark === 0 ? 'mdc-slider__tick-mark--active' : 'mdc-slider__tick-mark--inactive'"
+            [style.transform]="_calcTickMarkTransform(i)"></div>
+        }
+      }
+    </div>
+  }
+</div>
+
+<!-- Thumbs -->
+@if (_isRange) {
+  <mat-slider-visual-thumb
+    [discrete]="discrete"
+    [thumbPosition]="1"
+    [valueIndicatorText]="startValueIndicatorText">
+  </mat-slider-visual-thumb>
+}
+
+<mat-slider-visual-thumb
+  [discrete]="discrete"
+  [thumbPosition]="2"
+  [valueIndicatorText]="endValueIndicatorText">
+</mat-slider-visual-thumb>

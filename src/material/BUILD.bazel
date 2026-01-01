@@ -1,0 +1,59 @@
+load(
+    "//src/material:config.bzl",
+    "MATERIAL_ENTRYPOINTS",
+    "MATERIAL_SCSS_LIBS",
+    "MATERIAL_TARGETS",
+    "MATERIAL_TESTING_TARGETS",
+)
+load("//tools:defaults.bzl", "ng_package", "sass_library")
+load("//tools:defaults2.bzl", "ts_project")
+load("//tools/bazel:legacy_target.bzl", "get_legacy_label")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_project(
+    name = "material",
+    srcs = ["index.ts"],
+)
+
+filegroup(
+    name = "overviews",
+    srcs = ["//src/material/%s:overview" % name for name in MATERIAL_ENTRYPOINTS],
+)
+
+filegroup(
+    name = "tokens",
+    srcs = ["//src/material/%s:tokens" % name for name in MATERIAL_ENTRYPOINTS],
+)
+
+sass_library(
+    name = "sass_lib",
+    srcs = [
+        "_index.scss",
+    ],
+    deps = [
+        "//src/material/core:core_scss_lib",
+        "//src/material/core:theming_scss_lib",
+    ],
+)
+
+# Creates the @angular/material package published to npm.
+ng_package(
+    name = "npm_package",
+    srcs = [
+        "package.json",
+        ":sass_lib",
+        "//src/material/core:theming_scss_lib",
+        "//src/material/prebuilt-themes:azure-blue",
+        "//src/material/prebuilt-themes:cyan-orange",
+        "//src/material/prebuilt-themes:deeppurple-amber",
+        "//src/material/prebuilt-themes:indigo-pink",
+        "//src/material/prebuilt-themes:magenta-violet",
+        "//src/material/prebuilt-themes:pink-bluegrey",
+        "//src/material/prebuilt-themes:purple-green",
+        "//src/material/prebuilt-themes:rose-red",
+    ] + MATERIAL_SCSS_LIBS,
+    nested_packages = ["//src/material/schematics:npm_package"],
+    tags = ["release-package"],
+    deps = [get_legacy_label(t) for t in MATERIAL_TARGETS + MATERIAL_TESTING_TARGETS],
+)

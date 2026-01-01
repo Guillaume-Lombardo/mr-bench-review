@@ -1,0 +1,23 @@
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "clipboard",
+    srcs = glob(["**/*.ts"]),
+    assets = [
+        ":clipboard_demo_scss",
+        "clipboard-demo.html",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//src/cdk/clipboard",
+    ],
+)
+
+sass_binary(
+    name = "clipboard_demo_scss",
+    src = "clipboard-demo.scss",
+)

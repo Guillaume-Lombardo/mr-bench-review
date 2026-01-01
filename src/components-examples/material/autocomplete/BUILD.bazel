@@ -1,0 +1,61 @@
+load("//tools:defaults.bzl", "ng_web_test_suite")
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "autocomplete",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    assets = glob([
+        "**/*.html",
+        "**/*.css",
+    ]),
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/rxjs",
+        "//src/cdk/overlay",
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
+        "//src/material/autocomplete",
+        "//src/material/autocomplete/testing",
+        "//src/material/form-field",
+        "//src/material/input",
+        "//src/material/slide-toggle",
+    ],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob([
+        "**/*.html",
+        "**/*.css",
+        "**/*.ts",
+    ]),
+)
+
+ts_project(
+    name = "unit_tests_lib",
+    testonly = True,
+    srcs = glob(["**/*.spec.ts"]),
+    deps = [
+        ":autocomplete",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
+        "//src/material/autocomplete",
+        "//src/material/autocomplete/testing",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_tests_lib"],
+)

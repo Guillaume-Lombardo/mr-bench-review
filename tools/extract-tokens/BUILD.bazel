@@ -1,0 +1,25 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("//tools:defaults2.bzl", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_project(
+    name = "extract_tokens_lib",
+    srcs = glob(["**/*.ts"]),
+    tsconfig = "//tools:tsconfig",
+    deps = [
+        "//:node_modules/sass",
+        "//tools/highlight-files:sources",
+    ],
+)
+
+nodejs_binary(
+    name = "extract-tokens",
+    data = [
+        ":extract_tokens_lib_legacy",
+        "@npm//highlight.js",
+        "@npm//sass",
+    ],
+    entry_point = ":extract-tokens.ts",
+    templated_args = ["--bazel_patch_module_resolver"],
+)

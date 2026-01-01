@@ -1,0 +1,26 @@
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "layout",
+    srcs = glob(["**/*.ts"]),
+    assets = glob([
+        "**/*.html",
+        "**/*.css",
+    ]),
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
+        "//src/cdk/layout",
+    ],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob([
+        "**/*.html",
+        "**/*.css",
+        "**/*.ts",
+    ]),
+)

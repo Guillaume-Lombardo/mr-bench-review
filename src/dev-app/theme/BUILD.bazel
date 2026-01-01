@@ -1,0 +1,29 @@
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "theme",
+    srcs = glob(["**/*.ts"]),
+    assets = [
+        "theme-demo.html",
+        ":theme_demo_scss",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//src/dev-app/dev-app",
+        "//src/material/card",
+        "//src/material/expansion",
+        "//src/material/icon",
+    ],
+)
+
+sass_binary(
+    name = "theme_demo_scss",
+    src = "theme-demo.scss",
+    deps = [
+        "//src/material:sass_lib",
+    ],
+)

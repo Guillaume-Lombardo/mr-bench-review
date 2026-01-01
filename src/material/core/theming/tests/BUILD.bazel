@@ -1,0 +1,83 @@
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "jasmine_test", "ts_project")
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
+
+package(default_visibility = ["//visibility:public"])
+
+# Test theme used to ensure that our themes will compile using CSS variables in
+# the palettes.
+sass_binary(
+    name = "test-css-variables-theme",
+    testonly = True,
+    src = "test-css-variables-theme.scss",
+    deps = [
+        "//src/material/core:theming_scss_lib",
+    ],
+)
+
+# Sass binary which is used to ensure that our themes will compile with the
+# pattern for configuring themes. For more information, inspect
+# the `mat-light-theme` and `mat-dark-theme` theming functions.
+sass_binary(
+    name = "test-theming-api",
+    testonly = True,
+    src = "test-theming-api.scss",
+    deps = [
+        "//src/material/core:theming_scss_lib",
+    ],
+)
+
+# Sass binary used to ensure that the theming bundle works as expected.
+sass_binary(
+    name = "test-theming-bundle",
+    testonly = True,
+    src = "test-theming-bundle.scss",
+    deps = ["//src/material:sass_lib"],
+)
+
+# Sass binary that asserts that setting the font family for a typography config works as expected.
+sass_binary(
+    name = "test-typography-font-family",
+    testonly = True,
+    src = "test-typography-font-family.scss",
+    deps = ["//src/material:sass_lib"],
+)
+
+build_test(
+    name = "sass_compile_tests",
+    targets = [
+        ":test-css-variables-theme",
+        ":test-theming-api",
+        ":test-theming-bundle",
+        ":test-typography-font-family",
+    ],
+)
+
+ts_project(
+    name = "unit_test_lib",
+    testonly = True,
+    srcs = glob([
+        "*.spec.ts",
+    ]),
+    deps = [
+        "//:node_modules/@bazel/runfiles",
+        "//:node_modules/postcss",
+        "//:node_modules/sass",
+        "//tools/postcss",
+        "//tools/sass:sass_lib",
+    ],
+)
+
+jasmine_test(
+    name = "unit_tests",
+    data = [
+        ":unit_test_lib",
+        "//src/material:sass_lib",
+        "//src/material-experimental:sass_lib",
+    ],
+    no_copy_to_bin = [
+        "//src/material:sass_lib",
+        "//src/material-experimental:sass_lib",
+    ],
+    shard_count = 4,
+)

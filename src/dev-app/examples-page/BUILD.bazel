@@ -1,0 +1,13 @@
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "examples-page",
+    srcs = glob(["**/*.ts"]),
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/components-examples",
+        "//src/dev-app/example",
+    ],
+)

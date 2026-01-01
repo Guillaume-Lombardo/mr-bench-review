@@ -1,0 +1,24 @@
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "drawer",
+    srcs = glob(["**/*.ts"]),
+    assets = [
+        "drawer-demo.html",
+        ":drawer_demo_scss",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/material/button",
+        "//src/material/list",
+        "//src/material/sidenav",
+    ],
+)
+
+sass_binary(
+    name = "drawer_demo_scss",
+    src = "drawer-demo.scss",
+)

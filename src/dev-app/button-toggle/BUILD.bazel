@@ -1,0 +1,25 @@
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "button-toggle",
+    srcs = glob(["**/*.ts"]),
+    assets = [
+        "button-toggle-demo.html",
+        ":button_toggle_demo_scss",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//src/material/button-toggle",
+        "//src/material/checkbox",
+        "//src/material/icon",
+    ],
+)
+
+sass_binary(
+    name = "button_toggle_demo_scss",
+    src = "button-toggle-demo.scss",
+)

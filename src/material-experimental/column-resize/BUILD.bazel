@@ -1,0 +1,51 @@
+load("//tools:defaults.bzl", "ng_web_test_suite", "sass_library")
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "column-resize",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//src/cdk-experimental/column-resize",
+        "//src/cdk/overlay",
+        "//src/cdk/table",
+        "//src/material/table",
+    ],
+)
+
+sass_library(
+    name = "column_resize_scss_lib",
+    srcs = glob(["**/_*.scss"]),
+    deps = [
+        "//src/material:sass_lib",
+    ],
+)
+
+ts_project(
+    name = "column_resize_test_sources",
+    testonly = True,
+    srcs = glob(["**/*.spec.ts"]),
+    deps = [
+        ":column-resize",
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
+        "//src/cdk-experimental/column-resize",
+        "//src/cdk/bidi",
+        "//src/cdk/collections",
+        "//src/cdk/keycodes",
+        "//src/cdk/overlay",
+        "//src/cdk/testing/private",
+        "//src/material/table",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":column_resize_test_sources"],
+)

@@ -1,0 +1,15 @@
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "table",
+    srcs = glob(["**/*.ts"]),
+    assets = ["table-demo.html"],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/components-examples/cdk/table",
+        "//src/components-examples/material/table",
+        "//src/dev-app/example",
+    ],
+)

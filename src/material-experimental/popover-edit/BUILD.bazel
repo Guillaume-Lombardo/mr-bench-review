@@ -1,0 +1,57 @@
+load(
+    "//tools:defaults.bzl",
+    "ng_web_test_suite",
+    "sass_library",
+)
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "popover-edit",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//src/cdk-experimental/popover-edit",
+        "//src/material/core",
+    ],
+)
+
+sass_library(
+    name = "popover_edit_scss_lib",
+    srcs = glob(["**/_*.scss"]),
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material:sass_lib",
+    ],
+)
+
+ts_project(
+    name = "unit_test_sources",
+    testonly = True,
+    srcs = glob(
+        ["**/*.spec.ts"],
+        exclude = ["**/*.e2e.spec.ts"],
+    ),
+    deps = [
+        ":popover-edit",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/rxjs",
+        "//src/cdk-experimental/popover-edit",
+        "//src/cdk/collections",
+        "//src/cdk/keycodes",
+        "//src/cdk/overlay",
+        "//src/cdk/testing/private",
+        "//src/material/table",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)

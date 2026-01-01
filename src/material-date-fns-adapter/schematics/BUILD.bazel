@@ -1,0 +1,36 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
+load("//tools:defaults.bzl", "pkg_npm")
+load("//tools:defaults2.bzl", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+copy_to_bin(
+    name = "schematics_assets",
+    srcs = glob(
+        ["**/*.json"],
+        exclude = ["tsconfig.json"],
+    ),
+)
+
+ts_project(
+    name = "schematics",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    tsconfig = "tsconfig.json",
+    deps = [
+        "//:node_modules/@angular-devkit/schematics",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@types/node",
+    ],
+)
+
+# This package is intended to be combined into the main @angular/material-date-fns-adapter package as a dep.
+pkg_npm(
+    name = "npm_package",
+    deps = [
+        ":schematics",
+        ":schematics_assets",
+    ],
+)

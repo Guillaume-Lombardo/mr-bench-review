@@ -1,0 +1,38 @@
+load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ng_web_test_suite")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_project(
+    name = "testbed",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
+        "//src/cdk/keycodes",
+        "//src/cdk/testing",
+    ],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob(["**/*.ts"]),
+)
+
+ts_project(
+    name = "unit_test_sources",
+    testonly = True,
+    srcs = glob(["**/*.spec.ts"]),
+    deps = [
+        ":testbed",
+        "//:node_modules/@angular/core",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)

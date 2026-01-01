@@ -1,0 +1,87 @@
+load(
+    "//tools:defaults.bzl",
+    "ng_package",
+    "ng_web_test_suite",
+    "sass_binary",
+)
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
+load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
+
+package(default_visibility = ["//visibility:public"])
+
+rules_js_tsconfig(
+    name = "tsconfig-test",
+    src = "tsconfig-test.json",
+    deps = [
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/youtube",
+        "//src:test-tsconfig",
+    ],
+)
+
+ng_project(
+    name = "youtube-player",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = [
+            "**/*.spec.ts",
+            "fake-youtube-player.ts",
+        ],
+    ),
+    assets = [
+        ":youtube_player_scss",
+        ":youtube_player_placeholder_scss",
+    ],
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@types/youtube",
+        "//:node_modules/rxjs",
+        "//src:dev_mode_types",
+    ],
+)
+
+sass_binary(
+    name = "youtube_player_scss",
+    src = "youtube-player.scss",
+)
+
+sass_binary(
+    name = "youtube_player_placeholder_scss",
+    src = "youtube-player-placeholder.scss",
+)
+
+ng_package(
+    name = "npm_package",
+    srcs = ["package.json"],
+    nested_packages = ["//src/youtube-player/schematics:npm_package"],
+    tags = ["release-package"],
+    deps = [":youtube-player_legacy"],
+)
+
+ts_project(
+    name = "unit_test_sources",
+    testonly = True,
+    srcs = ["fake-youtube-player.ts"] + glob(
+        ["**/*.spec.ts"],
+        exclude = ["**/*.e2e.spec.ts"],
+    ),
+    tsconfig = ":tsconfig-test",
+    deps = [
+        ":youtube-player",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/rxjs",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob(["**/*.ts"]),
+)

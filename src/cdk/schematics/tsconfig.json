@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "lib": ["es2017"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "rootDir": ".",
+    "strictNullChecks": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "strict": true,
+    "useUnknownInCatchVariables": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    "skipDefaultLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": false,
+    "noImplicitThis": true,
+    "skipLibCheck": true,
+    "strictFunctionTypes": true,
+    "sourceMap": true,
+    "target": "es2015",
+    "types": ["jasmine", "node"]
+  },
+  "exclude": ["**/files/**/*", "**/*.spec.ts", "ng-update/test-cases/**/*", "testing/**/*.ts"]
+}

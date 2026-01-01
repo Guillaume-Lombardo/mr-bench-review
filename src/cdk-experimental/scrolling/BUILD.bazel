@@ -1,0 +1,57 @@
+load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
+load("//tools:defaults.bzl", "ng_web_test_suite")
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "scrolling",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
+        "//src:dev_mode_types",
+        "//src/cdk/coercion",
+        "//src/cdk/collections",
+        "//src/cdk/scrolling",
+    ],
+)
+
+ts_project(
+    name = "unit_test_sources",
+    testonly = True,
+    srcs = glob(
+        ["**/*.spec.ts"],
+        exclude = ["**/*.e2e.spec.ts"],
+    ),
+    deps = [
+        ":scrolling",
+        "//:node_modules/@angular/core",
+        "//src/cdk/scrolling",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)
+
+ts_project(
+    name = "e2e_test_sources",
+    testonly = True,
+    srcs = glob(["**/*.e2e.spec.ts"]),
+    deps = [
+        "//:node_modules/@types/selenium-webdriver",
+        "//:node_modules/protractor",
+    ],
+)
+
+e2e_test_suite(
+    name = "e2e_tests",
+    deps = [
+        ":e2e_test_sources_legacy",
+    ],
+)

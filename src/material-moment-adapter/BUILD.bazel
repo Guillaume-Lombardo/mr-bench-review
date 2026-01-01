@@ -1,0 +1,49 @@
+load("//tools:defaults.bzl", "ng_package", "ng_web_test_suite")
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "material-moment-adapter",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/moment",
+        "//src:dev_mode_types",
+        "//src/material/core",
+    ],
+)
+
+ts_project(
+    name = "unit_test_sources",
+    testonly = True,
+    srcs = glob(
+        ["**/*.spec.ts"],
+        exclude = ["**/*.e2e.spec.ts"],
+    ),
+    deps = [
+        ":material-moment-adapter",
+        "//:node_modules/@angular/core",
+        "//:node_modules/moment",
+        "//src/material/core",
+        "//src/material/testing",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [
+        ":unit_test_sources",
+    ],
+)
+
+ng_package(
+    name = "npm_package",
+    srcs = ["package.json"],
+    nested_packages = ["//src/material-moment-adapter/schematics:npm_package"],
+    tags = ["release-package"],
+    deps = [":material-moment-adapter_legacy"],
+)

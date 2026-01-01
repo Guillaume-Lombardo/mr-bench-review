@@ -1,0 +1,65 @@
+load(
+    "//tools:defaults.bzl",
+    "markdown_to_html",
+    "ng_web_test_suite",
+    "sass_binary",
+)
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "table",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    assets = [":table.css"],
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
+        "//src:dev_mode_types",
+        "//src/cdk/bidi",
+        "//src/cdk/coercion",
+        "//src/cdk/collections",
+        "//src/cdk/platform",
+        "//src/cdk/scrolling",
+    ],
+)
+
+sass_binary(
+    name = "table_scss",
+    src = "table.scss",
+)
+
+ts_project(
+    name = "unit_test_sources",
+    testonly = True,
+    srcs = glob(
+        ["**/*.spec.ts"],
+        exclude = ["**/*.e2e.spec.ts"],
+    ),
+    deps = [
+        ":table",
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
+        "//src/cdk/bidi",
+        "//src/cdk/collections",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)
+
+markdown_to_html(
+    name = "overview",
+    srcs = [":table.md"],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob(["**/*.ts"]),
+)

@@ -1,0 +1,14 @@
+load("//tools:defaults2.bzl", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_project(
+    name = "postcss",
+    srcs = [
+        "compare-nodes.ts",
+    ],
+    tsconfig = "//tools:tsconfig",
+    deps = [
+        "//:node_modules/postcss",
+    ],
+)

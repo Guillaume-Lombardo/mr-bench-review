@@ -1,0 +1,31 @@
+load("//tools:defaults.bzl", "sass_binary", "sass_library")
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "selection",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    assets = [":selection_column_scss"],
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//src/cdk-experimental/selection",
+        "//src/material/checkbox",
+        "//src/material/table",
+    ],
+)
+
+sass_library(
+    name = "selection_scss_lib",
+    srcs = glob(["**/_*.scss"]),
+    deps = ["//src/material:sass_lib"],
+)
+
+sass_binary(
+    name = "selection_column_scss",
+    src = "selection-column.scss",
+)

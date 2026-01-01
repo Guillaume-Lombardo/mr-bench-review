@@ -1,0 +1,29 @@
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "connected-overlay",
+    srcs = glob(["**/*.ts"]),
+    assets = [
+        "connected-overlay-demo.html",
+        ":connected-overlay_demo_scss",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//src/cdk/bidi",
+        "//src/cdk/overlay",
+        "//src/cdk/portal",
+        "//src/components-examples/cdk/overlay",
+        "//src/material/button",
+        "//src/material/checkbox",
+        "//src/material/radio",
+    ],
+)
+
+sass_binary(
+    name = "connected-overlay_demo_scss",
+    src = "connected-overlay-demo.scss",
+)

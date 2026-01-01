@@ -1,0 +1,44 @@
+load("//tools:defaults.bzl", "ng_web_test_suite")
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "testing",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
+        "//src/cdk/testing",
+        "//src/material/icon",
+    ],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob(["**/*.ts"]),
+)
+
+ts_project(
+    name = "unit_tests_lib",
+    testonly = True,
+    srcs = glob(["**/*.spec.ts"]),
+    deps = [
+        ":testing",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//src/cdk/platform",
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
+        "//src/material/icon",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_tests_lib"],
+)

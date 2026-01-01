@@ -1,0 +1,89 @@
+load(
+    "//tools:defaults.bzl",
+    "extract_tokens",
+    "markdown_to_html",
+    "ng_web_test_suite",
+    "sass_binary",
+    "sass_library",
+)
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "timepicker",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    assets = [":timepicker.css"] + glob(["**/*.html"]),
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/rxjs",
+        "//src:dev_mode_types",
+        "//src/cdk/bidi",
+        "//src/cdk/keycodes",
+        "//src/cdk/overlay",
+        "//src/cdk/platform",
+        "//src/cdk/portal",
+        "//src/cdk/scrolling",
+        "//src/material/button",
+        "//src/material/core",
+        "//src/material/input",
+    ],
+)
+
+sass_library(
+    name = "timepicker_scss_lib",
+    srcs = glob(["**/_*.scss"]),
+    deps = ["//src/material/core:core_scss_lib"],
+)
+
+sass_binary(
+    name = "timepicker_scss",
+    src = "timepicker.scss",
+    deps = ["//src/material/core:core_scss_lib"],
+)
+
+ts_project(
+    name = "unit_test_sources",
+    testonly = True,
+    srcs = glob(
+        ["**/*.spec.ts"],
+    ),
+    deps = [
+        ":timepicker",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/rxjs",
+        "//src/cdk/keycodes",
+        "//src/cdk/overlay",
+        "//src/cdk/scrolling",
+        "//src/cdk/testing/private",
+        "//src/material/core",
+        "//src/material/form-field",
+        "//src/material/input",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)
+
+markdown_to_html(
+    name = "overview",
+    srcs = [":timepicker.md"],
+)
+
+extract_tokens(
+    name = "tokens",
+    srcs = [":timepicker_scss_lib"],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob(["**/*.ts"]),
+)

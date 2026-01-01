@@ -1,0 +1,28 @@
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "slider",
+    srcs = glob(["**/*.ts"]),
+    assets = [
+        "slider-demo.html",
+        ":slider_demo_scss",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//src/material/button",
+        "//src/material/button-toggle",
+        "//src/material/checkbox",
+        "//src/material/dialog",
+        "//src/material/slider",
+        "//src/material/tabs",
+    ],
+)
+
+sass_binary(
+    name = "slider_demo_scss",
+    src = "slider-demo.scss",
+)

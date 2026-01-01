@@ -1,0 +1,43 @@
+load(
+    "//src/material-experimental:config.bzl",
+    "MATERIAL_EXPERIMENTAL_SCSS_LIBS",
+    "MATERIAL_EXPERIMENTAL_TARGETS",
+    "MATERIAL_EXPERIMENTAL_TESTING_TARGETS",
+)
+load("//tools:defaults.bzl", "ng_package", "sass_library")
+load("//tools:defaults2.bzl", "ts_project")
+load("//tools/bazel:legacy_target.bzl", "get_legacy_label")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_project(
+    name = "material-experimental",
+    srcs = glob(
+        ["*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = ["//:node_modules/@angular/core"],
+)
+
+sass_library(
+    name = "theming_scss_lib",
+    srcs = MATERIAL_EXPERIMENTAL_SCSS_LIBS,
+)
+
+sass_library(
+    name = "sass_lib",
+    srcs = ["_index.scss"],
+    deps = [
+        ":theming_scss_lib",
+    ],
+)
+
+ng_package(
+    name = "npm_package",
+    srcs = [
+        "package.json",
+        ":sass_lib",
+    ],
+    tags = ["release-package"],
+    deps = [get_legacy_label(t) for t in MATERIAL_EXPERIMENTAL_TARGETS + MATERIAL_EXPERIMENTAL_TESTING_TARGETS],
+)

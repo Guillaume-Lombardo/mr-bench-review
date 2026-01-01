@@ -1,0 +1,37 @@
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "input",
+    srcs = glob(["**/*.ts"]),
+    assets = [
+        ":input_demo_scss",
+        "input-demo.html",
+    ],
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/rxjs",
+        "//src/components-examples/material/form-field",
+        "//src/material/autocomplete",
+        "//src/material/button",
+        "//src/material/button-toggle",
+        "//src/material/card",
+        "//src/material/checkbox",
+        "//src/material/form-field",
+        "//src/material/icon",
+        "//src/material/input",
+        "//src/material/tabs",
+        "//src/material/toolbar",
+        "//src/material/tooltip",
+    ],
+)
+
+sass_binary(
+    name = "input_demo_scss",
+    src = "input-demo.scss",
+    deps = ["//src/cdk:sass_lib"],
+)
