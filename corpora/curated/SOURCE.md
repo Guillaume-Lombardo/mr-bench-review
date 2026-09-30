@@ -1,8 +1,7 @@
 # Curated corpus — provenance
 
-Created 2026-09-30. Selected for bdf-review in the Claude Code session "MR de test pour
-benchmark de modèles" (https://claude.ai/code/session_01TAHbqyxv6Jnj8iiM3xkJsa) and moved
-here unchanged in substance. Every case reproduces a public upstream commit; no code was
+Created 2026-09-30. Selected for bdf-review and moved here unchanged in substance.
+Every case reproduces a public upstream commit; no code was
 written or modified for the benchmark.
 
 ## Selection method
