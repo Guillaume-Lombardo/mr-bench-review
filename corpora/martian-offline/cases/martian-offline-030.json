@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "martian-offline",
+  "id": "martian-offline-030",
+  "language": "go",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/martian-offline/martian-offline-030/base",
+  "head_branch": "bench/martian-offline/martian-offline-030/head",
+  "base_sha": "faa2bfc6178c34ff7afa00ff7358d88ccf0eaba1",
+  "head_sha": "d0dde81c9b8239d418d8ae633b23e9eec79e9af3",
+  "mr_title": "Unified Storage Performance Optimizations",
+  "mr_description": "- dont lazy init unified storage\n- Inits index when creating new resource server. Fixes trace propagation by passing span ctx. Update some logging.\n- Use finer grained cache locking when building indexes to speed things up. Locking the whole function was slowing things down.\n- formatting\n- Merge branch 'main' into unified-storage-dont-lazy-init\n- linter fix\n- Merge branch 'main' into unified-storage-dont-lazy-init\n- go mod\n- make update-workspace\n- fix workspaces check error\n- update dependency owner in mod file\n- wait 1 second before querying metrics\n- try with big timeout, see if fixes CI. Wont fail locally.\n- Merge branch 'main' into unified-storage-dont-lazy-init\n- skips postgres integration test. Only fails in drone. Will fix later.\n- put delay back to 500 ms\n- Merge branch 'main' into unified-storage-dont-lazy-init",
+  "origin": {
+    "repository": "https://github.com/grafana/grafana",
+    "commit": "26fed312840cd76b766cbd2158e17a7e6c0ec548",
+    "license": "AGPL-3.0",
+    "source_case": "https://github.com/grafana/grafana/pull/97529",
+    "source_url": "https://github.com/withmartian/code-review-benchmark/blob/e616e849755441da38f18bf3adba2c9583b03803/offline/golden_comments/grafana.json"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "high",
+      "title": "A race condition in BuildIndex allows multiple goroutines to concurrently build the same…",
+      "description": "A race condition in BuildIndex allows multiple goroutines to concurrently build the same expensive index for the same key. This is caused by moving the b.cacheMu lock from protecting the entire function to only protecting the final cache assignment.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "concurrency",
+      "source_text": "A race condition in BuildIndex allows multiple goroutines to concurrently build the same expensive index for the same key. This is caused by moving the b.cacheMu lock from protecting the entire function to only protecting the final cache assignment. "
+    },
+    {
+      "id": "i2",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Calling s.search.TotalDocs() here may race with concurrent index creation: TotalDocs iter…",
+      "description": "Calling s.search.TotalDocs() here may race with concurrent index creation: TotalDocs iterates b.cache without synchronization, and the event watcher goroutine started just above could trigger BuildIndex writes concurrently, potentially causing a concurrent map read/write panic.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "concurrency",
+      "source_text": "Calling s.search.TotalDocs() here may race with concurrent index creation: TotalDocs iterates b.cache without synchronization, and the event watcher goroutine started just above could trigger BuildIndex writes concurrently, potentially causing a concurrent map read/write panic."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/grafana/grafana/pull/97529). Upstream base 871af07203177ce59a24e742107119409274f48a (resolved as described in SOURCE.md). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile Strict"
+}

@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "corpus": "martian-offline",
+  "id": "martian-offline-038",
+  "language": "java",
+  "size": "large",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/martian-offline/martian-offline-038/base",
+  "head_branch": "bench/martian-offline/martian-offline-038/head",
+  "base_sha": "e0df1f2b619e8289d287520bc34adc92131e66d4",
+  "head_sha": "c9ad01cad9bb2216c54354a7c9e836eef87e11fe",
+  "mr_title": "Implement access token context encoding framework",
+  "mr_description": "- Encoding context to access token IDs closes\n- Shorter encoding of access token",
+  "origin": {
+    "repository": "https://github.com/keycloak/keycloak",
+    "commit": "daffb05b5ad091d3ec09933c3c99c2b54f448696",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/keycloak/keycloak/pull/37634",
+    "source_url": "https://github.com/withmartian/code-review-benchmark/blob/e616e849755441da38f18bf3adba2c9583b03803/offline/golden_comments/keycloak.json"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "critical",
+      "title": "In AccessTokenContext constructor, the fourth Objects.requireNonNull validates grantType…",
+      "description": "In AccessTokenContext constructor, the fourth Objects.requireNonNull validates grantType twice instead of validating rawTokenId, allowing null rawTokenId values to pass validation.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "bug",
+      "source_text": "In AccessTokenContext constructor, the fourth Objects.requireNonNull validates grantType twice instead of validating rawTokenId, allowing null rawTokenId values to pass validation."
+    },
+    {
+      "id": "i2",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "high",
+      "title": "In isAccessTokenId, the substring for the grant shortcut and the equality check look inve…",
+      "description": "In isAccessTokenId, the substring for the grant shortcut and the equality check look inverted: the grant shortcut occupies indices 4–5 (substring(4,6)), and a match should return true (combined with UUID check), not false.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "bug",
+      "source_text": "In isAccessTokenId, the substring for the grant shortcut and the equality check look inverted: the grant shortcut occupies indices 4–5 (substring(4,6)), and a match should return true (combined with UUID check), not false."
+    },
+    {
+      "id": "i3",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "maintainability",
+      "severity": "low",
+      "title": "Javadoc mentions \"usually like 3-letters shortcut\" but some implementations use 2-letter…",
+      "description": "Javadoc mentions \"usually like 3-letters shortcut\" but some implementations use 2-letter shortcuts (\"ac\", \"cc\", \"rt\", \"te\", \"pc\", \"ci\", \"ro\"). Consider updating documentation to reflect actual usage pattern.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "doc_defect",
+      "source_text": "Javadoc mentions \"usually like 3-letters shortcut\" but some implementations use 2-letter shortcuts (\"ac\", \"cc\", \"rt\", \"te\", \"pc\", \"ci\", \"ro\"). Consider updating documentation to reflect actual usage pattern."
+    },
+    {
+      "id": "i4",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "low",
+      "title": "Catching generic RuntimeException is too broad",
+      "description": "Catching generic RuntimeException is too broad. The implementation throws IllegalArgumentException specifically - catch that instead for more precise testing.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "bug",
+      "source_text": " Catching generic RuntimeException is too broad. The implementation throws IllegalArgumentException specifically - catch that instead for more precise testing."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/keycloak/keycloak/pull/37634). Upstream base c22f76867f595f0f7c327376a66a08dca01949e8 (resolved as described in SOURCE.md). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile Strict; i3: Martian profile Core; i4: Martian profile Strict"
+}

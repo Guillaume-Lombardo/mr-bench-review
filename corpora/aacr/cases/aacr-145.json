@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-145",
+  "language": "cpp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-145/base",
+  "head_branch": "bench/aacr/aacr-145/head",
+  "base_sha": "f8f821c5e0dc342395d3c978dda920dc17d8b2e8",
+  "head_sha": "10d239b6f11cae59a6bc6f84f7999b313879b240",
+  "mr_title": "Only allow one thread to spawn in pipeline",
+  "mr_description": "- Only allow one thread to spawn in pipeline\n- Avoid spawn too many idle threads\n- Use a better way to do try_lock\n- Fix style-check failure\n- Fix CI fail for the assumption of thread count\n- Continue fix thread count assumption\n- Avoid the lock in shouldSpawn()\n- Fix py style check\n- Make test_concurrent_threads_soft_limit_defined_50  more robust\n- Merge branch 'master' into limit-idle-threads",
+  "origin": {
+    "repository": "https://github.com/ClickHouse/ClickHouse",
+    "commit": "d67628cd7e7aeeba2a60bea273c5cfc08714120c",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/ClickHouse/ClickHouse/pull/72920",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/Processors/Executors/ExecutorTasks.h",
+      "line_start": 51,
+      "line_end": 51,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The constant `TOO_MANY_IDLE_THRESHOLD=4` lacks documented rationale; add a comment explai…",
+      "description": "The constant `TOO_MANY_IDLE_THRESHOLD=4` lacks documented rationale; add a comment explaining the basis for this value selection.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The constant `TOO_MANY_IDLE_THRESHOLD=4` lacks documented rationale; add a comment explaining the basis for this value selection."
+    },
+    {
+      "id": "i2",
+      "file": "src/Processors/Executors/ExecutorTasks.h",
+      "line_start": 75,
+      "line_end": 75,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The constant `TOO_MANY_IDLE_THRESHOLD` is misnamed as it represents a *minimum* idle thre…",
+      "description": "The constant `TOO_MANY_IDLE_THRESHOLD` is misnamed as it represents a *minimum* idle thread threshold (spawning occurs when `idle_threads <= threshold`), not a maximum for \"too many\" idle threads. Rename it to accurately reflect its role as a lower-bound trigger (e.g., `MIN_IDLE_THRESHOLD`).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The constant `TOO_MANY_IDLE_THRESHOLD` is misnamed as it represents a *minimum* idle thread threshold (spawning occurs when `idle_threads <= threshold`), not a maximum for \"too many\" idle threads. Rename it to accurately reflect its role as a lower-bound trigger (e.g., `MIN_IDLE_THRESHOLD`)."
+    },
+    {
+      "id": "i3",
+      "file": "src/Processors/Executors/PipelineExecutor.cpp",
+      "line_start": 372,
+      "line_end": 372,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The code change sets the initial thread count to 1 without documentation, obscuring the o…",
+      "description": "The code change sets the initial thread count to 1 without documentation, obscuring the optimization rationale. Document why initializing `tasks.init` with 1 thread (instead of `grantedCount()`) prevents waiting for all threads to idle when insufficient work exists, enabling incremental thread spawning.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The code change sets the initial thread count to 1 without documentation, obscuring the optimization rationale. Document why initializing `tasks.init` with 1 thread (instead of `grantedCount()`) prevents waiting for all threads to idle when insufficient work exists, enabling incremental thread spawning."
+    },
+    {
+      "id": "i4",
+      "file": "src/Processors/Executors/PipelineExecutor.cpp",
+      "line_start": 381,
+      "line_end": 386,
+      "category": "correctness",
+      "severity": null,
+      "title": "Using `std::try_to_lock` here can cause missed spawns: if another thread holds `spawn_loc…",
+      "description": "Using `std::try_to_lock` here can cause missed spawns: if another thread holds `spawn_lock`, this call returns early and relies on some future trigger to call `spawnThreads()` again. If no further trigger happens, the executor may end up under-spawned. Consider either blocking on the lock (if safe), or using a flag/condition to ensure a pending spawn request is handled after the current spawner finishes.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Using `std::try_to_lock` here can cause missed spawns: if another thread holds `spawn_lock`, this call returns early and relies on some future trigger to call `spawnThreads()` again. If no further trigger happens, the executor may end up under-spawned. Consider either blocking on the lock (if safe), or using a flag/condition to ensure a pending spawn request is handled after the current spawner finishes."
+    },
+    {
+      "id": "i5",
+      "file": "src/Processors/Executors/PipelineExecutor.h",
+      "line_start": 88,
+      "line_end": 88,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Add TSA annotations for the newly introduced `spawn_lock` mutex to explicitly document th…",
+      "description": "Add TSA annotations for the newly introduced `spawn_lock` mutex to explicitly document the data it protects, per project thread-safety conventions.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Add TSA annotations for the newly introduced `spawn_lock` mutex to explicitly document the data it protects, per project thread-safety conventions."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/Processors/Executors/ExecutorTasks.h",
+      "line_start": 41,
+      "line_end": 41,
+      "description": "The `idle_threads` variable is declared as `std::atomic_size_t`, but it's being incremented and decremented in multiple places without using atomic operations (e.g., `idle_threads++`, `idle_threads--`). While `++` and `--` on atomic types are atomic operations, the `shouldSpawn()` method reads this value without any synchronization, which could lead to race conditions when combined with the spawn_lock in PipelineExecutor.\n\nConsider documenting the thread-safety guarantees or using explicit atomic operations like `fetch_add(1)` and `fetch_sub(1)` for clarity."
+    },
+    {
+      "file": "src/Processors/Executors/PipelineExecutor.cpp",
+      "line_start": 388,
+      "line_end": 389,
+      "description": "`while (tasks.shouldSpawn() && (slot = cpu_slots->tryAcquire()))`: re-checking `tasks.shouldSpawn()` without synchronization guarantees can be racy if it depends on shared state updated by other threads. If `shouldSpawn()` is not atomic/lock-free by design, consider documenting its thread-safety or guarding it appropriately (e.g., under the same lock / using atomics). Also consider acquiring slot first and then checking `shouldSpawn()` to avoid repeatedly calling `tryAcquire()` if spawns are no longer needed."
+    },
+    {
+      "file": "src/Processors/Executors/PipelineExecutor.h",
+      "line_start": 11,
+      "line_end": 12,
+      "description": "Missing `<mutex>` header inclusion. `std::mutex` is used in the class definition, so `<mutex>` must be included."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/ClickHouse/ClickHouse/pull/72920). Upstream base 66394a7495d9ce9bb9defe27185358d402cef8d2 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 71. Severity absent in the source. i1: human comment, File Level; i2: human comment, Repo Level; i3: human comment, Diff Level; i4: AI comment (GPT-5.2), Diff Level; i5: human comment, Diff Level"
+}

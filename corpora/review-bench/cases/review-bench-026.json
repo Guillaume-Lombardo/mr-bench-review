@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-026",
+  "language": "go",
+  "size": "medium",
+  "kind": "clean",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-026/base",
+  "head_branch": "bench/review-bench/review-bench-026/head",
+  "base_sha": "f68ca30fabe451f93007074485c2c232627934fd",
+  "head_sha": "4a175b9e54a3864078a66ecc5ee4210e872f308a",
+  "mr_title": "Compare public elements of struct",
+  "mr_description": "* Implement checking only exported fields\n\n* Update comment\n\n* Run go generate\n\n* Make compatiable with Go 1.16.5\n\n* Fix go generate files\n\n* Fix white space changes\n\n* Fix whitespace changes\n\n* Fix whitespace changes in gogenerate files\n\n---------",
+  "origin": {
+    "repository": "https://github.com/stretchr/testify",
+    "commit": "c5fc9d6b6b21ea89be8480c0dc35e2977ab988f6",
+    "license": "MIT",
+    "source_case": "testify-struct-public-compare",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/testify-struct-public-compare"
+  },
+  "expected_issues": [],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench testify-struct-public-compare (corpus corpus/v0.1). Introducing PR https://github.com/stretchr/testify/pull/1309."
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "martian-offline",
+  "id": "martian-offline-028",
+  "language": "go",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/martian-offline/martian-offline-028/base",
+  "head_branch": "bench/martian-offline/martian-offline-028/head",
+  "base_sha": "ad82ff94adaf9c6a8afb697f14ba57f35d592771",
+  "head_sha": "7893f01eefa9486dd4c046f64090d39363806b99",
+  "mr_title": "Frontend Asset Optimization",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/grafana/grafana",
+    "commit": "b1613e320acff00623e6efc59f00ee68c7684a97",
+    "license": "AGPL-3.0",
+    "source_case": "https://github.com/grafana/grafana/pull/90939",
+    "source_url": "https://github.com/withmartian/code-review-benchmark/blob/e616e849755441da38f18bf3adba2c9583b03803/offline/golden_comments/grafana.json"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "The GetWebAssets function implements an incomplete double-checked locking pattern for cac…",
+      "description": "The GetWebAssets function implements an incomplete double-checked locking pattern for caching web assets. The function first checks if the cache is populated using a read lock (RLock), and if the cache is empty, it acquires a write lock to populate it. However, it fails to re-check whether the cache was populated by another goroutine while waiting to acquire the write lock.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "concurrency",
+      "source_text": "The GetWebAssets function implements an incomplete double-checked locking pattern for caching web assets. The function first checks if the cache is populated using a read lock (RLock), and if the cache is empty, it acquires a write lock to populate it. However, it fails to re-check whether the cache was populated by another goroutine while waiting to acquire the write lock."
+    },
+    {
+      "id": "i2",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "high",
+      "title": "In addition to the missing double-check, the function has a critical flaw in its error ha…",
+      "description": "In addition to the missing double-check, the function has a critical flaw in its error handling: it unconditionally assigns the fetch result to the cache (line 69: entryPointAssetsCache = result) regardless of whether the fetch succeeded or failed. When an error occurs during asset fetching, result is nil, and this nil value overwrites any previously valid cache entry.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "bug",
+      "source_text": "In addition to the missing double-check, the function has a critical flaw in its error handling: it unconditionally assigns the fetch result to the cache (line 69: entryPointAssetsCache = result) regardless of whether the fetch succeeded or failed. When an error occurs during asset fetching, result is nil, and this nil value overwrites any previously valid cache entry."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/grafana/grafana/pull/90939). Upstream base cca9dee702ac4338ddc38aa56257273b8143e32e (resolved as described in SOURCE.md). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile Strict"
+}

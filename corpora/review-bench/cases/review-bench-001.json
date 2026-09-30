@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-001",
+  "language": "javascript",
+  "size": "small",
+  "kind": "clean",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-001/base",
+  "head_branch": "bench/review-bench/review-bench-001/head",
+  "base_sha": "314617a59629a038c501a6b76ed0bce96e377fb6",
+  "head_sha": "1c0bb6c729bdb55ff20c722d9d6093a5a5062ce7",
+  "mr_title": "feat(HttpStatusCode): add RFC 9110 aliases for 413 and 422",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/axios/axios",
+    "commit": "39955a6ebed53217a524a3c8c7e5568fc0faa4bd",
+    "license": "MIT",
+    "source_case": "axios-httpstatus-rfc9110-aliases",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/axios-httpstatus-rfc9110-aliases"
+  },
+  "expected_issues": [],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench axios-httpstatus-rfc9110-aliases (corpus corpus/v0.1). Introducing PR https://github.com/axios/axios/pull/11082."
+}

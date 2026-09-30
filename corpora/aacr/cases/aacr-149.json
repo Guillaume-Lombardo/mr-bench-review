@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-149",
+  "language": "java",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-149/base",
+  "head_branch": "bench/aacr/aacr-149/head",
+  "base_sha": "cf3a3baaafc66ca308182b21e669057466007175",
+  "head_sha": "b0fdc5b1ad3db4cdfa18f8558dcc9352a3136eb1",
+  "mr_title": "Skip iterating DISI when reading metric values",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/elastic/elasticsearch",
+    "commit": "5e604e492648a95f7adef067aeb2b9fc2ca4a206",
+    "license": "AGPL-3.0-only OR SSPL-1.0 OR Elastic-2.0",
+    "source_case": "https://github.com/elastic/elasticsearch/pull/133365",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "modules/mapper-extras/src/main/java/org/elasticsearch/index/mapper/extras/ScaledFloatFieldMapper.java",
+      "line_start": 380,
+      "line_end": 380,
+      "category": "correctness",
+      "severity": null,
+      "title": "`LongToScaledFloat` performs `v / scalingFactor`",
+      "description": "`LongToScaledFloat` performs `v / scalingFactor`. If `scalingFactor` can ever be 0 or non-finite, this will yield +/-Inf/NaN and silently propagate into blocks. Previously this risk existed too, but now that conversion is centralized it’s a good place to enforce invariants. Consider validating `scalingFactor` (finite and > 0) when building the mapper / block loader, or at least asserting here to fail fast.\n\n```suggestion\n                // consider validating scalingFactor is finite and > 0 earlier\n                return new BlockDocValuesReader.DoublesBlockLoader(name(), new BlockDocValuesReader.LongToScaledFloat(scalingFactor));\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`LongToScaledFloat` performs `v / scalingFactor`. If `scalingFactor` can ever be 0 or non-finite, this will yield +/-Inf/NaN and silently propagate into blocks. Previously this risk existed too, but now that conversion is centralized it’s a good place to enforce invariants. Consider validating `scalingFactor` (finite and > 0) when building the mapper / block loader, or at least asserting here to fail fast.\n\n```suggestion\n                // consider validating scalingFactor is finite and > 0 earlier\n                return new BlockDocValuesReader.DoublesBlockLoader(name(), new BlockDocValuesReader.LongToScaledFloat(scalingFactor));\n```"
+    },
+    {
+      "id": "i2",
+      "file": "server/src/main/java/org/elasticsearch/index/codec/tsdb/es819/ES819TSDBDocValuesProducer.java",
+      "line_start": 1504,
+      "line_end": 1504,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Use '!' operator instead of '== false' for boolean comparison to follow standard Java con…",
+      "description": "Use '!' operator instead of '== false' for boolean comparison to follow standard Java conventions and improve readability.\n\n```suggestion\n                    if (!nullsFiltered) {\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Use '!' operator instead of '== false' for boolean comparison to follow standard Java conventions and improve readability.\n\n```suggestion\n                    if (!nullsFiltered) {\n```"
+    },
+    {
+      "id": "i3",
+      "file": "server/src/main/java/org/elasticsearch/index/codec/tsdb/es819/ES819TSDBDocValuesProducer.java",
+      "line_start": 1507,
+      "line_end": 1511,
+      "category": "correctness",
+      "severity": null,
+      "title": "Edge case: `docs.count()` might be 0 (or `offset` might not be valid), which would make `…",
+      "description": "Edge case: `docs.count()` might be 0 (or `offset` might not be valid), which would make `docs.get(offset)` / `docs.get(docs.count() - 1)` throw. If the contract guarantees non-empty docs, please add an assertion (e.g., `assert docs.count() > 0`) and/or validate `offset < docs.count()` to prevent future misuse. Otherwise handle empty early (return an empty block or `null`).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Edge case: `docs.count()` might be 0 (or `offset` might not be valid), which would make `docs.get(offset)` / `docs.get(docs.count() - 1)` throw. If the contract guarantees non-empty docs, please add an assertion (e.g., `assert docs.count() > 0`) and/or validate `offset < docs.count()` to prevent future misuse. Otherwise handle empty early (return an empty block or `null`)."
+    },
+    {
+      "id": "i4",
+      "file": "server/src/main/java/org/elasticsearch/index/codec/tsdb/es819/ES819TSDBDocValuesProducer.java",
+      "line_start": 1512,
+      "line_end": 1521,
+      "category": "correctness",
+      "severity": null,
+      "title": "Thread safety issue: lazy initialization of jumpDISI field is not synchronized",
+      "description": "Thread safety issue: lazy initialization of jumpDISI field is not synchronized. If multiple threads call tryReadDoubles concurrently, this could lead to race conditions or multiple initializations.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Thread safety issue: lazy initialization of jumpDISI field is not synchronized. If multiple threads call tryReadDoubles concurrently, this could lead to race conditions or multiple initializations.\n"
+    },
+    {
+      "id": "i5",
+      "file": "server/src/main/java/org/elasticsearch/index/codec/tsdb/es819/ES819TSDBDocValuesProducer.java",
+      "line_start": 1522,
+      "line_end": 1534,
+      "category": "correctness",
+      "severity": null,
+      "title": "Correctness assumption: this optimization relies on `docs` being sorted ascending and uni…",
+      "description": "Correctness assumption: this optimization relies on `docs` being sorted ascending and unique. Using `lastDoc = docs.get(docs.count() - 1)` and comparing `valueCount == docs.count()` can produce wrong results if docs are unsorted or contain duplicates (the comment mentions duplicates can happen with enrich/lookup). Consider explicitly gating this fast-path behind a `docs` capability (sorted/unique) or performing a cheap check (at least when docs.count() is small) before trusting first/last arithmetic.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Correctness assumption: this optimization relies on `docs` being sorted ascending and unique. Using `lastDoc = docs.get(docs.count() - 1)` and comparing `valueCount == docs.count()` can produce wrong results if docs are unsorted or contain duplicates (the comment mentions duplicates can happen with enrich/lookup). Consider explicitly gating this fast-path behind a `docs` capability (sorted/unique) or performing a cheap check (at least when docs.count() is small) before trusting first/last arithmetic."
+    },
+    {
+      "id": "i6",
+      "file": "server/src/main/java/org/elasticsearch/index/codec/tsdb/es819/ES819TSDBDocValuesProducer.java",
+      "line_start": 1549,
+      "line_end": 1550,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Incomplete comment: The line ends with 'from the' but is missing the rest of the descript…",
+      "description": "Incomplete comment: The line ends with 'from the' but is missing the rest of the description. Please complete the comment or remove it if not needed.\n\n```suggestion\n                            // bulk convert from currentBlock to values array\n                            final int count = Math.min(ES819TSDBDocValuesFormat.NUMERIC_BLOCK_SIZE - blockStartIndex, valueCount - i);\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Incomplete comment: The line ends with 'from the' but is missing the rest of the description. Please complete the comment or remove it if not needed.\n\n```suggestion\n                            // bulk convert from currentBlock to values array\n                            final int count = Math.min(ES819TSDBDocValuesFormat.NUMERIC_BLOCK_SIZE - blockStartIndex, valueCount - i);\n```"
+    },
+    {
+      "id": "i7",
+      "file": "server/src/main/java/org/elasticsearch/index/mapper/BlockDocValuesReader.java",
+      "line_start": 149,
+      "line_end": 149,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Typo in assertion message: 'nullFiltered' should be 'nullsFiltered' to match the actual p…",
+      "description": "Typo in assertion message: 'nullFiltered' should be 'nullsFiltered' to match the actual parameter name.\n\n```suggestion\n                        assert nullsFiltered == false : \"nullsFiltered is true, but doc [\" + doc + \"] has no value\";\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Typo in assertion message: 'nullFiltered' should be 'nullsFiltered' to match the actual parameter name.\n\n```suggestion\n                        assert nullsFiltered == false : \"nullsFiltered is true, but doc [\" + doc + \"] has no value\";\n```"
+    },
+    {
+      "id": "i8",
+      "file": "server/src/main/java/org/elasticsearch/index/mapper/BlockDocValuesReader.java",
+      "line_start": 149,
+      "line_end": 149,
+      "category": "correctness",
+      "severity": null,
+      "title": "Assertion logic seems inverted",
+      "description": "Assertion logic seems inverted. Conventionally, nullsFiltered=true means nulls were pre-filtered, so encountering a doc without value would be unexpected. Current assertion fails when nullsFiltered=false, which misses detecting inconsistent states.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Assertion logic seems inverted. Conventionally, nullsFiltered=true means nulls were pre-filtered, so encountering a doc without value would be unexpected. Current assertion fails when nullsFiltered=false, which misses detecting inconsistent states.\n"
+    },
+    {
+      "id": "i9",
+      "file": "server/src/main/java/org/elasticsearch/index/mapper/BlockDocValuesReader.java",
+      "line_start": 377,
+      "line_end": 377,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Duplicate conversion logic in SortableShortToHalfFloat.convert: the array conversion meth…",
+      "description": "Duplicate conversion logic in SortableShortToHalfFloat.convert: the array conversion method directly invokes HalfFloatPoint.sortableShortToHalfFloat instead of reusing the single-element convert method.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Duplicate conversion logic in SortableShortToHalfFloat.convert: the array conversion method directly invokes HalfFloatPoint.sortableShortToHalfFloat instead of reusing the single-element convert method."
+    },
+    {
+      "id": "i10",
+      "file": "server/src/main/java/org/elasticsearch/index/mapper/BlockDocValuesReader.java",
+      "line_start": 542,
+      "line_end": 548,
+      "category": "correctness",
+      "severity": null,
+      "title": "In the direct path, `nullsFiltered` is forwarded to `tryReadDoubles`, but in the fallback…",
+      "description": "In the direct path, `nullsFiltered` is forwarded to `tryReadDoubles`, but in the fallback path (`toDouble.readThenConvert`) null-filtering is not enforced (it appends nulls). Ensure this is consistent with the semantics of `nullsFiltered`: if `true` means docs are guaranteed to have values, then fallback should assert/throw similarly to other loaders, or at least assert when `advanceExact` is false. Otherwise behavior differences between direct and fallback implementations may slip through tests.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "In the direct path, `nullsFiltered` is forwarded to `tryReadDoubles`, but in the fallback path (`toDouble.readThenConvert`) null-filtering is not enforced (it appends nulls). Ensure this is consistent with the semantics of `nullsFiltered`: if `true` means docs are guaranteed to have values, then fallback should assert/throw similarly to other loaders, or at least assert when `advanceExact` is false. Otherwise behavior differences between direct and fallback implementations may slip through tests."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "server/src/main/java/org/elasticsearch/index/codec/tsdb/es819/ES819TSDBDocValuesProducer.java",
+      "line_start": 1533,
+      "line_end": 1533,
+      "description": "Bug: The optimization check uses `docs.count()` but should use `docs.count() - offset`. \n\nWhen `offset > 0`, the method reads documents from `docs.get(offset)` to `docs.get(docs.count() - 1)`, which is `docs.count() - offset` documents, not `docs.count()` documents.\n\nFor example, if docs contains 5 documents and offset is 2, we're reading 3 documents (indices 2, 3, 4), but this checks if `valueCount == 5` instead of `valueCount == 3`, causing the optimization to be incorrectly skipped.\n\nThis affects lines 1533, 1535, and 1552. The fix should be:\n\n```java\nif (valueCount == (docs.count() - offset)) {\n    final double[] values = new double[docs.count() - offset];\n    // ... conversion logic ...\n    return factory.doubles(values, docs.count() - offset);\n}\n```\n\nThis bug prevents the optimization from working when `offset > 0`, which could occur during paginated reads or partial block processing."
+    },
+    {
+      "file": "server/src/main/java/org/elasticsearch/index/codec/tsdb/es819/ES819TSDBDocValuesProducer.java",
+      "line_start": 1551,
+      "line_end": 1551,
+      "description": "The `tryReadDoubles` method unnecessarily allocates a double array during conversion; replace with `SingletonLongToDoubleDelegate` to convert longs to doubles on the fly without allocation."
+    },
+    {
+      "file": "server/src/main/java/org/elasticsearch/index/mapper/BlockDocValuesReader.java",
+      "line_start": 356,
+      "line_end": 366,
+      "description": "`ToDouble` is now a sealed interface but there is no explicit `permits` clause. This only compiles if all implementations are nested in the same compilation unit, which is true *today* but makes extension from other files impossible (including future optimizations). If you intend to allow external implementations (e.g., mappers/codecs) remove `sealed`; if you intend to restrict, consider adding an explicit `permits` list to make the intended set of implementors clear and prevent accidental breakage when moving classes."
+    },
+    {
+      "file": "server/src/main/java/org/elasticsearch/index/mapper/BlockDocValuesReader.java",
+      "line_start": 371,
+      "line_end": 371,
+      "description": "`convert(long v)` and the bulk `convert(...)` both down-cast from `long` to narrower types (short/int). If any caller passes a value outside the expected sortable encoding range, this will silently truncate and produce wrong results. If the contract is \"v is always Lucene sortable encoded\", consider adding a defensive range check in debug builds (assert) or documenting/renaming methods to make the encoding requirement explicit."
+    },
+    {
+      "file": "server/src/main/java/org/elasticsearch/index/mapper/BlockLoader.java",
+      "line_start": 403,
+      "line_end": 403,
+      "description": "Method naming conflict: The new method `doubles(double[] values, int expectedCount)` has the same name as the existing `doubles(int expectedCount)` method, which returns a `DoubleBuilder` instead of a `Block`. This creates API confusion. Consider renaming to something more descriptive like `doublesFromArray` or `doublesFromValues` to distinguish it from the builder method, similar to how `constantNulls` and `constantBytes` are named differently from builder methods."
+    },
+    {
+      "file": "server/src/main/java/org/elasticsearch/index/mapper/BlockLoader.java",
+      "line_start": 403,
+      "line_end": 403,
+      "description": "Having both a double array and an expectedCount parameter may cause confusion. The array already contains its length information via values.length. Consider removing the expectedCount parameter or clarifying in the Javadoc what happens when the two don't match."
+    },
+    {
+      "file": "x-pack/plugin/esql/compute/src/main/java/org/elasticsearch/compute/lucene/read/DelegatingBlockLoaderFactory.java",
+      "line_start": 82,
+      "line_end": 84,
+      "description": "Consider adding null validation for the 'values' parameter to provide a clearer error message if null is passed. While the underlying factory method may handle null values, explicit validation here would make the error more traceable and prevent potential NPE.\n\nSuggested approach:\n```java\nObjects.requireNonNull(values, \"values array cannot be null\");\n```"
+    },
+    {
+      "file": "x-pack/plugin/esql/compute/src/main/java/org/elasticsearch/compute/lucene/read/DelegatingBlockLoaderFactory.java",
+      "line_start": 83,
+      "line_end": 83,
+      "description": "Consider asserting that values.length equals expectedCount to avoid ambiguous behaviors caused by mismatched sizes.\n\n```suggestion\n        if (values.length != expectedCount) {\n            throw new IllegalArgumentException(\"Mismatch between array length [\" + values.length + \"] and expected count [\" + expectedCount + \"]\");\n        }\n        return factory.newDoubleArrayVector(values, expectedCount).asBlock();\n```"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/elastic/elasticsearch/pull/133365). Upstream base 971c87dc70b66d81faba990854d0c084fbe34823 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 289. Severity absent in the source. i1: AI comment (GPT-5.2), File Level; i2: AI comment (GLM-4.7), Diff Level; i3: AI comment (GPT-5.2), File Level; i4: AI comment (Deepseek-V3.2), Repo Level; i5: AI comment (GPT-5.2), Repo Level; i6: AI comment (GLM-4.7), Diff Level; i7: AI comment (GLM-4.7), Diff Level; i8: AI comment (Qwen-Coder-480B), File Level; i9: human comment, File Level; i10: AI comment (GPT-5.2), File Level"
+}

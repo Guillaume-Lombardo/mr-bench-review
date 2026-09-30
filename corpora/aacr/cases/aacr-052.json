@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-052",
+  "language": "typescript",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-052/base",
+  "head_branch": "bench/aacr/aacr-052/head",
+  "base_sha": "2ca3998f30f859a104ee7ef391623b5e7c8c3c69",
+  "head_sha": "3b81ebb258e1c0fcad765b2e1a68b09bf00ba386",
+  "mr_title": "Fixed to be able to use DeepSeek model in Azure.",
+  "mr_description": "- Fixed to be able to use DeepSeek model in Azure.\n- fix\n- fix .changeset",
+  "origin": {
+    "repository": "https://github.com/cline/cline",
+    "commit": "cb4d5c90460885942cbbae0298b95f4ee5682086",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/cline/cline/pull/1808",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/api/providers/openai.ts",
+      "line_start": 17,
+      "line_end": 17,
+      "category": "correctness",
+      "severity": null,
+      "title": "The condition for Azure API shape detection was incorrectly modified to check the base UR…",
+      "description": "The condition for Azure API shape detection was incorrectly modified to check the base URL for 'deepseek'; it should verify 'azure.com' in the base URL while excluding DeepSeek models via the model ID to prevent duplicated logic.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The condition for Azure API shape detection was incorrectly modified to check the base URL for 'deepseek'; it should verify 'azure.com' in the base URL while excluding DeepSeek models via the model ID to prevent duplicated logic."
+    },
+    {
+      "id": "i2",
+      "file": "src/api/providers/openai.ts",
+      "line_start": 39,
+      "line_end": 39,
+      "category": "maintainability",
+      "severity": null,
+      "title": "**Duplicate code**: The condition `modelId.includes(\"deepseek-reasoner\") || modelId.inclu…",
+      "description": "**Duplicate code**: The condition `modelId.includes(\"deepseek-reasoner\") || modelId.includes(\"deepseek-r1\")` is duplicated across multiple provider files (openai.ts, deepseek.ts, qwen.ts, together.ts, requesty.ts). Consider extracting this into a shared utility function to improve maintainability.\n\nExample:\n```typescript\n// In a shared utils file\nexport const isDeepSeekReasonerModel = (modelId: string): boolean => {\n  return modelId.includes(\"deepseek-reasoner\") || modelId.includes(\"deepseek-r1\");\n};\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "**Duplicate code**: The condition `modelId.includes(\"deepseek-reasoner\") || modelId.includes(\"deepseek-r1\")` is duplicated across multiple provider files (openai.ts, deepseek.ts, qwen.ts, together.ts, requesty.ts). Consider extracting this into a shared utility function to improve maintainability.\n\nExample:\n```typescript\n// In a shared utils file\nexport const isDeepSeekReasonerModel = (modelId: string): boolean => {\n  return modelId.includes(\"deepseek-reasoner\") || modelId.includes(\"deepseek-r1\");\n};\n```\n"
+    },
+    {
+      "id": "i3",
+      "file": "src/api/providers/openai.ts",
+      "line_start": 39,
+      "line_end": 39,
+      "category": "correctness",
+      "severity": null,
+      "title": "Model checks using substring `includes` can create false positives (e.g., custom model na…",
+      "description": "Model checks using substring `includes` can create false positives (e.g., custom model names that contain these tokens). If model IDs are known, prefer exact match or a small set/regex anchored to expected patterns. Also consider normalizing case once (model IDs can sometimes be mixed-case).\n\n```suggestion\n\t\tconst normalizedModelId = modelId.toLowerCase()\n\t\tconst isDeepseekReasoner =\n\t\t\tnormalizedModelId === \"deepseek-reasoner\" || normalizedModelId === \"deepseek-r1\"\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Model checks using substring `includes` can create false positives (e.g., custom model names that contain these tokens). If model IDs are known, prefer exact match or a small set/regex anchored to expected patterns. Also consider normalizing case once (model IDs can sometimes be mixed-case).\n\n```suggestion\n\t\tconst normalizedModelId = modelId.toLowerCase()\n\t\tconst isDeepseekReasoner =\n\t\t\tnormalizedModelId === \"deepseek-reasoner\" || normalizedModelId === \"deepseek-r1\"\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/api/providers/deepseek.ts",
+      "line_start": 26,
+      "line_end": 26,
+      "description": "The change adding \"deepseek-r1\" to the model ID check is unnecessary for Azure support and should be reverted."
+    },
+    {
+      "file": "src/api/providers/deepseek.ts",
+      "line_start": 26,
+      "line_end": 26,
+      "description": "The model detection logic is now hard-coded to match multiple substrings (\"deepseek-reasoner\" or \"deepseek-r1\"). This can become brittle as model naming evolves and duplicates similar logic across providers. Consider centralizing model family detection (e.g., in getModel()/a helper like isReasonerModel(model.id)) or using an explicit model capability flag in the model config, so adding new aliases doesn’t require code changes in multiple places."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/cline/cline/pull/1808). Upstream base 283d7d6928755ce5f62827e25c437a7a77964549 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 11. Severity absent in the source. i1: human comment, Diff Level; i2: AI comment (Claude-Code/Claude-4.5-Sonnet), Repo Level; i3: AI comment (GPT-5.2), Diff Level"
+}

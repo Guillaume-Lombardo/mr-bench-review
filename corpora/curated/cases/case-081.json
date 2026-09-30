@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-081",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-081/base",
+  "head_branch": "bench/curated/case-081/head",
+  "base_sha": "07140e80dbc9381091fdf35bf321c0c6f20dc803",
+  "head_sha": "f7eb7853b014bbb14d692cdb7c62bf10a3abc926",
+  "mr_title": "Moved _is_pk_set checks into _prepare_for_bulk_create().",
+  "mr_description": "To avoid looping over objs twice.",
+  "origin": {
+    "repository": "https://github.com/django/django",
+    "commit": "7d9aab8da0a06787d649762a702e1a518d843a63",
+    "license": "BSD-3-Clause",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "django/db/models/query.py",
+      "line_start": 673,
+      "line_end": 686,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Objects partitioned before related fields are prepared in bulk_create()",
+      "description": "Objects are partitioned by primary-key presence before _prepare_related_fields_for_save() runs, so objects whose pk comes from a related instance saved late are put in the wrong bucket.\n\nPreviously the partition happened after every object had gone through _prepare_related_fields_for_save(), which copies the pk of a related object saved after instantiation (e.g. a OneToOne primary key). The refactor classifies each object before preparing its related fields, so such an object is treated as having no pk; bulk_create() then inserts it through the objs_without_pk path and fails the returned-rows assertion on backends that return rows (PostgreSQL). The preparation call must run before the classification.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/7d9aab8da0a06787d649762a702e1a518d843a63. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/c9ff757a55392b1f50968eb89fe775f6155168d8; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

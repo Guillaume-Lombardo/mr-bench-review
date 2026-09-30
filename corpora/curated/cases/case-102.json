@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-102",
+  "language": "typescript",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-102/base",
+  "head_branch": "bench/curated/case-102/head",
+  "base_sha": "cc2ac02e2b099d45ee48493ee07593e6a85cda8a",
+  "head_sha": "e365b88d145e6c1ae3af8f2565bea7f161e0e0ad",
+  "mr_title": "managed settings: fix stale cache case when moving to unavailable",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/microsoft/vscode",
+    "commit": "b019241b7c2896739a527236794940f63bad86dd",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/vs/workbench/services/accounts/browser/defaultAccount.ts",
+      "line_start": 946,
+      "line_end": 950,
+      "category": "security",
+      "severity": "high",
+      "title": "Stale managed policy dropped on a transient refresh failure",
+      "description": "On a failed refresh ('unavailable': timeout, 401/403, 429, 5xx) the cached managed-settings response is only retained while it is not yet expired; once stale, the enterprise policy is dropped and the client silently falls back to unmanaged defaults.\n\nA transient failure of the policy endpoint is not evidence that the organisation withdrew its managed settings. With this change, after the one-hour cache lifetime any failed fetch returns `managedSettings: undefined`, removing enforced settings (e.g. telemetry endpoints, feature restrictions) until the next successful call. The last successful policy should be kept (with its original timestamp so it is still refetched); only an affirmative answer (200/404) should replace or clear it.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/microsoft/vscode/commit/b019241b7c2896739a527236794940f63bad86dd. Primary issue confirmed by the later upstream fix https://github.com/microsoft/vscode/commit/29b6800099e93591c9a1c930b95b6e9c5657c002; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

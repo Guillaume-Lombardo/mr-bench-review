@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-108",
+  "language": "python",
+  "size": "large",
+  "kind": "real",
+  "tier": "core",
+  "base_branch": "bench/curated/case-108/base",
+  "head_branch": "bench/curated/case-108/head",
+  "base_sha": "037bbf152a82d139deff99daa5ea9c2a100bffda",
+  "head_sha": "026ea9b9dce3d732ea3438f2181d0803d763a6ff",
+  "mr_title": "Implemented async auth backends and utils.",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/django/django",
+    "commit": "50f89ae850f6b4e35819fe725a08c7e579bfd099",
+    "license": "BSD-3-Clause",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "django/contrib/auth/middleware.py",
+      "line_start": 93,
+      "line_end": 93,
+      "category": "security",
+      "severity": "high",
+      "title": "Overridden process_request() silently bypassed after the middleware rewrite",
+      "description": "RemoteUserMiddleware no longer derives from MiddlewareMixin and no longer calls process_request(), so subclasses that customise authentication by overriding process_request() are silently bypassed.\n\nProjects commonly subclass RemoteUserMiddleware and override process_request() (for example to accept the header only from a trusted proxy, or to map external identities). The rewrite to a plain sync/async middleware implements the logic directly in __call__/__acall__, so an overridden process_request() is never called: the custom checks stop running without any error or warning, and requests are authenticated with the default behaviour. The old hook must keep being honoured (or deprecated with a warning).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/50f89ae850f6b4e35819fe725a08c7e579bfd099. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/1704c49a9b149b66b6a0e67abc8c95293bc35649; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

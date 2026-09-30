@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-070",
+  "language": "typescript",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-070/base",
+  "head_branch": "bench/aacr/aacr-070/head",
+  "base_sha": "c170258a44a48a41a653031a1753e1e5f62f74a5",
+  "head_sha": "327125465d31b3de5d338ec349ae5ec546a19e58",
+  "mr_title": "Add integration test for extensions",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/google-gemini/gemini-cli",
+    "commit": "c6e624883852318b71baa2a060c933bb5de591ef",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/google-gemini/gemini-cli/pull/9177",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "integration-tests/test-helper.ts",
+      "line_start": 309,
+      "line_end": 312,
+      "category": "correctness",
+      "severity": null,
+      "title": "* The new `runCommand` method lacks validation that `setup()` has been called, risking ru…",
+      "description": "* The new `runCommand` method lacks validation that `setup()` has been called, risking runtime errors when `testDir` is uninitialized.  \n* The existing `run` method has the same vulnerability and requires identical setup validation.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "* The new `runCommand` method lacks validation that `setup()` has been called, risking runtime errors when `testDir` is uninitialized.  \n* The existing `run` method has the same vulnerability and requires identical setup validation."
+    },
+    {
+      "id": "i2",
+      "file": "integration-tests/test-helper.ts",
+      "line_start": 309,
+      "line_end": 358,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The `runCommand` method duplicates process execution and stream handling logic already pr…",
+      "description": "The `runCommand` method duplicates process execution and stream handling logic already present in the `run` method, violating DRY principles and increasing maintenance burden. Extract the common child process spawning, stream collection, and promise resolution into a private helper method shared by both functions.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The `runCommand` method duplicates process execution and stream handling logic already present in the `run` method, violating DRY principles and increasing maintenance burden. Extract the common child process spawning, stream collection, and promise resolution into a private helper method shared by both functions."
+    },
+    {
+      "id": "i3",
+      "file": "integration-tests/test-helper.ts",
+      "line_start": 323,
+      "line_end": 326,
+      "category": "correctness",
+      "severity": null,
+      "title": "Using non-null assertion operators (!) on child process streams could lead to runtime err…",
+      "description": "Using non-null assertion operators (!) on child process streams could lead to runtime errors if the streams are unexpectedly null. Consider adding proper null checks for better safety.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Using non-null assertion operators (!) on child process streams could lead to runtime errors if the streams are unexpectedly null. Consider adding proper null checks for better safety.\n"
+    },
+    {
+      "id": "i4",
+      "file": "integration-tests/test-helper.ts",
+      "line_start": 323,
+      "line_end": 326,
+      "category": "correctness",
+      "severity": null,
+      "title": "If `options.stdin` is an empty string, this branch won’t run, and stdin won’t be closed",
+      "description": "If `options.stdin` is an empty string, this branch won’t run, and stdin won’t be closed. Prefer checking `options.stdin !== undefined` so callers can intentionally send empty input and still close stdin to avoid child waiting for EOF.\n\n```suggestion\n    if (options.stdin !== undefined) {\n      child.stdin!.write(options.stdin);\n      child.stdin!.end();\n    }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "If `options.stdin` is an empty string, this branch won’t run, and stdin won’t be closed. Prefer checking `options.stdin !== undefined` so callers can intentionally send empty input and still close stdin to avoid child waiting for EOF.\n\n```suggestion\n    if (options.stdin !== undefined) {\n      child.stdin!.write(options.stdin);\n      child.stdin!.end();\n    }\n```"
+    },
+    {
+      "id": "i5",
+      "file": "integration-tests/test-helper.ts",
+      "line_start": 328,
+      "line_end": 333,
+      "category": "correctness",
+      "severity": null,
+      "title": "`stdout += data` / `stderr += data` is concatenating a Buffer to a string, which relies o…",
+      "description": "`stdout += data` / `stderr += data` is concatenating a Buffer to a string, which relies on implicit coercion and can produce unexpected output (e.g., \"[object Object]\") depending on runtime/TS settings. Convert explicitly via `data.toString('utf8')` (or set encoding on the streams) before appending.\n\n```suggestion\n    child.stdout!.setEncoding('utf8');\n    child.stdout!.on('data', (data: string) => {\n      stdout += data;\n      if (env.KEEP_OUTPUT === 'true' || env.VERBOSE === 'true') {\n        process.stdout.write(data);\n      }\n    });\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`stdout += data` / `stderr += data` is concatenating a Buffer to a string, which relies on implicit coercion and can produce unexpected output (e.g., \"[object Object]\") depending on runtime/TS settings. Convert explicitly via `data.toString('utf8')` (or set encoding on the streams) before appending.\n\n```suggestion\n    child.stdout!.setEncoding('utf8');\n    child.stdout!.on('data', (data: string) => {\n      stdout += data;\n      if (env.KEEP_OUTPUT === 'true' || env.VERBOSE === 'true') {\n        process.stdout.write(data);\n      }\n    });\n```"
+    },
+    {
+      "id": "i6",
+      "file": "integration-tests/test-helper.ts",
+      "line_start": 342,
+      "line_end": 355,
+      "category": "correctness",
+      "severity": null,
+      "title": "Missing `child.on('error', ...)` handling",
+      "description": "Missing `child.on('error', ...)` handling. If spawning `node` fails (ENOENT, permission, etc.), the promise will never settle. Add an `error` listener that rejects.\n\n```suggestion\n    const promise = new Promise<string>((resolve, reject) => {\n      child.on('error', reject);\n      child.on('close', (code: number | null, signal: NodeJS.Signals | null) => {\n        if (code === 0) {\n          this._lastRunStdout = stdout;\n          let result = stdout;\n          if (stderr) result += `\\n\\nStdErr:\\n${stderr}`;\n          resolve(result);\n        } else {\n          const extra = signal ? ` (signal: ${signal})` : '';\n          reject(new Error(`Process exited with code ${code}${extra}:\\n${stderr}`));\n        }\n      });\n    });\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Missing `child.on('error', ...)` handling. If spawning `node` fails (ENOENT, permission, etc.), the promise will never settle. Add an `error` listener that rejects.\n\n```suggestion\n    const promise = new Promise<string>((resolve, reject) => {\n      child.on('error', reject);\n      child.on('close', (code: number | null, signal: NodeJS.Signals | null) => {\n        if (code === 0) {\n          this._lastRunStdout = stdout;\n          let result = stdout;\n          if (stderr) result += `\\n\\nStdErr:\\n${stderr}`;\n          resolve(result);\n        } else {\n          const extra = signal ? ` (signal: ${signal})` : '';\n          reject(new Error(`Process exited with code ${code}${extra}:\\n${stderr}`));\n        }\n      });\n    });\n```"
+    },
+    {
+      "id": "i7",
+      "file": "integration-tests/test-helper.ts",
+      "line_start": 352,
+      "line_end": 352,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The error handling only includes stderr in the rejection",
+      "description": "The error handling only includes stderr in the rejection. For better debugging, consider including both stdout and stderr in the error message.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The error handling only includes stderr in the rejection. For better debugging, consider including both stdout and stderr in the error message.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "integration-tests/test-helper.ts",
+      "line_start": 351,
+      "line_end": 353,
+      "description": "Consider preserving the original error object while augmenting it with additional information. This approach maintains the original stack trace and error details while still providing the stderr output for debugging. For example: `const error = new Error(stderr); error.code = code; reject(error);`"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/google-gemini/gemini-cli/pull/9177). Upstream base 570b0086b606d2a6d55a2bdcd08b8a91c8092c8d = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 103. Severity absent in the source. i1: human comment, Repo Level; i2: human comment, Repo Level; i3: AI comment (Deepseek-V3.2), File Level; i4: AI comment (GPT-5.2), File Level; i5: AI comment (GPT-5.2), File Level; i6: AI comment (GPT-5.2), File Level; i7: AI comment (Deepseek-V3.2), File Level"
+}

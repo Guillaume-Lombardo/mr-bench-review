@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-186",
+  "language": "rust",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-186/base",
+  "head_branch": "bench/aacr/aacr-186/head",
+  "base_sha": "51a5a9b6c380c8daec03caa18ffecabe778e4ab7",
+  "head_sha": "8335cfe568c9fc8eaa11b91aed101611ff3451ab",
+  "mr_title": "Add a limit for the number of received_log entries in a chain info response",
+  "mr_description": "- Add a limit for the number of received_log entries in a chain info response\n- Fix a rename gone wrong",
+  "origin": {
+    "repository": "https://github.com/linera-io/linera-protocol",
+    "commit": "3535ddb83de7dfae5db1732a7f1535031d31380a",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/linera-io/linera-protocol/pull/4639",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "linera-core/src/chain_worker/state.rs",
+      "line_start": 51,
+      "line_end": 51,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Doc comment should format `received_log` and `ChainInfo` as code identifiers using backti…",
+      "description": "Doc comment should format `received_log` and `ChainInfo` as code identifiers using backticks.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Doc comment should format `received_log` and `ChainInfo` as code identifiers using backticks."
+    },
+    {
+      "id": "i2",
+      "file": "linera-core/src/chain_worker/state.rs",
+      "line_start": 53,
+      "line_end": 53,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Making this `pub` exposes a protocol/behavior constant outside the crate",
+      "description": "Making this `pub` exposes a protocol/behavior constant outside the crate. If this limit is only an internal safeguard for responses, consider `pub(crate)` to avoid accidental external coupling. If it must be public, document whether it’s a hard API guarantee and whether changing it is a breaking change.\n\n```suggestion\npub(crate) const CHAIN_INFO_MAX_RECEIVED_LOG_ENTRIES: usize = 1000;\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Making this `pub` exposes a protocol/behavior constant outside the crate. If this limit is only an internal safeguard for responses, consider `pub(crate)` to avoid accidental external coupling. If it must be public, document whether it’s a hard API guarantee and whether changing it is a breaking change.\n\n```suggestion\npub(crate) const CHAIN_INFO_MAX_RECEIVED_LOG_ENTRIES: usize = 1000;\n```"
+    },
+    {
+      "id": "i3",
+      "file": "linera-core/src/chain_worker/state.rs",
+      "line_start": 1418,
+      "line_end": 1420,
+      "category": "correctness",
+      "severity": null,
+      "title": "Consider adding validation to handle the case where `start >= chain.received_log.count()`",
+      "description": "Consider adding validation to handle the case where `start >= chain.received_log.count()`. Currently, if start exceeds the log count, the range `start..end` could be invalid or empty. It might be better to return early with an empty result or an error to make the behavior explicit.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Consider adding validation to handle the case where `start >= chain.received_log.count()`. Currently, if start exceeds the log count, the range `start..end` could be invalid or empty. It might be better to return early with an empty result or an error to make the behavior explicit.\n"
+    },
+    {
+      "id": "i4",
+      "file": "linera-core/src/chain_worker/state.rs",
+      "line_start": 1418,
+      "line_end": 1419,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The pagination loop condition might result in an extra unnecessary request when exactly C…",
+      "description": "The pagination loop condition might result in an extra unnecessary request when exactly CHAIN_INFO_MAX_RECEIVED_LOG_ENTRIES entries are returned. Consider using <= comparison to break when the number of received entries is less than or equal to the maximum.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "The pagination loop condition might result in an extra unnecessary request when exactly CHAIN_INFO_MAX_RECEIVED_LOG_ENTRIES entries are returned. Consider using <= comparison to break when the number of received entries is less than or equal to the maximum.\n"
+    },
+    {
+      "id": "i5",
+      "file": "linera-core/src/client/mod.rs",
+      "line_start": 846,
+      "line_end": 857,
+      "category": "correctness",
+      "severity": null,
+      "title": "The pagination loop lacks a safeguard against infinite iteration",
+      "description": "The pagination loop lacks a safeguard against infinite iteration. If entries are being added to the `received_log` faster than the client paginates through it (e.g., during concurrent writes), the condition `received_entries < CHAIN_INFO_MAX_RECEIVED_LOG_ENTRIES` might never be met, potentially causing an infinite loop.\n\nConsider adding a maximum iteration limit or a timeout safeguard to prevent this edge case. For example:\n```rust\nlet mut iterations = 0;\nconst MAX_ITERATIONS: u32 = 1000;\nloop {\n    let query = ChainInfoQuery::new(chain_id).with_received_log_excluding_first_n(offset);\n    let info = remote_node.handle_chain_info_query(query).await?;\n    let received_entries = info.requested_received_log.len();\n    offset += received_entries as u64;\n    remote_log.extend(info.requested_received_log);\n    if received_entries < CHAIN_INFO_MAX_RECEIVED_LOG_ENTRIES {\n        break;\n    }\n    iterations += 1;\n    if iterations >= MAX_ITERATIONS {\n        warn!(\"Reached maximum iterations while paginating received log for chain {:?}\", chain_id);\n        break;\n    }\n}\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The pagination loop lacks a safeguard against infinite iteration. If entries are being added to the `received_log` faster than the client paginates through it (e.g., during concurrent writes), the condition `received_entries < CHAIN_INFO_MAX_RECEIVED_LOG_ENTRIES` might never be met, potentially causing an infinite loop.\n\nConsider adding a maximum iteration limit or a timeout safeguard to prevent this edge case. For example:\n```rust\nlet mut iterations = 0;\nconst MAX_ITERATIONS: u32 = 1000;\nloop {\n    let query = ChainInfoQuery::new(chain_id).with_received_log_excluding_first_n(offset);\n    let info = remote_node.handle_chain_info_query(query).await?;\n    let received_entries = info.requested_received_log.len();\n    offset += received_entries as u64;\n    remote_log.extend(info.requested_received_log);\n    if received_entries < CHAIN_INFO_MAX_RECEIVED_LOG_ENTRIES {\n        break;\n    }\n    iterations += 1;\n    if iterations >= MAX_ITERATIONS {\n        warn!(\"Reached maximum iterations while paginating received log for chain {:?}\", chain_id);\n        break;\n    }\n}\n```"
+    },
+    {
+      "id": "i6",
+      "file": "linera-core/src/client/mod.rs",
+      "line_start": 848,
+      "line_end": 857,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The pagination loop will make an extra unnecessary query when the total number of entries…",
+      "description": "The pagination loop will make an extra unnecessary query when the total number of entries is exactly a multiple of CHAIN_INFO_MAX_RECEIVED_LOG_ENTRIES (1000). For example, if there are exactly 2000 new entries, it will make 3 queries returning (1000, 1000, 0) instead of stopping after 2 queries. While this doesn't affect correctness, consider adding a check to avoid the extra query, such as tracking if we've reached the expected end or checking if the response is empty before extending the vector.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "The pagination loop will make an extra unnecessary query when the total number of entries is exactly a multiple of CHAIN_INFO_MAX_RECEIVED_LOG_ENTRIES (1000). For example, if there are exactly 2000 new entries, it will make 3 queries returning (1000, 1000, 0) instead of stopping after 2 queries. While this doesn't affect correctness, consider adding a check to avoid the extra query, such as tracking if we've reached the expected end or checking if the response is empty before extending the vector.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "linera-core/src/chain_worker/mod.rs",
+      "line_start": 17,
+      "line_end": 17,
+      "description": "Re-exporting `CHAIN_INFO_MAX_RECEIVED_LOG_ENTRIES` from `chain_worker::mod` makes it part of the `chain_worker` module API surface and encourages cross-module coupling (e.g., `client` now imports it). If this constant is intended as an internal implementation detail of ChainInfo pagination, consider keeping it in `state` and exposing a dedicated helper/API instead, or at least making the re-export `pub(crate)`/documenting stability guarantees (semver) if this is meant to be consumed outside the crate.\n\n```suggestion\n    // Consider limiting visibility if not part of the public API:\n    // pub(crate) use state::CHAIN_INFO_MAX_RECEIVED_LOG_ENTRIES;\n    state::BlockOutcome,\n```"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/linera-io/linera-protocol/pull/4639). Upstream base c31634e52d719fdf60694f47812e2f007022ae26 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 40. Severity absent in the source. i1: human comment, Diff Level; i2: AI comment (GPT-5.2), Diff Level; i3: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i4: AI comment (Deepseek-V3.2), Repo Level; i5: AI comment (GLM-4.7), Diff Level; i6: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level"
+}

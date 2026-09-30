@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-031",
+  "language": "python",
+  "size": "large",
+  "kind": "real",
+  "tier": "pilot",
+  "base_branch": "bench/curated/case-031/base",
+  "head_branch": "bench/curated/case-031/head",
+  "base_sha": "f0fb4631d1a7fc1d1465ccb9e2666ef4b522469e",
+  "head_sha": "7c65224e8933f3ae98cba1a70bbbc43251dc8ed7",
+  "mr_title": "Type mysql dialect",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/sqlalchemy/sqlalchemy",
+    "commit": "51a7678db2f0fcb1552afa40333640bc7fbb6dac",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "lib/sqlalchemy/dialects/mysql/mysqlconnector.py",
+      "line_start": 166,
+      "line_end": 166,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Runtime cast() references a name imported only under TYPE_CHECKING",
+      "description": "DBAPIModule is only imported under TYPE_CHECKING, but it is used as a runtime argument to cast(), so import_dbapi() raises NameError and the mysqlconnector dialect cannot connect.\n\ntyping.cast() evaluates its first argument at runtime. The name is defined only inside `if TYPE_CHECKING:`, so calling MySQLDialect_mysqlconnector.import_dbapi() fails with NameError: name 'DBAPIModule' is not defined, breaking every create_engine('mysql+mysqlconnector://...'). In a typing-only change the cast target must be a string ('DBAPIModule') or imported at runtime.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/sqlalchemy/sqlalchemy/commit/51a7678db2f0fcb1552afa40333640bc7fbb6dac. Primary issue confirmed by the later upstream fix https://github.com/sqlalchemy/sqlalchemy/commit/7ff2e7070a4fb021de83eec0eb8ae05de02d6fbb; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

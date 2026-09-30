@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-088",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-088/base",
+  "head_branch": "bench/curated/case-088/head",
+  "base_sha": "75011b8789620d8f883c076090be23f98a6ea0eb",
+  "head_sha": "d5338c6a8e79a798b51c82e4973d9cccd8bd1020",
+  "mr_title": "Fixed bulk_create() crash with nullable geometry fields on PostGIS.",
+  "mr_description": "Swapped to an allow list instead of a deny list for field types to\ndetermine if the UNNEST optimization can be enabled to avoid further\nsurprises with other types that would require further specialization to\nadapt.\n\nThanks Joshua Goodwin for the report and Sarah Boyce for the test.",
+  "origin": {
+    "repository": "https://github.com/django/django",
+    "commit": "764af7a3d6c0b543dcf659a2c327f214da768fe4",
+    "license": "BSD-3-Clause",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "django/db/backends/postgresql/compiler.py",
+      "line_start": 43,
+      "line_end": 43,
+      "category": "correctness",
+      "severity": "low",
+      "title": "UNNEST optimisation disabled for every model with a foreign key",
+      "description": "The new allow-list uses field.get_internal_type(), which is 'ForeignKey' for relations and is not a key of connection.data_types, so the UNNEST bulk-insert optimisation is silently disabled for every model with a foreign key.\n\nconnection.data_types maps concrete column types (IntegerField, BigAutoField, ...) but not relation fields, whose column type comes from their target field. Since nearly all bulk inserts include a ForeignKey, the change quietly removes the performance optimisation it was meant to keep safe. Relations should be checked through field.target_field.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/764af7a3d6c0b543dcf659a2c327f214da768fe4. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/3df1ad57bfcabaf75e4617064d79610f185f3f9f; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

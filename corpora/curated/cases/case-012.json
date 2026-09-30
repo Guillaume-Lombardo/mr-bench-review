@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-012",
+  "language": "python",
+  "size": "medium",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-012/base",
+  "head_branch": "bench/curated/case-012/head",
+  "base_sha": "c06b86c829c113f5ec6b76d86561b31c1859c2a9",
+  "head_sha": "53e0216b95491a9e8a3430e7973d84aa8a118f68",
+  "mr_title": "Improve caching by comparing file hashes as fallback for mtime and size",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/psf/black",
+    "commit": "c6a031e623c7991ac9129f578dc21dffe2d7ede3",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/black/cache.py",
+      "line_start": 101,
+      "line_end": 101,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Cache compares mtimes truncated to whole seconds",
+      "description": "The cache compares mtimes truncated to whole seconds, so a file edited within the same second and with the same size is considered unchanged and is not reformatted/checked.\n\nis_changed() only falls back to the content hash when the (integer) mtime differs. Two writes within one second that keep the size identical (e.g. a one-character edit by a tool, or a git checkout followed by an immediate run) keep int(mtime) equal, so the hash is never compared and black reports the file as unchanged from the stale cache. Compare the full-precision mtime.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/psf/black/commit/c6a031e623c7991ac9129f578dc21dffe2d7ede3. Primary issue confirmed by the later upstream fix https://github.com/psf/black/commit/bf6cabc8049cbdf4d0b8af33134317a0190a614f; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

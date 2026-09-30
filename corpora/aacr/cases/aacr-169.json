@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-169",
+  "language": "c",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-169/base",
+  "head_branch": "bench/aacr/aacr-169/head",
+  "base_sha": "e80531c19cef7e08e142c2027ea4fcf54b063ef2",
+  "head_sha": "ab9c83eab895753d5d1eeaf24f1c2e60b95fac01",
+  "mr_title": "misc/random: eliminate mutex",
+  "mr_description": "- misc/random: eliminate mutex\n- misc/random: use av_random_bytes() for the whole seed\n- misc/random: improve the fallback case\n- misc/random: add mp_rand_in_range32()",
+  "origin": {
+    "repository": "https://github.com/mpv-player/mpv",
+    "commit": "dbd327d36fd0dc80ebd6e5517c102a92e31a0836",
+    "license": "GPL-2.0-or-later OR LGPL-2.1-or-later",
+    "source_case": "https://github.com/mpv-player/mpv/pull/16164",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "common/playlist.c",
+      "line_start": 175,
+      "line_end": 176,
+      "category": "security",
+      "severity": null,
+      "title": "Potential signed/unsigned narrowing: `pl->num_entries` is likely `int`, but `mp_rand_in_r…",
+      "description": "Potential signed/unsigned narrowing: `pl->num_entries` is likely `int`, but `mp_rand_in_range32` takes `uint32_t`. If `num_entries` can exceed `UINT32_MAX` or be negative (corrupted state), implicit conversion can wrap and lead to OOB access. Consider casting with validation (and early-return if `num_entries <= 1`) to keep bounds safe.\n\n```suggestion\n        if (pl->num_entries <= 1)\n            return;\n        \n        uint32_t nn = (uint32_t)pl->num_entries; // consider asserting pl->num_entries > 0\n        uint32_t i = (uint32_t)n;\n        size_t j = mp_rand_in_range32(&s, i, nn);\n        MPSWAP(struct playlist_entry *, pl->entries[n], pl->entries[j]);\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "Potential signed/unsigned narrowing: `pl->num_entries` is likely `int`, but `mp_rand_in_range32` takes `uint32_t`. If `num_entries` can exceed `UINT32_MAX` or be negative (corrupted state), implicit conversion can wrap and lead to OOB access. Consider casting with validation (and early-return if `num_entries <= 1`) to keep bounds safe.\n\n```suggestion\n        if (pl->num_entries <= 1)\n            return;\n        \n        uint32_t nn = (uint32_t)pl->num_entries; // consider asserting pl->num_entries > 0\n        uint32_t i = (uint32_t)n;\n        size_t j = mp_rand_in_range32(&s, i, nn);\n        MPSWAP(struct playlist_entry *, pl->entries[n], pl->entries[j]);\n```"
+    },
+    {
+      "id": "i2",
+      "file": "misc/io_utils.c",
+      "line_start": 43,
+      "line_end": 47,
+      "category": "security",
+      "severity": null,
+      "title": "The new per-function RNG state (`struct mp_rand_state s = mp_rand_seed(0);`) changes beha…",
+      "description": "The new per-function RNG state (`struct mp_rand_state s = mp_rand_seed(0);`) changes behavior from using a global RNG (`mp_rand_next()` without state) to a locally-seeded stream. Seeding with a constant `0` makes the sequence deterministic for every call, which can increase collision risk across concurrent calls/processes. If the goal is merely to avoid global state, consider seeding from a higher-entropy source (time/PID/urandom) or document why determinism is acceptable here. Also consider moving the seed outside the loop is fine (as done), but ensure `mp_rand_seed(0)` is not an expensive call in this hot path.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "The new per-function RNG state (`struct mp_rand_state s = mp_rand_seed(0);`) changes behavior from using a global RNG (`mp_rand_next()` without state) to a locally-seeded stream. Seeding with a constant `0` makes the sequence deterministic for every call, which can increase collision risk across concurrent calls/processes. If the goal is merely to avoid global state, consider seeding from a higher-entropy source (time/PID/urandom) or document why determinism is acceptable here. Also consider moving the seed outside the loop is fine (as done), but ensure `mp_rand_seed(0)` is not an expensive call in this hot path."
+    },
+    {
+      "id": "i3",
+      "file": "misc/io_utils.c",
+      "line_start": 44,
+      "line_end": 47,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The variable names 'fuckshit' and 'fuckmess' contain inappropriate profanity and violate…",
+      "description": "The variable names 'fuckshit' and 'fuckmess' contain inappropriate profanity and violate the naming conventions requirement. Variable names should be meaningful and use snake_case. Please rename these to descriptive names like 'attempt' or 'iteration' for the loop counter, and 'random_value' or 'rand_val' for the random value.\n\n```suggestion\n    for (size_t attempt = 0; attempt < UINT32_MAX; attempt++) {\n        // Using a random value may make it require fewer iterations (even if\n        // not truly random; just a counter would be sufficient).\n        size_t rand_val = mp_rand_next(&s);\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The variable names 'fuckshit' and 'fuckmess' contain inappropriate profanity and violate the naming conventions requirement. Variable names should be meaningful and use snake_case. Please rename these to descriptive names like 'attempt' or 'iteration' for the loop counter, and 'random_value' or 'rand_val' for the random value.\n\n```suggestion\n    for (size_t attempt = 0; attempt < UINT32_MAX; attempt++) {\n        // Using a random value may make it require fewer iterations (even if\n        // not truly random; just a counter would be sufficient).\n        size_t rand_val = mp_rand_next(&s);\n```"
+    },
+    {
+      "id": "i4",
+      "file": "misc/random.c",
+      "line_start": 84,
+      "line_end": 84,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Remove unused function `mp_rand_next_double` as it is not referenced in the current codeb…",
+      "description": "Remove unused function `mp_rand_next_double` as it is not referenced in the current codebase and adds unnecessary dead code.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Remove unused function `mp_rand_next_double` as it is not referenced in the current codebase and adds unnecessary dead code."
+    },
+    {
+      "id": "i5",
+      "file": "misc/random.c",
+      "line_start": 89,
+      "line_end": 89,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The reference link in the algorithm documentation should be updated to include a Wayback…",
+      "description": "The reference link in the algorithm documentation should be updated to include a Wayback Machine snapshot on a separate line, matching the project's convention for preventing dead links and enabling easier URL copying.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The reference link in the algorithm documentation should be updated to include a Wayback Machine snapshot on a separate line, matching the project's convention for preventing dead links and enabling easier URL copying."
+    },
+    {
+      "id": "i6",
+      "file": "misc/random.c",
+      "line_start": 93,
+      "line_end": 99,
+      "category": "maintainability",
+      "severity": null,
+      "title": "mp_rand_in_range32(): `mp_round_next_power_of_2()` explicitly returns 0 on overflow (e.g",
+      "description": "mp_rand_in_range32(): `mp_round_next_power_of_2()` explicitly returns 0 on overflow (e.g. for values needing 2^32). If `range > 0x80000000`, `mp_round_next_power_of_2(range)` becomes 0, so `mask` underflows to `UINT32_MAX`. The rejection loop still terminates but can become extremely slow (acceptance probability ~= range/2^32), and this behavior is surprising. Suggest: explicitly handle large ranges, e.g.:\n- if `range` is a power of two: just `min + (mp_rand_next(s) & (range - 1))`\n- else if `mp_round_next_power_of_2(range)==0`: use a 64-bit mask/rejection (or Lemire method) based on `uint64_t r = mp_rand_next(s)` and `ret = (uint32_t)(r % range)` with bias-free technique.\nAt minimum, add a guard/fast-path to avoid the underflow case.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "mp_rand_in_range32(): `mp_round_next_power_of_2()` explicitly returns 0 on overflow (e.g. for values needing 2^32). If `range > 0x80000000`, `mp_round_next_power_of_2(range)` becomes 0, so `mask` underflows to `UINT32_MAX`. The rejection loop still terminates but can become extremely slow (acceptance probability ~= range/2^32), and this behavior is surprising. Suggest: explicitly handle large ranges, e.g.:\n- if `range` is a power of two: just `min + (mp_rand_next(s) & (range - 1))`\n- else if `mp_round_next_power_of_2(range)==0`: use a 64-bit mask/rejection (or Lemire method) based on `uint64_t r = mp_rand_next(s)` and `ret = (uint32_t)(r % range)` with bias-free technique.\nAt minimum, add a guard/fast-path to avoid the underflow case."
+    },
+    {
+      "id": "i7",
+      "file": "misc/random.h",
+      "line_start": 28,
+      "line_end": 28,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The project convention prohibits typedef'ing internal structs; retain `mp_rand_state` as…",
+      "description": "The project convention prohibits typedef'ing internal structs; retain `mp_rand_state` as `struct mp_rand_state` without typedef to maintain consistency.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The project convention prohibits typedef'ing internal structs; retain `mp_rand_state` as `struct mp_rand_state` without typedef to maintain consistency."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "misc/random.c",
+      "line_start": 25,
+      "line_end": 25,
+      "description": "Include statements are not sorted alphabetically; rearrange them to maintain consistent style ordering."
+    },
+    {
+      "file": "misc/random.c",
+      "line_start": 52,
+      "line_end": 54,
+      "description": "Unnecessary cast of ret.v to void*. Since ret.v is already a pointer, this cast adds no value and reduces readability."
+    },
+    {
+      "file": "misc/random.c",
+      "line_start": 66,
+      "line_end": 69,
+      "description": "mp_rand_next(): new API requires a valid non-NULL `struct mp_rand_state *s`, but there is no defensive check and it will NULL-deref if misused. Consider adding `mp_assert(s);` (and possibly documenting that `*s` must be initialized via mp_rand_seed()). Same applies to mp_rand_next_double() and mp_rand_in_range32()."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/mpv-player/mpv/pull/16164). Upstream base 5ba7ee513751dd005379a06fb627303e6fe1b3dd = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 79. Severity absent in the source. i1: AI comment (GPT-5.2), Repo Level; i2: AI comment (GPT-5.2), Diff Level; i3: AI comment (GLM-4.7), Diff Level; i4: human comment, Repo Level; i5: human comment, Diff Level; i6: AI comment (GPT-5.2), File Level; i7: human comment, File Level"
+}

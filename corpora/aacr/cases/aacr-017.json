@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-017",
+  "language": "go",
+  "size": "large",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-017/base",
+  "head_branch": "bench/aacr/aacr-017/head",
+  "base_sha": "901b03a419f4994f2ff4a333728badc9a996846d",
+  "head_sha": "dd7b6c0ebfd76832c7b5e051681108615b770152",
+  "mr_title": "Port more of tsc help from strada",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/microsoft/typescript-go",
+    "commit": "100dbc5127e723c4108efc02a179d9aec5fce32a",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/microsoft/typescript-go/pull/698",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "internal/execute/outputs.go",
+      "line_start": 270,
+      "line_end": 270,
+      "category": "correctness",
+      "severity": null,
+      "title": "The type assertion for `DefaultValueDescription` lacks a nil check on the resulting `*dia…",
+      "description": "The type assertion for `DefaultValueDescription` lacks a nil check on the resulting `*diagnostics.Message` pointer, risking a runtime panic when accessing `msg` if it is nil despite the assertion succeeding. The condition should verify both `ok` and `msg != nil` to prevent dereferencing a nil pointer.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The type assertion for `DefaultValueDescription` lacks a nil check on the resulting `*diagnostics.Message` pointer, risking a runtime panic when accessing `msg` if it is nil despite the assertion succeeding. The condition should verify both `ok` and `msg != nil` to prevent dereferencing a nil pointer."
+    },
+    {
+      "id": "i2",
+      "file": "internal/execute/outputs.go",
+      "line_start": 311,
+      "line_end": 316,
+      "category": "correctness",
+      "severity": null,
+      "title": "The condition 'if valueCandidates != nil' inside the defaultValueDescription block seems…",
+      "description": "The condition 'if valueCandidates != nil' inside the defaultValueDescription block seems incorrect. It should probably check if we previously added valueCandidates content to determine if we need a separator newline, rather than checking if valueCandidates exists.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The condition 'if valueCandidates != nil' inside the defaultValueDescription block seems incorrect. It should probably check if we previously added valueCandidates content to determine if we need a separator newline, rather than checking if valueCandidates exists.\n"
+    },
+    {
+      "id": "i3",
+      "file": "internal/execute/outputs.go",
+      "line_start": 354,
+      "line_end": 359,
+      "category": "correctness",
+      "severity": null,
+      "title": "Nil pointer risk in `showAdditionalInfoOutput` - The function accesses `valueCandidates.p…",
+      "description": "Nil pointer risk in `showAdditionalInfoOutput` - The function accesses `valueCandidates.possibleValues` without checking if `valueCandidates` is nil, which could cause runtime panics.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Nil pointer risk in `showAdditionalInfoOutput` - The function accesses `valueCandidates.possibleValues` without checking if `valueCandidates` is nil, which could cause runtime panics."
+    },
+    {
+      "id": "i4",
+      "file": "testdata/baselines/reference/tsc/commandLine/Parse-watch-interval-option.js",
+      "line_start": 86,
+      "line_end": 86,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Inconsistent formatting: Missing trailing period '.' at end of descriptive sentence (unli…",
+      "description": "Inconsistent formatting: Missing trailing period '.' at end of descriptive sentence (unlike other entries)",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Inconsistent formatting: Missing trailing period '.' at end of descriptive sentence (unlike other entries)\n"
+    },
+    {
+      "id": "i5",
+      "file": "testdata/baselines/reference/tsc/commandLine/help.js",
+      "line_start": 148,
+      "line_end": 148,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The default value format for `--declaration, -d` uses backticks (`false`) while all other…",
+      "description": "The default value format for `--declaration, -d` uses backticks (`false`) while all other boolean options use plain text (false) without backticks. This creates inconsistent formatting in the help output. Please verify if this backtick usage is intentional or if it should be consistent with other boolean default values.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The default value format for `--declaration, -d` uses backticks (`false`) while all other boolean options use plain text (false) without backticks. This creates inconsistent formatting in the help output. Please verify if this backtick usage is intentional or if it should be consistent with other boolean default values."
+    },
+    {
+      "id": "i6",
+      "file": "testdata/baselines/reference/tsc/commandLine/show-help-with-ExitStatus.DiagnosticsPresent_OutputsSkipped-when-host-cannot-provide-terminal-width.js",
+      "line_start": 81,
+      "line_end": 81,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Inconsistency: This description is missing a trailing period, unlike other option descrip…",
+      "description": "Inconsistency: This description is missing a trailing period, unlike other option descriptions in this list.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Inconsistency: This description is missing a trailing period, unlike other option descriptions in this list.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "internal/execute/outputs.go",
+      "line_start": 282,
+      "line_end": 301,
+      "description": "Unimplemented terminal width detection lacks `!!!` marker comment on `terminalWidth` declaration to indicate incomplete functionality."
+    },
+    {
+      "file": "internal/execute/outputs.go",
+      "line_start": 327,
+      "line_end": 327,
+      "description": "The `formatDefaultValue` function fails to handle nil values alongside core.TSUnknown. The condition should check for both `nil` and `core.TSUnknown` to properly handle all cases of unknown default values."
+    },
+    {
+      "file": "internal/execute/outputs.go",
+      "line_start": 335,
+      "line_end": 335,
+      "description": "Missing import for \"fmt\" package. The code uses `fmt.Sprintf` but the \"fmt\" package is not imported in the file. This will cause a compilation error.\n\nAdd the following import:\n```go\nimport \"fmt\"\n```"
+    },
+    {
+      "file": "internal/execute/outputs.go",
+      "line_start": 354,
+      "line_end": 358,
+      "description": "Potential logical error here. The valueCandidates.possibleValues comes from getPossibleValues which returns string(option.Kind) for basic types (e.g. \"CommandLineOptionTypeString\"). But this condition compares it to the literal string \"string\". These will never match, potentially causing unexpected behavior."
+    },
+    {
+      "file": "internal/execute/outputs.go",
+      "line_start": 375,
+      "line_end": 375,
+      "description": "The `getValueCandidate` function contains a commented-out assertion for `CommandLineOptionTypeListOrElement` that should be implemented as a runtime check. Add a panic statement to handle this invalid option kind with a clear error message rather than leaving the assertion disabled."
+    },
+    {
+      "file": "testdata/baselines/reference/tsc/commandLine/Parse-watch-interval-option.js",
+      "line_start": 1,
+      "line_end": 1,
+      "description": "The test produces unexpected help output and exits with a non-success status.  \n- Help output is printed when it should not occur  \n- Exit status must be success (0) but currently fails"
+    },
+    {
+      "file": "testdata/baselines/reference/tsc/commandLine/help.js",
+      "line_start": 99,
+      "line_end": 99,
+      "description": "Possible typo/inconsistency in the option value list: `es2017.intl` appears twice in the `--lib` list. If this is not exactly mirroring upstream `tsc --help` output, it may be an accidental duplication and could confuse readers. Please confirm against the actual `tsc --help` output for the target TypeScript version and remove the duplicate if unintended."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/microsoft/typescript-go/pull/698). Upstream base 8a218b02a52b13d0ca8264a4c897c6dbd0b2b4d5 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 829. Severity absent in the source. i1: human comment, File Level; i2: AI comment (Deepseek-V3.2), File Level; i3: human comment, File Level; i4: AI comment (Qwen-Coder-480B), Diff Level; i5: AI comment (GLM-4.7), Diff Level; i6: AI comment (Gemini-3-Pro), Diff Level"
+}

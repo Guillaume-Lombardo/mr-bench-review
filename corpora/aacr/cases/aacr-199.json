@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-199",
+  "language": "javascript",
+  "size": "medium",
+  "kind": "clean",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-199/base",
+  "head_branch": "bench/aacr/aacr-199/head",
+  "base_sha": "7ab3295879805b65acffa6deefb5ddfa21f9c581",
+  "head_sha": "7e96ad70152229262dc872cd62e07db6fc9f6342",
+  "mr_title": "[assert helpers] ReactChildren-test",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/facebook/react",
+    "commit": "59812014eb10e8c0aec7e1890e38dbc22951caab",
+    "license": "MIT",
+    "source_case": "https://github.com/facebook/react/pull/31844",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [],
+  "known_false_positives": [
+    {
+      "file": "packages/react/src/__tests__/ReactChildren-test.js",
+      "line_start": 928,
+      "line_end": 938,
+      "description": "The assertion for verifying no console errors has been removed. This test case (\"does not warn for mapped static children without keys\") previously used `toErrorDev([])` to verify that no warnings are logged, but the assertion is now completely removed. This reduces test coverage. Consider adding `assertConsoleErrorDev([]);` after the `act()` call to maintain the verification that no console errors are expected."
+    },
+    {
+      "file": "packages/react/src/__tests__/ReactChildren-test.js",
+      "line_start": 984,
+      "line_end": 991,
+      "description": "The test no longer verifies the absence of React warnings during rendering of `ComponentRenderingClonedChildren` due to removal of the `toErrorDev` assertion."
+    },
+    {
+      "file": "packages/react/src/__tests__/ReactChildren-test.js",
+      "line_start": 1032,
+      "line_end": 1042,
+      "description": "The assertion for verifying no console errors has been removed. This test case (\"does not warn for flattened static children without keys\") previously used `toErrorDev([])` to verify that no warnings are logged, but the assertion is now completely removed. Consider adding `assertConsoleErrorDev([]);` after the `act()` call."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/facebook/react/pull/31844). Upstream base 8f92ea467e2672a436e3e032299d5230d03187ed = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 206. Severity absent in the source."
+}

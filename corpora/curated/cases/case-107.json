@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-107",
+  "language": "java",
+  "size": "medium",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-107/base",
+  "head_branch": "bench/curated/case-107/head",
+  "base_sha": "89c2cb5e71bebed7acc088ea5856c5ef51d90570",
+  "head_sha": "0859541336aa4048269a931b491bf321b9ab30b4",
+  "mr_title": "Allow 'status' and 'error' to be excluded from error response",
+  "mr_description": "Update `ErrorAttributeOptions` to allow the `status` and `error`\nfields to be excluded from the response without throwing a\nNullPointerException.",
+  "origin": {
+    "repository": "https://github.com/spring-projects/spring-boot",
+    "commit": "60b7e6cf23c9befefa78bb41e1fb5073d2258de7",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "spring-boot-project/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/web/reactive/error/DefaultErrorWebExceptionHandler.java",
+      "line_start": 123,
+      "line_end": 124,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "ErrorAttributes invoked twice per error",
+      "description": "renderErrorView/renderErrorResponse now call getErrorAttributes() twice per error, which invokes user-provided ErrorAttributes twice (duplicated side effects/cost) and can yield a status inconsistent with the rendered attributes.\n\nErrorAttributes is a user extension point; custom implementations may log, record metrics, or compute a status from the exception. Calling it once with ONLY_STATUS and once with the full options doubles those side effects and, if the implementation customises 'status', the HTTP status and the body can disagree. Compute the attributes once and only fall back to a default status lookup when 'status' is excluded.",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "spring-boot-project/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/web/reactive/error/DefaultErrorWebExceptionHandler.java",
+          "line_start": 150,
+          "line_end": 151
+        }
+      ],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/spring-projects/spring-boot/commit/60b7e6cf23c9befefa78bb41e1fb5073d2258de7. Primary issue confirmed by the later upstream fix https://github.com/spring-projects/spring-boot/commit/05b73ceeecd940843a34b9026ce73ba408a7aaa2; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

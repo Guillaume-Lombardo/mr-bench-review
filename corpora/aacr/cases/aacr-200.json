@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-200",
+  "language": "python",
+  "size": "small",
+  "kind": "clean",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-200/base",
+  "head_branch": "bench/aacr/aacr-200/head",
+  "base_sha": "e0ce9a26f1bbc0e524033a249a4b95e300b2b5bb",
+  "head_sha": "70dee96e2fdf408c10cd641eb92801dcebc9cfb9",
+  "mr_title": "[TPU] update torch_xla pin",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/vllm-project/vllm",
+    "commit": "acfaec4e0f99ffd81078428355662a166c1f5b60",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/vllm-project/vllm/pull/19231",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [],
+  "known_false_positives": [
+    {
+      "file": "tests/tpu/test_moe_pallas.py",
+      "line_start": 30,
+      "line_end": 30,
+      "description": "The test suite lacks coverage for the kernel's required constraint that `num_tokens * topk` must be a multiple of 16. Add a test case with parameters ensuring this condition is satisfied to validate correct operation under valid inputs."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/vllm-project/vllm/pull/19231). Upstream base 9ef9173cfa338ea7742f23ee9d0038e580081390 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 15. Severity absent in the source."
+}

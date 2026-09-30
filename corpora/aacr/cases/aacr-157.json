@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-157",
+  "language": "java",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-157/base",
+  "head_branch": "bench/aacr/aacr-157/head",
+  "base_sha": "80629bf0fc2036c044c2fd4805082205d191b89a",
+  "head_sha": "fe9f791d7d406a2f980cfcd8f9e9072283e12373",
+  "mr_title": "Make centroid oversampling depend on the visit ratio",
+  "mr_description": "- Make centroid oversampling depend on the visit ratio\n- increase to 8\n- Merge branch 'main' into centroid_versample",
+  "origin": {
+    "repository": "https://github.com/elastic/elasticsearch",
+    "commit": "dc8943ff2d735c9cd71adef644378ca2850db34f",
+    "license": "AGPL-3.0-only OR SSPL-1.0 OR Elastic-2.0",
+    "source_case": "https://github.com/elastic/elasticsearch/pull/133945",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "server/src/main/java/org/elasticsearch/index/codec/vectors/DefaultIVFVectorsReader.java",
+      "line_start": 44,
+      "line_end": 44,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The CENTROID_OVERSAMPLING constant should dynamically use `centroidsPerParentCluster/2` f…",
+      "description": "The CENTROID_OVERSAMPLING constant should dynamically use `centroidsPerParentCluster/2` for adaptive oversampling, but remains hardcoded to 8.0f.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "The CENTROID_OVERSAMPLING constant should dynamically use `centroidsPerParentCluster/2` for adaptive oversampling, but remains hardcoded to 8.0f."
+    },
+    {
+      "id": "i2",
+      "file": "server/src/main/java/org/elasticsearch/index/codec/vectors/DefaultIVFVectorsReader.java",
+      "line_start": 197,
+      "line_end": 197,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential boundary condition issue: When numCentroids = 0, the buffer size calculation re…",
+      "description": "Potential boundary condition issue: When numCentroids = 0, the buffer size calculation results in 0, which defeats the purpose of the inner Math.max(..., 1). This could cause issues when creating NeighborQueue with size 0.\n\nSuggested fix: Ensure bufferSize is always at least 1:\nfinal int bufferSize = Math.max(1, (int) Math.min(visitRatio * numCentroids * CENTROID_OVERSAMPLING, numCentroids));\n\n```suggestion\n        final int bufferSize = Math.max(1, (int) Math.min(visitRatio * numCentroids * CENTROID_OVERSAMPLING, numCentroids));\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential boundary condition issue: When numCentroids = 0, the buffer size calculation results in 0, which defeats the purpose of the inner Math.max(..., 1). This could cause issues when creating NeighborQueue with size 0.\n\nSuggested fix: Ensure bufferSize is always at least 1:\nfinal int bufferSize = Math.max(1, (int) Math.min(visitRatio * numCentroids * CENTROID_OVERSAMPLING, numCentroids));\n\n```suggestion\n        final int bufferSize = Math.max(1, (int) Math.min(visitRatio * numCentroids * CENTROID_OVERSAMPLING, numCentroids));\n```"
+    },
+    {
+      "id": "i3",
+      "file": "server/src/main/java/org/elasticsearch/index/codec/vectors/DefaultIVFVectorsReader.java",
+      "line_start": 197,
+      "line_end": 197,
+      "category": "correctness",
+      "severity": null,
+      "title": "`bufferSize` depends on `visitRatio`, but there is no local validation/clamping",
+      "description": "`bufferSize` depends on `visitRatio`, but there is no local validation/clamping. If `visitRatio` is negative, NaN, or extremely large, the cast to int after Math.min/Math.max can yield unexpected results (e.g., NaN -> 0 after cast, or overflow), and `new NeighborQueue(bufferSize, ...)` may break assumptions. Suggest clamping `visitRatio` to a safe range (e.g., [0, 1]) or explicitly handling NaN/Infinity before computing `bufferSize`.\n\nAlso consider rounding behavior: `(int)` truncates toward 0; if you expect at least `ceil(visitRatio * numCentroids * oversampling)`, use `Math.ceil` before casting.\n\n```suggestion\n        final float vr = Float.isFinite(visitRatio) ? Math.min(Math.max(visitRatio, 0f), 1f) : 0f;\n        final int bufferSize = (int) Math.min(Math.max(Math.ceil(vr * numCentroids * CENTROID_OVERSAMPLING), 1d), (double) numCentroids);\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`bufferSize` depends on `visitRatio`, but there is no local validation/clamping. If `visitRatio` is negative, NaN, or extremely large, the cast to int after Math.min/Math.max can yield unexpected results (e.g., NaN -> 0 after cast, or overflow), and `new NeighborQueue(bufferSize, ...)` may break assumptions. Suggest clamping `visitRatio` to a safe range (e.g., [0, 1]) or explicitly handling NaN/Infinity before computing `bufferSize`.\n\nAlso consider rounding behavior: `(int)` truncates toward 0; if you expect at least `ceil(visitRatio * numCentroids * oversampling)`, use `Math.ceil` before casting.\n\n```suggestion\n        final float vr = Float.isFinite(visitRatio) ? Math.min(Math.max(visitRatio, 0f), 1f) : 0f;\n        final int bufferSize = (int) Math.min(Math.max(Math.ceil(vr * numCentroids * CENTROID_OVERSAMPLING), 1d), (double) numCentroids);\n```"
+    },
+    {
+      "id": "i4",
+      "file": "server/src/main/java/org/elasticsearch/index/codec/vectors/IVFVectorsReader.java",
+      "line_start": 256,
+      "line_end": 257,
+      "category": "correctness",
+      "severity": null,
+      "title": "New `visitRatio` is now part of the abstract API and is used downstream to compute buffer…",
+      "description": "New `visitRatio` is now part of the abstract API and is used downstream to compute buffer sizes (e.g., `visitRatio * numCentroids * ...` then cast to int). To avoid NaN/Inf/negative values propagating into sizing/casts (which can lead to 0, negative, or overflowed sizes and runtime exceptions), consider validating/clamping `visitRatio` in `IVFVectorsReader.search` before passing it to `getCentroidIterator` (e.g., ensure finite and within [0..1]).\n\n```suggestion\n            postListSlice,\n            Float.isFinite(visitRatio) ? Math.max(0f, Math.min(1f, visitRatio)) : 0f\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "New `visitRatio` is now part of the abstract API and is used downstream to compute buffer sizes (e.g., `visitRatio * numCentroids * ...` then cast to int). To avoid NaN/Inf/negative values propagating into sizing/casts (which can lead to 0, negative, or overflowed sizes and runtime exceptions), consider validating/clamping `visitRatio` in `IVFVectorsReader.search` before passing it to `getCentroidIterator` (e.g., ensure finite and within [0..1]).\n\n```suggestion\n            postListSlice,\n            Float.isFinite(visitRatio) ? Math.max(0f, Math.min(1f, visitRatio)) : 0f\n```"
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/elastic/elasticsearch/pull/133945). Upstream base bede881840643d36010595d19db22803824723d0 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 23. Severity absent in the source. i1: human comment, File Level; i2: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i3: AI comment (GPT-5.2), File Level; i4: AI comment (GPT-5.2), File Level"
+}

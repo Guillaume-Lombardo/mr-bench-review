@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-158",
+  "language": "java",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-158/base",
+  "head_branch": "bench/aacr/aacr-158/head",
+  "base_sha": "3a2160b92886eef9546ac696b858252edc8f620a",
+  "head_sha": "c888de7b4dbdf957be7dba1e3d876554f97300d8",
+  "mr_title": "Set `keyUsage` for generated HTTP certificates and self-signed CA",
+  "mr_description": "- Set `keyUsage` for generated HTTP certificates and self-signed CA\n- Update docs/changelog/126376.yaml\n- Merge branch 'main' into sa-include-key-usage-in-http-certs\n- make default HTTP `keyUsage` overridable\n- [CI] Auto commit changes from spotless\n- respect custom keyUsage\n- fix terminal messages and ignore leading and trailing whitespaces\n- nit: error message\n- add extra line after error message\n- more test coverage\n- nit: error message\n- add `ca-keyusage` option\n- cleanup, test and update docs\n- update ca-keyusage description\n- Merge branch 'main' into sa-include-key-usage-in-http-certs\n- remove randomization to avoid raising ValidatorException:\n- Merge branch 'sa-include-key-usage-in-http-certs' of github.com:slobodanadamovic/elasticsearch into sa-include-key-usage-in-http-certs",
+  "origin": {
+    "repository": "https://github.com/elastic/elasticsearch",
+    "commit": "10d682d9aa4b1c2976e1db769ba04cb15256da9e",
+    "license": "AGPL-3.0-only OR SSPL-1.0 OR Elastic-2.0",
+    "source_case": "https://github.com/elastic/elasticsearch/pull/126376",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "x-pack/plugin/security/cli/src/main/java/org/elasticsearch/xpack/security/cli/CertGenUtils.java",
+      "line_start": 86,
+      "line_end": 106,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Consider using `Map.ofEntries()` with explicit `Map.entry()` calls instead of `Map.of()`…",
+      "description": "Consider using `Map.ofEntries()` with explicit `Map.entry()` calls instead of `Map.of()` for improved readability of the multi-entry `KEY_USAGE_MAPPINGS` constant initialization.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Consider using `Map.ofEntries()` with explicit `Map.entry()` calls instead of `Map.of()` for improved readability of the multi-entry `KEY_USAGE_MAPPINGS` constant initialization."
+    },
+    {
+      "id": "i2",
+      "file": "x-pack/plugin/security/cli/src/main/java/org/elasticsearch/xpack/security/cli/CertGenUtils.java",
+      "line_start": 124,
+      "line_end": 124,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Key usage mapping constants in `CertGenUtils` are exclusively used in tests and should be…",
+      "description": "Key usage mapping constants in `CertGenUtils` are exclusively used in tests and should be relocated to a test utility class instead of residing in production code.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Key usage mapping constants in `CertGenUtils` are exclusively used in tests and should be relocated to a test utility class instead of residing in production code."
+    },
+    {
+      "id": "i3",
+      "file": "x-pack/plugin/security/cli/src/main/java/org/elasticsearch/xpack/security/cli/CertGenUtils.java",
+      "line_start": 124,
+      "line_end": 143,
+      "category": "maintainability",
+      "severity": null,
+      "title": "`KEY_USAGE_BITS` is introduced as a public constant but (in this class) it is not used an…",
+      "description": "`KEY_USAGE_BITS` is introduced as a public constant but (in this class) it is not used anywhere. Exposing an extra public map increases API surface and maintenance burden, and can confuse readers (two sources of truth: `KEY_USAGE_MAPPINGS` vs `KEY_USAGE_BITS`). Consider removing it if not used, or make it `private` and/or add a clear consumer in this change set.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "`KEY_USAGE_BITS` is introduced as a public constant but (in this class) it is not used anywhere. Exposing an extra public map increases API surface and maintenance burden, and can confuse readers (two sources of truth: `KEY_USAGE_MAPPINGS` vs `KEY_USAGE_BITS`). Consider removing it if not used, or make it `private` and/or add a clear consumer in this change set.\n"
+    },
+    {
+      "id": "i4",
+      "file": "x-pack/plugin/security/cli/src/main/java/org/elasticsearch/xpack/security/cli/CertGenUtils.java",
+      "line_start": 483,
+      "line_end": 485,
+      "category": "maintainability",
+      "severity": null,
+      "title": "`buildKeyUsage` throws `IllegalArgumentException` on the first unknown value",
+      "description": "`buildKeyUsage` throws `IllegalArgumentException` on the first unknown value. If multiple values are supplied, it may be more helpful to include the list of allowed values (e.g., `KEY_USAGE_MAPPINGS.keySet()`) in the exception message so the caller/CLI can present actionable feedback.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "`buildKeyUsage` throws `IllegalArgumentException` on the first unknown value. If multiple values are supplied, it may be more helpful to include the list of allowed values (e.g., `KEY_USAGE_MAPPINGS.keySet()`) in the exception message so the caller/CLI can present actionable feedback.\n"
+    },
+    {
+      "id": "i5",
+      "file": "x-pack/plugin/security/cli/src/main/java/org/elasticsearch/xpack/security/cli/CertificateTool.java",
+      "line_start": 283,
+      "line_end": 283,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The \"ca-keyusage\" command-line option should be renamed to \"keyusage\" as the \"ca-\" prefix…",
+      "description": "The \"ca-keyusage\" command-line option should be renamed to \"keyusage\" as the \"ca-\" prefix is redundant since it's exclusively used in the `certutil ca` context.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The \"ca-keyusage\" command-line option should be renamed to \"keyusage\" as the \"ca-\" prefix is redundant since it's exclusively used in the `certutil ca` context."
+    },
+    {
+      "id": "i6",
+      "file": "x-pack/plugin/security/cli/src/main/java/org/elasticsearch/xpack/security/cli/CertificateTool.java",
+      "line_start": 333,
+      "line_end": 343,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential issue: When `rawCaKeyUsage` is not empty but contains only whitespace/empty ele…",
+      "description": "Potential issue: When `rawCaKeyUsage` is not empty but contains only whitespace/empty elements (e.g., `\",,,\"` or `\"   ,\"`), `Strings.splitStringByCommaToArray` returns an empty array. `List.of()` then creates an empty List, which causes `buildKeyUsage` to return `null`. This means the user provided a value but no key usage will be applied to the CA certificate. Consider either: 1) Filtering out empty/blank strings before building the list, or 2) Validating that at least one valid key usage is provided when the option is specified.\n\n```suggestion\n        final List<String> getCaKeyUsage(OptionSet options) {\n            if (options.has(caKeyUsageSpec)) {\n                String rawCaKeyUsage = caKeyUsageSpec.value(options);\n                if (Strings.isNullOrEmpty(rawCaKeyUsage)) {\n                    return DEFAULT_CA_KEY_USAGE;\n                }\n                // Filter out empty/blank strings to ensure valid key usages\n                String[] parts = Strings.splitStringByCommaToArray(rawCaKeyUsage);\n                List<String> validUsages = new ArrayList<>();\n                for (String part : parts) {\n                    if (Strings.hasText(part)) {\n                        validUsages.add(part.trim());\n                    }\n                }\n                return validUsages.isEmpty() ? DEFAULT_CA_KEY_USAGE : validUsages;\n            } else {\n                return DEFAULT_CA_KEY_USAGE;\n            }\n        }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential issue: When `rawCaKeyUsage` is not empty but contains only whitespace/empty elements (e.g., `\",,,\"` or `\"   ,\"`), `Strings.splitStringByCommaToArray` returns an empty array. `List.of()` then creates an empty List, which causes `buildKeyUsage` to return `null`. This means the user provided a value but no key usage will be applied to the CA certificate. Consider either: 1) Filtering out empty/blank strings before building the list, or 2) Validating that at least one valid key usage is provided when the option is specified.\n\n```suggestion\n        final List<String> getCaKeyUsage(OptionSet options) {\n            if (options.has(caKeyUsageSpec)) {\n                String rawCaKeyUsage = caKeyUsageSpec.value(options);\n                if (Strings.isNullOrEmpty(rawCaKeyUsage)) {\n                    return DEFAULT_CA_KEY_USAGE;\n                }\n                // Filter out empty/blank strings to ensure valid key usages\n                String[] parts = Strings.splitStringByCommaToArray(rawCaKeyUsage);\n                List<String> validUsages = new ArrayList<>();\n                for (String part : parts) {\n                    if (Strings.hasText(part)) {\n                        validUsages.add(part.trim());\n                    }\n                }\n                return validUsages.isEmpty() ? DEFAULT_CA_KEY_USAGE : validUsages;\n            } else {\n                return DEFAULT_CA_KEY_USAGE;\n            }\n        }\n```"
+    },
+    {
+      "id": "i7",
+      "file": "x-pack/plugin/security/cli/src/main/java/org/elasticsearch/xpack/security/cli/CertificateTool.java",
+      "line_start": 335,
+      "line_end": 335,
+      "category": "correctness",
+      "severity": null,
+      "title": "The `getCaKeyUsage` method incorrectly uses `value()` for `caKeyUsageSpec`, preventing mu…",
+      "description": "The `getCaKeyUsage` method incorrectly uses `value()` for `caKeyUsageSpec`, preventing multiple `--ca-keyusage` flags; it should use `values()` to properly handle repeated options like `--dns` and `--ip`.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The `getCaKeyUsage` method incorrectly uses `value()` for `caKeyUsageSpec`, preventing multiple `--ca-keyusage` flags; it should use `values()` to properly handle repeated options like `--dns` and `--ip`."
+    },
+    {
+      "id": "i8",
+      "file": "x-pack/plugin/security/cli/src/main/java/org/elasticsearch/xpack/security/cli/HttpCertificateCommand.java",
+      "line_start": 1042,
+      "line_end": 1065,
+      "category": "correctness",
+      "severity": null,
+      "title": "`readKeyUsage` currently accepts duplicate key-usage entries (e.g",
+      "description": "`readKeyUsage` currently accepts duplicate key-usage entries (e.g. `digitalSignature,digitalSignature`) and also allows an effectively empty list when the user inputs only commas/spaces if trimming leaves empties (you return null on empty token, but `input=\",\"` yields two empty tokens and is rejected; however `input=\"\"` is handled earlier as default). More importantly, it allows users to provide *no* effective usages via something like `\",\"`? rejected; ok. Still, duplicates are likely unintended and can cause `buildKeyUsage` to set the same bit multiple times or behave unexpectedly depending on implementation. Consider normalizing (e.g., `toLowerCase(Locale.ROOT)` if allowed), de-duplicating while preserving order, and validating that the resulting set is non-empty when the user explicitly provides input.\n\n```suggestion\n    private static List<String> readKeyUsage(Terminal terminal, List<String> defaultKeyUsage) {\n        return tryReadInput(terminal, \"Key Usage\", defaultKeyUsage, input -> {\n            final String[] keyUsages = input.split(\",\");\n            final LinkedHashSet<String> resolvedKeyUsages = new LinkedHashSet<>(keyUsages.length);\n            for (String keyUsage : keyUsages) {\n                keyUsage = keyUsage.trim();\n                if (keyUsage.isEmpty()) {\n                    terminal.println(\"Key usage cannot be blank or empty\");\n                    return null;\n                }\n                if (isValidKeyUsage(keyUsage) == false) {\n                    terminal.println(\"Invalid key usage: \" + keyUsage);\n                    terminal.println(\"The key usage should be one of the following values: \");\n                    for (String keyUsageName : CertGenUtils.KEY_USAGE_MAPPINGS.keySet()) {\n                        terminal.println(\" - \" + keyUsageName);\n                    }\n                    terminal.println(\"\");\n                    return null;\n                }\n                resolvedKeyUsages.add(keyUsage);\n            }\n            if (resolvedKeyUsages.isEmpty()) {\n                terminal.println(\"Key usage must contain at least one value\");\n                return null;\n            }\n            return List.copyOf(resolvedKeyUsages);\n        });\n    }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`readKeyUsage` currently accepts duplicate key-usage entries (e.g. `digitalSignature,digitalSignature`) and also allows an effectively empty list when the user inputs only commas/spaces if trimming leaves empties (you return null on empty token, but `input=\",\"` yields two empty tokens and is rejected; however `input=\"\"` is handled earlier as default). More importantly, it allows users to provide *no* effective usages via something like `\",\"`? rejected; ok. Still, duplicates are likely unintended and can cause `buildKeyUsage` to set the same bit multiple times or behave unexpectedly depending on implementation. Consider normalizing (e.g., `toLowerCase(Locale.ROOT)` if allowed), de-duplicating while preserving order, and validating that the resulting set is non-empty when the user explicitly provides input.\n\n```suggestion\n    private static List<String> readKeyUsage(Terminal terminal, List<String> defaultKeyUsage) {\n        return tryReadInput(terminal, \"Key Usage\", defaultKeyUsage, input -> {\n            final String[] keyUsages = input.split(\",\");\n            final LinkedHashSet<String> resolvedKeyUsages = new LinkedHashSet<>(keyUsages.length);\n            for (String keyUsage : keyUsages) {\n                keyUsage = keyUsage.trim();\n                if (keyUsage.isEmpty()) {\n                    terminal.println(\"Key usage cannot be blank or empty\");\n                    return null;\n                }\n                if (isValidKeyUsage(keyUsage) == false) {\n                    terminal.println(\"Invalid key usage: \" + keyUsage);\n                    terminal.println(\"The key usage should be one of the following values: \");\n                    for (String keyUsageName : CertGenUtils.KEY_USAGE_MAPPINGS.keySet()) {\n                        terminal.println(\" - \" + keyUsageName);\n                    }\n                    terminal.println(\"\");\n                    return null;\n                }\n                resolvedKeyUsages.add(keyUsage);\n            }\n            if (resolvedKeyUsages.isEmpty()) {\n                terminal.println(\"Key usage must contain at least one value\");\n                return null;\n            }\n            return List.copyOf(resolvedKeyUsages);\n        });\n    }\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "docs/reference/elasticsearch/command-line-tools/certutil.md",
+      "line_start": 103,
+      "line_end": 103,
+      "description": "The `--ca-keyusage` parameter documentation incorrectly describes compatibility constraints; it must specify exclusive use with the `ca` parameter instead of listing incompatible modes for precise usage clarity."
+    },
+    {
+      "file": "x-pack/plugin/security/cli/src/main/java/org/elasticsearch/xpack/security/cli/AutoConfigureNode.java",
+      "line_start": 414,
+      "line_end": 419,
+      "description": "Inconsistency: The transport CA certificate is generated with `null` for keyUsage, while the HTTP CA certificate is generated with `buildKeyUsage(DEFAULT_CA_KEY_USAGE)` (which includes \"keyCertSign\" and \"cRLSign\"). Since both are CA certificates, they should have consistent key usage settings. Consider applying the same key usage pattern for the transport CA certificate.\n\n```suggestion\n                    null,\n                    true,\n                    TRANSPORT_CA_CERTIFICATE_DAYS,\n                    SIGNATURE_ALGORITHM,\n                    buildKeyUsage(DEFAULT_CA_KEY_USAGE),\n                    Set.of()\n```"
+    },
+    {
+      "file": "x-pack/plugin/security/cli/src/main/java/org/elasticsearch/xpack/security/cli/CertificateTool.java",
+      "line_start": 253,
+      "line_end": 253,
+      "description": "The call to `acceptCertificateAuthorityKeyUsage()` should be removed as it relates to the deprecated on-the-fly CA generation feature, which has been unsupported since Elasticsearch 8.0."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/elastic/elasticsearch/pull/126376). Upstream base 79297438ed2b6f2fb5315508157d6584c84f1760 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 476. Severity absent in the source. i1: human comment, Diff Level; i2: human comment, Repo Level; i3: AI comment (GPT-5.2), Repo Level; i4: AI comment (GPT-5.2), Diff Level; i5: human comment, Diff Level; i6: AI comment (GLM-4.7), Diff Level; i7: human comment, Diff Level; i8: AI comment (GPT-5.2), Repo Level"
+}

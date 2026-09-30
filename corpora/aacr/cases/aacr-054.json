@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-054",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-054/base",
+  "head_branch": "bench/aacr/aacr-054/head",
+  "base_sha": "47c199afc518d35aec3f892e7588d15784c5f8b1",
+  "head_sha": "487d97a70d01741f6bec03085bbfb9810aa03790",
+  "mr_title": "add anti detection via rebrowser",
+  "mr_description": "- add anti detection via rebrowser\n- Merge branch 'main' into bot-detection-batch\n- Add back Chromium arguments to browser launch configuration\n- add changes\n- Merge branch 'main' into bot-detection-batch\n- Merge branch 'main' into bot-detection-batch\n- Merge branch 'main' into bot-detection-batch\n- fix CSP, Shadow DOM & Migrate to Patchright\n- Merge branch 'main' into bot-detection-batch\n- Revert examples/notebook/agent_browsing.ipynb to upstream main version\n- Merge branch 'main' into bot-detection-batch\n- Merge branch 'main' into bot-detection-batch\n- run lint\n- fix lint",
+  "origin": {
+    "repository": "https://github.com/browser-use/browser-use",
+    "commit": "aab7b3bb54e2b15ee3b32ad7de74c91fc8b22f52",
+    "license": "MIT",
+    "source_case": "https://github.com/browser-use/browser-use/pull/857",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "browser_use/browser/browser.py",
+      "line_start": 283,
+      "line_end": 283,
+      "category": "correctness",
+      "severity": null,
+      "title": "The hardcoding of `channel='chrome'` in the browser launch call is invalid for non-Chromi…",
+      "description": "The hardcoding of `channel='chrome'` in the browser launch call is invalid for non-Chromium browsers (Firefox/WebKit), as the `channel` parameter is exclusively supported by Chromium-based browsers and will cause runtime errors if used with other browser types.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The hardcoding of `channel='chrome'` in the browser launch call is invalid for non-Chromium browsers (Firefox/WebKit), as the `channel` parameter is exclusively supported by Chromium-based browsers and will cause runtime errors if used with other browser types."
+    },
+    {
+      "id": "i2",
+      "file": "docs/customize/agent-settings.mdx",
+      "line_start": 95,
+      "line_end": 95,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Documentation inconsistency: The import statement has been updated to use `patchright.asy…",
+      "description": "Documentation inconsistency: The import statement has been updated to use `patchright.async_api`, but the surrounding documentation text still references 'Playwright' (e.g., line 91 mentions 'A Playwright browser context' and lines 120-121 link to Playwright documentation). Consider updating these references to 'Patchright' for consistency, or add a note explaining that Patchright is a Playwright-compatible library being used in the codebase.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Documentation inconsistency: The import statement has been updated to use `patchright.async_api`, but the surrounding documentation text still references 'Playwright' (e.g., line 91 mentions 'A Playwright browser context' and lines 120-121 link to Playwright documentation). Consider updating these references to 'Patchright' for consistency, or add a note explaining that Patchright is a Playwright-compatible library being used in the codebase.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "browser_use/agent/service.py",
+      "line_start": 261,
+      "line_end": 261,
+      "description": "Potential logic flaw detected! Manually enforcing equality between outer config's disable_security and inner new_context_config's disable_security overrides independent configurability designed elsewhere. Consider removing forced sync unless strong justification exists."
+    },
+    {
+      "file": "browser_use/browser/context.py",
+      "line_start": 414,
+      "line_end": 416,
+      "description": "Logic error: Hardcoding no_viewport=False contradicts the configurable no_viewport field and creates inconsistent behavior. Should respect self.config.no_viewport when provided, otherwise default appropriately based on headless mode."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/browser-use/browser-use/pull/857). Upstream base 01abdc414b4bea9da34d10c2fb5383c870396f50 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 95. Severity absent in the source. i1: human comment, File Level; i2: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level"
+}

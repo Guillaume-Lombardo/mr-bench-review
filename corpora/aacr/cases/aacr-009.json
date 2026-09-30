@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-009",
+  "language": "cpp",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-009/base",
+  "head_branch": "bench/aacr/aacr-009/head",
+  "base_sha": "a3f444b0a4bfb00bf3640ffb71d12e028a7e0300",
+  "head_sha": "f8c3bb8bc87267611d4823446112bdd95a80d9e9",
+  "mr_title": "DRY",
+  "mr_description": "- DRY\n- Simplify expression\n- Use auto\n- Join declaration and assignment\n- C++ style cast instead of C\n- Declaration hides previous\n- Else after return\n- Redundant c_str()\n- Reserve vector size\n- Don't use endl\n- Narrowing conversion\n- Calling static via instance\n- App: Minor formatting from review",
+  "origin": {
+    "repository": "https://github.com/FreeCAD/FreeCAD",
+    "commit": "39c5968bdc6c0b20d94d4a629cd43eafee1e56d0",
+    "license": "LGPL-2.0-or-later",
+    "source_case": "https://github.com/FreeCAD/FreeCAD/pull/19977",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/App/Application.cpp",
+      "line_start": 402,
+      "line_end": 402,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The lambda parameter `str` is unnecessarily defined as `std::string` when it could use st…",
+      "description": "The lambda parameter `str` is unnecessarily defined as `std::string` when it could use string literals directly, creating redundant string conversions. While string concatenation requires one string type, the implementation should optimize for minimal object creation by using C-style strings where possible.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "The lambda parameter `str` is unnecessarily defined as `std::string` when it could use string literals directly, creating redundant string conversions. While string concatenation requires one string type, the implementation should optimize for minimal object creation by using C-style strings where possible."
+    },
+    {
+      "id": "i2",
+      "file": "src/App/Application.cpp",
+      "line_start": 402,
+      "line_end": 402,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The init-capture `str {\"Base.\"}` creates a non-const copy of the string",
+      "description": "The init-capture `str {\"Base.\"}` creates a non-const copy of the string. Since this value is never modified within the lambda, it should be marked as `const` for better const correctness. Change `str {\"Base.\"}` to `const str {\"Base.\"}` or use a more explicit syntax.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The init-capture `str {\"Base.\"}` creates a non-const copy of the string. Since this value is never modified within the lambda, it should be marked as `const` for better const correctness. Change `str {\"Base.\"}` to `const str {\"Base.\"}` or use a more explicit syntax."
+    },
+    {
+      "id": "i3",
+      "file": "src/App/Application.cpp",
+      "line_start": 409,
+      "line_end": 411,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential namespace/qualification regression: the old code assigned to `Base::PyExc_*` gl…",
+      "description": "Potential namespace/qualification regression: the old code assigned to `Base::PyExc_*` globals, but the new code assigns to unqualified `PyExc_FC_*`. If these variables live in `Base::` (as before), this will either fail to compile or silently assign different symbols (if there are similarly named globals in another namespace). Suggest explicitly qualifying (e.g., `Base::PyExc_FC_GeneralError = ...`) or adding `using Base::PyExc_FC_GeneralError;` etc. Also consider making `module` a `PyObject* const` or capturing by value to avoid referencing a local through the lambda unnecessarily.\n\n```suggestion\n    Base::PyExc_FC_GeneralError = setup(\"FreeCADError\", PyExc_RuntimeError);\n    Base::PyExc_FC_FreeCADAbort = setup(\"FreeCADAbort\", PyExc_BaseException);\n    Base::PyExc_FC_XMLBaseException = setup(\"XMLBaseException\", PyExc_Exception);\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential namespace/qualification regression: the old code assigned to `Base::PyExc_*` globals, but the new code assigns to unqualified `PyExc_FC_*`. If these variables live in `Base::` (as before), this will either fail to compile or silently assign different symbols (if there are similarly named globals in another namespace). Suggest explicitly qualifying (e.g., `Base::PyExc_FC_GeneralError = ...`) or adding `using Base::PyExc_FC_GeneralError;` etc. Also consider making `module` a `PyObject* const` or capturing by value to avoid referencing a local through the lambda unnecessarily.\n\n```suggestion\n    Base::PyExc_FC_GeneralError = setup(\"FreeCADError\", PyExc_RuntimeError);\n    Base::PyExc_FC_FreeCADAbort = setup(\"FreeCADAbort\", PyExc_BaseException);\n    Base::PyExc_FC_XMLBaseException = setup(\"XMLBaseException\", PyExc_Exception);\n```"
+    },
+    {
+      "id": "i4",
+      "file": "src/App/Application.cpp",
+      "line_start": 681,
+      "line_end": 681,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Replace the manual null or empty string check `if(!path || path[0] == '\\0')` with the exi…",
+      "description": "Replace the manual null or empty string check `if(!path || path[0] == '\\0')` with the existing `isNullOrEmpty()` helper function for consistency and readability.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Replace the manual null or empty string check `if(!path || path[0] == '\\0')` with the existing `isNullOrEmpty()` helper function for consistency and readability."
+    },
+    {
+      "id": "i5",
+      "file": "src/App/Application.cpp",
+      "line_start": 3488,
+      "line_end": 3491,
+      "category": "correctness",
+      "severity": null,
+      "title": "According to the RAII principle and smart pointer usage guidelines, this code uses manual…",
+      "description": "According to the RAII principle and smart pointer usage guidelines, this code uses manual `new` and `delete` to manage dynamic memory. If `realpath` throws an exception or if there's another code path that exits the scope before `delete [] buf`, it would cause a memory leak. Consider using `std::unique_ptr<char[]>` to manage the memory automatically and ensure exception safety.\n\n```suggestion\n        if (auto buf = std::make_unique<char[]>(++sz); _NSGetExecutablePath(buf.get(), &sz) == 0) {\n                    char resolved[PATH_MAX];\n                    char* path = realpath(buf.get(), resolved);\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "According to the RAII principle and smart pointer usage guidelines, this code uses manual `new` and `delete` to manage dynamic memory. If `realpath` throws an exception or if there's another code path that exits the scope before `delete [] buf`, it would cause a memory leak. Consider using `std::unique_ptr<char[]>` to manage the memory automatically and ensure exception safety.\n\n```suggestion\n        if (auto buf = std::make_unique<char[]>(++sz); _NSGetExecutablePath(buf.get(), &sz) == 0) {\n                    char resolved[PATH_MAX];\n                    char* path = realpath(buf.get(), resolved);\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/App/Application.cpp",
+      "line_start": 305,
+      "line_end": 305,
+      "description": "Inconsistent namespace usage: `InterpreterSingleton::addType` lacks the required `Base::` qualifier while type arguments (e.g., `Base::VectorPy::Type`) retain it, violating namespace consistency standards."
+    },
+    {
+      "file": "src/App/Application.cpp",
+      "line_start": 1382,
+      "line_end": 1382,
+      "description": "Reserving capacity before loop can prevent multiple reallocations."
+    },
+    {
+      "file": "src/App/Application.cpp",
+      "line_start": 2673,
+      "line_end": 2673,
+      "description": "This condition can be simplified since comparing against \"Cmd\" directly expresses intent clearer."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/FreeCAD/FreeCAD/pull/19977). Upstream base 855ad6c70904f911b2ce7114dd1a5bc24da98bd1 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 306. Severity absent in the source. i1: human comment, File Level; i2: AI comment (GLM-4.7), File Level; i3: AI comment (GPT-5.2), File Level; i4: human comment, File Level; i5: AI comment (GLM-4.7), Diff Level"
+}

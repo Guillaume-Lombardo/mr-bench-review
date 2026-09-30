@@ -1,0 +1,263 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-135",
+  "language": "cpp",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-135/base",
+  "head_branch": "bench/aacr/aacr-135/head",
+  "base_sha": "5916974aeb567c0770bdee4ba406f795951fa307",
+  "head_sha": "d9189583417e2caacababb6c49cc352fc81dd3e5",
+  "mr_title": "Fix retries after failed insert",
+  "mr_description": "- Fix retries after failed insert\n- Automatic style fix\n- Merge remote-tracking branch 'origin/master' into s3queue-fix-retries-after-failed-insert\n- Merge remote-tracking branch 'origin/master' into s3queue-fix-retries-after-failed-insert\n- Review fixes\n- Fix fast test build\n- Fix\n- Merge branch 'master' into s3queue-fix-retries-after-failed-insert\n- Merge branch 'master' into s3queue-fix-retries-after-failed-insert\n- Merge branch 'master' into s3queue-fix-retries-after-failed-insert\n- Merge remote-tracking branch 'origin/master' into s3queue-fix-retries-after-failed-insert\n- Fix\n- Better\n- Fix\n- Nicer\n- Fxi\n- Fxi\n- Fxi\n- Update ObjectStorageQueueOrderedFileMetadata.cpp\n- Update test.py\n- Try fix test",
+  "origin": {
+    "repository": "https://github.com/ClickHouse/ClickHouse",
+    "commit": "40a4654d7b114f1d42f48680d57007ae80897cd1",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/ClickHouse/ClickHouse/pull/73546",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueIFileMetadata.cpp",
+      "line_start": 233,
+      "line_end": 234,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The log statement unnecessarily reloads the file state via `file_status->state.load()` wh…",
+      "description": "The log statement unnecessarily reloads the file state via `file_status->state.load()` when the already-loaded `state` variable is available, causing redundant atomic operations. Use the existing `state` variable in the log call instead.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "The log statement unnecessarily reloads the file state via `file_status->state.load()` when the already-loaded `state` variable is available, causing redundant atomic operations. Use the existing `state` variable in the log call instead."
+    },
+    {
+      "id": "i2",
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueIFileMetadata.cpp",
+      "line_start": 327,
+      "line_end": 327,
+      "category": "correctness",
+      "severity": null,
+      "title": "The error handling for ZooKeeper multi requests lacks a condition to address cases where…",
+      "description": "The error handling for ZooKeeper multi requests lacks a condition to address cases where the overall request fails despite all individual operations succeeding (ZOK status), causing an unreachable assertion. Implement a specific check for this scenario and set a descriptive failure reason.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The error handling for ZooKeeper multi requests lacks a condition to address cases where the overall request fails despite all individual operations succeeding (ZOK status), causing an unreachable assertion. Implement a specific check for this scenario and set a descriptive failure reason."
+    },
+    {
+      "id": "i3",
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueOrderedFileMetadata.cpp",
+      "line_start": 252,
+      "line_end": 252,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The reviewer suggests replacing the MULTI_READ feature flag implementation with `zk_clien…",
+      "description": "The reviewer suggests replacing the MULTI_READ feature flag implementation with `zk_client->tryGet()` using a vector of paths to eliminate response casting and improve code clarity. This approach would simplify the metadata retrieval logic while maintaining the same functionality.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The reviewer suggests replacing the MULTI_READ feature flag implementation with `zk_client->tryGet()` using a vector of paths to eliminate response casting and improve code clarity. This approach would simplify the metadata retrieval logic while maintaining the same functionality."
+    },
+    {
+      "id": "i4",
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueOrderedFileMetadata.cpp",
+      "line_start": 268,
+      "line_end": 271,
+      "category": "correctness",
+      "severity": null,
+      "title": "After dynamic_cast, the code should check if get_response is nullptr before dereferencing…",
+      "description": "After dynamic_cast, the code should check if get_response is nullptr before dereferencing it. Although the cast should succeed when error is ZOK, it's safer to add a nullptr check to prevent undefined behavior in edge cases.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "After dynamic_cast, the code should check if get_response is nullptr before dereferencing it. Although the cast should succeed when error is ZOK, it's safer to add a nullptr check to prevent undefined behavior in edge cases.\n"
+    },
+    {
+      "id": "i5",
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueSource.cpp",
+      "line_start": 488,
+      "line_end": 488,
+      "category": "correctness",
+      "severity": null,
+      "title": "The assertion that processed_rows > 0 may not always hold true",
+      "description": "The assertion that processed_rows > 0 may not always hold true. If cancellation occurs immediately after a file begins processing but before any rows are read, processed_rows could be 0. This would cause a crash in debug builds due to chassert, creating inconsistent behavior between debug and release builds. Consider handling the case where processed_rows == 0 explicitly rather than asserting.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The assertion that processed_rows > 0 may not always hold true. If cancellation occurs immediately after a file begins processing but before any rows are read, processed_rows could be 0. This would cause a crash in debug builds due to chassert, creating inconsistent behavior between debug and release builds. Consider handling the case where processed_rows == 0 explicitly rather than asserting.\n"
+    },
+    {
+      "id": "i6",
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueSource.cpp",
+      "line_start": 527,
+      "line_end": 533,
+      "category": "correctness",
+      "severity": null,
+      "title": "In the `reader` branch you assume `processed_files.back()` exists and is Processing",
+      "description": "In the `reader` branch you assume `processed_files.back()` exists and is Processing. If `reader` can ever be non-null while `processed_files` is empty (e.g., due to future refactors or error paths), this will be UB. Consider guarding with `chassert(!processed_files.empty())` before accessing `.back()` to make the invariant explicit.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "In the `reader` branch you assume `processed_files.back()` exists and is Processing. If `reader` can ever be non-null while `processed_files` is empty (e.g., due to future refactors or error paths), this will be UB. Consider guarding with `chassert(!processed_files.empty())` before accessing `.back()` to make the invariant explicit."
+    },
+    {
+      "id": "i7",
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueSource.cpp",
+      "line_start": 599,
+      "line_end": 609,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Consider catching specific exception types instead of using catch-all (...)",
+      "description": "Consider catching specific exception types instead of using catch-all (...). While the current implementation properly logs and handles the error, catching specific exceptions (e.g., std::exception, DB::Exception) would be more aligned with best practices and could allow for more targeted error handling if needed in the future.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Consider catching specific exception types instead of using catch-all (...). While the current implementation properly logs and handles the error, catching specific exceptions (e.g., std::exception, DB::Exception) would be more aligned with best practices and could allow for more targeted error handling if needed in the future.\n"
+    },
+    {
+      "id": "i8",
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueSource.cpp",
+      "line_start": 658,
+      "line_end": 658,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Spelling/clarity: log string `insert {}succeeded` reads awkwardly (missing space)",
+      "description": "Spelling/clarity: log string `insert {}succeeded` reads awkwardly (missing space). Consider `insert {}succeeded` -> `insert {}succeeded` with proper formatting, e.g. `\"insert {}succeeded\"` => `\"insert {}succeeded\"` is still odd; better: `\"insert {}\"` with `\"succeeded\"/\"didn't succeed\"` or `\"insert {}succeeded\"` -> `\"insert {}succeeded\"` plus a space: `\"{} succeeded\"`.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Spelling/clarity: log string `insert {}succeeded` reads awkwardly (missing space). Consider `insert {}succeeded` -> `insert {}succeeded` with proper formatting, e.g. `\"insert {}succeeded\"` => `\"insert {}succeeded\"` is still odd; better: `\"insert {}\"` with `\"succeeded\"/\"didn't succeed\"` or `\"insert {}succeeded\"` -> `\"insert {}succeeded\"` plus a space: `\"{} succeeded\"`."
+    },
+    {
+      "id": "i9",
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueSource.cpp",
+      "line_start": 677,
+      "line_end": 689,
+      "category": "correctness",
+      "severity": null,
+      "title": "Logic issue in commit method: Files in Processing state should not reach commit phase",
+      "description": "Logic issue in commit method: Files in Processing state should not reach commit phase. Also, cancelled files should use a different error message than insertion failures.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Logic issue in commit method: Files in Processing state should not reach commit phase. Also, cancelled files should use a different error message than insertion failures.\n"
+    },
+    {
+      "id": "i10",
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueSource.cpp",
+      "line_start": 677,
+      "line_end": 689,
+      "category": "correctness",
+      "severity": null,
+      "title": "In `commit()`, `FileState::Processing` is treated as an error only when `insert_succeeded…",
+      "description": "In `commit()`, `FileState::Processing` is treated as an error only when `insert_succeeded` is true; otherwise it is marked failed. This means a partially processed/in-flight file during failed insert will be set Failed with `reduce_retry_count=false`, potentially making it retry without reducing attempts. Verify this matches desired semantics; often partially-read files should reduce retry count (or be returned for retry) to avoid infinite loops on persistent read errors.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "In `commit()`, `FileState::Processing` is treated as an error only when `insert_succeeded` is true; otherwise it is marked failed. This means a partially processed/in-flight file during failed insert will be set Failed with `reduce_retry_count=false`, potentially making it retry without reducing attempts. Verify this matches desired semantics; often partially-read files should reduce retry count (or be returned for retry) to avoid infinite loops on persistent read errors."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueIFileMetadata.cpp",
+      "line_start": 229,
+      "line_end": 231,
+      "description": "Suspicious null check: `file_status->retries` is of type `std::atomic<size_t>` (as seen in the header file), so it cannot be null. This condition `&& file_status->retries` will evaluate to true when retries > 0 and false when retries == 0.\n\nIf the intent is to check whether retries is greater than 0, this works but is unclear. Consider making it explicit:\n```cpp\n|| (state == FileStatus::State::Failed\n    && file_status->retries > 0\n    && file_status->retries >= max_loading_retries)\n```\n\nHowever, the second condition `file_status->retries >= max_loading_retries` already implies `retries > 0` when `max_loading_retries > 0`, so the middle check might be redundant unless `max_loading_retries` can be 0."
+    },
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueIFileMetadata.cpp",
+      "line_start": 233,
+      "line_end": 234,
+      "description": "This change adds more detailed logging which is good for debugging. No issues here."
+    },
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueIFileMetadata.cpp",
+      "line_start": 267,
+      "line_end": 269,
+      "description": "Using `SCOPE_EXIT` is a good practice for ensuring cleanup actions are performed. However, consider whether throwing an exception inside a scope exit handler is appropriate, especially since exceptions thrown in destructors or scope exits can lead to program termination if another exception is active."
+    },
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueIFileMetadata.cpp",
+      "line_start": 279,
+      "line_end": 279,
+      "description": "The constant `check_processing_id_path_idx` set to 0 is an incorrect index value and redundant, as removal operations already handle versioning without requiring this check."
+    },
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueIFileMetadata.cpp",
+      "line_start": 293,
+      "line_end": 293,
+      "description": "Lambda function naming inconsistency: Change `is_request_failed` to `has_request_failed` for consistent predicate naming convention in ZooKeeper request handling logic."
+    },
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueIFileMetadata.cpp",
+      "line_start": 387,
+      "line_end": 389,
+      "description": "Calling `resetProcessing()` here might have side effects depending on its implementation. Verify that this behavior aligns with intended semantics when marking a file as failed."
+    },
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueIFileMetadata.cpp",
+      "line_start": 410,
+      "line_end": 410,
+      "description": "Consider adding braces around the inner condition for better readability and to avoid potential dangling else issues."
+    },
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueIFileMetadata.cpp",
+      "line_start": 437,
+      "line_end": 437,
+      "description": "Typo: `retrieable_failed_node_path` should be `retriable_failed_node_path` (missing 'r'). This is a misspelling of 'retriable'.\n\n```suggestion\n    auto retriable_failed_node_path = failed_node_path + \".retriable\";\n```"
+    },
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueOrderedFileMetadata.cpp",
+      "line_start": 286,
+      "line_end": 297,
+      "description": "In the `else` branch, the check for `failed_node_path` is nested inside the `if (getMaxProcessedFile(...))` block. This means if `getMaxProcessedFile` returns `false` (e.g., if the processed node doesn't exist yet), the code will skip checking if the file is marked as failed. This is inconsistent with the `MULTI_READ` branch and could lead to incorrect behavior (e.g., attempting to process a failed file).\n\nConsider moving the `failed_node_path` check outside and before `getMaxProcessedFile`."
+    },
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueSource.cpp",
+      "line_start": 474,
+      "line_end": 484,
+      "description": "Potential logical issue: on cancellation you only mark the *last* file as Cancelled if it's in Processing state; if multiple files could be in Processing/partially-read states (e.g., if reader is swapped/reused or future changes allow pipelining), earlier ones would remain unaccounted. If the design guarantees at most one in-flight file, consider asserting it explicitly (e.g., processed_files.size()==1 or tracking current index) to prevent future regressions."
+    },
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueSource.cpp",
+      "line_start": 492,
+      "line_end": 494,
+      "description": "Exception code/message: `QUERY_WAS_CANCELLED` is used both for user cancellation and table drop. That might be fine, but if upstream distinguishes these cases, consider using different codes or embedding a stable marker in the message for easier triage/metrics (e.g., \"cancelled_by_user\" vs \"table_dropped\")."
+    },
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueSource.cpp",
+      "line_start": 565,
+      "line_end": 566,
+      "description": "After `dynamic_cast`, `object_info` can be null if `reader` is created with a different ObjectInfo type. Currently you dereference unconditionally. If this is guaranteed by construction, add `chassert(object_info)` (or replace with `static_cast` if polymorphism isn't needed) to avoid UB in unexpected scenarios."
+    },
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueSource.cpp",
+      "line_start": 603,
+      "line_end": 603,
+      "description": "Bug: Reader is not reset after an exception during read, which will cause assertion failure on the next call to generateImpl().\n\nWhen an exception occurs during chunk processing (lines 599-607), the code sets the state to ErrorOnRead and returns, but doesn't reset the reader:\n\n```cpp\ncatch (...)\n{\n    const auto message = getCurrentExceptionMessage(true);\n    LOG_ERROR(log, \"Got an error while pulling chunk. Will set file {} as failed. Error: {} \", path, message);\n\n    processed_files.back().state = FileState::ErrorOnRead;\n    processed_files.back().exception_during_read = message;\n\n    /// Stop processing and commit what is already processed.\n    return {};\n}\n```\n\nOn the next call to generateImpl(), the reader will still be set, so the code at lines 523-530 will execute:\n\n```cpp\nif (reader)\n{\n    chassert(processed_files.back().state == FileState::Processing);  // This will fail!\n    // ...\n}\n```\n\nThe assertion at line 524 expects state to be Processing, but it will be ErrorOnRead, causing an assertion failure.\n\nFix: Reset the reader after setting ErrorOnRead state:\n```\nFix src/Storages/ObjectStorageQueue/ObjectStorageQueueSource.cpp:603-607: After setting the state to ErrorOnRead, reset the reader to prevent assertion failure on the next generateImpl() call. Add \"reader = {};\" before the return statement at line 607."
+    },
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueSource.h",
+      "line_start": 178,
+      "line_end": 186,
+      "description": "`ProcessedFile` stores `std::string exception_during_read`, but this header doesn’t show an include for `<string>`. If it’s not already included transitively, this can break compilation. Prefer including `<string>` explicitly in the header where the type is used.\n\n(Also ensure structured bindings in `commit()` match the member order of `ProcessedFile` exactly: `state`, `metadata`, `exception_during_read`.)"
+    },
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueUnorderedFileMetadata.cpp",
+      "line_start": 111,
+      "line_end": 117,
+      "description": "Potential bug/semantic regression: `RequestType` still defines `CHECK_PROCESSING_ID_PATH`, and later error handling expects a check request (`is_request_failed(CHECK_PROCESSING_ID_PATH)`), but the transaction no longer adds `makeCheckRequest(processing_node_id_path, processing_id_version.value())`. At the same time, `request_index[CHECK_PROCESSING_ID_PATH] = 0;` is set even though index 0 is now a *remove* request. This mislabels response indices and can make error classification incorrect (e.g., a remove failure could be reported as \"Version of processing id node changed\"). Fix by either restoring the check request as the first request, or removing CHECK_PROCESSING_ID_PATH from enum/indexing and updating error handling accordingly."
+    },
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueUnorderedFileMetadata.cpp",
+      "line_start": 123,
+      "line_end": 125,
+      "description": "The explicit check request for `processing_node_id_path` was removed. While the `makeRemoveRequest` includes version checking, the explicit check provided fail-fast behavior and clearer error semantics. Consider if this change affects error handling or race condition detection in distributed scenarios where the processing node might be modified by another process between operations."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/ClickHouse/ClickHouse/pull/73546). Upstream base d144f444affac79d6b43b45fc1d68c46a7766750 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 498. Severity absent in the source. i1: human comment, File Level; i2: human comment, Diff Level; i3: human comment, Diff Level; i4: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i5: AI comment (Qwen-Coder-480B), Diff Level; i6: AI comment (GPT-5.2), Diff Level; i7: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i8: AI comment (GPT-5.2), Diff Level; i9: AI comment (Deepseek-V3.2), Diff Level; i10: AI comment (GPT-5.2), File Level"
+}

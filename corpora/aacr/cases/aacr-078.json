@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-078",
+  "language": "php",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-078/base",
+  "head_branch": "bench/aacr/aacr-078/head",
+  "base_sha": "a409c85af1f999e2d4a54fc66bfc25abe249d505",
+  "head_sha": "5010b05e011eee92cfefb27c14fec7ac0c9f98f3",
+  "mr_title": "improve make:migration command output",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/laravel/framework",
+    "commit": "0a5238acfc4ca99c363283bf3bb16e20905f2a39",
+    "license": "MIT",
+    "source_case": "https://github.com/laravel/framework/pull/56591",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/Illuminate/Database/Console/Migrations/MigrateMakeCommand.php",
+      "line_start": 115,
+      "line_end": 117,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The current string replacement for Windows path separators is fragile and platform-depend…",
+      "description": "The current string replacement for Windows path separators is fragile and platform-dependent; refactor to use a dedicated path abstraction class that handles separators internally based on the OS.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The current string replacement for Windows path separators is fragile and platform-dependent; refactor to use a dedicated path abstraction class that handles separators internally based on the OS."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/laravel/framework/pull/56591). Upstream base 6d94b16fd5f4f72bb741f9b900b83179c8ab46c9 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 4. Severity absent in the source. i1: human comment, Diff Level"
+}

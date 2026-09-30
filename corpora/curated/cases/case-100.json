@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-100",
+  "language": "java",
+  "size": "small",
+  "kind": "real",
+  "tier": "core",
+  "base_branch": "bench/curated/case-100/base",
+  "head_branch": "bench/curated/case-100/head",
+  "base_sha": "11b323c5116605dd7dab745e3ee27015ef58568a",
+  "head_sha": "7741c1e77bf36890866e5d1db70b7a6d7fc5ebbb",
+  "mr_title": "Optimize ObjectNode findValue(s) and findParent(s) fast paths",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/FasterXML/jackson-databind",
+    "commit": "8050a1eaa3eeaf0f98d75567c55969da011e2f03",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/main/java/com/fasterxml/jackson/databind/node/ObjectNode.java",
+      "line_start": 345,
+      "line_end": 360,
+      "category": "correctness",
+      "severity": "high",
+      "title": "findValues/findParents stop at the first direct match and skip sibling subtrees",
+      "description": "The fast path returns as soon as a direct child matches, so findValues/findValuesAsText/findParents no longer collect matches located in sibling subtrees.\n\nThe original loop visited every entry: a matching key was collected and other entries were recursed into. The optimised version looks up `_children.get(propertyName)` and returns immediately when it exists, so for `{\"a\":1, \"b\":{\"a\":2}}` findValues(\"a\") now returns [1] instead of [1, 2]. The same early return was introduced in findValuesAsText and findParents. This silently changes the documented result of a public API in a change presented as a pure optimisation.",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "src/main/java/com/fasterxml/jackson/databind/node/ObjectNode.java",
+          "line_start": 364,
+          "line_end": 379
+        },
+        {
+          "file": "src/main/java/com/fasterxml/jackson/databind/node/ObjectNode.java",
+          "line_start": 399,
+          "line_end": 414
+        }
+      ],
+      "source_category": null,
+      "source_text": null
+    },
+    {
+      "id": "i2",
+      "file": "src/main/java/com/fasterxml/jackson/databind/node/ObjectNode.java",
+      "line_start": 352,
+      "line_end": 352,
+      "category": "tests",
+      "severity": "medium",
+      "title": "Optimisation of a public API ships without tests of nested matches",
+      "description": "findValue(s)/findParent(s) are rewritten for speed without any test; a test with the same property name at several nesting levels would have shown the lost sibling matches.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/FasterXML/jackson-databind/commit/8050a1eaa3eeaf0f98d75567c55969da011e2f03. Primary issue confirmed by the later upstream fix https://github.com/FasterXML/jackson-databind/commit/1c66e4973eb1758c650ca6d52c43458d8ef25dd4; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

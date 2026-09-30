@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-020",
+  "language": "go",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-020/base",
+  "head_branch": "bench/review-bench/review-bench-020/head",
+  "base_sha": "62e6274911e47737afa08fba45e91ead8c9afbdb",
+  "head_sha": "dd6c4ceca2e2c636595dd315e4ff8f609baf91eb",
+  "mr_title": "Make resolver Build() take a target struct",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/grpc/grpc-go",
+    "commit": "3f10311ccf076b6b7cba28273df3290d42e60982",
+    "license": "Apache-2.0",
+    "source_case": "grpc-parsetarget-unix-scheme",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/grpc-parsetarget-unix-scheme"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "resolver_conn_wrapper.go",
+      "line_start": 39,
+      "line_end": 40,
+      "category": "correctness",
+      "severity": null,
+      "title": "parseTarget applies the '/' authority/endpoint split even when the target contains no ':/…",
+      "description": "parseTarget applies the '/' authority/endpoint split even when the target contains no '://' scheme separator, so a scheme-less target such as 'unix:/path/to/socket' is decomposed into Authority 'unix:' and Endpoint 'path/to/socket', handing the resolver a mangled endpoint instead of the original target.\n\nProvenance: fix PR #1611 (commit 0d57c57): parseTarget returns the target unsplit when no scheme separator is present.",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "resolver_conn_wrapper.go",
+          "line_start": 43,
+          "line_end": 43
+        },
+        {
+          "file": "resolver_conn_wrapper.go",
+          "line_start": 45,
+          "line_end": 45
+        },
+        {
+          "file": "resolver_conn_wrapper.go",
+          "line_start": 51,
+          "line_end": 52
+        }
+      ],
+      "source_category": null,
+      "source_text": "parseTarget applies the '/' authority/endpoint split even when the target contains no '://' scheme separator, so a scheme-less target such as 'unix:/path/to/socket' is decomposed into Authority 'unix:' and Endpoint 'path/to/socket', handing the resolver a mangled endpoint instead of the original target."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench grpc-parsetarget-unix-scheme (corpus corpus/v0.1). Introducing PR https://github.com/grpc/grpc-go/pull/1567. Fix https://github.com/grpc/grpc-go/commit/0d57c57a68d6c3f0cf1d708ab380b10e092c759f (PR #1611). Category defaulted to correctness and severity left null because the source has neither; to be reviewed. Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 40-41, review-head lines 39-40) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 44-44, review-head lines 43-43) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 46-46, review-head lines 45-45) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 52-53, review-head lines 51-52)"
+}

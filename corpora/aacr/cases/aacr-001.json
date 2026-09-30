@@ -1,0 +1,401 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-001",
+  "language": "cpp",
+  "size": "large",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-001/base",
+  "head_branch": "bench/aacr/aacr-001/head",
+  "base_sha": "40e83a3e867711e0a924cf0444e1594bb8749395",
+  "head_sha": "973320140475161c5028065193044f08ef9eedf8",
+  "mr_title": "Remove magic number and hard type enums in ArrowPropEnum.h",
+  "mr_description": "- Remove magic number and hard type enums in ArrowPropEnum.h\n- Remove magic number and hard type enums in BalloonPropEnum.h\n- Remove magic number and hard type enums in DrawViewDimension.h\n- Remove magic number and hard type enums in DimensionValidator.h\n- Remove magic number and hard type enums in DrawViewPart.h",
+  "origin": {
+    "repository": "https://github.com/FreeCAD/FreeCAD",
+    "commit": "a050e422e23ce3eaee960b75ceff236b34f369b9",
+    "license": "LGPL-2.0-or-later",
+    "source_case": "https://github.com/FreeCAD/FreeCAD/pull/19411",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/Mod/TechDraw/App/DrawProjGroup.cpp",
+      "line_start": 1123,
+      "line_end": 1126,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Optimization suggestion: `getDirsFromFront(t)` is currently called for every view in the…",
+      "description": "Optimization suggestion: `getDirsFromFront(t)` is currently called for every view in the loop. If multiple views share the same `ProjDirection` `t`, this results in redundant calculations. \n\nConsider checking if `t` is already in `saveVals` before calling `getDirsFromFront`.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "Optimization suggestion: `getDirsFromFront(t)` is currently called for every view in the loop. If multiple views share the same `ProjDirection` `t`, this results in redundant calculations. \n\nConsider checking if `t` is already in `saveVals` before calling `getDirsFromFront`.\n"
+    },
+    {
+      "id": "i2",
+      "file": "src/Mod/TechDraw/App/DrawProjGroup.cpp",
+      "line_start": 1127,
+      "line_end": 1132,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The commented-out code block should be removed entirely rather than left as a TODO comment",
+      "description": "The commented-out code block should be removed entirely rather than left as a TODO comment. Dead code in comments can cause confusion and should be cleaned up.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The commented-out code block should be removed entirely rather than left as a TODO comment. Dead code in comments can cause confusion and should be cleaned up.\n"
+    },
+    {
+      "id": "i3",
+      "file": "src/Mod/TechDraw/App/DrawProjGroup.cpp",
+      "line_start": 1144,
+      "line_end": 1153,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Unresolved TODO comment left in code regarding potential refactoring of identical functio…",
+      "description": "Unresolved TODO comment left in code regarding potential refactoring of identical functions to DrawView.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Unresolved TODO comment left in code regarding potential refactoring of identical functions to DrawView."
+    },
+    {
+      "id": "i4",
+      "file": "src/Mod/TechDraw/App/DrawProjGroup.h",
+      "line_start": 46,
+      "line_end": 48,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential C++ standard violation: The forward declarations specify the underlying type as…",
+      "description": "Potential C++ standard violation: The forward declarations specify the underlying type as `: int`, but the actual enum definitions in DrawViewPart.h do not specify an underlying type. According to C++ rules, forward declarations must match the definition exactly. Either remove `: int` from these forward declarations in DrawProjGroup.h, or add `: int` to the enum definitions in DrawViewPart.h.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential C++ standard violation: The forward declarations specify the underlying type as `: int`, but the actual enum definitions in DrawViewPart.h do not specify an underlying type. According to C++ rules, forward declarations must match the definition exactly. Either remove `: int` from these forward declarations in DrawProjGroup.h, or add `: int` to the enum definitions in DrawViewPart.h."
+    },
+    {
+      "id": "i5",
+      "file": "src/Mod/TechDraw/App/DrawProjGroup.h",
+      "line_start": 133,
+      "line_end": 134,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Enums should typically be passed by value (they are small integral types)",
+      "description": "Enums should typically be passed by value (they are small integral types). Passing by `const&` adds indirection and can complicate usage; also keep naming consistent (`rotationdirection` vs type `RotationMotion`).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Enums should typically be passed by value (they are small integral types). Passing by `const&` adds indirection and can complicate usage; also keep naming consistent (`rotationdirection` vs type `RotationMotion`)."
+    },
+    {
+      "id": "i6",
+      "file": "src/Mod/TechDraw/App/DrawViewPart.cpp",
+      "line_start": 96,
+      "line_end": 96,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Commented-out type alias `ProjDirection` should be removed as it creates unnecessary code…",
+      "description": "Commented-out type alias `ProjDirection` should be removed as it creates unnecessary code clutter and provides no functional value.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Commented-out type alias `ProjDirection` should be removed as it creates unnecessary code clutter and provides no functional value."
+    },
+    {
+      "id": "i7",
+      "file": "src/Mod/TechDraw/App/DrawViewPart.cpp",
+      "line_start": 1300,
+      "line_end": 1303,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Using separate if statements instead of else-if may evaluate both conditions unnecessarily",
+      "description": "Using separate if statements instead of else-if may evaluate both conditions unnecessarily. Consider using else if to ensure mutual exclusivity.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "Using separate if statements instead of else-if may evaluate both conditions unnecessarily. Consider using else if to ensure mutual exclusivity.\n"
+    },
+    {
+      "id": "i8",
+      "file": "src/Mod/TechDraw/App/DrawViewPart.cpp",
+      "line_start": 1385,
+      "line_end": 1393,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Commenting out the error handling branch removes fallback behavior for unknown projection…",
+      "description": "Commenting out the error handling branch removes fallback behavior for unknown projection types. Verify this is intentional.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Commenting out the error handling branch removes fallback behavior for unknown projection types. Verify this is intentional.\n"
+    },
+    {
+      "id": "i9",
+      "file": "src/Mod/TechDraw/App/Preferences.cpp",
+      "line_start": 180,
+      "line_end": 181,
+      "category": "correctness",
+      "severity": null,
+      "title": "Directly casting an integer preference value to ArrowType without bounds/validation risks…",
+      "description": "Directly casting an integer preference value to ArrowType without bounds/validation risks creating invalid enum states. Consider validating input against known ArrowType limits.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Directly casting an integer preference value to ArrowType without bounds/validation risks creating invalid enum states. Consider validating input against known ArrowType limits.\n"
+    },
+    {
+      "id": "i10",
+      "file": "src/Mod/TechDraw/Gui/CommandCreateDims.cpp",
+      "line_start": 2383,
+      "line_end": 2383,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Typo in variable name: 'acceptableDimensionGeometrys' should be 'acceptableDimensionGeome…",
+      "description": "Typo in variable name: 'acceptableDimensionGeometrys' should be 'acceptableDimensionGeometries'.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Typo in variable name: 'acceptableDimensionGeometrys' should be 'acceptableDimensionGeometries'.\n"
+    },
+    {
+      "id": "i11",
+      "file": "src/Mod/TechDraw/Gui/DimensionValidators.cpp",
+      "line_start": 391,
+      "line_end": 392,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential typo: Should return DimensionGeometry::isVertical instead of isHorizontal",
+      "description": "Potential typo: Should return DimensionGeometry::isVertical instead of isHorizontal",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential typo: Should return DimensionGeometry::isVertical instead of isHorizontal\n"
+    },
+    {
+      "id": "i12",
+      "file": "src/Mod/TechDraw/Gui/DimensionValidators.cpp",
+      "line_start": 435,
+      "line_end": 437,
+      "category": "correctness",
+      "severity": null,
+      "title": "Bug: This should return `DimensionGeometry::isVertical` instead of `DimensionGeometry::is…",
+      "description": "Bug: This should return `DimensionGeometry::isVertical` instead of `DimensionGeometry::isHorizontal`. When `line.x` is near zero (FLT_EPSILON), the line is vertical, not horizontal.\n\nThe condition checks `fabs(line.x) < FLT_EPSILON` which means the x-component is negligible, making the line vertical.\n\n**Fix needed:**\n```cpp\n} else if (fabs(line.x) < FLT_EPSILON) {\n    return DimensionGeometry::isVertical;\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Bug: This should return `DimensionGeometry::isVertical` instead of `DimensionGeometry::isHorizontal`. When `line.x` is near zero (FLT_EPSILON), the line is vertical, not horizontal.\n\nThe condition checks `fabs(line.x) < FLT_EPSILON` which means the x-component is negligible, making the line vertical.\n\n**Fix needed:**\n```cpp\n} else if (fabs(line.x) < FLT_EPSILON) {\n    return DimensionGeometry::isVertical;\n```"
+    },
+    {
+      "id": "i13",
+      "file": "src/Mod/TechDraw/Gui/DimensionValidators.cpp",
+      "line_start": 675,
+      "line_end": 677,
+      "category": "correctness",
+      "severity": null,
+      "title": "Bug: This should return `DimensionGeometry::isVertical` instead of `DimensionGeometry::is…",
+      "description": "Bug: This should return `DimensionGeometry::isVertical` instead of `DimensionGeometry::isHorizontal`. When `line.x` is near zero (FLT_EPSILON), the line is vertical, not horizontal.\n\nThe condition checks `fabs(line.x) < FLT_EPSILON` which means the x-component is negligible, making the line vertical.\n\n**Fix needed:**\n```cpp\n} else if (fabs(line.x) < FLT_EPSILON) {\n    return DimensionGeometry::isVertical;\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Bug: This should return `DimensionGeometry::isVertical` instead of `DimensionGeometry::isHorizontal`. When `line.x` is near zero (FLT_EPSILON), the line is vertical, not horizontal.\n\nThe condition checks `fabs(line.x) < FLT_EPSILON` which means the x-component is negligible, making the line vertical.\n\n**Fix needed:**\n```cpp\n} else if (fabs(line.x) < FLT_EPSILON) {\n    return DimensionGeometry::isVertical;\n```"
+    },
+    {
+      "id": "i14",
+      "file": "src/Mod/TechDraw/Gui/DimensionValidators.h",
+      "line_start": 70,
+      "line_end": 70,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Spelling/API naming: `acceptableDimensionGeometrys` is an incorrect plural (should be `ac…",
+      "description": "Spelling/API naming: `acceptableDimensionGeometrys` is an incorrect plural (should be `acceptableDimensionGeometries`). Since this is part of the function signature in a header, the typo propagates to all callers and hurts readability/searchability. Consider renaming (and updating callers) or providing a backward-compatible overload/typedef during transition.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Spelling/API naming: `acceptableDimensionGeometrys` is an incorrect plural (should be `acceptableDimensionGeometries`). Since this is part of the function signature in a header, the typo propagates to all callers and hurts readability/searchability. Consider renaming (and updating callers) or providing a backward-compatible overload/typedef during transition."
+    },
+    {
+      "id": "i15",
+      "file": "src/Mod/TechDraw/Gui/DimensionValidators.h",
+      "line_start": 83,
+      "line_end": 84,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Typo in parameter name: 'minimumCouts' should be 'minimumCounts' for consistency and corr…",
+      "description": "Typo in parameter name: 'minimumCouts' should be 'minimumCounts' for consistency and correctness.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Typo in parameter name: 'minimumCouts' should be 'minimumCounts' for consistency and correctness.\n"
+    },
+    {
+      "id": "i16",
+      "file": "src/Mod/TechDraw/Gui/DlgPrefsTechDrawAnnotationImp.cpp",
+      "line_start": 169,
+      "line_end": 169,
+      "category": "correctness",
+      "severity": null,
+      "title": "`prefBalloonArrow()` now returns `TechDraw::ArrowType` and is cast to an int for `setCurr…",
+      "description": "`prefBalloonArrow()` now returns `TechDraw::ArrowType` and is cast to an int for `setCurrentIndex()`. Consider validating the resulting index against the combobox range to handle corrupted/unknown stored preference values (or enum changes across versions). Without a guard, Qt may end up with an invalid index (-1) and the UI may not reflect the actual preference/default as intended.\n\n```suggestion\n    const int idx = static_cast<int>(prefBalloonArrow());\n    ui->pcbBalloonArrow->setCurrentIndex((idx >= 0 && idx < ui->pcbBalloonArrow->count()) ? idx : 0);\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`prefBalloonArrow()` now returns `TechDraw::ArrowType` and is cast to an int for `setCurrentIndex()`. Consider validating the resulting index against the combobox range to handle corrupted/unknown stored preference values (or enum changes across versions). Without a guard, Qt may end up with an invalid index (-1) and the UI may not reflect the actual preference/default as intended.\n\n```suggestion\n    const int idx = static_cast<int>(prefBalloonArrow());\n    ui->pcbBalloonArrow->setCurrentIndex((idx >= 0 && idx < ui->pcbBalloonArrow->count()) ? idx : 0);\n```"
+    },
+    {
+      "id": "i17",
+      "file": "src/Mod/TechDraw/Gui/DlgPrefsTechDrawDimensionsImp.cpp",
+      "line_start": 150,
+      "line_end": 150,
+      "category": "correctness",
+      "severity": null,
+      "title": "`prefArrowStyle()` returning `TechDraw::ArrowType` improves type safety, but `setCurrentI…",
+      "description": "`prefArrowStyle()` returning `TechDraw::ArrowType` improves type safety, but `setCurrentIndex(static_cast<int>(prefArrowStyle()))` assumes the enum values match the combobox ordering and are within range. If the stored preference is out-of-range/unknown (e.g., older config or manual edits), this can set an invalid index. Prefer validating against `count()` or mapping enum->index explicitly (e.g., store enum as itemData and use `findData`).\n\n```suggestion\n    const int idx = static_cast<int>(prefArrowStyle());\n    ui->pcbArrow->setCurrentIndex((idx >= 0 && idx < ui->pcbArrow->count()) ? idx : 0);\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`prefArrowStyle()` returning `TechDraw::ArrowType` improves type safety, but `setCurrentIndex(static_cast<int>(prefArrowStyle()))` assumes the enum values match the combobox ordering and are within range. If the stored preference is out-of-range/unknown (e.g., older config or manual edits), this can set an invalid index. Prefer validating against `count()` or mapping enum->index explicitly (e.g., store enum as itemData and use `findData`).\n\n```suggestion\n    const int idx = static_cast<int>(prefArrowStyle());\n    ui->pcbArrow->setCurrentIndex((idx >= 0 && idx < ui->pcbArrow->count()) ? idx : 0);\n```"
+    },
+    {
+      "id": "i18",
+      "file": "src/Mod/TechDraw/Gui/QGIArrow.h",
+      "line_start": 86,
+      "line_end": 86,
+      "category": "correctness",
+      "severity": null,
+      "title": "Consider initializing m_style explicitly (e.g., to a sensible default like TechDraw::Arro…",
+      "description": "Consider initializing m_style explicitly (e.g., to a sensible default like TechDraw::ArrowType::FILLED_TRIANGLE or preference value) to avoid uninitialized enum usage. Changing from int to enum makes it easier to assume validity, but it still needs initialization in the constructor/initializer list.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Consider initializing m_style explicitly (e.g., to a sensible default like TechDraw::ArrowType::FILLED_TRIANGLE or preference value) to avoid uninitialized enum usage. Changing from int to enum makes it easier to assume validity, but it still needs initialization in the constructor/initializer list."
+    },
+    {
+      "id": "i19",
+      "file": "src/Mod/TechDraw/Gui/QGILeaderLine.cpp",
+      "line_start": 429,
+      "line_end": 438,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Reusing the same variable 'choice' for both start and end arrow types reduces code clarity",
+      "description": "Reusing the same variable 'choice' for both start and end arrow types reduces code clarity. Consider using separate descriptive variables like 'startArrowType' and 'endArrowType' to make the code more readable and maintainable.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Reusing the same variable 'choice' for both start and end arrow types reduces code clarity. Consider using separate descriptive variables like 'startArrowType' and 'endArrowType' to make the code more readable and maintainable.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/Mod/TechDraw/App/DrawProjGroup.cpp",
+      "line_start": 1127,
+      "line_end": 1132,
+      "description": "The refactored code removes error handling for invalid projection types without implementing alternative validation. The commented-out default case that previously logged errors for invalid `ProjDirection` values should either be reimplemented with proper enum validation or explicitly documented as intentionally omitted."
+    },
+    {
+      "file": "src/Mod/TechDraw/App/DrawProjGroup.cpp",
+      "line_start": 1147,
+      "line_end": 1147,
+      "description": "The function `DrawProjGroup::rotate` now expects a `RotationMotion` parameter type, but call sites still pass `RotationDirection` enum values, causing a type mismatch compilation error."
+    },
+    {
+      "file": "src/Mod/TechDraw/App/DrawProjGroup.cpp",
+      "line_start": 1157,
+      "line_end": 1163,
+      "description": "Critical bug: The second 'if' should be 'else if'. Currently, if 'spindirection' is neither CW nor CCW, the variable 'angle' will be uninitialized when passed to spin(angle). This could lead to undefined behavior."
+    },
+    {
+      "file": "src/Mod/TechDraw/App/DrawProjGroup.h",
+      "line_start": 46,
+      "line_end": 48,
+      "description": "This header exposes `ProjDirection/RotationDirection/RotationMotion` in public method signatures but only forward-declares them, and this file does not include any header that defines these enums. If the enum definitions are not visible to translation units including DrawProjGroup.h, you can get compile errors or mismatched forward declaration vs definition (ODR). Prefer including the header that defines these enums here (or move the enum definitions into a common header included by both .h/.cpp)."
+    },
+    {
+      "file": "src/Mod/TechDraw/App/DrawViewBalloon.cpp",
+      "line_start": 73,
+      "line_end": 73,
+      "description": "Casting `Preferences::balloonArrow()` to `int` may be unnecessary and can reduce type-safety. If `EndType` is an enum property (given `setEnums(...)`), prefer passing the enum directly. If the property API truly requires an integer, prefer an explicit underlying-type conversion (e.g., `std::to_underlying` in C++23 / helper) to document intent and keep it aligned if the enum underlying type changes."
+    },
+    {
+      "file": "src/Mod/TechDraw/App/DrawViewDimension.cpp",
+      "line_start": 1565,
+      "line_end": 1582,
+      "description": "`getRefTypeSubElements` computes `refType` via a series of independent `if` statements. While the current conditions are mutually exclusive today, keeping them as separate `if`s makes future edits risky (a new condition could accidentally override an earlier match). After switching to a strongly-typed `RefType`, consider using an `else if` chain or early-returns to make exclusivity explicit and prevent accidental overwrites.\n\nAlso consider switching the subsequent `if`s to `else if` for clarity and to communicate that exactly one configuration is expected.\n\n```suggestion\n    if (refEdges == 0 && refVertices == 2 && refFaces == 0) {\n        return RefType::twoVertex;\n    }\n    else if (refEdges == 0 && refVertices == 3 && refFaces == 0) {\n        return RefType::threeVertex;\n    }\n    else if (refEdges == 1 && refVertices == 0 && refFaces == 0) {\n        return RefType::oneEdge;\n    }\n    else if (refEdges == 1 && refVertices == 1 && refFaces == 0) {\n        return RefType::vertexEdge;\n    }\n    else if (refEdges == 2 && refVertices == 0 && refFaces == 0) {\n        return RefType::twoEdge;\n    }\n    else if (refEdges == 0 && refVertices == 0 && refFaces == 1) {\n        return RefType::oneFace;\n    }\n\n    return RefType::invalidRef;\n```"
+    },
+    {
+      "file": "src/Mod/TechDraw/App/DrawViewPart.h",
+      "line_start": 96,
+      "line_end": 106,
+      "description": "The enum names `RotationDirection` and `RotationMotion` are confusing and inconsistent with their intended semantics; rename `RotationDirection` to `SpinDirection` and `RotationMotion` to `RotationDirection`."
+    },
+    {
+      "file": "src/Mod/TechDraw/App/DrawViewPart.h",
+      "line_start": 203,
+      "line_end": 203,
+      "description": "Critical error handling regression: The fallback branch for handling unknown projection directions has been removed. If an invalid ProjDirection enum value reaches this function, it will not return a valid pair and could cause undefined behavior. This error handling should be restored."
+    },
+    {
+      "file": "src/Mod/TechDraw/App/Preferences.cpp",
+      "line_start": 178,
+      "line_end": 178,
+      "description": "The balloonArrow() function should be declared as const since it doesn't modify the object state. This allows calling the function on const objects."
+    },
+    {
+      "file": "src/Mod/TechDraw/App/Preferences.h",
+      "line_start": 43,
+      "line_end": 43,
+      "description": "`Preferences::balloonArrow()` now returns `ArrowType`, but this header only forward-declares the enum. That’s technically OK for a return type, however it can easily cause compile/build-order issues for callers that include `Preferences.h` and want to use enum enumerators (e.g., `ArrowType::FILLED_ARROW`) without including `ArrowPropEnum.h`. Consider including the defining header here (or providing a dedicated public header that defines `ArrowType`) to avoid fragile transitive-include dependencies.\n\nAlso ensure the definition keeps the same underlying type (`: int`) everywhere; otherwise the forward declaration would be ill-formed."
+    },
+    {
+      "file": "src/Mod/TechDraw/Gui/CommandCreateDims.cpp",
+      "line_start": 2132,
+      "line_end": 2132,
+      "description": "Potential compile/logic issue: this comparison uses an unqualified `isInvalid` after the refactor to `DimensionGeometry`. In this file other checks were updated to `DimensionGeometry::isInvalid`. Leaving this unqualified may fail to compile (if the enumerator isn’t in scope) or accidentally bind to a different symbol. Consider qualifying it consistently.\n\nAlso consider making `acceptableDimensionGeometrys` a `const std::vector<DimensionGeometry>&` in `execDim/execExtent` signatures if you want to avoid copies (not required for correctness but can reduce allocations)."
+    },
+    {
+      "file": "src/Mod/TechDraw/Gui/DimensionValidators.cpp",
+      "line_start": 636,
+      "line_end": 636,
+      "description": "Bug: This should return `DimensionGeometry::isVertical` instead of `DimensionGeometry::isHorizontal`. When `line.x` is near zero (FLT_EPSILON), the line is vertical, not horizontal.\n\nThe condition checks `fabs(line.x) < FLT_EPSILON` which means the x-component is negligible, making the line vertical.\n\n**Fix needed:**\n```cpp\n} else if (fabs(line.x) < FLT_EPSILON) {\n    return DimensionGeometry::isVertical;\n```"
+    },
+    {
+      "file": "src/Mod/TechDraw/Gui/QGILeaderLine.cpp",
+      "line_start": 429,
+      "line_end": 429,
+      "description": "The local variable 'choice' should be declared as 'const' since it's not modified after initialization. This improves const correctness and clearly expresses the intent that the value won't change.\n\nSuggestion: `const ArrowType choice = static_cast<ArrowType>(featLeader->StartSymbol.getValue());`"
+    },
+    {
+      "file": "src/Mod/TechDraw/Gui/QGILeaderLine.cpp",
+      "line_start": 520,
+      "line_end": 550,
+      "description": "Same variable reuse issue here - using 'choice' for both start and end arrow types. Use separate descriptive variables to improve code readability."
+    },
+    {
+      "file": "src/Mod/TechDraw/Gui/QGISectionLine.cpp",
+      "line_start": 144,
+      "line_end": 144,
+      "description": "Good improvement replacing magic number 0 with ArrowType::FILLED_ARROW for better readability and type safety. However, for consistency with the ArrowType enum class refactoring, consider also converting the arrow mode macros (SINGLEDIRECTIONMODE, MULTIDIRECTIONMODE) to an enum class to eliminate all magic numbers in arrow-related code."
+    },
+    {
+      "file": "src/Mod/TechDraw/Gui/TaskLeaderLine.cpp",
+      "line_start": 236,
+      "line_end": 237,
+      "description": "`dimArrowStyle()` now returns `ArrowType`, but `QComboBox::setCurrentIndex()` expects an index into the items you loaded via `DrawGuiUtil::loadArrowBox()`. This assumes the enum underlying values exactly match the combo item ordering. If the combo is populated in a different order (or enum values are non-contiguous), the wrong item will be selected.\n\nSuggestion: map enum->index explicitly (e.g., find item by associated userData storing the enum), or provide a helper like `DrawGuiUtil::setArrowBoxValue(combo, ArrowType)` / `arrowTypeToComboIndex()` and use that here. Also consider validating the index (>=0) before setting it."
+    },
+    {
+      "file": "src/Mod/TechDraw/Gui/TaskLinkDim.cpp",
+      "line_start": 95,
+      "line_end": 95,
+      "description": "Consider declaring loop variable as 'const auto*' to enforce immutable access to viewed items."
+    },
+    {
+      "file": "src/Mod/TechDraw/Gui/TaskProjGroup.cpp",
+      "line_start": 447,
+      "line_end": 452,
+      "description": "TaskProjGroup.cpp now uses RotationMotion/RotationDirection. These enums are defined in TechDraw::DrawViewPart.h, but this .cpp does not include that header directly (it only includes DrawViewPart.h today—good). However, the types are unqualified here (RotationMotion::Up), relying on `using namespace TechDraw;`. Consider explicitly qualifying as `TechDraw::RotationMotion` / `TechDraw::RotationDirection` (or adding a local `using` alias) to avoid accidental name collisions and improve readability. Also ensure the needed defining header is included directly (not via transitive includes) if this file is ever refactored to drop `DrawViewPart.h`."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/FreeCAD/FreeCAD/pull/19411). Upstream base fbb1225f909bd7de602d9cd1b540d8099ca3429a = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 862. Severity absent in the source. i1: AI comment (Gemini-3-Pro), File Level; i2: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i3: human comment, File Level; i4: AI comment (GLM-4.7), Repo Level; i5: AI comment (GPT-5.2), Diff Level; i6: human comment, Diff Level; i7: AI comment (Qwen-Coder-480B), Diff Level; i8: AI comment (Qwen-Coder-480B), Diff Level; i9: AI comment (Qwen-Coder-480B), Diff Level; i10: AI comment (Gemini-3-Pro), Diff Level; i11: AI comment (Qwen-Coder-480B), Diff Level; i12: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i13: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i14: AI comment (GPT-5.2), Diff Level; i15: AI comment (Qwen-Coder-480B), File Level; i16: AI comment (GPT-5.2), File Level; i17: AI comment (GPT-5.2), File Level; i18: AI comment (GPT-5.2), File Level; i19: AI comment (Deepseek-V3.2), Diff Level"
+}

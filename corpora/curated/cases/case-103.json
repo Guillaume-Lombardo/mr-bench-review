@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-103",
+  "language": "typescript",
+  "size": "large",
+  "kind": "real",
+  "tier": "core",
+  "base_branch": "bench/curated/case-103/base",
+  "head_branch": "bench/curated/case-103/head",
+  "base_sha": "84482661168ba97e66ba2a5122a60500ac02f613",
+  "head_sha": "ffec2e3ff3553628051e0655922445839b3e9f1a",
+  "mr_title": "extract chat input widget",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/microsoft/vscode",
+    "commit": "45aeec810806fd01d9b42f0e723181a2b16fe86d",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/vs/sessions/contrib/chat/browser/newChatViewPane.ts",
+      "line_start": 85,
+      "line_end": 85,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Disposable returned by _renderWorkspacePicker() is discarded",
+      "description": "render() discards the IDisposable returned by _renderWorkspacePicker(), so the workspace-selection event subscription is never disposed and leaks with every widget.\n\n_renderWorkspacePicker() returns the onDidSelectWorkspace subscription. Ignoring the return value leaves the listener attached after the widget is disposed (VS Code's leak detector reports it), and a disposed widget may keep reacting to selection events. The result must be registered on the widget (this._register(...)).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/microsoft/vscode/commit/45aeec810806fd01d9b42f0e723181a2b16fe86d. Primary issue confirmed by the later upstream fix https://github.com/microsoft/vscode/commit/ee95c6e7c1cfe4d8a2c0c8ba6cf223bf2f1d07b0; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

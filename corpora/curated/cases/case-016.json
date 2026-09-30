@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-016",
+  "language": "typescript",
+  "size": "small",
+  "kind": "clean",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-016/base",
+  "head_branch": "bench/curated/case-016/head",
+  "base_sha": "f5cf070056ab8628cb3ccbe44d296c0718bfc73b",
+  "head_sha": "f8af234b2f1205ba7c92ab6bc4c0b4743df27aa0",
+  "mr_title": "fix(compiler): ignore placeholder-only i18n messages",
+  "mr_description": "Message which only contain a single placeholder cannot be translated, there is no static text to be translated. Therefore these messages can be skipped and shouldn't be extracted at all.\n\nIdeally, Angular would throw an error if a message is only a placeholder, since it should not contain an `i18n` attribute at all. However this would be a breaking change and require a migration which isn't in scope right now. We can explore converting this to a hard error sometime in the future.",
+  "origin": {
+    "repository": "https://github.com/angular/angular",
+    "commit": "ba4340875ac8e338ff1390fc7897eecc704ef7c5",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/angular/angular/commit/ba4340875ac8e338ff1390fc7897eecc704ef7c5. No known defect: at least 90% of its added lines were still unchanged upstream on 2026-09-30 and no later commit reports it as faulty. This is not proof of absence. Curator difficulty: medium. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

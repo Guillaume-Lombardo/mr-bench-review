@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-168",
+  "language": "c",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-168/base",
+  "head_branch": "bench/aacr/aacr-168/head",
+  "base_sha": "dca56ee33c439ab541436089059a3e816a76623e",
+  "head_sha": "9d43cc8414b8d8c9155a545ae1cbae528913a5b4",
+  "mr_title": "misc/language: parse forced tag from external subtitle tracks",
+  "mr_description": "This also adds a `forced` argument to the `sub-add` command.",
+  "origin": {
+    "repository": "https://github.com/mpv-player/mpv",
+    "commit": "0b0330fa9d5d70c78f36e1010a3b826fa7046387",
+    "license": "GPL-2.0-or-later OR LGPL-2.1-or-later",
+    "source_case": "https://github.com/mpv-player/mpv/pull/16061",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "misc/language.c",
+      "line_start": 332,
+      "line_end": 332,
+      "category": "correctness",
+      "severity": null,
+      "title": "The current implementation uses a single `checked_tag` state variable for multiple subtit…",
+      "description": "The current implementation uses a single `checked_tag` state variable for multiple subtitle flags (hearing impaired and forced), which fails to correctly parse filenames containing both tags in arbitrary order (e.g., `en.hi.forced.srt` vs `en.forced.hi.srt`); separate state tracking per flag is required.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The current implementation uses a single `checked_tag` state variable for multiple subtitle flags (hearing impaired and forced), which fails to correctly parse filenames containing both tags in arbitrary order (e.g., `en.hi.forced.srt` vs `en.forced.hi.srt`); separate state tracking per flag is required."
+    },
+    {
+      "id": "i2",
+      "file": "misc/language.c",
+      "line_start": 340,
+      "line_end": 342,
+      "category": "correctness",
+      "severity": null,
+      "title": "The use of `checked_tag` (previously `checked_hi`) prevents detecting multiple tags if th…",
+      "description": "The use of `checked_tag` (previously `checked_hi`) prevents detecting multiple tags if they appear together, such as in `movie.en.forced.sdh.srt` or `movie.en.sdh.forced.srt`.\n\nIf `movie.en.forced.sdh.srt` is encountered:\n1. `sdh` is detected, `checked_tag` becomes true.\n2. `forced` is encountered next. Since `checked_tag` is true, it skips the tag check.\n3. `forced` is then treated as a language candidate but fails the length check (6 chars).\nResult: Language detection fails.\n\nIf `movie.en.sdh.forced.srt` is encountered:\n1. `forced` is detected, `checked_tag` becomes true.\n2. `sdh` is encountered next. Since `checked_tag` is true, it skips the tag check.\n3. `sdh` is treated as a language candidate (length 3).\nResult: Language is incorrectly detected as \"sdh\".\n\nConsider removing `checked_tag` or resetting it to allow multiple tags to be stripped and detected correctly.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The use of `checked_tag` (previously `checked_hi`) prevents detecting multiple tags if they appear together, such as in `movie.en.forced.sdh.srt` or `movie.en.sdh.forced.srt`.\n\nIf `movie.en.forced.sdh.srt` is encountered:\n1. `sdh` is detected, `checked_tag` becomes true.\n2. `forced` is encountered next. Since `checked_tag` is true, it skips the tag check.\n3. `forced` is then treated as a language candidate but fails the length check (6 chars).\nResult: Language detection fails.\n\nIf `movie.en.sdh.forced.srt` is encountered:\n1. `forced` is detected, `checked_tag` becomes true.\n2. `sdh` is encountered next. Since `checked_tag` is true, it skips the tag check.\n3. `sdh` is treated as a language candidate (length 3).\nResult: Language is incorrectly detected as \"sdh\".\n\nConsider removing `checked_tag` or resetting it to allow multiple tags to be stripped and detected correctly.\n"
+    },
+    {
+      "id": "i3",
+      "file": "player/loadfile.c",
+      "line_start": 993,
+      "line_end": 993,
+      "category": "correctness",
+      "severity": null,
+      "title": "This reads `e->forced`; please ensure this field is always initialized for every entry re…",
+      "description": "This reads `e->forced`; please ensure this field is always initialized for every entry returned by `find_external_files()` (including default false), otherwise it can propagate uninitialized data into `flags`.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "This reads `e->forced`; please ensure this field is always initialized for every entry returned by `find_external_files()` (including default false), otherwise it can propagate uninitialized data into `flags`."
+    },
+    {
+      "id": "i4",
+      "file": "test/language.c",
+      "line_start": 104,
+      "line_end": 104,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The test coverage is incomplete for combined hearing impaired and forced subtitle scenari…",
+      "description": "The test coverage is incomplete for combined hearing impaired and forced subtitle scenarios. Add test cases where both `hearing_impaired` and `forced` flags are true simultaneously, and include test cases with reversed tag ordering (e.g., \"[forced][hi]\" instead of \"[hi][forced]\").",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The test coverage is incomplete for combined hearing impaired and forced subtitle scenarios. Add test cases where both `hearing_impaired` and `forced` flags are true simultaneously, and include test cases with reversed tag ordering (e.g., \"[forced][hi]\" instead of \"[hi][forced]\")."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "DOCS/man/input.rst",
+      "line_start": 680,
+      "line_end": 680,
+      "description": "Documentation inconsistency: The backticks for `video-add` in the `<attached-picture>` description use triple backticks (```) instead of double backticks (`). This is inconsistent with the formatting used for `sub-add` in the `<forced>` description above. Please change ```video-add``` to `video-add` for consistency."
+    },
+    {
+      "file": "misc/language.c",
+      "line_start": 300,
+      "line_end": 300,
+      "description": "The function's growing boolean parameters (`hearing_impaired`, `forced`) cause duplication in call sites; consolidate into a single `enum track_flags` parameter for maintainability and reduced redundancy."
+    },
+    {
+      "file": "misc/language.c",
+      "line_start": 350,
+      "line_end": 357,
+      "description": "Delimiter handling: the tag extraction triggers only when `name.start[i] == delimiter`. If `delimiter` can be '-' or '_' etc., ensure `tag` parsing and the `i -= (delimiter != '.') ? 2 : 1;` adjustment remains correct for all delimiters (this offset is a bit non-obvious and easy to get wrong). Consider refactoring the index rewind into a helper or add an assertion/comment explaining why the decrement differs for '.' vs others to avoid off-by-one mistakes in future changes."
+    },
+    {
+      "file": "player/command.c",
+      "line_start": 7159,
+      "line_end": 7160,
+      "description": "The new `forced` flag is registered in the generic `*-add` flags list here, which means it may be accepted for other add commands too (e.g., audio-add/video-add) unless additional validation exists elsewhere. Docs say it's only for `sub-add`. Consider either (1) validating in the command handler and rejecting/ignoring `TRACK_FORCED` when the command isn’t `sub-add`, or (2) tightening option registration so `forced` is only available to `sub-add`, to avoid silently accepting meaningless flags."
+    },
+    {
+      "file": "player/external_files.c",
+      "line_start": 159,
+      "line_end": 160,
+      "description": "`forced` is parsed and stored, but in this function it currently doesn’t influence `prio` or filtering. If the intent is to prefer forced subtitles (or exclude them unless requested), consider incorporating `forced` into `prio` (e.g., add a flag/bit) or ensure downstream selection logic actually consumes `sub->forced`. Otherwise this becomes write-only metadata with no behavioral change."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/mpv-player/mpv/pull/16061). Upstream base 6c4218252278c582c7a40654c66f8216aac43326 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 159. Severity absent in the source. i1: human comment, Diff Level; i2: AI comment (Gemini-3-Pro), Diff Level; i3: AI comment (GPT-5.2), File Level; i4: human comment, Diff Level"
+}

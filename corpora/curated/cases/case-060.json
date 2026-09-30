@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-060",
+  "language": "python",
+  "size": "medium",
+  "kind": "clean",
+  "tier": "pilot",
+  "base_branch": "bench/curated/case-060/base",
+  "head_branch": "bench/curated/case-060/head",
+  "base_sha": "57268e7824821ccb98af2dd5c940141458f3cab7",
+  "head_sha": "39bb1927a26c9108e042bd1caf92f0387eebfd05",
+  "mr_title": "Allowed BaseUserCreationForm to define non required password fields.",
+  "mr_description": "Thanks buffgecko12 for the report and Sarah Boyce for the review.",
+  "origin": {
+    "repository": "https://github.com/django/django",
+    "commit": "d15454a6e84a595ffc8dc1b926282f484f782a8f",
+    "license": "BSD-3-Clause",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/d15454a6e84a595ffc8dc1b926282f484f782a8f. No known defect: at least 90% of its added lines were still unchanged upstream on 2026-09-30 and no later commit reports it as faulty. This is not proof of absence. Curator difficulty: easy. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

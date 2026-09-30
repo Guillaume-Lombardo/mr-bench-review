@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-061",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-061/base",
+  "head_branch": "bench/curated/case-061/head",
+  "base_sha": "f7c745bb3110edea8537f8450f019a155b0526ff",
+  "head_sha": "8cf3a2f43040f749a8ca7aec2be981727266348a",
+  "mr_title": "Accepted str or bytes for password and salt in password hashers.",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/django/django",
+    "commit": "78fac1b0473ed8960ecd2a30aca4fa8420d150b8",
+    "license": "BSD-3-Clause",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "django/contrib/auth/hashers.py",
+      "line_start": 328,
+      "line_end": 329,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "force_str() on bytes passwords fails for non-UTF-8 input",
+      "description": "force_str() on a bytes password raises UnicodeDecodeError for valid non-UTF-8 byte passwords in the PBKDF2 hasher (and the MD5 hasher), although the change claims to accept bytes.\n\nThe change advertises str-or-bytes support, but PBKDF2PasswordHasher.encode() decodes the password with force_str() before hashing, and MD5PasswordHasher decodes both salt and password. Any bytes password that is not valid UTF-8 now raises UnicodeDecodeError instead of being hashed; hashing functions should use force_bytes() and never decode the secret.",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "django/contrib/auth/hashers.py",
+          "line_start": 662,
+          "line_end": 663
+        }
+      ],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/78fac1b0473ed8960ecd2a30aca4fa8420d150b8. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/356e5b0f5ddb473eec3ed96d8ad9a37f3f8585eb; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

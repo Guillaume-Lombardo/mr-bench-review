@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-015",
+  "language": "go",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-015/base",
+  "head_branch": "bench/aacr/aacr-015/head",
+  "base_sha": "dddd3fcb6d85f7b1502cf659638267298174be64",
+  "head_sha": "8e1c5ce78c4bbc42a6f34e5e5e430fdcabadd2e6",
+  "mr_title": "Implement `containerSeemsToBeEmptyDomElement` (regex free)",
+  "mr_description": "- Implement `containerSeemsToBeEmptyDomElement` (regex free)\n- Add missing \"Element\" check\n- Use correct dom lib name\n- Revert dom change and add missing a-zA-Z check\n- Revert revert of lib.dom",
+  "origin": {
+    "repository": "https://github.com/microsoft/typescript-go",
+    "commit": "1a84d8d5705df98fd1e1f81d9d3115a7a203509d",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/microsoft/typescript-go/pull/691",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "internal/checker/checker.go",
+      "line_start": 10829,
+      "line_end": 10831,
+      "category": "correctness",
+      "severity": null,
+      "title": "The condition here seems logically inverted",
+      "description": "The condition here seems logically inverted. Currently, the check returns false (disabling further logic) when the DOM library is either unspecified (`nil`) or explicitly included (`Contains(...)`). This implies the subsequent DOM-specific checks are skipped precisely when DOM types would be valid/resolvable. Was the intention to disable these checks only when the DOM library is NOT available? Consider revising the condition.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The condition here seems logically inverted. Currently, the check returns false (disabling further logic) when the DOM library is either unspecified (`nil`) or explicitly included (`Contains(...)`). This implies the subsequent DOM-specific checks are skipped precisely when DOM types would be valid/resolvable. Was the intention to disable these checks only when the DOM library is NOT available? Consider revising the condition.\n"
+    },
+    {
+      "id": "i2",
+      "file": "internal/checker/checker.go",
+      "line_start": 10844,
+      "line_end": 10852,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The manual loop for validating ASCII letters in HTML element names should be replaced wit…",
+      "description": "The manual loop for validating ASCII letters in HTML element names should be replaced with the existing `stringutil.IsASCIILetter` utility function for cleaner and more maintainable code.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The manual loop for validating ASCII letters in HTML element names should be replaced with the existing `stringutil.IsASCIILetter` utility function for cleaner and more maintainable code."
+    },
+    {
+      "id": "i3",
+      "file": "internal/checker/checker.go",
+      "line_start": 10845,
+      "line_end": 10845,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential runtime panic: String slicing may cause index out of bounds",
+      "description": "Potential runtime panic: String slicing may cause index out of bounds. The code attempts to slice t.symbol.Name[4:len(t.symbol.Name)-7] but doesn't check if the string length is at least 11 characters. For short names like 'HTML' or 'Element', this will panic.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential runtime panic: String slicing may cause index out of bounds. The code attempts to slice t.symbol.Name[4:len(t.symbol.Name)-7] but doesn't check if the string length is at least 11 characters. For short names like 'HTML' or 'Element', this will panic.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "internal/checker/checker.go",
+      "line_start": 10836,
+      "line_end": 10842,
+      "description": "The DOM type name validation in `containerSeemsToBeEmptyDomElement` is overly verbose; replace the nested string prefix/suffix checks with a switch statement for fixed names (EventTarget/Node/Element) and `strings.CutPrefix`/`CutSuffix` for HTML*Element patterns to improve readability."
+    },
+    {
+      "file": "internal/checker/checker.go",
+      "line_start": 10844,
+      "line_end": 10852,
+      "description": "`t.symbol.Name[4:len-7]` slices by byte indices but the loop ranges over runes. If names ever contain non-ASCII (unlikely, but possible in malformed inputs), indexing could cut mid-UTF8 sequence. Consider guarding with `len` in bytes is fine for ASCII-only checks, or explicitly operate on bytes. Also, the heuristic currently rejects digits/hyphens in the middle, which might be too strict for some DOM names (e.g., SVG*Element types). Verify this matches expected baseline behavior."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/microsoft/typescript-go/pull/691). Upstream base da4e121142cd3f891785b573a194b9caaaa01d55 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 92. Severity absent in the source. i1: AI comment (Qwen-Coder-480B), Repo Level; i2: human comment, Repo Level; i3: AI comment (Deepseek-V3.2), Diff Level"
+}

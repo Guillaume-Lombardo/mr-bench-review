@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-162",
+  "language": "go",
+  "size": "large",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-162/base",
+  "head_branch": "bench/aacr/aacr-162/head",
+  "base_sha": "d73825750121076af5f9e6ef442d30970bd1134c",
+  "head_sha": "251ba0833d6c1456444abfe026346fe438791e28",
+  "mr_title": "Integration test improvements",
+  "mr_description": "Add some new test coverage for various model architectures,\nand switch from orca-mini to the small llama model.",
+  "origin": {
+    "repository": "https://github.com/ollama/ollama",
+    "commit": "498792c9be023ebfdaa1e0dbc6ac85c0ff8c75b1",
+    "license": "MIT",
+    "source_case": "https://github.com/ollama/ollama/pull/9654",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "integration/model_arch_test.go",
+      "line_start": 49,
+      "line_end": 49,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Suggestion to use named return values for `getTimeouts` function to clarify the purpose o…",
+      "description": "Suggestion to use named return values for `getTimeouts` function to clarify the purpose of each duration parameter (soft vs hard timeout).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Suggestion to use named return values for `getTimeouts` function to clarify the purpose of each duration parameter (soft vs hard timeout)."
+    },
+    {
+      "id": "i2",
+      "file": "integration/model_arch_test.go",
+      "line_start": 172,
+      "line_end": 172,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Unclear developer comment lacks context about embedding test maintenance workflow",
+      "description": "Unclear developer comment lacks context about embedding test maintenance workflow. The comment \"// Cut-and-paste the following into the table above\" needs clarification as it refers to the manual process of populating expected embedding values but doesn't explain its purpose in test maintenance.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Unclear developer comment lacks context about embedding test maintenance workflow. The comment \"// Cut-and-paste the following into the table above\" needs clarification as it refers to the manual process of populating expected embedding values but doesn't explain its purpose in test maintenance."
+    },
+    {
+      "id": "i3",
+      "file": "integration/utils_test.go",
+      "line_start": 291,
+      "line_end": 291,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Hardcoded model name \"llama3.2:1b\" should be extracted to a constant for easier future up…",
+      "description": "Hardcoded model name \"llama3.2:1b\" should be extracted to a constant for easier future updates and maintenance.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Hardcoded model name \"llama3.2:1b\" should be extracted to a constant for easier future updates and maintenance."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "integration/api_test.go",
+      "line_start": 386,
+      "line_end": 390,
+      "description": "The test code identifies a potential bug where non-stream responses may lack the 'done_reason' field, as indicated by the TODO comment questioning whether this behavior is expected or requires fixing. This inconsistency in API response structure needs verification against the intended protocol specification."
+    },
+    {
+      "file": "integration/model_arch_test.go",
+      "line_start": 36,
+      "line_end": 36,
+      "description": "Deprecated falcon:latest model is included in chatModels test suite; integration test results show it successfully generates responses despite expectations it should fail due to deprecation."
+    },
+    {
+      "file": "integration/model_arch_test.go",
+      "line_start": 184,
+      "line_end": 184,
+      "description": "Hardcoded model lists (`chatModels` and `embedModels`) should be moved to a testdata directory instead of being defined directly in the test code for better maintainability and adherence to Go testing conventions."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/ollama/ollama/pull/9654). Upstream base aee28501b592e2fe98863212913ffa8fb22e1ca0 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 776. Severity absent in the source. i1: human comment, Diff Level; i2: human comment, Diff Level; i3: human comment, File Level"
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-150",
+  "language": "java",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-150/base",
+  "head_branch": "bench/aacr/aacr-150/head",
+  "base_sha": "f7db641aa16f683d896d9702b1bb18ba3db80455",
+  "head_sha": "6655919f66e772c17444f310ddfd1572fd5b9f83",
+  "mr_title": "unmute tests",
+  "mr_description": "- unmute tests\n- revert\n- Merge remote-tracking branch 'upstream/main'\n- Merge remote-tracking branch 'upstream/main'\n- Merge remote-tracking branch 'upstream/main'\n- Merge remote-tracking branch 'upstream/main'\n- Add test for ES_5 custom analyzer - standard token filter\n- Add comment\n- Add consumer for custom assertions\n- Update javadoc\n- Add test cases for version 6 created snapshot\n- update code\n- Correct javadoc\n- Merge branch 'main' into test/add_custom_analyzer_old_versions\n- update after review\n- Merge branch 'main' into test/add_custom_analyzer_old_versions\n- Merge branch 'main' into test/add_custom_analyzer_old_versions\n- Delete deprecated code\n- Merge branch 'test/add_custom_analyzer_old_versions' of github.com:drempapis/elasticsearch into test/add_custom_analyzer_old_versions\n- Merge branch 'main' into test/add_custom_analyzer_old_versions",
+  "origin": {
+    "repository": "https://github.com/elastic/elasticsearch",
+    "commit": "a3bac5f2d4020183019a47d8d64c08123f7ec25d",
+    "license": "AGPL-3.0-only OR SSPL-1.0 OR Elastic-2.0",
+    "source_case": "https://github.com/elastic/elasticsearch/pull/119759",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "x-pack/qa/repository-old-versions-compatibility/src/javaRestTest/java/org/elasticsearch/oldrepos/TestSnapshotCases.java",
+      "line_start": 21,
+      "line_end": 21,
+      "category": "correctness",
+      "severity": null,
+      "title": "Constant `ES_VERSION_6` is incorrectly assigned the value `\"5\"` and documented for versio…",
+      "description": "Constant `ES_VERSION_6` is incorrectly assigned the value `\"5\"` and documented for version 5, but should represent version 6 with value `\"6\"` and an accurate comment.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Constant `ES_VERSION_6` is incorrectly assigned the value `\"5\"` and documented for version 5, but should represent version 6 with value `\"6\"` and an accurate comment."
+    },
+    {
+      "id": "i2",
+      "file": "x-pack/qa/repository-old-versions-compatibility/src/javaRestTest/java/org/elasticsearch/oldrepos/archiveindex/RestoreFromVersion5CustomAnalyzerIT.java",
+      "line_start": 49,
+      "line_end": 49,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Consider merging these two adjacent string literals into one for better readability and m…",
+      "description": "Consider merging these two adjacent string literals into one for better readability and maintainability.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Consider merging these two adjacent string literals into one for better readability and maintainability.\n"
+    },
+    {
+      "id": "i3",
+      "file": "x-pack/qa/repository-old-versions-compatibility/src/javaRestTest/resources/README.md",
+      "line_start": 127,
+      "line_end": 127,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Documentation error: Section header says \"Create Index Version 5\" but this is actually Ve…",
+      "description": "Documentation error: Section header says \"Create Index Version 5\" but this is actually Version 6 configuration. The mapping type \"doc\" is used in ES 6, not \"my_type\" which was used in ES 5.\n\n```suggestion\n### Create Index Version 6 - Custom-Analyzer\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Documentation error: Section header says \"Create Index Version 5\" but this is actually Version 6 configuration. The mapping type \"doc\" is used in ES 6, not \"my_type\" which was used in ES 5.\n\n```suggestion\n### Create Index Version 6 - Custom-Analyzer\n```"
+    },
+    {
+      "id": "i4",
+      "file": "x-pack/qa/repository-old-versions-compatibility/src/javaRestTest/resources/README.md",
+      "line_start": 186,
+      "line_end": 186,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The custom analyzer documentation section title incorrectly specifies version 5; it shoul…",
+      "description": "The custom analyzer documentation section title incorrectly specifies version 5; it should reference version 6.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The custom analyzer documentation section title incorrectly specifies version 5; it should reference version 6."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "x-pack/qa/repository-old-versions-compatibility/src/javaRestTest/java/org/elasticsearch/oldrepos/TestSnapshotCases.java",
+      "line_start": 10,
+      "line_end": 12,
+      "description": "Spelling/clarity: class-level Javadoc indentation is off and wording is a bit ambiguous. Consider clarifying that these are snapshot *case ids* (or resource base names) used by tests, and keep Javadoc formatting consistent (one space after `*`). Not functional, but improves readability and avoids confusion about whether these are full zip filenames vs base names."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/elastic/elasticsearch/pull/119759). Upstream base 4ac8d55ff7c5612413e4a45e14a2b39f3e85f3a9 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 494. Severity absent in the source. i1: human comment, Diff Level; i2: AI comment (Qwen-Coder-480B), File Level; i3: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i4: human comment, File Level"
+}

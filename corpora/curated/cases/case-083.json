@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-083",
+  "language": "java",
+  "size": "small",
+  "kind": "real",
+  "tier": "core",
+  "base_branch": "bench/curated/case-083/base",
+  "head_branch": "bench/curated/case-083/head",
+  "base_sha": "2c5c28ec83800be164479db317125b91d767cdfd",
+  "head_sha": "836dae148f751651b3f0663b9e2ed8e330f94d96",
+  "mr_title": "Optimize ByteBuf.setCharSequence for adaptive allocator",
+  "mr_description": "Motivation:\nThe `setCharSequence` method is used a fair bit when encoding HTTP\nheaders. I noticed the AdaptiveByteBuf was sending the call down a path\nwith a more indirections than strictly necessary.\n\nModification:\nImplement `setCharSequence` in the `AdaptiveByteBuf` so we skip a level\nof indirections. This is especially profitable for direct/off-heap\nbuffers, where we see up to a 50% performance improvement in the\nbenchmark. The benefit is greater the longer the string is.\n\nInterestingly, the benchmark also show that it isn't profitable to do\nthis for the `getCharSequence` sibling method.\n\nResult:\nDirect buffers from the adaptive allocator now have much faster\n`setCharSequence`, which will help with HTTP header encoding.",
+  "origin": {
+    "repository": "https://github.com/netty/netty",
+    "commit": "31c033a1d95eb4a74002c5f17ea01c967b07add9",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "buffer/src/main/java/io/netty/buffer/AdaptivePoolingAllocator.java",
+      "line_start": 1375,
+      "line_end": 1376,
+      "category": "security",
+      "severity": "critical",
+      "title": "Bounds check uses char count, allowing writes past the buffer window",
+      "description": "Bounds are checked against the number of chars, but the encoded byte length can be larger (UTF-8, multi-byte charsets), and the write goes directly to the shared root parent buffer, so it can overwrite memory belonging to other ByteBufs carved from the same chunk.\n\nAdaptiveByteBuf is a window into a larger shared chunk. checkIndex(index, sequence.length()) only guarantees room for one byte per char; rootParent().setCharSequence() then encodes the full byte sequence at idx(index) without knowing the window limit. A string with non-ASCII characters written near the end of the buffer silently corrupts adjacent buffers (e.g. other connections' HTTP headers). The capacity check must use the maximum encoded length (e.g. ByteBufUtil.utf8MaxBytes) or fall back to the checked generic path.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    },
+    {
+      "id": "i2",
+      "file": "buffer/src/main/java/io/netty/buffer/AdaptivePoolingAllocator.java",
+      "line_start": 1374,
+      "line_end": 1374,
+      "category": "tests",
+      "severity": "medium",
+      "title": "Fast path added without tests for multi-byte charsets or bounds",
+      "description": "Only a benchmark is added. No unit test writes a multi-byte (UTF-8) sequence into an adaptive buffer, near its capacity, or checks that neighbouring buffers are untouched.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/netty/netty/commit/31c033a1d95eb4a74002c5f17ea01c967b07add9. Primary issue confirmed by the later upstream fix https://github.com/netty/netty/commit/8f7211c38f3a781acc976671c8486882bad34536; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

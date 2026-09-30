@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "corpus": "martian-offline",
+  "id": "martian-offline-026",
+  "language": "go",
+  "size": "large",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/martian-offline/martian-offline-026/base",
+  "head_branch": "bench/martian-offline/martian-offline-026/head",
+  "base_sha": "1941686164e928a922f66f687bb30ec28f752440",
+  "head_sha": "cb3e10406c25663d355aa1454e839957139c6e01",
+  "mr_title": "Dual Storage Architecture",
+  "mr_description": "- Dual writer: mode 3\n- Add integration tests for playlits in mode 3\n- Remove todo\n- Update pkg/apiserver/rest/dualwriter_mode3.go\n- Admin: Fixes an issue where user accounts could not be enabled\n- [REVIEW] FInish mode 3 and add tests\n- Improve logging\n- Update dependencies\n- Update pkg/apiserver/rest/dualwriter_mode3_test.go\n- remove test assertion\n- Use mode log when dual writer is initiated",
+  "origin": {
+    "repository": "https://github.com/grafana/grafana",
+    "commit": "e369f24665ec70e1e3700f457d25ef83301d931a",
+    "license": "AGPL-3.0",
+    "source_case": "https://github.com/grafana/grafana/pull/90045",
+    "source_url": "https://github.com/withmartian/code-review-benchmark/blob/e616e849755441da38f18bf3adba2c9583b03803/offline/golden_comments/grafana.json"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "The context is being created with d.Log instead of the log variable that was initialized…",
+      "description": "The context is being created with d.Log instead of the log variable that was initialized with additional context values (name, kind, method). This means those values won't be propagated to the logging context.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "bug",
+      "source_text": "The context is being created with d.Log instead of the log variable that was initialized with additional context values (name, kind, method). This means those values won't be propagated to the logging context."
+    },
+    {
+      "id": "i2",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "high",
+      "title": "In DualWriterMode3's DeleteCollection method, when a storage operation fails, recordStora…",
+      "description": "In DualWriterMode3's DeleteCollection method, when a storage operation fails, recordStorageDuration is incorrectly called with recordLegacyDuration instead.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "bug",
+      "source_text": "In DualWriterMode3's DeleteCollection method, when a storage operation fails, recordStorageDuration is incorrectly called with recordLegacyDuration instead."
+    },
+    {
+      "id": "i3",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Inconsistency: using name instead of options.Kind for metrics recording differs from othe…",
+      "description": "Inconsistency: using name instead of options.Kind for metrics recording differs from other methods.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "api",
+      "source_text": "Inconsistency: using name instead of options.Kind for metrics recording differs from other methods."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/grafana/grafana/pull/90045). Upstream base 66c4dff17e9147b11fb9b14c6ed63089a599da65 (resolved as described in SOURCE.md). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile Strict; i3: Martian profile Strict"
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-016",
+  "language": "javascript",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-016/base",
+  "head_branch": "bench/review-bench/review-bench-016/head",
+  "base_sha": "e80068ab5ae3df6e6e738dd9923b78fde0be6cae",
+  "head_sha": "9bf151cd0277c406afecf09d17ea6da4c9971580",
+  "mr_title": "fix(res.send): add Content-Length header only if Transfer-Encoding is not present",
+  "mr_description": "* fix(respond): add Content-Length header only if Transfer-Encoding is not present\n\n* fix(response): used get('Transfer-Encoding')\n\n* test(res.send): covered Transfer-Encoding and Content-Length headers logic\n\n* chore(response): removed comment\n\n* chore(res.redirect): revert changes to focus on res.send\n\n* test(res.send): added tests for all transfer encodings\n\n* docs: update History.md to include bug fix for HTTP header conflict in res.send()\n\n---------",
+  "origin": {
+    "repository": "https://github.com/expressjs/express",
+    "commit": "18e5985b8a9d5e8423db0a9121f22bdaecd5b120",
+    "license": "MIT",
+    "source_case": "express-etag-transfer-encoding",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/express-etag-transfer-encoding"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "lib/response.js",
+      "line_start": 165,
+      "line_end": 166,
+      "category": "correctness",
+      "severity": null,
+      "title": "Gating the whole length-computation block on !Transfer-Encoding also skips the ETag gener…",
+      "description": "Gating the whole length-computation block on !Transfer-Encoding also skips the ETag generation path, so res.send with a pre-set Transfer-Encoding header loses its automatic ETag.\n\nProvenance: fix PR #7459 body (commit 9a34acf0), which names introducing commit 18e5985b.",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "lib/response.js",
+          "line_start": 168,
+          "line_end": 168
+        }
+      ],
+      "source_category": null,
+      "source_text": "Gating the whole length-computation block on !Transfer-Encoding also skips the ETag generation path, so res.send with a pre-set Transfer-Encoding header loses its automatic ETag."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench express-etag-transfer-encoding (corpus corpus/v0.1). Introducing PR https://github.com/expressjs/express/pull/4893. Fix https://github.com/expressjs/express/commit/9a34acf03cb818ff3f8bc40e44176e277a25cbb9 (PR #7459). Category defaulted to correctness and severity left null because the source has neither; to be reviewed. Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 165-166, review-head lines 165-166) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 168-168, review-head lines 168-168)"
+}

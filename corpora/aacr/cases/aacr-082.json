@@ -1,0 +1,247 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-082",
+  "language": "c",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-082/base",
+  "head_branch": "bench/aacr/aacr-082/head",
+  "base_sha": "d60ad420b26957d9bc956d7e5576b47e616159a8",
+  "head_sha": "6f9eecd2a8b27e156b13217cb5b45e9b39ab8d3e",
+  "mr_title": "Support RDMA for client and benchmark",
+  "mr_description": "vakley has already replaced dependency `hiredis` with `libvalkey`, and libvalkey also supports RDMA. Add '--rdma' for both\nvalkey-cli and valkey-benchmark to enable RDMA.",
+  "origin": {
+    "repository": "https://github.com/valkey-io/valkey",
+    "commit": "1379171021c18b009fa02c42088e82caf0e33203",
+    "license": "BSD-3-Clause",
+    "source_case": "https://github.com/valkey-io/valkey/pull/2059",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "cmake/Modules/ValkeySetup.cmake",
+      "line_start": 94,
+      "line_end": 94,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The required linking order (valkey_rdma before valkey) resolves an upstream static linkin…",
+      "description": "The required linking order (valkey_rdma before valkey) resolves an upstream static linking dependency issue; add a comment explaining this workaround and include a TODO to remove valkey::valkey when the upstream fix is integrated.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The required linking order (valkey_rdma before valkey) resolves an upstream static linking dependency issue; add a comment explaining this workaround and include a TODO to remove valkey::valkey when the upstream fix is integrated."
+    },
+    {
+      "id": "i2",
+      "file": "cmake/Modules/ValkeySetup.cmake",
+      "line_start": 127,
+      "line_end": 127,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The macro `valkey_build_and_install_module` is unused in the codebase and should be remov…",
+      "description": "The macro `valkey_build_and_install_module` is unused in the codebase and should be removed, as confirmed by `git grep` showing no references beyond its definition. The added RDMA dependency logic within it is unnecessary since the macro is never invoked.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The macro `valkey_build_and_install_module` is unused in the codebase and should be removed, as confirmed by `git grep` showing no references beyond its definition. The added RDMA dependency logic within it is unnecessary since the macro is never invoked."
+    },
+    {
+      "id": "i3",
+      "file": "deps/CMakeLists.txt",
+      "line_start": 23,
+      "line_end": 23,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The description string for the `ENABLE_RDMA` CMake option incorrectly states \"Should we t…",
+      "description": "The description string for the `ENABLE_RDMA` CMake option incorrectly states \"Should we test RDMA connections\" when it should reflect feature enablement (e.g., \"Enable RDMA support\"), as the variable controls functionality—not test execution—and the wording causes confusion with actual testing workflows.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The description string for the `ENABLE_RDMA` CMake option incorrectly states \"Should we test RDMA connections\" when it should reflect feature enablement (e.g., \"Enable RDMA support\"), as the variable controls functionality—not test execution—and the wording causes confusion with actual testing workflows."
+    },
+    {
+      "id": "i4",
+      "file": "src/Makefile",
+      "line_start": 344,
+      "line_end": 344,
+      "category": "maintainability",
+      "severity": null,
+      "title": "$(RDMA_LIBS) is being added to FINAL_LIBS twice - once on the previous line and again her…",
+      "description": "$(RDMA_LIBS) is being added to FINAL_LIBS twice - once on the previous line and again here as part of the expanded value. This duplication could cause linking issues or warnings.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "$(RDMA_LIBS) is being added to FINAL_LIBS twice - once on the previous line and again here as part of the expanded value. This duplication could cause linking issues or warnings.\n"
+    },
+    {
+      "id": "i5",
+      "file": "src/cli_common.h",
+      "line_start": 56,
+      "line_end": 56,
+      "category": "maintainability",
+      "severity": null,
+      "title": "`rdma` parameter is part of the public wrapper signature, but in the implementation it is…",
+      "description": "`rdma` parameter is part of the public wrapper signature, but in the implementation it is effectively ignored when `USE_RDMA` is not enabled (the code falls back to TCP without warning). Consider either (1) validating `rdma` here and surfacing an error when RDMA is requested but not compiled in, or (2) gating the parameter behind `#ifdef USE_RDMA` to avoid a silent behavior change for callers.\n\nThis helps prevent confusing situations where `--rdma` (or caller code) sets `rdma=1` but the connection is actually TCP.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "`rdma` parameter is part of the public wrapper signature, but in the implementation it is effectively ignored when `USE_RDMA` is not enabled (the code falls back to TCP without warning). Consider either (1) validating `rdma` here and surfacing an error when RDMA is requested but not compiled in, or (2) gating the parameter behind `#ifdef USE_RDMA` to avoid a silent behavior change for callers.\n\nThis helps prevent confusing situations where `--rdma` (or caller code) sets `rdma=1` but the connection is actually TCP."
+    },
+    {
+      "id": "i6",
+      "file": "src/valkey-benchmark.c",
+      "line_start": 253,
+      "line_end": 253,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The `rdma` parameter added to `getValkeyContext` is redundant since RDMA configuration sh…",
+      "description": "The `rdma` parameter added to `getValkeyContext` is redundant since RDMA configuration should be sourced globally from `config.rdma` (consistent with TLS handling), not passed as a function argument. Replace the parameter usage with `config.rdma` in the `valkeyConnectWrapper` call.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The `rdma` parameter added to `getValkeyContext` is redundant since RDMA configuration should be sourced globally from `config.rdma` (consistent with TLS handling), not passed as a function argument. Replace the parameter usage with `config.rdma` in the `valkeyConnectWrapper` call."
+    },
+    {
+      "id": "i7",
+      "file": "src/valkey-benchmark.c",
+      "line_start": 1539,
+      "line_end": 1539,
+      "category": "maintainability",
+      "severity": null,
+      "title": "RDMA cluster operation requires TCP port to equal RDMA port; document this constraint in…",
+      "description": "RDMA cluster operation requires TCP port to equal RDMA port; document this constraint in valkey.conf.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "RDMA cluster operation requires TCP port to equal RDMA port; document this constraint in valkey.conf."
+    },
+    {
+      "id": "i8",
+      "file": "src/valkey-cli.c",
+      "line_start": 221,
+      "line_end": 223,
+      "category": "correctness",
+      "severity": null,
+      "title": "`config.rdma` is newly added but not explicitly initialized here",
+      "description": "`config.rdma` is newly added but not explicitly initialized here. If `config` isn't zero-initialized (depends on its definition/initialization elsewhere), this could lead to nondeterministic behavior (attempting RDMA when user didn't request it). Ensure it defaults to 0 (e.g., set in config init/reset path or define the static struct with explicit initializer).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`config.rdma` is newly added but not explicitly initialized here. If `config` isn't zero-initialized (depends on its definition/initialization elsewhere), this could lead to nondeterministic behavior (attempting RDMA when user didn't request it). Ensure it defaults to 0 (e.g., set in config init/reset path or define the static struct with explicit initializer)."
+    },
+    {
+      "id": "i9",
+      "file": "src/valkey-cli.c",
+      "line_start": 2831,
+      "line_end": 2836,
+      "category": "correctness",
+      "severity": null,
+      "title": "If the `--rdma` flag is provided multiple times in the command line, `valkeyInitiateRdma(…",
+      "description": "If the `--rdma` flag is provided multiple times in the command line, `valkeyInitiateRdma()` will be called multiple times. Consider checking `if (!config.rdma)` before calling it to ensure initialization happens only once, or confirm that `valkeyInitiateRdma()` handles repeated calls gracefully.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "If the `--rdma` flag is provided multiple times in the command line, `valkeyInitiateRdma()` will be called multiple times. Consider checking `if (!config.rdma)` before calling it to ensure initialization happens only once, or confirm that `valkeyInitiateRdma()` handles repeated calls gracefully.\n"
+    },
+    {
+      "id": "i10",
+      "file": "src/valkey-cli.c",
+      "line_start": 2831,
+      "line_end": 2836,
+      "category": "correctness",
+      "severity": null,
+      "title": "`valkeyInitiateRdma()` is called during option parsing and `exit(1)` on failure",
+      "description": "`valkeyInitiateRdma()` is called during option parsing and `exit(1)` on failure. This makes `--help`/usage behavior and unit/integration tooling more rigid, and can be surprising if parsing happens in contexts where a hard exit isn't desired. Prefer returning an error from `parseOptions` and letting caller handle exit/cleanup consistently. Also consider whether initialization should be idempotent (user passes `--rdma` multiple times) or delayed until connect.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`valkeyInitiateRdma()` is called during option parsing and `exit(1)` on failure. This makes `--help`/usage behavior and unit/integration tooling more rigid, and can be surprising if parsing happens in contexts where a hard exit isn't desired. Prefer returning an error from `parseOptions` and letting caller handle exit/cleanup consistently. Also consider whether initialization should be idempotent (user passes `--rdma` multiple times) or delayed until connect."
+    },
+    {
+      "id": "i11",
+      "file": "src/valkey-cli.c",
+      "line_start": 2963,
+      "line_end": 2963,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Usage text: 'Establish a RDMA connection.' should be 'Establish an RDMA connection.' for…",
+      "description": "Usage text: 'Establish a RDMA connection.' should be 'Establish an RDMA connection.' for correct English.\n\n```suggestion\n        \"  --rdma             Establish an RDMA connection.\\n\"\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Usage text: 'Establish a RDMA connection.' should be 'Establish an RDMA connection.' for correct English.\n\n```suggestion\n        \"  --rdma             Establish an RDMA connection.\\n\"\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/Makefile",
+      "line_start": 354,
+      "line_end": 354,
+      "description": "RDMA_MODULE_CFLAGS currently appends $(RDMA_LIBS), which are linker flags/libraries, not compiler flags. Mixing libs into CFLAGS can break compilation on some toolchains. Keep RDMA libs in a *LIBS variable and only pass them at link time.\n\n```suggestion\n\tRDMA_MODULE_CFLAGS+=-DUSE_RDMA=$(BUILD_MODULE) -DBUILD_RDMA_MODULE=$(BUILD_MODULE)\n\t# Keep RDMA libs for linking only (e.g., in RDMA_CLIENT_LIBS / FINAL_LIBS)\n```"
+    },
+    {
+      "file": "src/Makefile",
+      "line_start": 519,
+      "line_end": 519,
+      "description": "The build rule for valkey-tls.so incorrectly links RDMA client libraries, which are irrelevant to TLS functionality and likely a configuration error."
+    },
+    {
+      "file": "src/Makefile",
+      "line_start": 531,
+      "line_end": 531,
+      "description": "Same issue here - RDMA_CLIENT_LIBS is only defined under BUILD_RDMA=module but used unconditionally. Additionally, when BUILD_RDMA=yes, the RDMA libraries are already part of FINAL_LIBS, so including RDMA_CLIENT_LIBS again might cause library duplication."
+    },
+    {
+      "file": "src/cli_common.c",
+      "line_start": 438,
+      "line_end": 438,
+      "description": "The function silently ignores `rdma=1` requests when compiled without RDMA support (USE_RDMA undefined), risking incorrect behavior; add error handling (e.g., `assert(!rdma)`) in the `#else` branch to prevent silent failures."
+    },
+    {
+      "file": "src/valkey-benchmark.c",
+      "line_start": 395,
+      "line_end": 399,
+      "description": "Event-loop integration risk: for RDMA you directly call `writeHandler(...)` instead of registering `AE_WRITABLE`. This can cause re-entrancy (calling handler while resetting state), potential busy-looping, and bypasses the event loop’s scheduling/backpressure. Prefer adding an explicit RDMA-specific event or a timer/once flag to defer calling `writeHandler` via the event loop (e.g., `aeCreateTimeEvent` or `aePostFunction`) rather than immediate invocation."
+    },
+    {
+      "file": "src/valkey-benchmark.c",
+      "line_start": 1104,
+      "line_end": 1104,
+      "description": "The RDMA parameter is hardcoded to 0, which means cluster configuration fetching won't use RDMA even when --rdma flag is specified. For consistency with the main connection (line 1839), this should pass config.rdma instead of 0."
+    },
+    {
+      "file": "src/valkey-benchmark.c",
+      "line_start": 1105,
+      "line_end": 1105,
+      "description": "Null/err handling: `getValkeyContext()` checks `(ctx == NULL || ctx->err)` and then unconditionally uses `ctx->errstr`. If `ctx == NULL`, dereferencing `ctx->errstr` is undefined. Split the cases so NULL context prints a generic message."
+    },
+    {
+      "file": "src/valkey-benchmark.c",
+      "line_start": 1217,
+      "line_end": 1217,
+      "description": "Similar to the issue in fetchClusterConfiguration(), the RDMA parameter is hardcoded to 0 here. For consistency with the RDMA feature implementation, this should use config.rdma instead of 0.\n\n```suggestion\n            ctx = getValkeyContext(node->ip, node->port, NULL, config.rdma);\n```"
+    },
+    {
+      "file": "src/valkey-benchmark.c",
+      "line_start": 1492,
+      "line_end": 1498,
+      "description": "Option parsing robustness: `valkeyInitiateRdma()` is called immediately on seeing `--rdma`, and `exit(1)` on failure. That’s fine for a CLI tool, but consider also rejecting incompatible combinations (e.g., `--rdma` with `-s <unixsocket>` or TLS options) early with a clear message, since RDMA likely only applies to TCP connections. Otherwise later code paths may silently ignore RDMA (unix socket) or behave unexpectedly."
+    },
+    {
+      "file": "src/valkey-benchmark.c",
+      "line_start": 1832,
+      "line_end": 1832,
+      "description": "When fetching cluster node configurations, the RDMA parameter is hardcoded to 0. For consistency with the RDMA feature, this should pass config.rdma instead of 0.\n\n```suggestion\n            node->redis_config = getServerConfig(node->ip, node->port, NULL, config.rdma);\n```"
+    },
+    {
+      "file": "src/valkey-benchmark.c",
+      "line_start": 2079,
+      "line_end": 2079,
+      "description": "When loading the function script, the RDMA parameter is hardcoded to 0. For consistency with the RDMA feature, this should pass config.rdma instead of 0.\n\n```suggestion\n            valkeyContext *ctx = getValkeyContext(config.conn_info.hostip, config.conn_info.hostport, NULL, config.rdma);\n```"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/valkey-io/valkey/pull/2059). Upstream base b5c7743971df5476acbdbbbd3b378496e885e1e4 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 283. Severity absent in the source. i1: human comment, Diff Level; i2: human comment, Repo Level; i3: human comment, Diff Level; i4: AI comment (Qwen-Coder-480B), File Level; i5: AI comment (GPT-5.2), Diff Level; i6: human comment, Repo Level; i7: human comment, Repo Level; i8: AI comment (GPT-5.2), File Level; i9: AI comment (Gemini-3-Pro), Diff Level; i10: AI comment (GPT-5.2), Diff Level; i11: AI comment (GPT-5.2), Diff Level"
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-023",
+  "language": "rust",
+  "size": "small",
+  "kind": "clean",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-023/base",
+  "head_branch": "bench/review-bench/review-bench-023/head",
+  "base_sha": "2a3116b0d3b77ffc8a9a54971b305b506859b1e4",
+  "head_sha": "1f9d447d7e31e402b4617b9bef213910d462e3e9",
+  "mr_title": "Add support for 128 bit HashMap key serialization",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/serde-rs/json",
+    "commit": "599228d5dc52a0f1595fe4bd901821f70d0317a5",
+    "license": "Apache-2.0",
+    "source_case": "json-hashmap-128bit-keys",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/json-hashmap-128bit-keys"
+  },
+  "expected_issues": [],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench json-hashmap-128bit-keys (corpus corpus/v0.1). Introducing PR https://github.com/serde-rs/json/pull/1188."
+}

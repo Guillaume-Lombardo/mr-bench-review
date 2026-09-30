@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-102",
+  "language": "typescript",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-102/base",
+  "head_branch": "bench/aacr/aacr-102/head",
+  "base_sha": "235b93f3448284da40202e6437604bd075ae8078",
+  "head_sha": "c5ea9715ef7ffc07e51e39b268106f81f3c46863",
+  "mr_title": "fix(server) optimize number of sql calls for GET /api/albums",
+  "mr_description": "- fix(server) optimize number of sql calls for GET /api/albums\n- fix(server) remove unnecessary getLastUpdatedAssetForAlbumId call for GET /api/album/:id",
+  "origin": {
+    "repository": "https://github.com/immich-app/immich",
+    "commit": "966c3f22d034c230a14bb21b02627ef6d00eec68",
+    "license": "AGPL-3.0",
+    "source_case": "https://github.com/immich-app/immich/pull/17124",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "server/src/repositories/album.repository.ts",
+      "line_start": 154,
+      "line_end": 157,
+      "category": "maintainability",
+      "severity": null,
+      "title": "* The multi-line SQL template strings for `startDate` and `endDate` date conversions redu…",
+      "description": "* The multi-line SQL template strings for `startDate` and `endDate` date conversions reduce readability; condense them into single-line expressions.  \n* The `sql` generic type should be `Date` (not `any`) for `startDate`/`endDate` since the query returns JavaScript `Date` objects, as confirmed by runtime type checks.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "* The multi-line SQL template strings for `startDate` and `endDate` date conversions reduce readability; condense them into single-line expressions.  \n* The `sql` generic type should be `Date` (not `any`) for `startDate`/`endDate` since the query returns JavaScript `Date` objects, as confirmed by runtime type checks."
+    },
+    {
+      "id": "i2",
+      "file": "server/src/services/album.service.ts",
+      "line_start": 64,
+      "line_end": 68,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Minor: `x ??",
+      "description": "Minor: `x ?? undefined` is redundant when `x` is already possibly undefined. You can just use `albumMetadata[album.id]?.startDate` / `endDate` / `lastModifiedAssetTimestamp` for readability. This is especially helpful since the repository type already allows `null`; you may want to normalize `null` to `undefined` explicitly via `?? undefined`, but then do it consistently and consider a helper to avoid repetition.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Minor: `x ?? undefined` is redundant when `x` is already possibly undefined. You can just use `albumMetadata[album.id]?.startDate` / `endDate` / `lastModifiedAssetTimestamp` for readability. This is especially helpful since the repository type already allows `null`; you may want to normalize `null` to `undefined` explicitly via `?? undefined`, but then do it consistently and consider a helper to avoid repetition."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "server/src/repositories/album.repository.ts",
+      "line_start": 137,
+      "line_end": 137,
+      "description": "**Potential Issue: Empty albums won't return metadata**\n\nThe query now starts from `assets` table with an `INNER JOIN` to `album_assets`. This means albums with no assets (empty albums) will not appear in the results, whereas the original query starting from `albums` table would still return a row.\n\n**Impact:**\n- For album IDs in the `ids` parameter that have zero assets, no row will be returned\n- Calling code expects to receive metadata (even if null/0) for all requested album IDs\n- This could cause `albumMetadata[album.id]` lookups in `album.service.ts` to return `undefined` instead of an object with `assetCount: 0`\n\n**Verification needed:**\nCheck if the application has empty albums and whether this behavior change is acceptable. \n\n**Possible fixes:**\n1. If empty albums should return metadata: Use `LEFT JOIN` and start from a subquery of album IDs\n2. If empty albums are acceptable to skip: Document this behavior change as it differs from the original\n\nThe original query would return:\n```\n{ albumId: 'xyz', assetCount: 0, startDate: null, endDate: null }\n```\n\nThe new query returns nothing for empty albums."
+    },
+    {
+      "file": "server/src/services/album.service.ts",
+      "line_start": 67,
+      "line_end": 67,
+      "description": "Temporary development comment should be removed before committing. This type of comment doesn't provide value to the codebase and could be confusing for other developers."
+    },
+    {
+      "file": "server/src/services/album.service.ts",
+      "line_start": 67,
+      "line_end": 68,
+      "description": "The `lastModifiedAssetTimestamp` is now retrieved from `albumMetadata`, which relies on the updated repository query. I noticed in the repository changes that this field is cast to a `DATE` type (stripping the time component). The previous implementation used `lastModifiedAsset?.updatedAt`, which provided a full timestamp.\n\nPlease verify if this loss of precision is acceptable for the mobile app (e.g., for sorting or synchronization). If a full timestamp is required, the repository query should be adjusted to preserve the time."
+    },
+    {
+      "file": "server/src/services/album.service.ts",
+      "line_start": 84,
+      "line_end": 84,
+      "description": "Similar to previous instance, using 'any' disables compile-time checks. Define explicit return types for safer coding practices."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/immich-app/immich/pull/17124). Upstream base 6ba94ac2f2f78c871f56874a7c2ff61b2ff4a06b = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 122. Severity absent in the source. i1: human comment, File Level; i2: AI comment (GPT-5.2), Diff Level"
+}

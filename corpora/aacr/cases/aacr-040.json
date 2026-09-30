@@ -1,0 +1,271 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-040",
+  "language": "cpp",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-040/base",
+  "head_branch": "bench/aacr/aacr-040/head",
+  "base_sha": "6e4035b9492be8259c4c25945f67cc4967e45337",
+  "head_sha": "0ecf4b8a751d981980ec0a18929f530b8359ed57",
+  "mr_title": "initial commit",
+  "mr_description": "- initial commit\n- dummy java wrapper\n- Keep jclass in wrapper\n- working test\n- Revert unused files\n- Remove size argument from read\n- Check backend available before test\n- Try print exception\n- Revert \"Try print exception\"\n- Use NewLocalRef for Java stream object\n- Wrap native seek and read\n- Try create global ref\n- Fix long long in Python",
+  "origin": {
+    "repository": "https://github.com/opencv/opencv",
+    "commit": "79afad939ecfaa332af0541db473fa94f8f425b6",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/opencv/opencv/pull/27284",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "modules/java/generator/gen_java.py",
+      "line_start": 93,
+      "line_end": 99,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Memory leak: GetByteArrayElements must be paired with ReleaseByteArrayElements",
+      "description": "Memory leak: GetByteArrayElements must be paired with ReleaseByteArrayElements. The current implementation only acquires the array elements but never releases them, causing a memory leak. Similar to the string type handling on line 80, the jni_var should include the release call. Consider: \"char* n_%(n)s = reinterpret_cast<char*>(env->GetByteArrayElements(%(n)s, NULL)); ... env->ReleaseByteArrayElements(%(n)s, reinterpret_cast<jbyte*>(n_%(n)s), 0);\"",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "Memory leak: GetByteArrayElements must be paired with ReleaseByteArrayElements. The current implementation only acquires the array elements but never releases them, causing a memory leak. Similar to the string type handling on line 80, the jni_var should include the release call. Consider: \"char* n_%(n)s = reinterpret_cast<char*>(env->GetByteArrayElements(%(n)s, NULL)); ... env->ReleaseByteArrayElements(%(n)s, reinterpret_cast<jbyte*>(n_%(n)s), 0);\"\n"
+    },
+    {
+      "id": "i2",
+      "file": "modules/java/generator/gen_java.py",
+      "line_start": 522,
+      "line_end": 529,
+      "category": "correctness",
+      "severity": null,
+      "title": "Behavior change: previously `type_dict.setdefault(\"Ptr_\"+name, {}).update({...})` would r…",
+      "description": "Behavior change: previously `type_dict.setdefault(\"Ptr_\"+name, {}).update({...})` would refresh/update an existing `Ptr_...` mapping. Now it only sets the entry when missing. If `Ptr_...` can be created earlier (e.g., multiple passes, cross-module deps, or preloaded gen_dict overrides) this can leave stale `j_type`/`j_import`/`jni_name` values and break generated code.\n\nIf the goal is to avoid overwriting user overrides, consider updating only missing keys (merge), or preserve the old `setdefault(...).update(...)` behavior.\n\n```suggestion\n        type_dict.setdefault(\"Ptr_\"+name, {}).update({\n            \"j_type\" : classinfo.jname,\n            \"jn_type\" : \"long\", \"jn_args\" : ((\"__int64\", \".getNativeObjAddr()\"),),\n            \"jni_name\" : \"*((Ptr<\"+classinfo.fullNameCPP()+\">*)%(n)s_nativeObj)\", \"jni_type\" : \"jlong\",\n            \"suffix\" : \"J\",\n            \"j_import\" : \"org.opencv.%s.%s\" % (self.module, classinfo.jname)\n        })\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Behavior change: previously `type_dict.setdefault(\"Ptr_\"+name, {}).update({...})` would refresh/update an existing `Ptr_...` mapping. Now it only sets the entry when missing. If `Ptr_...` can be created earlier (e.g., multiple passes, cross-module deps, or preloaded gen_dict overrides) this can leave stale `j_type`/`j_import`/`jni_name` values and break generated code.\n\nIf the goal is to avoid overwriting user overrides, consider updating only missing keys (merge), or preserve the old `setdefault(...).update(...)` behavior.\n\n```suggestion\n        type_dict.setdefault(\"Ptr_\"+name, {}).update({\n            \"j_type\" : classinfo.jname,\n            \"jn_type\" : \"long\", \"jn_args\" : ((\"__int64\", \".getNativeObjAddr()\"),),\n            \"jni_name\" : \"*((Ptr<\"+classinfo.fullNameCPP()+\">*)%(n)s_nativeObj)\", \"jni_type\" : \"jlong\",\n            \"suffix\" : \"J\",\n            \"j_import\" : \"org.opencv.%s.%s\" % (self.module, classinfo.jname)\n        })\n```"
+    },
+    {
+      "id": "i3",
+      "file": "modules/python/src2/cv2_convert.hpp",
+      "line_start": 196,
+      "line_end": 206,
+      "category": "correctness",
+      "severity": null,
+      "title": "The `to` function only handles `PyLong_Check(obj)` but doesn't handle `PyInt_Check(obj)`",
+      "description": "The `to` function only handles `PyLong_Check(obj)` but doesn't handle `PyInt_Check(obj)`. Similar converters in this file (e.g., unsigned int, uint64_t) handle both PyInt and PyLong for Python 2 compatibility. This could cause conversion failures when the Python object is a PyInt instance.\n\n```suggestion\n    static inline bool to(PyObject* obj, long long& value, const ArgInfo& info)\n    {\n        CV_UNUSED(info);\n        if(!obj || obj == Py_None)\n            return true;\n        if(PyInt_Check(obj))\n            value = (long long)PyInt_AsLong(obj);\n        else if(PyLong_Check(obj))\n            value = PyLong_AsLongLong(obj);\n        else\n            return false;\n        return value != (long long)-1 || !PyErr_Occurred();\n    }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The `to` function only handles `PyLong_Check(obj)` but doesn't handle `PyInt_Check(obj)`. Similar converters in this file (e.g., unsigned int, uint64_t) handle both PyInt and PyLong for Python 2 compatibility. This could cause conversion failures when the Python object is a PyInt instance.\n\n```suggestion\n    static inline bool to(PyObject* obj, long long& value, const ArgInfo& info)\n    {\n        CV_UNUSED(info);\n        if(!obj || obj == Py_None)\n            return true;\n        if(PyInt_Check(obj))\n            value = (long long)PyInt_AsLong(obj);\n        else if(PyLong_Check(obj))\n            value = PyLong_AsLongLong(obj);\n        else\n            return false;\n        return value != (long long)-1 || !PyErr_Occurred();\n    }\n```"
+    },
+    {
+      "id": "i4",
+      "file": "modules/python/src2/hdr_parser.py",
+      "line_start": 193,
+      "line_end": 194,
+      "category": "correctness",
+      "severity": null,
+      "title": "Logic issue: This condition allows invalid C++ type combinations",
+      "description": "Logic issue: This condition allows invalid C++ type combinations. For example:\n- 'short char', 'short short', 'short long' are not valid C++ types\n- 'long char', 'long short' are not valid C++ types\n\nValid combinations should be:\n- signed/unsigned + char/short/int/long\n- short + int\n- long + int/long\n\nConsider refining the logic to only accept valid C++ type modifier combinations.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Logic issue: This condition allows invalid C++ type combinations. For example:\n- 'short char', 'short short', 'short long' are not valid C++ types\n- 'long char', 'long short' are not valid C++ types\n\nValid combinations should be:\n- signed/unsigned + char/short/int/long\n- short + int\n- long + int/long\n\nConsider refining the logic to only accept valid C++ type modifier combinations.\n"
+    },
+    {
+      "id": "i5",
+      "file": "modules/python/src2/typing_stubs_generation/predefined_types.py",
+      "line_start": 31,
+      "line_end": 31,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential coverage issue: the generator/parser may output canonical spellings like `long…",
+      "description": "Potential coverage issue: the generator/parser may output canonical spellings like `long long int`, `signed long long`, or `unsigned long long`. Adding only `\"long long\"` might not match and won’t fix the original missing-type case. Also consider whether this becomes redundant with the existing `int64_t` entry, which could lead to inconsistent mapping depending on platform/type-emission. Suggest normalizing native type strings before lookup or adding the canonical variants explicitly.\n\n```suggestion\n    # Prefer canonical spellings (or normalize the native type string upstream)\n    PrimitiveTypeNode.int_(\"long long int\"),\n    PrimitiveTypeNode.int_(\"signed long long\"),\n    PrimitiveTypeNode.int_(\"unsigned long long\"),\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential coverage issue: the generator/parser may output canonical spellings like `long long int`, `signed long long`, or `unsigned long long`. Adding only `\"long long\"` might not match and won’t fix the original missing-type case. Also consider whether this becomes redundant with the existing `int64_t` entry, which could lead to inconsistent mapping depending on platform/type-emission. Suggest normalizing native type strings before lookup or adding the canonical variants explicitly.\n\n```suggestion\n    # Prefer canonical spellings (or normalize the native type string upstream)\n    PrimitiveTypeNode.int_(\"long long int\"),\n    PrimitiveTypeNode.int_(\"signed long long\"),\n    PrimitiveTypeNode.int_(\"unsigned long long\"),\n```"
+    },
+    {
+      "id": "i6",
+      "file": "modules/videoio/misc/java/src/cpp/videoio_converters.cpp",
+      "line_start": 3,
+      "line_end": 6,
+      "category": "correctness",
+      "severity": null,
+      "title": "Missing NULL check for GetObjectClass result",
+      "description": "Missing NULL check for GetObjectClass result. If GetObjectClass returns NULL (e.g., OutOfMemoryError), calling NewGlobalRef on NULL jclass will cause a crash. Also, if NewGlobalRef fails (returns NULL), the global ref is invalid but the destructor will still call DeleteGlobalRef on it. Consider adding proper error handling and cleanup.\n\n```suggestion\nJavaStreamReader::JavaStreamReader(JNIEnv* _env, jobject _obj) : env(_env)\n{\n    obj = env->NewGlobalRef(_obj);\n    if (!obj) return; // Handle allocation failure\n    jclass cls = env->GetObjectClass(obj);\n    if (!cls) return; // Handle allocation failure\n    m_read = env->GetMethodID(cls, \"read\", \"([BJ)J\");\n    m_seek = env->GetMethodID(cls, \"seek\", \"(JI)J\");\n}\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Missing NULL check for GetObjectClass result. If GetObjectClass returns NULL (e.g., OutOfMemoryError), calling NewGlobalRef on NULL jclass will cause a crash. Also, if NewGlobalRef fails (returns NULL), the global ref is invalid but the destructor will still call DeleteGlobalRef on it. Consider adding proper error handling and cleanup.\n\n```suggestion\nJavaStreamReader::JavaStreamReader(JNIEnv* _env, jobject _obj) : env(_env)\n{\n    obj = env->NewGlobalRef(_obj);\n    if (!obj) return; // Handle allocation failure\n    jclass cls = env->GetObjectClass(obj);\n    if (!cls) return; // Handle allocation failure\n    m_read = env->GetMethodID(cls, \"read\", \"([BJ)J\");\n    m_seek = env->GetMethodID(cls, \"seek\", \"(JI)J\");\n}\n```"
+    },
+    {
+      "id": "i7",
+      "file": "modules/videoio/misc/java/src/cpp/videoio_converters.cpp",
+      "line_start": 3,
+      "line_end": 5,
+      "category": "correctness",
+      "severity": null,
+      "title": "`JNIEnv*` is thread-affine; storing it as a member and using it later from another thread…",
+      "description": "`JNIEnv*` is thread-affine; storing it as a member and using it later from another thread is undefined and can crash. Prefer storing `JavaVM*` and attaching/detaching per call (or document/enforce same-thread usage).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`JNIEnv*` is thread-affine; storing it as a member and using it later from another thread is undefined and can crash. Prefer storing `JavaVM*` and attaching/detaching per call (or document/enforce same-thread usage)."
+    },
+    {
+      "id": "i8",
+      "file": "modules/videoio/misc/java/src/cpp/videoio_converters.cpp",
+      "line_start": 6,
+      "line_end": 8,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential JNI local reference leak: `GetObjectClass(obj)` returns a local ref that should…",
+      "description": "Potential JNI local reference leak: `GetObjectClass(obj)` returns a local ref that should be `DeleteLocalRef(cls)` after `GetMethodID` calls. In long-running/native loops this can exhaust the local ref table.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential JNI local reference leak: `GetObjectClass(obj)` returns a local ref that should be `DeleteLocalRef(cls)` after `GetMethodID` calls. In long-running/native loops this can exhaust the local ref table."
+    },
+    {
+      "id": "i9",
+      "file": "modules/videoio/misc/java/src/cpp/videoio_converters.cpp",
+      "line_start": 7,
+      "line_end": 7,
+      "category": "correctness",
+      "severity": null,
+      "title": "**Missing error handling**: The code doesn't check if `GetMethodID` succeeds",
+      "description": "**Missing error handling**: The code doesn't check if `GetMethodID` succeeds. If the Java class doesn't implement the required methods correctly, `m_read` or `m_seek` will be null, which could lead to crashes.\n\n**Suggested fix**: Add error checking:\n```cpp\nif (!m_read || !m_seek) {\n    // Handle error - throw exception or log error\n}\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "**Missing error handling**: The code doesn't check if `GetMethodID` succeeds. If the Java class doesn't implement the required methods correctly, `m_read` or `m_seek` will be null, which could lead to crashes.\n\n**Suggested fix**: Add error checking:\n```cpp\nif (!m_read || !m_seek) {\n    // Handle error - throw exception or log error\n}\n```"
+    },
+    {
+      "id": "i10",
+      "file": "modules/videoio/misc/java/src/cpp/videoio_converters.cpp",
+      "line_start": 19,
+      "line_end": 19,
+      "category": "correctness",
+      "severity": null,
+      "title": "**Missing JNI exception check**: After calling `NewByteArray`, you should check for JNI e…",
+      "description": "**Missing JNI exception check**: After calling `NewByteArray`, you should check for JNI exceptions. If memory allocation fails, this could throw an OutOfMemoryError that needs to be handled.\n\n**Suggested fix**:\n```cpp\njbyteArray jBuffer = env->NewByteArray(static_cast<jsize>(size));\nif (!jBuffer || env->ExceptionCheck()) {\n    if (env->ExceptionCheck()) env->ExceptionClear();\n    return 0;\n}\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "**Missing JNI exception check**: After calling `NewByteArray`, you should check for JNI exceptions. If memory allocation fails, this could throw an OutOfMemoryError that needs to be handled.\n\n**Suggested fix**:\n```cpp\njbyteArray jBuffer = env->NewByteArray(static_cast<jsize>(size));\nif (!jBuffer || env->ExceptionCheck()) {\n    if (env->ExceptionCheck()) env->ExceptionClear();\n    return 0;\n}\n```"
+    },
+    {
+      "id": "i11",
+      "file": "modules/videoio/misc/java/src/cpp/videoio_converters.cpp",
+      "line_start": 20,
+      "line_end": 20,
+      "category": "security",
+      "severity": null,
+      "title": "Size truncation risk: casting `size` (long long) to `jsize` can overflow for large values…",
+      "description": "Size truncation risk: casting `size` (long long) to `jsize` can overflow for large values, leading to negative/incorrect allocation and memory issues. Validate `size` <= std::numeric_limits<jsize>::max() before `NewByteArray` / `GetByteArrayRegion`.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "Size truncation risk: casting `size` (long long) to `jsize` can overflow for large values, leading to negative/incorrect allocation and memory issues. Validate `size` <= std::numeric_limits<jsize>::max() before `NewByteArray` / `GetByteArrayRegion`."
+    },
+    {
+      "id": "i12",
+      "file": "modules/videoio/misc/java/src/cpp/videoio_converters.cpp",
+      "line_start": 37,
+      "line_end": 37,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Const correctness: The function only reads from the vector, so the parameter should be co…",
+      "description": "Const correctness: The function only reads from the vector, so the parameter should be const reference to prevent unintended modifications and enable const correctness.\n\n```suggestion\njobject vector_VideoCaptureAPIs_to_List(JNIEnv* env, const std::vector<cv::VideoCaptureAPIs>& vs)\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Const correctness: The function only reads from the vector, so the parameter should be const reference to prevent unintended modifications and enable const correctness.\n\n```suggestion\njobject vector_VideoCaptureAPIs_to_List(JNIEnv* env, const std::vector<cv::VideoCaptureAPIs>& vs)\n```"
+    },
+    {
+      "id": "i13",
+      "file": "modules/videoio/misc/java/src/cpp/videoio_converters.hpp",
+      "line_start": 12,
+      "line_end": 12,
+      "category": "correctness",
+      "severity": null,
+      "title": "Storing a thread-specific `JNIEnv*` in `JavaStreamReader` risks undefined behavior when a…",
+      "description": "Storing a thread-specific `JNIEnv*` in `JavaStreamReader` risks undefined behavior when accessed from non-creation threads. Replace with `JavaVM*` storage and use `GetEnv`/`AttachCurrentThread` for thread-safe JNI access.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Storing a thread-specific `JNIEnv*` in `JavaStreamReader` risks undefined behavior when accessed from non-creation threads. Replace with `JavaVM*` storage and use `GetEnv`/`AttachCurrentThread` for thread-safe JNI access."
+    },
+    {
+      "id": "i14",
+      "file": "modules/videoio/misc/java/src/cpp/videoio_converters.hpp",
+      "line_start": 23,
+      "line_end": 23,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Header completeness: this header uses `std::vector` in the declaration but doesn’t includ…",
+      "description": "Header completeness: this header uses `std::vector` in the declaration but doesn’t include `<vector>`. Relying on transitive includes is fragile; include `<vector>` here or forward declare with `namespace std { template<class T, class Allocator> class vector; }` (including `<vector>` is preferred).\n\n```suggestion\n#include <vector>\n\njobject vector_VideoCaptureAPIs_to_List(JNIEnv* env, std::vector<cv::VideoCaptureAPIs>& vs);\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Header completeness: this header uses `std::vector` in the declaration but doesn’t include `<vector>`. Relying on transitive includes is fragile; include `<vector>` here or forward declare with `namespace std { template<class T, class Allocator> class vector; }` (including `<vector>` is preferred).\n\n```suggestion\n#include <vector>\n\njobject vector_VideoCaptureAPIs_to_List(JNIEnv* env, std::vector<cv::VideoCaptureAPIs>& vs);\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "modules/python/src2/cv2_convert.hpp",
+      "line_start": 187,
+      "line_end": 189,
+      "description": "The type trait condition '!std::is_same<long long, int64>::value' may not work correctly since 'int64' is not a standard type. Consider using 'std::int64_t' instead if that's what's intended."
+    },
+    {
+      "file": "modules/python/src2/hdr_parser.py",
+      "line_start": 193,
+      "line_end": 194,
+      "description": "Logic issue: when parsing primitives like `unsigned int`, `arg_type` already contains `\"unsigned\"` from the previous iteration (since the default `else` appended it). This new branch then appends `\" int\"` but the loop will later hit the default `else` again for `w == \"int\"` and append `\"int\"` a second time, producing `\"unsigned intint\"` (or `\"unsigned int int\"` depending on spacing). Same risk for `long long`, etc. Fix by making this branch *consume* the token (e.g., `continue`) and/or preventing the default appending when this branch fires, and also consider basing the condition on `arg_type` (e.g., `arg_type in qualifiers`) rather than `prev_w` alone."
+    },
+    {
+      "file": "modules/videoio/include/opencv2/videoio.hpp",
+      "line_start": 730,
+      "line_end": 730,
+      "description": "The `read` method uses `char* buffer` as an output buffer. I noticed you added `CV_WRAP`. While Java bindings are explicitly handled in `gen_dict.json` (mapping to `byte[]`), please ensure Python bindings are also correct. Standard Python bindings usually map `char*` to input string, which would be incorrect here (as strings are immutable and this is an output buffer). You might need a custom converter or manual mapping for Python if this method is intended to be used from Python."
+    },
+    {
+      "file": "modules/videoio/include/opencv2/videoio.hpp",
+      "line_start": 739,
+      "line_end": 739,
+      "description": "Adding `CV_WRAP` to pure virtual methods exposes them to OpenCV’s language bindings. Please verify this is intended and safe for all generators:\n- Wrapping methods with a raw `char*` buffer parameter can be problematic for Java/Python (ownership, buffer length, mutability) and may require `CV_OUT`/`CV_INOUT`, `uchar*`, or special handling.\n- For abstract interfaces, wrappers typically cannot instantiate/override from target languages unless there is explicit director/proxy support; otherwise this may generate unusable APIs or generator errors.\n- Ensure this change doesn’t break binary compatibility expectations for existing bindings (added methods in wrappers / signature mapping). Consider adding/adjusting binding tests (e.g., Java/Python) if the intent is to make `IStreamReader` overridable/usable from bindings."
+    },
+    {
+      "file": "modules/videoio/misc/java/filelist_common",
+      "line_start": 1,
+      "line_end": 1,
+      "description": "This filelist entry adds only the header path. Please double-check how `filelist_common` is consumed (CMake/packaging): (1) whether paths are expected to be relative to `modules/videoio` or `modules/videoio/misc/java` (the current `misc/java/...` prefix may be wrong if the base is already `misc/java`), and (2) whether the corresponding implementation file (`misc/java/src/cpp/videoio_converters.cpp`) also needs to be listed for compilation/installation. If this list is used for Java wrapper sources, omitting the .cpp could cause build/link issues depending on the build scripts."
+    },
+    {
+      "file": "modules/videoio/misc/java/gen_dict.json",
+      "line_start": 2,
+      "line_end": 2,
+      "description": "Potential typo / inconsistent naming: key `func_arg_fix` differs from more common `func_args_fix`/`func_arg_fixes` style. If the generator expects an exact key name, verify this matches the consumer code to avoid the section being ignored."
+    },
+    {
+      "file": "modules/videoio/misc/java/src/cpp/videoio_converters.cpp",
+      "line_start": 43,
+      "line_end": 44,
+      "description": "Potential local reference leak in `vector_VideoCaptureAPIs_to_List`: `FindClass` returns a local ref; since `jInteger` is declared `static jclass` it should be promoted to a global ref (and local deleted), or re-fetched each call without `static`. As-is, the static will hold a local ref that becomes invalid across calls/threads."
+    },
+    {
+      "file": "modules/videoio/misc/java/src/cpp/videoio_converters.hpp",
+      "line_start": 14,
+      "line_end": 15,
+      "description": "The member functions `read` and `seek` do not modify any member variables, so they should be marked as `const` to properly express their const-correctness and allow them to be called on const instances of the class.\n\n```suggestion\n    long long read(char* buffer, long long size) const CV_OVERRIDE;\n    long long seek(long long offset, int way) const CV_OVERRIDE;\n```"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/opencv/opencv/pull/27284). Upstream base 4ad4bd5dc09b343b2be6c8137b563f143d68584d = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 307. Severity absent in the source. i1: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i2: AI comment (GPT-5.2), File Level; i3: AI comment (GLM-4.7), Diff Level; i4: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i5: AI comment (GPT-5.2), File Level; i6: AI comment (GLM-4.7), Repo Level; i7: AI comment (GPT-5.2), Diff Level; i8: AI comment (GPT-5.2), Diff Level; i9: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i10: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i11: AI comment (GPT-5.2), Diff Level; i12: AI comment (GLM-4.7), Diff Level; i13: human comment, File Level; i14: AI comment (GPT-5.2), Repo Level"
+}

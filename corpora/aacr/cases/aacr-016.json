@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-016",
+  "language": "go",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-016/base",
+  "head_branch": "bench/aacr/aacr-016/head",
+  "base_sha": "8e1a79086ed6cd7aec20888307e50f6fc1484d43",
+  "head_sha": "92d233e6b4c5f70aef72195dfab68e907ee0f8fd",
+  "mr_title": "Get declaration diagnostics in LSP",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/microsoft/typescript-go",
+    "commit": "45c0de96a08812aff07974b859bc2327e7fe25ed",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/microsoft/typescript-go/pull/1000",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "internal/ls/diagnostics.go",
+      "line_start": 44,
+      "line_end": 44,
+      "category": "correctness",
+      "severity": null,
+      "title": "Passing `nil` for converters to `toLSPDiagnostic` in the new `toLSPDiagnostics` helper wi…",
+      "description": "Passing `nil` for converters to `toLSPDiagnostic` in the new `toLSPDiagnostics` helper will cause a panic since the function requires non-nil converters; propagate `l.converters` from the receiver instead.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Passing `nil` for converters to `toLSPDiagnostic` in the new `toLSPDiagnostics` helper will cause a panic since the function requires non-nil converters; propagate `l.converters` from the receiver instead."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/microsoft/typescript-go/pull/1000). Upstream base a06d95b0fe0346851ada34b05d1af901b2e28ab3 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 47. Severity absent in the source. i1: human comment, File Level"
+}

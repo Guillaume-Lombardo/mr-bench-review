@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-080",
+  "language": "c",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-080/base",
+  "head_branch": "bench/aacr/aacr-080/head",
+  "base_sha": "12595a493fa88535ab8d3eb0dfea23ef807e51f8",
+  "head_sha": "2fcbb17f93be961709bb431fefd21e950a4829dc",
+  "mr_title": "update redis to server",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/valkey-io/valkey",
+    "commit": "866fa4a4c9635bae6f0a6b59a78954083ff5ff1a",
+    "license": "BSD-3-Clause",
+    "source_case": "https://github.com/valkey-io/valkey/pull/2141",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/valkey-benchmark.c",
+      "line_start": 1998,
+      "line_end": 1998,
+      "category": "security",
+      "severity": null,
+      "title": "Memory-safety (per checklist): after freeServerConfig(), consider setting the pointer to…",
+      "description": "Memory-safety (per checklist): after freeServerConfig(), consider setting the pointer to NULL. This reduces risk of accidental reuse/double-free if future code adds additional cleanup paths or early returns.\n\n```suggestion\n        if (config.server_config != NULL) {\n            freeServerConfig(config.server_config);\n            config.server_config = NULL;\n        }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "Memory-safety (per checklist): after freeServerConfig(), consider setting the pointer to NULL. This reduces risk of accidental reuse/double-free if future code adds additional cleanup paths or early returns.\n\n```suggestion\n        if (config.server_config != NULL) {\n            freeServerConfig(config.server_config);\n            config.server_config = NULL;\n        }\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/valkey-benchmark.c",
+      "line_start": 129,
+      "line_end": 129,
+      "description": "The naming of `struct serverConfig` and the `server_config` variable is ambiguous in the benchmark tool context, as it conflicts with the existing benchmark-specific `struct config` and risks misinterpretation of its purpose (server configuration vs. benchmark configuration). Clarify the naming to explicitly distinguish server-related settings from benchmark options."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/valkey-io/valkey/pull/2141). Upstream base 374718b2a365ca69f715d542709b7d71540b1387 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 30. Severity absent in the source. i1: AI comment (GPT-5.2), File Level"
+}

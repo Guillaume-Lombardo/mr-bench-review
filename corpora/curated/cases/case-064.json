@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-064",
+  "language": "python",
+  "size": "medium",
+  "kind": "clean",
+  "tier": "core",
+  "base_branch": "bench/curated/case-064/base",
+  "head_branch": "bench/curated/case-064/head",
+  "base_sha": "b1f06f86641bb4f5de31213dc1bfafa3c5bd46d9",
+  "head_sha": "720d1894469b9e37a9ab4230edc5030c573c71c8",
+  "mr_title": "Add basic implementation of PEP657 style expression markers in tracebacks",
+  "mr_description": "* Add very basic implementation of PEP657 style line markers in tracebacks\n\n* Version guard the py3.11 attributes\n\n* Change version guard to make mypy happy. Also, stop using private traceback function\n\n* Version guard unit test\n\n* Fix repr cycle test\n\n* Add changelog entry\n\n* Add pragma no cover for branch where column info is missing",
+  "origin": {
+    "repository": "https://github.com/pytest-dev/pytest",
+    "commit": "a0e3a49f194175bec96a551791b2b02b23e06a09",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/pytest-dev/pytest/commit/a0e3a49f194175bec96a551791b2b02b23e06a09. No known defect: at least 90% of its added lines were still unchanged upstream on 2026-09-30 and no later commit reports it as faulty. This is not proof of absence. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

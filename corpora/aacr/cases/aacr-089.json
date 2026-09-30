@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-089",
+  "language": "cpp",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-089/base",
+  "head_branch": "bench/aacr/aacr-089/head",
+  "base_sha": "78fd8c936a79a416fc4f51bb9b883c1d5111c8d6",
+  "head_sha": "57926ad3effdafc6ea346165bbd774e224709083",
+  "mr_title": "validation: call InvalidChainfound also from AcceptBlock",
+  "mr_description": "- validation: call InvalidChainfound also from AcceptBlock\n- validation: in invalidateblock, mark children as invalid right away\n- validation: in invalidateblock, calculate m_best_header right away\n- validation: Add more checks to CheckBlockIndex()\n- validation: remove m_failed_blocks",
+  "origin": {
+    "repository": "https://github.com/bitcoin/bitcoin",
+    "commit": "4ba2e480ffa0b77113953bee4ff5c9349e277e7e",
+    "license": "MIT",
+    "source_case": "https://github.com/bitcoin/bitcoin/pull/31405",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/validation.cpp",
+      "line_start": 3767,
+      "line_end": 3772,
+      "category": "correctness",
+      "severity": null,
+      "title": "When modifying block status, the blocks should be inserted into `m_blockman.m_dirty_block…",
+      "description": "When modifying block status, the blocks should be inserted into `m_blockman.m_dirty_blockindex` to ensure the changes are persisted. This is inconsistent with the pattern used elsewhere in this function (e.g., lines 3762-3764) where status modifications are followed by `m_blockman.m_dirty_blockindex.insert()`.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "When modifying block status, the blocks should be inserted into `m_blockman.m_dirty_blockindex` to ensure the changes are persisted. This is inconsistent with the pattern used elsewhere in this function (e.g., lines 3762-3764) where status modifications are followed by `m_blockman.m_dirty_blockindex.insert()`.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/validation.cpp",
+      "line_start": 3697,
+      "line_end": 3697,
+      "description": "The newly added `best_header_blocks_by_work` map is redundant as it stores a superset of the same block candidates as `candidate_blocks_by_work`; consolidate into a single map and apply validation checks at consumption points instead of during data collection."
+    },
+    {
+      "file": "src/validation.cpp",
+      "line_start": 3767,
+      "line_end": 3773,
+      "description": "The code unsets `BLOCK_FAILED_VALID` when marking descendant blocks as `BLOCK_FAILED_CHILD`, but the rationale for this flag manipulation is undocumented and potentially incorrect. Add a comment clarifying why `BLOCK_FAILED_VALID` must be explicitly cleared (as descendants should never inherit independent validation failures per the chainstate invalidation model)."
+    },
+    {
+      "file": "src/validation.cpp",
+      "line_start": 3775,
+      "line_end": 3777,
+      "description": "Potential null dereference: `invalid_walk_tip->pprev` can be null when invalidating the genesis block (or if `invalid_walk_tip` is otherwise the first block). This code assigns `m_best_header = invalid_walk_tip->pprev` and later dereferences `m_chainman.m_best_header->nChainWork`, which would crash.\n\nSuggestion: guard `pprev` before use and define the desired behavior for invalidating genesis (e.g., keep best header at genesis, or set to nullptr and handle accordingly)."
+    },
+    {
+      "file": "src/validation.cpp",
+      "line_start": 4394,
+      "line_end": 4394,
+      "description": "Missing validation: Headers should be rejected if their parent block is marked as invalid.\n\nThe removed code (lines 4395-4434) checked if `pindexPrev` descended from a failed block and rejected the header with `BLOCK_INVALID_PREV` error. Now that `BLOCK_FAILED_CHILD` is guaranteed to be set correctly (as stated in the PR description), this check should be replaced with a simpler check:\n\n```cpp\nif (pindexPrev->nStatus & BLOCK_FAILED_MASK) {\n    LogDebug(BCLog::VALIDATION, \"header %s has invalid prev block: %s\\n\", hash.ToString(), block.hashPrevBlock.ToString());\n    return state.Invalid(BlockValidationResult::BLOCK_INVALID_PREV, \"bad-prevblk\");\n}\n```\n\nWithout this check, headers can be added to the block index even when their parent is known to be invalid, which contradicts the PR's goal of ensuring `BLOCK_FAILED_CHILD` status is always correct.\n\n**Suggested location:** Add this check after the `ContextualCheckBlockHeader()` call (around line 4393), before the closing brace of the `if (pindexPrev)` block."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/bitcoin/bitcoin/pull/31405). Upstream base b432e367427f1f9fe0f0a5800e31e496f00cd38d = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 135. Severity absent in the source. i1: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level"
+}

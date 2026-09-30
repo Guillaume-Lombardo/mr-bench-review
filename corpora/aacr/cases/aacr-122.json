@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-122",
+  "language": "php",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-122/base",
+  "head_branch": "bench/aacr/aacr-122/head",
+  "base_sha": "b7c290b4ec80fe610a415a4ae26144dc7a5e736a",
+  "head_sha": "f1e97123be717c036f5597be225c5903dbd1df49",
+  "mr_title": "In CanGenerateModelForms trait",
+  "mr_description": "- In CanGenerateModelForms trait\n- In CanGenerateModelTables trait",
+  "origin": {
+    "repository": "https://github.com/filamentphp/filament",
+    "commit": "871ec75815e1f92da141e9aef80f287f7779dfe7",
+    "license": "MIT",
+    "source_case": "https://github.com/filamentphp/filament/pull/15217",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "packages/tables/src/Commands/FileGenerators/Concerns/CanGenerateModelTables.php",
+      "line_start": 145,
+      "line_end": 147,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The condition for the 'time' type incorrectly uses `in_array` for a single string compari…",
+      "description": "The condition for the 'time' type incorrectly uses `in_array` for a single string comparison; replace it with a direct `===` check for efficiency and readability.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The condition for the 'time' type incorrectly uses `in_array` for a single string comparison; replace it with a direct `===` check for efficiency and readability."
+    },
+    {
+      "id": "i2",
+      "file": "packages/tables/src/Commands/FileGenerators/Concerns/CanGenerateModelTables.php",
+      "line_start": 145,
+      "line_end": 150,
+      "category": "correctness",
+      "severity": null,
+      "title": "This block unconditionally overwrites `$columnData['sortable']` with an empty array",
+      "description": "This block unconditionally overwrites `$columnData['sortable']` with an empty array. If earlier logic (or user config) already set `sortable` (e.g., `true`, `false`, or options), this will wipe it out. Consider only setting it when not already defined, or merging with existing config to avoid unexpected behavior.\n\n```suggestion\n                if (in_array($type['name'], [\n                    'time',\n                ])) {\n                    $columnData['time'] = [];\n\n                    // Preserve existing sortable configuration if already set.\n                    $columnData['sortable'] ??= [];\n                }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "This block unconditionally overwrites `$columnData['sortable']` with an empty array. If earlier logic (or user config) already set `sortable` (e.g., `true`, `false`, or options), this will wipe it out. Consider only setting it when not already defined, or merging with existing config to avoid unexpected behavior.\n\n```suggestion\n                if (in_array($type['name'], [\n                    'time',\n                ])) {\n                    $columnData['time'] = [];\n\n                    // Preserve existing sortable configuration if already set.\n                    $columnData['sortable'] ??= [];\n                }\n```"
+    },
+    {
+      "id": "i3",
+      "file": "packages/tables/src/Commands/FileGenerators/Concerns/CanGenerateModelTables.php",
+      "line_start": 148,
+      "line_end": 148,
+      "category": "correctness",
+      "severity": null,
+      "title": "Consider adding default formatting for 'time' columns to align with conventions used for…",
+      "description": "Consider adding default formatting for 'time' columns to align with conventions used for datetime/timestamp columns.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Consider adding default formatting for 'time' columns to align with conventions used for datetime/timestamp columns.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "packages/forms/src/Commands/FileGenerators/Concerns/CanGenerateModelForms.php",
+      "line_start": 93,
+      "line_end": 93,
+      "description": "Adding `time` -> `TimePicker` is sensible, but please double-check that `$type['name']` is exactly `'time'` for all supported DB drivers/introspection paths (e.g., MySQL `time`, Postgres `time without time zone`, Laravel schema types). If some drivers normalize to `'string'`/`'datetime'`-like names, this mapping won’t trigger. Consider normalizing type names (lowercase, strip modifiers) or handling common variants (e.g., `'time'`, `'timetz'`) to avoid silently generating the wrong component."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/filamentphp/filament/pull/15217). Upstream base e4a7ecf0e65574522eb9fbe70b7339f41de0bbe2 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 11. Severity absent in the source. i1: human comment, Diff Level; i2: AI comment (GPT-5.2), File Level; i3: AI comment (Qwen-Coder-480B), Diff Level"
+}

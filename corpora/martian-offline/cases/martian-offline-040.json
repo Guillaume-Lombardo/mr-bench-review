@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "martian-offline",
+  "id": "martian-offline-040",
+  "language": "java",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/martian-offline/martian-offline-040/base",
+  "head_branch": "bench/martian-offline/martian-offline-040/head",
+  "base_sha": "791da9e2d60c9dd70f03dbc061e7214d0501feee",
+  "head_sha": "4f98293c37cde2284209ebd0a45585b437f557e7",
+  "mr_title": "Fix concurrent group access to prevent NullPointerException",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/keycloak/keycloak",
+    "commit": "4def149a50c4b9b2c24fbb753ac60fe4f4df0cac",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/keycloak/keycloak/pull/40940",
+    "source_url": "https://github.com/withmartian/code-review-benchmark/blob/e616e849755441da38f18bf3adba2c9583b03803/offline/golden_comments/keycloak.json"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "critical",
+      "title": "Returning null from getSubGroupsCount() violates the GroupModel contract (Javadoc says it…",
+      "description": "Returning null from getSubGroupsCount() violates the GroupModel contract (Javadoc says it never returns null) and may lead to NPEs in callers that expect a non-null count.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "api",
+      "source_text": "Returning null from getSubGroupsCount() violates the GroupModel contract (Javadoc says it never returns null) and may lead to NPEs in callers that expect a non-null count."
+    },
+    {
+      "id": "i2",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "The reader thread isn’t waited for; flipping deletedAll to true and asserting immediately…",
+      "description": "The reader thread isn’t waited for; flipping deletedAll to true and asserting immediately can race and miss exceptions added just after the flag change, making this test flaky.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "concurrency",
+      "source_text": "The reader thread isn’t waited for; flipping deletedAll to true and asserting immediately can race and miss exceptions added just after the flag change, making this test flaky."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/keycloak/keycloak/pull/40940). Upstream base 7fd37690c44c7068cb19ecee3aa6ff99c46a821d (resolved as described in SOURCE.md). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile Strict"
+}

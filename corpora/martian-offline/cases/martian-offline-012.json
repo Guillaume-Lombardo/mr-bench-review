@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "martian-offline",
+  "id": "martian-offline-012",
+  "language": "ruby",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/martian-offline/martian-offline-012/base",
+  "head_branch": "bench/martian-offline/martian-offline-012/head",
+  "base_sha": "de8c88ccfe17a5aeebac99cb171155d5dc04a80b",
+  "head_sha": "eecd0fe7bf8405fdc56e212949cd6cf4d98bd607",
+  "mr_title": "FEATURE: per-topic unsubscribe option in emails",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/ai-code-review-evaluation/discourse-graphite",
+    "commit": "6669a2d94d76eea3b99b8c476d12b1eb66726b07",
+    "license": "GPL-2.0-or-later",
+    "source_case": "https://github.com/ai-code-review-evaluation/discourse-graphite/pull/2",
+    "source_url": "https://github.com/withmartian/code-review-benchmark/blob/e616e849755441da38f18bf3adba2c9583b03803/offline/golden_comments/discourse.json"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "high",
+      "title": "logic: Potential nil pointer exception - if no TopicUser record exists, tu will be nil an…",
+      "description": "logic: Potential nil pointer exception - if no TopicUser record exists, tu will be nil and calling methods on it will crash",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "bug",
+      "source_text": "logic: Potential nil pointer exception - if no TopicUser record exists, tu will be nil and calling methods on it will crash"
+    },
+    {
+      "id": "i2",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "maintainability",
+      "severity": "low",
+      "title": "Typo in property name: 'stopNotificiationsText' should be 'stopNotificationsText' (missin…",
+      "description": "Typo in property name: 'stopNotificiationsText' should be 'stopNotificationsText' (missing 'n' in 'Notifications')",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "style",
+      "source_text": "Typo in property name: 'stopNotificiationsText' should be 'stopNotificationsText' (missing 'n' in 'Notifications')"
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/ai-code-review-evaluation/discourse-graphite/pull/2). Upstream base 56abd247e1829cb6de82dfcc8ce04deb5f0d1e91 (resolved as described in SOURCE.md). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile All"
+}

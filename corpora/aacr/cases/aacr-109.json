@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-109",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-109/base",
+  "head_branch": "bench/aacr/aacr-109/head",
+  "base_sha": "af62fdd5ed6ec569f283be4bf0baef43716a6d14",
+  "head_sha": "e2932c81a9974e67fabd9fb5f797ebf7947902ee",
+  "mr_title": "[Benchmark] Update readme and throughput benchmark",
+  "mr_description": "- [Benchmark] Update readme and throughput benchmark\n- add aimo dataset split",
+  "origin": {
+    "repository": "https://github.com/vllm-project/vllm",
+    "commit": "a800045d0e2473ce173865edb83967cd210dec4c",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/vllm-project/vllm/pull/15998",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "benchmarks/README.md",
+      "line_start": 196,
+      "line_end": 196,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Inconsistent script path prefix: This example uses `vllm/benchmarks/benchmark_serving.py`…",
+      "description": "Inconsistent script path prefix: This example uses `vllm/benchmarks/benchmark_serving.py` while the throughput benchmark example at line 301 uses `benchmarks/benchmark_throughput.py` (without the `vllm/` prefix).\n\nFor consistency and to avoid user confusion, both examples should use the same path convention. Based on the actual file structure and the throughput example, this should likely be `benchmarks/benchmark_serving.py` (without the `vllm/` prefix).\n\n```\nFix benchmarks/README.md:196: Remove 'vllm/' prefix from the script path to match the convention used in other examples throughout the document\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Inconsistent script path prefix: This example uses `vllm/benchmarks/benchmark_serving.py` while the throughput benchmark example at line 301 uses `benchmarks/benchmark_throughput.py` (without the `vllm/` prefix).\n\nFor consistency and to avoid user confusion, both examples should use the same path convention. Based on the actual file structure and the throughput example, this should likely be `benchmarks/benchmark_serving.py` (without the `vllm/` prefix).\n\n```\nFix benchmarks/README.md:196: Remove 'vllm/' prefix from the script path to match the convention used in other examples throughout the document\n```"
+    },
+    {
+      "id": "i2",
+      "file": "benchmarks/benchmark_throughput.py",
+      "line_start": 335,
+      "line_end": 338,
+      "category": "correctness",
+      "severity": null,
+      "title": "The AIMODataset condition hardcodes dataset_split to 'train' while other dataset types us…",
+      "description": "The AIMODataset condition hardcodes dataset_split to 'train' while other dataset types use args.hf_split. This inconsistency may limit flexibility when users want to use different splits for AIMODataset. Consider using args.hf_split like other dataset types for consistency.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The AIMODataset condition hardcodes dataset_split to 'train' while other dataset types use args.hf_split. This inconsistency may limit flexibility when users want to use different splits for AIMODataset. Consider using args.hf_split like other dataset types for consistency.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "benchmarks/README.md",
+      "line_start": 306,
+      "line_end": 306,
+      "description": "The added benchmark command for the AI-MO/aimo-validation-aime dataset includes an unnecessary `--hf-split train` argument that should be removed."
+    },
+    {
+      "file": "benchmarks/benchmark_throughput.py",
+      "line_start": 337,
+      "line_end": 337,
+      "description": "AIMODataset does not require dataset subsets; set `common_kwargs['dataset_subset']` to None instead of `args.hf_subset` to prevent potential errors from passing unnecessary arguments."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/vllm-project/vllm/pull/15998). Upstream base 5e125e74d1b9739025ccb81106e28ce9b0dd4ea5 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 55. Severity absent in the source. i1: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i2: AI comment (Deepseek-V3.2), File Level"
+}

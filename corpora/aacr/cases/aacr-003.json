@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-003",
+  "language": "cpp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-003/base",
+  "head_branch": "bench/aacr/aacr-003/head",
+  "base_sha": "e432d8cf112f448771ab2bdc1d08b2b6f0fe11e1",
+  "head_sha": "843c109f0bdec60997d3af01f9cbedbc1a6efeb7",
+  "mr_title": "Base: Clean up ParameterManager::LoadDocument",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/FreeCAD/FreeCAD",
+    "commit": "82fef4a22503dd3affdd39e7120b6f71e9423f86",
+    "license": "LGPL-2.0-or-later",
+    "source_case": "https://github.com/FreeCAD/FreeCAD/pull/22744",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/Base/Parameter.cpp",
+      "line_start": 1866,
+      "line_end": 1866,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Unnamed parameters in `NoOpEntityResolver::resolveEntity` trigger a linter warning; name…",
+      "description": "Unnamed parameters in `NoOpEntityResolver::resolveEntity` trigger a linter warning; name the parameters and mark them as unused (e.g., with `[[maybe_unused]]` or a `(void)` cast) to resolve both the unnamed-parameter and unused-variable warnings.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Unnamed parameters in `NoOpEntityResolver::resolveEntity` trigger a linter warning; name the parameters and mark them as unused (e.g., with `[[maybe_unused]]` or a `(void)` cast) to resolve both the unnamed-parameter and unused-variable warnings."
+    },
+    {
+      "id": "i2",
+      "file": "src/Base/Parameter.cpp",
+      "line_start": 1911,
+      "line_end": 1911,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Double newline detected",
+      "description": "Double newline detected. The string \"\\n\" followed by \"\\n\" produces two consecutive newlines. Consider using a single \"\\n\" or std::endl for consistency with other error messages.\n\n```suggestion\n        std::cerr << \"An error occurred during parsing\\n\";\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Double newline detected. The string \"\\n\" followed by \"\\n\" produces two consecutive newlines. Consider using a single \"\\n\" or std::endl for consistency with other error messages.\n\n```suggestion\n        std::cerr << \"An error occurred during parsing\\n\";\n```"
+    },
+    {
+      "id": "i3",
+      "file": "src/Base/Parameter.cpp",
+      "line_start": 1913,
+      "line_end": 1913,
+      "category": "correctness",
+      "severity": null,
+      "title": "Replacing `std::endl` with `\\n` in error messages may delay critical error visibility due…",
+      "description": "Replacing `std::endl` with `\\n` in error messages may delay critical error visibility due to lack of explicit flushing; revert to `std::endl` to guarantee immediate terminal output for error reporting.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Replacing `std::endl` with `\\n` in error messages may delay critical error visibility due to lack of explicit flushing; revert to `std::endl` to guarantee immediate terminal output for error reporting."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/Base/Parameter.cpp",
+      "line_start": 1879,
+      "line_end": 1879,
+      "description": "Good use of std::make_unique for automatic memory management. This replaces manual new/delete calls and provides exception safety."
+    },
+    {
+      "file": "src/Base/Parameter.cpp",
+      "line_start": 1880,
+      "line_end": 1887,
+      "description": "Entity resolver lifetime: `setEntityResolver(entityBlocker.get())` stores a raw pointer in the parser. This is OK only if the resolver outlives all parses. Here it does, but consider simplifying by making `NoOpEntityResolver` a stack object (or `static`), or documenting lifetime expectations. Also consider overriding the correct signature for your Xerces version (some use `resolveEntity(XMLResourceIdentifier*)`); otherwise this may silently not block entities."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/FreeCAD/FreeCAD/pull/22744). Upstream base f3e1e6cec065f0295e38d36a68e0390f1b977a32 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 41. Severity absent in the source. i1: human comment, Diff Level; i2: AI comment (GLM-4.7), File Level; i3: human comment, Diff Level"
+}

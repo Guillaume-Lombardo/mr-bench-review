@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-017",
+  "language": "go",
+  "size": "medium",
+  "kind": "clean",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-017/base",
+  "head_branch": "bench/review-bench/review-bench-017/head",
+  "base_sha": "8403907428d10175bc64aa2c1056f7aa904885dd",
+  "head_sha": "78b139db0b3d57c3bbf343ebf8c7f56e211687f0",
+  "mr_title": "codes: Add UnmarshalJSON support to Code type",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/grpc/grpc-go",
+    "commit": "2941ee12eb653ae6965af2c79213b60a2e875008",
+    "license": "Apache-2.0",
+    "source_case": "grpc-codes-unmarshaljson",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/grpc-codes-unmarshaljson"
+  },
+  "expected_issues": [],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench grpc-codes-unmarshaljson (corpus corpus/v0.1). Introducing PR https://github.com/grpc/grpc-go/pull/1720."
+}

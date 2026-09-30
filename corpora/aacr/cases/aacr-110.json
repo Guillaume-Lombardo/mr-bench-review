@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-110",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-110/base",
+  "head_branch": "bench/aacr/aacr-110/head",
+  "base_sha": "25d2cf7abda36f817a6a0257251bb0d81aa2f42e",
+  "head_sha": "e68b906234ee908ebec4ce243af9631bbc12a176",
+  "mr_title": "[P/D] MultiConnector supports shutdown",
+  "mr_description": "- [P/D] MultiConnector supports shutdown\n- [P/D] MultiConnector supports shutdown\n- [P/D] MultiConnector supports shutdown\n- [P/D] MultiConnector supports shutdown\n- [P/D] MultiConnector supports shutdown\n- [P/D] MultiConnector supports shutdown\n- [P/D] MultiConnector supports shutdown",
+  "origin": {
+    "repository": "https://github.com/vllm-project/vllm",
+    "commit": "6217b0c46176fa51196d862e02e1b3722eefa4de",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/vllm-project/vllm/pull/24425",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "vllm/distributed/kv_transfer/kv_connector/v1/multi_connector.py",
+      "line_start": 96,
+      "line_end": 97,
+      "category": "correctness",
+      "severity": null,
+      "title": "Redundant exception message in logger.exception call: the current implementation includes…",
+      "description": "Redundant exception message in logger.exception call: the current implementation includes the exception string in the format specifier, but logger.exception automatically appends full exception details, causing duplication. Remove the `: %s` format specifier and `str(e)` argument.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Redundant exception message in logger.exception call: the current implementation includes the exception string in the format specifier, but logger.exception automatically appends full exception details, causing duplication. Remove the `: %s` format specifier and `str(e)` argument."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "vllm/distributed/kv_transfer/kv_connector/v1/multi_connector.py",
+      "line_start": 90,
+      "line_end": 100,
+      "description": "`MultiConnector.shutdown()` unconditionally calls `c.shutdown()`. This is only safe if *all* concrete connectors implement `shutdown()` (ideally declared/implemented in `KVConnectorBase_V1`). Otherwise an `AttributeError` will occur during cleanup.\n\nAlso, you collect exceptions but re-raise only the first one, which loses failure context (even though all are logged). Consider raising an aggregated exception (Py3.11 `ExceptionGroup`) or raising a single `RuntimeError` that summarizes count and chains the first exception, while continuing best-effort shutdown for all connectors."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/vllm-project/vllm/pull/24425). Upstream base f4962a6d55a340ebb569d377c842deff7611d8f7 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 12. Severity absent in the source. i1: human comment, Diff Level"
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-091",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": "core",
+  "base_branch": "bench/curated/case-091/base",
+  "head_branch": "bench/curated/case-091/head",
+  "base_sha": "aefe773cbe929fd2ea171d42fd53a2283fa48717",
+  "head_sha": "a184b6bb42f92445db44f5ddeaab36984ba3eeb1",
+  "mr_title": "Made get_prep_lookup() pass output_field when wrapping direct values in Value.",
+  "mr_description": "Previously, only strings were supplied with an output_field when wrapping\ndirect value iterable elements in Value expressions for ExpressionList. This\ncaused problems for __in lookups on JSONField when using expressions\nalongside direct values, as JSONField values can have different types which\nneed to be adapted by the field's get_db_prep_value().\n\nThanks Jacob Walls for the review.",
+  "origin": {
+    "repository": "https://github.com/django/django",
+    "commit": "7b54ddd5e64c96c641b70bb5f0e958a9e2035fb2",
+    "license": "BSD-3-Clause",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "django/db/models/lookups.py",
+      "line_start": 290,
+      "line_end": 303,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Iterator right-hand side is consumed by any() before being iterated again",
+      "description": "any() consumes self.rhs before it is iterated again, so an iterator/generator passed to an __in lookup becomes empty and the query silently matches nothing.\n\nget_prep_lookup() now scans `self.rhs` with any() and then iterates it a second time to build the ExpressionList or the prepared values. When the right-hand side is a one-shot iterator (e.g. `filter(field__in=(x for x in ids))` or `map(...)`), the first pass consumes it (partially or fully) and the second pass sees the remaining items only. The iterable must be materialised once (e.g. list()) before the two passes.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/7b54ddd5e64c96c641b70bb5f0e958a9e2035fb2. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/0751d5fed159fd9ff7edba522ece13c8c9d2a0d0; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

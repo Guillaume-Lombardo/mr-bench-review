@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-166",
+  "language": "go",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-166/base",
+  "head_branch": "bench/aacr/aacr-166/head",
+  "base_sha": "7a175420f2a27a47fb0bf3eae50c2c5f243aacf4",
+  "head_sha": "b4b628602c636dd6a1963ae7890352eac1bc3a80",
+  "mr_title": "envconfig: allow setting context length through env var",
+  "mr_description": "- envconfig: allow setting context length through env var\n- load env var as part of default\n- env: set default context length for memory test\n- envconfig: default value for 0 and -ve context length values",
+  "origin": {
+    "repository": "https://github.com/ollama/ollama",
+    "commit": "c2d08dd67a9bcf15e52a2f15b1fad888afffcd32",
+    "license": "MIT",
+    "source_case": "https://github.com/ollama/ollama/pull/8938",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "api/types.go",
+      "line_start": 614,
+      "line_end": 614,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential integer overflow: ContextLength() returns uint, but converting to int without b…",
+      "description": "Potential integer overflow: ContextLength() returns uint, but converting to int without bounds checking could result in negative values on 32-bit systems if context length exceeds 2,147,483,647. Consider adding bounds checking or using a different approach to ensure the value fits within int range.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential integer overflow: ContextLength() returns uint, but converting to int without bounds checking could result in negative values on 32-bit systems if context length exceeds 2,147,483,647. Consider adding bounds checking or using a different approach to ensure the value fits within int range.\n"
+    },
+    {
+      "id": "i2",
+      "file": "envconfig/config.go",
+      "line_start": 171,
+      "line_end": 171,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The context length validation (`CheckContextLength`) should be moved from the configurati…",
+      "description": "The context length validation (`CheckContextLength`) should be moved from the configuration package to the consumer layer (scheduler/llm) to enforce business logic where context length is used, avoiding premature validation and inconsistent bounds enforcement.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The context length validation (`CheckContextLength`) should be moved from the configuration package to the consumer layer (scheduler/llm) to enforce business logic where context length is used, avoiding premature validation and inconsistent bounds enforcement."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "envconfig/config.go",
+      "line_start": 190,
+      "line_end": 190,
+      "description": "The newly added `CheckContextLength` function is redundant as context length validation is already implemented in `llm/server.go` (referenced in `server/sched.go` line 83)."
+    },
+    {
+      "file": "envconfig/config.go",
+      "line_start": 265,
+      "line_end": 265,
+      "description": "The description for \"OLLAMA_CONTEXT_LENGTH\" inaccurately states \"Maximum context length\" when it should specify the default context length value (2048) unless overridden.  \nReplace the current description with \"Context length to use unless otherwise specified (default: 2048)\" for accuracy."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/ollama/ollama/pull/8938). Upstream base ed443a03930a10bec6182c55091f0880baa1e620 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 24. Severity absent in the source. i1: AI comment (Deepseek-V3.2), Repo Level; i2: human comment, Repo Level"
+}

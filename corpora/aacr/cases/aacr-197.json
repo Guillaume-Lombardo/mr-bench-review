@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-197",
+  "language": "cpp",
+  "size": "small",
+  "kind": "clean",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-197/base",
+  "head_branch": "bench/aacr/aacr-197/head",
+  "base_sha": "dfdbbbcec066cb1e7996d42627ae972412ba8a4e",
+  "head_sha": "ac580bbbafbecfd42b35da480af6a6bb7da3912f",
+  "mr_title": "Specify DLS and UPnP mappings to EPnP in all places for solvePnP* tests",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/opencv/opencv",
+    "commit": "7b98f70b7c339de343d02db7b7ec63497291f4be",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/opencv/opencv/pull/27185",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [],
+  "known_false_positives": [
+    {
+      "file": "modules/calib3d/test/test_solvepnp_ransac.cpp",
+      "line_start": 316,
+      "line_end": 321,
+      "description": "Unrelated modification of a commented-out code block; revert the formatting change as it's not relevant to the current fix."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/opencv/opencv/pull/27185). Upstream base 09c71aed141210bf2b14582974ed9d231c24edd5 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 28. Severity absent in the source."
+}

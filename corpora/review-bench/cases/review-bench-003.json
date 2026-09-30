@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-003",
+  "language": "javascript",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-003/base",
+  "head_branch": "bench/review-bench/review-bench-003/head",
+  "base_sha": "77714754d072f54018f5f9a764c7bc9c93a03d16",
+  "head_sha": "4ff2b46a25007df5bc0fa678ca00f76ee6af5ba4",
+  "mr_title": "fix: no_proxy hostname normalization bypass leads to ssrf",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/axios/axios",
+    "commit": "fb3befb6daac6cad26b2e54094d0f2d9e47f24df",
+    "license": "MIT",
+    "source_case": "axios-noproxy-wildcard-entry",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/axios-noproxy-wildcard-entry"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "lib/helpers/shouldBypassProxy.js",
+      "line_start": 83,
+      "line_end": 83,
+      "category": "correctness",
+      "severity": null,
+      "title": "NO_PROXY wildcard handling treats '*' as a bypass-all only when the entire variable is ex…",
+      "description": "NO_PROXY wildcard handling treats '*' as a bypass-all only when the entire variable is exactly '*'; a '*' entry inside a comma- or space-separated list is not honored.\n\nProvenance: fix PR #11053 summary (commit ff60b43).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": "NO_PROXY wildcard handling treats '*' as a bypass-all only when the entire variable is exactly '*'; a '*' entry inside a comma- or space-separated list is not honored."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench axios-noproxy-wildcard-entry (corpus corpus/v0.1). Introducing PR https://github.com/axios/axios/pull/10661. Fix https://github.com/axios/axios/commit/ff60b43277c32a5b2f7589c917db16d8e043c0d4 (PR #11053). Category defaulted to correctness and severity left null because the source has neither; to be reviewed. Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 302-302, review-head lines 83-83)"
+}

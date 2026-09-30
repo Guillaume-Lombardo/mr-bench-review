@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "corpus": "martian-offline",
+  "id": "martian-offline-033",
+  "language": "java",
+  "size": "large",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/martian-offline/martian-offline-033/base",
+  "head_branch": "bench/martian-offline/martian-offline-033/head",
+  "base_sha": "877019d50c09565ebadbc0cbaf9086fe6b921f11",
+  "head_sha": "7dced2e54ef18f82941aaead8d0fea9c89411592",
+  "mr_title": "Add AuthzClientCryptoProvider for authorization client cryptographic operations",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/keycloak/keycloak",
+    "commit": "79d11c4890cc4792e3dc3535af59e4e5f7a2739d",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/keycloak/keycloak/pull/33832",
+    "source_url": "https://github.com/withmartian/code-review-benchmark/blob/e616e849755441da38f18bf3adba2c9583b03803/offline/golden_comments/keycloak.json"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Returns wrong provider (default keystore instead of BouncyCastle)",
+      "description": "Returns wrong provider (default keystore instead of BouncyCastle)",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "bug",
+      "source_text": "Returns wrong provider (default keystore instead of BouncyCastle)"
+    },
+    {
+      "id": "i2",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "maintainability",
+      "severity": "low",
+      "title": "Dead code exists where ASN1Encoder instances are created and written to, but their result…",
+      "description": "Dead code exists where ASN1Encoder instances are created and written to, but their results are immediately discarded. The actual encoding is performed by new ASN1Encoder instances created in the subsequent return statement, rendering the earlier operations useless.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "perf",
+      "source_text": "Dead code exists where ASN1Encoder instances are created and written to, but their results are immediately discarded. The actual encoding is performed by new ASN1Encoder instances created in the subsequent return statement, rendering the earlier operations useless."
+    },
+    {
+      "id": "i3",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "When length starts at -1 from indefinite-length encoding, the arithmetic 'length = length…",
+      "description": "When length starts at -1 from indefinite-length encoding, the arithmetic 'length = length - bytes.length' will behave unexpectedly, potentially leading to incorrect processing of encoded data.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "bug",
+      "source_text": "When length starts at -1 from indefinite-length encoding, the arithmetic 'length = length - bytes.length' will behave unexpectedly, potentially leading to incorrect processing of encoded data."
+    },
+    {
+      "id": "i4",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "maintainability",
+      "severity": "low",
+      "title": "Abstract order() method on CryptoProvider may break backward compatibility with existing…",
+      "description": "Abstract order() method on CryptoProvider may break backward compatibility with existing implementations",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "speculative",
+      "source_text": "Abstract order() method on CryptoProvider may break backward compatibility with existing implementations"
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/keycloak/keycloak/pull/33832). Upstream base 10aca5552314d6e5c9226f3c6d0107861c38c693 (resolved as described in SOURCE.md). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile Core; i3: Martian profile Strict; i4: Martian profile All"
+}

@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-067",
+  "language": "typescript",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-067/base",
+  "head_branch": "bench/aacr/aacr-067/head",
+  "base_sha": "aa7ba01f6a7db94ef89a51be079ed147b0853b12",
+  "head_sha": "3b0d56ec023cbde62f6825a8038f31c69a26449f",
+  "mr_title": "Fix extensions enablement bugs",
+  "mr_description": "- Fix extensions enablement bugs\n- Use sep logic\n- Cleanup\n- fix windows failures\n- Remove some sep\n- Fix pathsep isseu",
+  "origin": {
+    "repository": "https://github.com/google-gemini/gemini-cli",
+    "commit": "d64b61ef89f01ecdc0e095a995d47522245a0065",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/google-gemini/gemini-cli/pull/8797",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "packages/cli/src/commands/extensions/disable.ts",
+      "line_start": 19,
+      "line_end": 23,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Consider directly mapping the input string to SettingScope enum values instead of conditi…",
+      "description": "Consider directly mapping the input string to SettingScope enum values instead of conditionally checking each possible value. This would simplify the logic and reduce duplication.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Consider directly mapping the input string to SettingScope enum values instead of conditionally checking each possible value. This would simplify the logic and reduce duplication.\n"
+    },
+    {
+      "id": "i2",
+      "file": "packages/cli/src/commands/extensions/disable.ts",
+      "line_start": 43,
+      "line_end": 43,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Typo: 'extenison' should be 'extension'",
+      "description": "Typo: 'extenison' should be 'extension'\n\n```suggestion\n        describe: 'The scope to disable the extension in.',\n```",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Typo: 'extenison' should be 'extension'\n\n```suggestion\n        describe: 'The scope to disable the extension in.',\n```"
+    },
+    {
+      "id": "i3",
+      "file": "packages/cli/src/commands/extensions/enable.ts",
+      "line_start": 22,
+      "line_end": 22,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The scope string parsing logic in `handleEnable` should be extracted to a shared utility…",
+      "description": "The scope string parsing logic in `handleEnable` should be extracted to a shared utility function to prevent duplication, as the same conversion pattern is needed in multiple locations. Currently, the inline check for `'workspace'` creates maintenance overhead and risks inconsistent handling across the codebase.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The scope string parsing logic in `handleEnable` should be extracted to a shared utility function to prevent duplication, as the same conversion pattern is needed in multiple locations. Currently, the inline check for `'workspace'` creates maintenance overhead and risks inconsistent handling across the codebase."
+    },
+    {
+      "id": "i4",
+      "file": "packages/cli/src/config/extensions/extensionEnablement.ts",
+      "line_start": 64,
+      "line_end": 69,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Missing return type annotation for isChildOf method",
+      "description": "Missing return type annotation for isChildOf method. This should explicitly return boolean for type safety.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Missing return type annotation for isChildOf method. This should explicitly return boolean for type safety.\n"
+    },
+    {
+      "id": "i5",
+      "file": "packages/cli/src/config/extensions/extensionEnablement.ts",
+      "line_start": 82,
+      "line_end": 88,
+      "category": "correctness",
+      "severity": null,
+      "title": "`ensureLeadingAndTrailingSlash` doesn’t handle empty string; `result.charAt(0)` and `resu…",
+      "description": "`ensureLeadingAndTrailingSlash` doesn’t handle empty string; `result.charAt(0)` and `result.charAt(result.length - 1)` will be `''`, producing `//`. If `scopePath`/`currentPath` can ever be empty (e.g., root), guard it explicitly to avoid generating malformed rules.\n\n```suggestion\n  let result = dirPath.replace(/\\\\/g, '/');\n  if (!result) return '/';\n  if (!result.startsWith('/')) result = '/' + result;\n  if (!result.endsWith('/')) result = result + '/';\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`ensureLeadingAndTrailingSlash` doesn’t handle empty string; `result.charAt(0)` and `result.charAt(result.length - 1)` will be `''`, producing `//`. If `scopePath`/`currentPath` can ever be empty (e.g., root), guard it explicitly to avoid generating malformed rules.\n\n```suggestion\n  let result = dirPath.replace(/\\\\/g, '/');\n  if (!result) return '/';\n  if (!result.startsWith('/')) result = '/' + result;\n  if (!result.endsWith('/')) result = result + '/';\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "packages/cli/src/commands/extensions/disable.ts",
+      "line_start": 24,
+      "line_end": 26,
+      "description": "Message shows raw input scope which might be undefined/misleading. Should reflect actual scope used (which defaults to 'user')."
+    },
+    {
+      "file": "packages/cli/src/commands/extensions/disable.ts",
+      "line_start": 47,
+      "line_end": 63,
+      "description": "This validation duplicates similar logic in the handleDisable function. Consider removing this check and letting handleDisable do all the validation/conversion work."
+    },
+    {
+      "file": "packages/cli/src/commands/extensions/enable.ts",
+      "line_start": 47,
+      "line_end": 51,
+      "description": "CLI UX: removing yargs 'choices' loses built-in help/auto-completion and allows arbitrary strings until runtime check triggers. Consider keeping 'choices' and using 'coerce' to normalize case, or provide 'choices' with lowercase values to match your case-insensitive validation.\n\n```suggestion\n      .option('scope', {\n        describe:\n          'The scope to enable the extension in. If not set, will be enabled in all scopes.',\n        type: 'string',\n        choices: Object.values(SettingScope).map((s) => s.toLowerCase()),\n        coerce: (v: string) => v.toLowerCase(),\n      })\n```"
+    },
+    {
+      "file": "packages/cli/src/commands/extensions/enable.ts",
+      "line_start": 54,
+      "line_end": 54,
+      "description": "Move the inline validator function for the scope option into a shared function to avoid duplication and improve maintainability."
+    },
+    {
+      "file": "packages/cli/src/config/extensions/extensionEnablement.ts",
+      "line_start": 35,
+      "line_end": 35,
+      "description": "The `fromFileRule` method incorrectly sets `includeSubdirs=true` for directory prefix patterns (e.g., `/foo/bar*`) due to its reliance on `endsWith('*')`, but it should only apply to patterns ending with `/*` (e.g., `/foo/bar/*`) to properly distinguish recursive directory matching from non-recursive prefix patterns."
+    },
+    {
+      "file": "packages/cli/src/config/extensions/extensionEnablement.ts",
+      "line_start": 36,
+      "line_end": 40,
+      "description": "`Override.fromFileRule` parses the rule from the configuration file but does not normalize the `baseRule` path (e.g., adding leading/trailing slashes). \n\nHowever, `Override.fromInput` and `isEnabled` both use `ensureLeadingAndTrailingSlash`. \n\nThis inconsistency can lead to:\n1.  **Matching failures**: A legacy rule `src/foo` (without slashes) will produce a regex that doesn't match the normalized input `/src/foo/`.\n2.  **Duplicate rules**: `conflictsWith` relies on strict string equality of `baseRule`. If `fromFileRule` returns `src/foo` and `fromInput` returns `/src/foo/`, the conflict won't be detected, and a duplicate rule will be added.\n\n**Suggestion**: Apply `ensureLeadingAndTrailingSlash` to `baseRule` in `fromFileRule` after stripping the wildcards."
+    },
+    {
+      "file": "packages/cli/src/config/extensions/extensionEnablement.ts",
+      "line_start": 42,
+      "line_end": 50,
+      "description": "The conflictsWith method only checks for conflicts when base rules are exactly equal. However, conflicts can also occur in parent-child relationships (e.g., '/dir/' and '/dir/sub/'). This could lead to inconsistent enablement behavior."
+    },
+    {
+      "file": "packages/cli/src/config/extensions/extensionEnablement.ts",
+      "line_start": 80,
+      "line_end": 90,
+      "description": "Consider adding JSDoc documentation to explain what this method does, especially since it's doing path normalization."
+    },
+    {
+      "file": "packages/cli/src/config/extensions/extensionEnablement.ts",
+      "line_start": 99,
+      "line_end": 99,
+      "description": "The function name `globToRegex` inaccurately implies full glob pattern support when it only implements `*` wildcard handling; rename to reflect the limited functionality (e.g., `pathMatchToRegex`)."
+    },
+    {
+      "file": "packages/cli/src/config/extensions/extensionEnablement.ts",
+      "line_start": 132,
+      "line_end": 134,
+      "description": "Potential path normalization bug: `ensureLeadingAndTrailingSlash` always appends a trailing `/`, so a path like `/repo/file.ts` becomes `/repo/file.ts/` and may never match overrides intended for files. In `isEnabled`, you normalize `currentPath` unconditionally, but override rules may represent directory scopes only (trailing `/`) and optional `*`. Consider normalizing based on whether `currentPath` is a directory, or normalize overrides and input paths consistently without forcing a trailing slash for file paths.\n\n```suggestion\n      // Consider normalizing separators only, and add leading slash, but don't force trailing slash for file paths.\n      const normalizedPath = normalizePath(currentPath);\n      if (override.matchesPath(normalizedPath)) {\n        enabled = !override.isDisable;\n      }\n      \n      function normalizePath(p: string): string {\n        let r = p.replace(/\\\\/g, '/');\n        if (!r.startsWith('/')) r = '/' + r;\n        return r;\n      }\n```"
+    },
+    {
+      "file": "packages/cli/src/config/extensions/extensionEnablement.ts",
+      "line_start": 171,
+      "line_end": 180,
+      "description": "Consider extracting this complex filter logic into a separate private method with a descriptive name to improve readability and maintainability."
+    },
+    {
+      "file": "packages/cli/src/config/extensions/extensionEnablement.ts",
+      "line_start": 181,
+      "line_end": 182,
+      "description": "In `enable`, you always `push` the new override after filtering, but you don’t de-duplicate the remaining list; repeated invocations could still accumulate duplicates from older configs that didn’t match `isEqualTo` due to normalization differences (e.g., missing leading/trailing slash). Consider normalizing all existing rules via `fromFileRule` + `output()` and using a Set to guarantee uniqueness."
+    },
+    {
+      "file": "packages/cli/src/config/extensions/extensionEnablement.ts",
+      "line_start": 191,
+      "line_end": 191,
+      "description": "While reusing the enable method is good for reducing duplication, it's not immediately clear that prepending '!' to scopePath achieves the desired disable behavior. Consider adding a comment explaining this approach."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/google-gemini/gemini-cli/pull/8797). Upstream base 0534ca74d4e67b00ed51e9f8bf568efc3ecaf834 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 436. Severity absent in the source. i1: AI comment (Qwen-Coder-480B), Diff Level; i2: AI comment (GLM-4.7), Diff Level; i3: human comment, Diff Level; i4: AI comment (Deepseek-V3.2), Diff Level; i5: AI comment (GPT-5.2), Diff Level"
+}

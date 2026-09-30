@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-012",
+  "language": "go",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-012/base",
+  "head_branch": "bench/review-bench/review-bench-012/head",
+  "base_sha": "8eceda6f3ae63c985ab8a914e6e20885c632009e",
+  "head_sha": "0a931c77815da67f22b0930ce54339533c969368",
+  "mr_title": "prevent removal of valid arguments",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/spf13/cobra",
+    "commit": "36aee64abe8c011e55572b30f0152fd143a32515",
+    "license": "Apache-2.0",
+    "source_case": "cobra-argsminusfirstx-flag-value",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/cobra-argsminusfirstx-flag-value"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "command.go",
+      "line_start": 333,
+      "line_end": 339,
+      "category": "correctness",
+      "severity": null,
+      "title": "argsMinusFirstX removes the first occurrence of x anywhere in args without flag awareness…",
+      "description": "argsMinusFirstX removes the first occurrence of x anywhere in args without flag awareness, so when the subcommand's name appears earlier as a flag's value (e.g. 'mycli --name admin subcmd admin') the flag value is stripped and the remaining argument list is misparsed.\n\nProvenance: fix PR #1781 (commit 6b0bd30): rewrite skips flag values when locating x.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": "argsMinusFirstX removes the first occurrence of x anywhere in args without flag awareness, so when the subcommand's name appears earlier as a flag's value (e.g. 'mycli --name admin subcmd admin') the flag value is stripped and the remaining argument list is misparsed."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench cobra-argsminusfirstx-flag-value (corpus corpus/v0.1). Introducing PR https://github.com/spf13/cobra/pull/95. Fix https://github.com/spf13/cobra/commit/6b0bd3076cfafd1c108264ed1e4aa0c0fe3f8537 (PR #1781). Category defaulted to correctness and severity left null because the source has neither; to be reviewed. Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 658-664, review-head lines 333-339)"
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-111",
+  "language": "java",
+  "size": "medium",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-111/base",
+  "head_branch": "bench/curated/case-111/head",
+  "base_sha": "085399bcc91a158163380d9673aadeed0e66bc1f",
+  "head_sha": "043649e7b211567f84bc89fea677ab8df37136a9",
+  "mr_title": "Support TimeUnit in the @Scheduled annotation",
+  "mr_description": "This commit introduces a new `timeUnit` attribute in the @Scheduled\nannotation to allow the user to specify a time unit other than\nmilliseconds.",
+  "origin": {
+    "repository": "https://github.com/spring-projects/spring-framework",
+    "commit": "e99b43b91e2a02b1cf18261ee85dccae5e6494e7",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "spring-context/src/main/java/org/springframework/scheduling/annotation/ScheduledAnnotationBeanPostProcessor.java",
+      "line_start": 412,
+      "line_end": 412,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Duration strings converted to milliseconds, then converted again",
+      "description": "parseDelayAsLong() already converts ISO-8601 Duration strings (e.g. 'PT5S') to milliseconds, and the result is then converted again from the annotation's timeUnit, so with timeUnit = SECONDS a 'PT5S' delay becomes 5000 seconds.\n\nOnly plain numeric strings are expressed in timeUnit; java.time.Duration strings carry their own unit and are returned in milliseconds by parseDelayAsLong(). Applying TimeUnit.MILLISECONDS.convert(value, timeUnit) to both cases multiplies Duration-based delays by the unit factor for fixedDelayString, fixedRateString and initialDelayString. The Javadoc also references non-existent attributes (fixedDelayTimeUnit(), fixedRateTimeUnit()).",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "spring-context/src/main/java/org/springframework/scheduling/annotation/ScheduledAnnotationBeanPostProcessor.java",
+          "line_start": 467,
+          "line_end": 467
+        },
+        {
+          "file": "spring-context/src/main/java/org/springframework/scheduling/annotation/ScheduledAnnotationBeanPostProcessor.java",
+          "line_start": 493,
+          "line_end": 493
+        }
+      ],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/spring-projects/spring-framework/commit/e99b43b91e2a02b1cf18261ee85dccae5e6494e7. Primary issue confirmed by the later upstream fix https://github.com/spring-projects/spring-framework/commit/bd72e4498b9d1824646c88fa6fa08c1780484d2f; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

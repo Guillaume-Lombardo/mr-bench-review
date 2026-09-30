@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-053",
+  "language": "python",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-053/base",
+  "head_branch": "bench/aacr/aacr-053/head",
+  "base_sha": "be50e0c91de6aa22c0528719035b2ac60c24bd9d",
+  "head_sha": "5e3bdbbd84552a373abb279de120dff91c4f6121",
+  "mr_title": "allow providing chrome_remote_debugging_port in browser config. fix launching user provided chrome browser.",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/browser-use/browser-use",
+    "commit": "0b21e50ca640581ecd46990475c8b223eaa05045",
+    "license": "MIT",
+    "source_case": "https://github.com/browser-use/browser-use/pull/1482",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "browser_use/browser/browser.py",
+      "line_start": 82,
+      "line_end": 83,
+      "category": "correctness",
+      "severity": null,
+      "title": "Typo: \"use to when\" should be \"use when\"",
+      "description": "Typo: \"use to when\" should be \"use when\".",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Typo: \"use to when\" should be \"use when\".\n"
+    },
+    {
+      "id": "i2",
+      "file": "browser_use/browser/browser.py",
+      "line_start": 290,
+      "line_end": 292,
+      "category": "correctness",
+      "severity": null,
+      "title": "`self.config.chrome_remote_debugging_port` is typed as `int | None`",
+      "description": "`self.config.chrome_remote_debugging_port` is typed as `int | None`. If it is `None`, `socket.connect_ex` will raise a `TypeError` because it expects an integer port. Suggest adding a check for `None` or ensuring it is a valid integer before using it here.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`self.config.chrome_remote_debugging_port` is typed as `int | None`. If it is `None`, `socket.connect_ex` will raise a `TypeError` because it expects an integer port. Suggest adding a check for `None` or ensuring it is a valid integer before using it here.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "browser_use/agent/service.py",
+      "line_start": 1225,
+      "line_end": 1225,
+      "description": "The linter rule `RUF006` is specifically for `asyncio.create_task` calls where the return value is not stored (to prevent garbage collection). \n\nHere, `self.llm.invoke` is called and the result is assigned to `response`, so `RUF006` is not applicable. \n\nThe previous `noqa: ASYNC` suggests the intention was to suppress a warning about a blocking call in an async context. Please verify the correct rule to suppress (e.g., `ASYNC101` if using flake8-async rules in Ruff) or remove the suppression if it's no longer needed."
+    },
+    {
+      "file": "browser_use/browser/browser.py",
+      "line_start": 219,
+      "line_end": 219,
+      "description": "The set construction syntax is incorrect. Using `*{...}` to unpack items inside a set literal is not valid Python syntax. The `*` unpacking operator cannot be used directly inside a set literal with braces. This will cause a `SyntaxError`. The correct approach is to create a set from an iterable or use a different data structure like a list. Looking at line 274, `chrome_args` is also defined as a set, so this pattern is consistent but syntactically invalid."
+    },
+    {
+      "file": "browser_use/browser/browser.py",
+      "line_start": 220,
+      "line_end": 220,
+      "description": "The Chrome debugging port argument in the launch configuration uses dictionary-based string formatting, which reduces readability compared to a direct f-string implementation. Replace `CHROME_DEBUGGING_ARG % {...}` with an f-string for the `--remote-debugging-port` flag."
+    },
+    {
+      "file": "browser_use/browser/browser.py",
+      "line_start": 229,
+      "line_end": 235,
+      "description": "Runtime bug: `asyncio.create_subprocess_exec` does **not** accept `shell=` (only `create_subprocess_shell` does). This will raise `TypeError` when launching Chrome.\n\nFix: remove `shell=False` (and optionally add `stdin=subprocess.DEVNULL` if desired).\n\n```suggestion\n\t\tchrome_sub_process = await asyncio.create_subprocess_exec(\n\t\t\tself.config.browser_binary_path,\n\t\t\t*chrome_launch_args,\n\t\t\tstdout=subprocess.DEVNULL,\n\t\t\tstderr=subprocess.DEVNULL,\n\t\t)\n```"
+    },
+    {
+      "file": "browser_use/browser/browser.py",
+      "line_start": 277,
+      "line_end": 277,
+      "description": "Replace `CHROME_DEBUGGING_ARG` constant usage with a hardcoded string for the remote debugging port argument to reduce indirection and improve grep-ability."
+    },
+    {
+      "file": "browser_use/browser/browser.py",
+      "line_start": 286,
+      "line_end": 286,
+      "description": "chrome_args is created using curly braces {}, which makes it a set. However, sets don't have a remove() method - they have discard(). This will cause a runtime AttributeError. Change curly braces to square brackets [] to create a list instead."
+    },
+    {
+      "file": "browser_use/browser/chrome.py",
+      "line_start": 97,
+      "line_end": 99,
+      "description": "CHROME_ARGS no longer includes any '--remote-debugging-port=...' flag (the previous f-string using CHROME_DEBUG_PORT was removed). The newly added CHROME_DEBUGGING_ARG is a format template but is not used here, so Chrome may start without a remote debugging port unless another code path injects it. If the intent is to make the port configurable, ensure this template is actually applied (e.g., appended to CHROME_ARGS after formatting) and consider removing/repurposing CHROME_DEBUG_PORT if it's now obsolete to avoid dead/contradictory config."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/browser-use/browser-use/pull/1482). Upstream base b50bb2216721b82d81e0fda8fb50a31266e09ce4 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 133. Severity absent in the source. i1: AI comment (Gemini-3-Pro), Diff Level; i2: AI comment (Gemini-3-Pro), File Level"
+}

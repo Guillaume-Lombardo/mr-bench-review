@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-004",
+  "language": "javascript",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-004/base",
+  "head_branch": "bench/review-bench/review-bench-004/head",
+  "base_sha": "a549f1081bceb3988c21be7082610ce28a067ba8",
+  "head_sha": "03477f39b0b8f94a4c22d659a798d9c6d50ca287",
+  "mr_title": "fix(interceptors): trim trailing ejected handlers",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/axios/axios",
+    "commit": "712e02373f1c5ac72fdf5da16f04838338ba817e",
+    "license": "MIT",
+    "source_case": "axios-nullish-interceptor-handlers",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/axios-nullish-interceptor-handlers"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "lib/core/InterceptorManager.js",
+      "line_start": 6,
+      "line_end": 7,
+      "category": "correctness",
+      "severity": null,
+      "title": "syncHandlerEntries() reads handlers.length before checking that handlers exists, so a fal…",
+      "description": "syncHandlerEntries() reads handlers.length before checking that handlers exists, so a falsy/ejected-to-nullish handlers value crashes interceptor synchronization.\n\nProvenance: fix PR #11118 body (commit 2d2a21a); fixes issue #11114.",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "lib/core/InterceptorManager.js",
+          "line_start": 14,
+          "line_end": 14
+        },
+        {
+          "file": "lib/core/InterceptorManager.js",
+          "line_start": 19,
+          "line_end": 20
+        },
+        {
+          "file": "lib/core/InterceptorManager.js",
+          "line_start": 31,
+          "line_end": 31
+        },
+        {
+          "file": "lib/core/InterceptorManager.js",
+          "line_start": 63,
+          "line_end": 63
+        },
+        {
+          "file": "lib/core/InterceptorManager.js",
+          "line_start": 149,
+          "line_end": 149
+        }
+      ],
+      "source_category": null,
+      "source_text": "syncHandlerEntries() reads handlers.length before checking that handlers exists, so a falsy/ejected-to-nullish handlers value crashes interceptor synchronization."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench axios-nullish-interceptor-handlers (corpus corpus/v0.1). Introducing PR https://github.com/axios/axios/pull/11087. Fix https://github.com/axios/axios/commit/2d2a21af8a433089474a2149781799c93acbcf3c (PR #11118). Category defaulted to correctness and severity left null because the source has neither; to be reviewed. Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 6-7, review-head lines 6-7) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 14-14, review-head lines 14-14) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 19-20, review-head lines 19-20) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 31-31, review-head lines 31-31) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 63-63, review-head lines 63-63) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 149-149, review-head lines 149-149)"
+}

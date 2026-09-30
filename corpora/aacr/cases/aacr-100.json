@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-100",
+  "language": "csharp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-100/base",
+  "head_branch": "bench/aacr/aacr-100/head",
+  "base_sha": "0fd1e5d3d67e888fdd8716f1ce7c1350ad3edaab",
+  "head_sha": "c5670d39f131e11545af45b3acdddfec2ed9f024",
+  "mr_title": "init",
+  "mr_description": "- init\n- this was duplicated",
+  "origin": {
+    "repository": "https://github.com/microsoft/PowerToys",
+    "commit": "c1cedce10cfe7436da12580ea231d5837520ef69",
+    "license": "MIT",
+    "source_case": "https://github.com/microsoft/PowerToys/pull/40814",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/modules/cmdpal/Microsoft.CmdPal.UI.ViewModels/TopLevelViewModel.cs",
+      "line_start": 71,
+      "line_end": 71,
+      "category": "maintainability",
+      "severity": null,
+      "title": "MoreCommands returns null for unsupported item types without logging, risking downstream…",
+      "description": "MoreCommands returns null for unsupported item types without logging, risking downstream null reference exceptions; add debug logging to record unexpected item types.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "MoreCommands returns null for unsupported item types without logging, risking downstream null reference exceptions; add debug logging to record unexpected item types."
+    },
+    {
+      "id": "i2",
+      "file": "src/modules/cmdpal/Microsoft.CmdPal.UI/Converters/ContextItemTemplateSelector.cs",
+      "line_start": 15,
+      "line_end": 15,
+      "category": "correctness",
+      "severity": null,
+      "title": "`Default`, `Critical`, and `Separator` are nullable",
+      "description": "`Default`, `Critical`, and `Separator` are nullable. If `Default` isn't set in XAML, this selector can return null templates (both on entry and in the fallback). Consider making `Default` non-null (required), or provide a safe non-null fallback (e.g., base.SelectTemplateCore / throw with a clear message) to avoid silent UI failures.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`Default`, `Critical`, and `Separator` are nullable. If `Default` isn't set in XAML, this selector can return null templates (both on entry and in the fallback). Consider making `Default` non-null (required), or provide a safe non-null fallback (e.g., base.SelectTemplateCore / throw with a clear message) to avoid silent UI failures."
+    },
+    {
+      "id": "i3",
+      "file": "src/modules/cmdpal/Microsoft.CmdPal.UI/Converters/ContextItemTemplateSelector.cs",
+      "line_start": 42,
+      "line_end": 42,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Missing debug logging for unknown item types in ContextItemTemplateSelector fallback",
+      "description": "Missing debug logging for unknown item types in ContextItemTemplateSelector fallback. Add a Debug.WriteLine statement when falling back to Default template to monitor unexpected types.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Missing debug logging for unknown item types in ContextItemTemplateSelector fallback. Add a Debug.WriteLine statement when falling back to Default template to monitor unexpected types."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/microsoft/PowerToys/pull/40814). Upstream base e1474c1f3020e2615c438d82b29f48626f456a9f = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 26. Severity absent in the source. i1: human comment, Diff Level; i2: AI comment (GPT-5.2), File Level; i3: human comment, File Level"
+}

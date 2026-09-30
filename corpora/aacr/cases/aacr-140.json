@@ -1,0 +1,257 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-140",
+  "language": "cpp",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-140/base",
+  "head_branch": "bench/aacr/aacr-140/head",
+  "base_sha": "9fe05edb19aa59d614b4c1a4eb18d67425a0b935",
+  "head_sha": "a071dbdbe3b2afdf7091aeed7d742dee197cb9d8",
+  "mr_title": "[core dumps] exclude sensitive data",
+  "mr_description": "- [core dumps] exclude sensitive data\n- enable USE_AWS_MEMORY_MANAGEMENT\n- add ifdef USE_AWS_S3\n- add ifdef USE_JEMALLOC\n- try fix compilation\n- check if MADV_DONTDUMP is defined\n- do not dump encryption keys\n- style fxs\n- fix\n- fxs\n- fix\n- Merge remote-tracking branch 'origin' into dont-dump-sensitive-data",
+  "origin": {
+    "repository": "https://github.com/ClickHouse/ClickHouse",
+    "commit": "314352043db0170026d11475bcaf67c7bb4fc311",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/ClickHouse/ClickHouse/pull/82441",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/Common/AwsNodumpMemoryManager.cpp",
+      "line_start": 8,
+      "line_end": 11,
+      "category": "correctness",
+      "severity": null,
+      "title": "The underlying `JemallocNodumpAllocatorImpl` may throw exceptions (e.g., `std::runtime_er…",
+      "description": "The underlying `JemallocNodumpAllocatorImpl` may throw exceptions (e.g., `std::runtime_error` during initialization or if `madvise` fails). It is recommended to catch these exceptions and return `nullptr` to ensure that the AWS SDK's memory allocation interface contract is honored and to prevent potential crashes due to uncaught exceptions.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The underlying `JemallocNodumpAllocatorImpl` may throw exceptions (e.g., `std::runtime_error` during initialization or if `madvise` fails). It is recommended to catch these exceptions and return `nullptr` to ensure that the AWS SDK's memory allocation interface contract is honored and to prevent potential crashes due to uncaught exceptions.\n"
+    },
+    {
+      "id": "i2",
+      "file": "src/Common/AwsNodumpMemoryManager.cpp",
+      "line_start": 18,
+      "line_end": 20,
+      "category": "maintainability",
+      "severity": null,
+      "title": "`Begin()`/`End()` are currently no-ops",
+      "description": "`Begin()`/`End()` are currently no-ops. If AWS SDK uses these hooks for per-thread setup/teardown or debugging, leaving them empty may be fine, but please confirm the intended semantics for your allocator integration. If intentionally unused, consider documenting that expectation in the header to avoid future incorrect assumptions.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "`Begin()`/`End()` are currently no-ops. If AWS SDK uses these hooks for per-thread setup/teardown or debugging, leaving them empty may be fine, but please confirm the intended semantics for your allocator integration. If intentionally unused, consider documenting that expectation in the header to avoid future incorrect assumptions."
+    },
+    {
+      "id": "i3",
+      "file": "src/Common/AwsNodumpMemoryManager.h",
+      "line_start": 8,
+      "line_end": 8,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Header include for JemallocNodumpAllocatorImpl.h should be moved to the implementation (.…",
+      "description": "Header include for JemallocNodumpAllocatorImpl.h should be moved to the implementation (.cpp) file as it is not required in the header interface.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Header include for JemallocNodumpAllocatorImpl.h should be moved to the implementation (.cpp) file as it is not required in the header interface."
+    },
+    {
+      "id": "i4",
+      "file": "src/Common/JemallocNodumpSTLAllocator.h",
+      "line_start": 15,
+      "line_end": 15,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The include for Poco/Format.h appears to be unused in this file",
+      "description": "The include for Poco/Format.h appears to be unused in this file. Consider removing it to reduce unnecessary dependencies.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The include for Poco/Format.h appears to be unused in this file. Consider removing it to reduce unnecessary dependencies.\n"
+    },
+    {
+      "id": "i5",
+      "file": "src/Common/JemallocNodumpSTLAllocator.h",
+      "line_start": 23,
+      "line_end": 27,
+      "category": "correctness",
+      "severity": null,
+      "title": "This allocator is missing several STL allocator requirements/traits (e.g., rebind for pre…",
+      "description": "This allocator is missing several STL allocator requirements/traits (e.g., rebind for pre-C++11 containers, propagate_on_container_* and is_always_equal, and potentially max_size). Some standard library implementations will still work, but others may reject it or behave suboptimally. Consider adding the standard allocator typedefs/traits to ensure it is a fully conforming allocator type.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "This allocator is missing several STL allocator requirements/traits (e.g., rebind for pre-C++11 containers, propagate_on_container_* and is_always_equal, and potentially max_size). Some standard library implementations will still work, but others may reject it or behave suboptimally. Consider adding the standard allocator typedefs/traits to ensure it is a fully conforming allocator type."
+    },
+    {
+      "id": "i6",
+      "file": "src/Common/JemallocNodumpSTLAllocator.h",
+      "line_start": 46,
+      "line_end": 51,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential alignment issue: allocate() returns raw memory from JemallocNodumpAllocatorImpl…",
+      "description": "Potential alignment issue: allocate() returns raw memory from JemallocNodumpAllocatorImpl without verifying it satisfies alignof(T). If the underlying allocator doesn't guarantee at least max_align_t or alignof(T), this can cause UB for over-aligned types. Consider either restricting T to not be over-aligned (static_assert) or adding an aligned allocation path.\n\n```suggestion\n        static_assert(alignof(T) <= alignof(std::max_align_t), \"Over-aligned types require aligned allocation\");\n        void * ptr = JemallocNodumpAllocatorImpl::instance().allocate(bytes);\n        if (!ptr)\n            throw std::bad_alloc();\n        return static_cast<T *>(ptr);\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential alignment issue: allocate() returns raw memory from JemallocNodumpAllocatorImpl without verifying it satisfies alignof(T). If the underlying allocator doesn't guarantee at least max_align_t or alignof(T), this can cause UB for over-aligned types. Consider either restricting T to not be over-aligned (static_assert) or adding an aligned allocation path.\n\n```suggestion\n        static_assert(alignof(T) <= alignof(std::max_align_t), \"Over-aligned types require aligned allocation\");\n        void * ptr = JemallocNodumpAllocatorImpl::instance().allocate(bytes);\n        if (!ptr)\n            throw std::bad_alloc();\n        return static_cast<T *>(ptr);\n```"
+    },
+    {
+      "id": "i7",
+      "file": "src/Common/JemallocNodumpSTLAllocator.h",
+      "line_start": 93,
+      "line_end": 99,
+      "category": "security",
+      "severity": null,
+      "title": "Security issue: Taking `std::string` by value creates a copy of sensitive data in regular…",
+      "description": "Security issue: Taking `std::string` by value creates a copy of sensitive data in regular heap memory before it's moved to NoDumpString. This defeats the purpose of using a no-dump allocator, as the sensitive data exists in dumpable memory during the copy operation. Consider taking the string by const reference and using the NoDumpString constructor that takes iterators, or provide a different API design that avoids copying sensitive data through regular heap memory.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "Security issue: Taking `std::string` by value creates a copy of sensitive data in regular heap memory before it's moved to NoDumpString. This defeats the purpose of using a no-dump allocator, as the sensitive data exists in dumpable memory during the copy operation. Consider taking the string by const reference and using the NoDumpString constructor that takes iterators, or provide a different API design that avoids copying sensitive data through regular heap memory."
+    },
+    {
+      "id": "i8",
+      "file": "src/Common/NamedCollections/NamedCollectionsMetadataStorage.cpp",
+      "line_start": 374,
+      "line_end": 374,
+      "category": "security",
+      "severity": null,
+      "title": "Using `boost::algorithm::unhex` directly returns a `std::string`, which creates a tempora…",
+      "description": "Using `boost::algorithm::unhex` directly returns a `std::string`, which creates a temporary copy of the decoded key in the default allocator (dumpable memory). This undermines the purpose of using `NoDumpString`. \n\nConsider decoding directly into the `key` variable using an output iterator to ensure the sensitive data remains in non-dumpable memory:\n\n```cpp\nkey.reserve(key_hex.size() / 2);\nboost::algorithm::unhex(key_hex, std::back_inserter(key));\n```",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "Using `boost::algorithm::unhex` directly returns a `std::string`, which creates a temporary copy of the decoded key in the default allocator (dumpable memory). This undermines the purpose of using `NoDumpString`. \n\nConsider decoding directly into the `key` variable using an output iterator to ensure the sensitive data remains in non-dumpable memory:\n\n```cpp\nkey.reserve(key_hex.size() / 2);\nboost::algorithm::unhex(key_hex, std::back_inserter(key));\n```\n"
+    },
+    {
+      "id": "i9",
+      "file": "src/Disks/DiskEncrypted.cpp",
+      "line_start": 32,
+      "line_end": 33,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Templating `unhexKey` appears unnecessary as the function is only used with `NoDumpString…",
+      "description": "Templating `unhexKey` appears unnecessary as the function is only used with `NoDumpString`; should be specialized to `NoDumpString` instead of generic template.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Templating `unhexKey` appears unnecessary as the function is only used with `NoDumpString`; should be specialized to `NoDumpString` instead of generic template."
+    },
+    {
+      "id": "i10",
+      "file": "src/Disks/DiskEncryptedTransaction.h",
+      "line_start": 22,
+      "line_end": 25,
+      "category": "security",
+      "severity": null,
+      "title": "The usage of `NoDumpString` is intended to prevent sensitive keys from being dumped",
+      "description": "The usage of `NoDumpString` is intended to prevent sensitive keys from being dumped. However, `std::basic_string` (which `NoDumpString` aliases) typically uses Small String Optimization (SSO). If a key is short (e.g., 16 bytes), it may be stored directly within the string object rather than in the allocator-managed memory. \n\nSince `all_keys` uses the default allocator for `std::unordered_map`, the map nodes (containing the `NoDumpString` objects) reside in dumpable memory. Consequently, short keys fitting in the SSO buffer will be exposed in core dumps. Similarly, `current_key` is vulnerable if `DiskEncryptedSettings` is allocated in dumpable memory.\n\nTo mitigate this for `all_keys`, consider using a nodump allocator for the map itself, ensuring the map nodes are also in protected memory.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "The usage of `NoDumpString` is intended to prevent sensitive keys from being dumped. However, `std::basic_string` (which `NoDumpString` aliases) typically uses Small String Optimization (SSO). If a key is short (e.g., 16 bytes), it may be stored directly within the string object rather than in the allocator-managed memory. \n\nSince `all_keys` uses the default allocator for `std::unordered_map`, the map nodes (containing the `NoDumpString` objects) reside in dumpable memory. Consequently, short keys fitting in the SSO buffer will be exposed in core dumps. Similarly, `current_key` is vulnerable if `DiskEncryptedSettings` is allocated in dumpable memory.\n\nTo mitigate this for `all_keys`, consider using a nodump allocator for the map itself, ensuring the map nodes are also in protected memory.\n"
+    },
+    {
+      "id": "i11",
+      "file": "src/Disks/DiskEncryptedTransaction.h",
+      "line_start": 22,
+      "line_end": 28,
+      "category": "security",
+      "severity": null,
+      "title": "`NoDumpString` is now used for encryption keys (good for avoiding core dumps), but this o…",
+      "description": "`NoDumpString` is now used for encryption keys (good for avoiding core dumps), but this only helps if key material is not frequently copied into plain `String/std::string` elsewhere. Please double-check call sites/implementations of `findKeyByFingerprint` and any logging/error paths to avoid implicit conversions or temporary `String` copies that would reintroduce sensitive data into normal heap memory.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "`NoDumpString` is now used for encryption keys (good for avoiding core dumps), but this only helps if key material is not frequently copied into plain `String/std::string` elsewhere. Please double-check call sites/implementations of `findKeyByFingerprint` and any logging/error paths to avoid implicit conversions or temporary `String` copies that would reintroduce sensitive data into normal heap memory."
+    },
+    {
+      "id": "i12",
+      "file": "src/IO/FileEncryptionCommon.cpp",
+      "line_start": 302,
+      "line_end": 304,
+      "category": "maintainability",
+      "severity": null,
+      "title": "`NoDumpString` is a `std::basic_string<char, ..., NoDumpCharAllocator>`, so `data()/size(…",
+      "description": "`NoDumpString` is a `std::basic_string<char, ..., NoDumpCharAllocator>`, so `data()/size()/c_str()` are contiguous and the SipHash calls are OK.\n\nOne thing to tighten: OpenSSL EVP APIs expect `const unsigned char *` for key/iv. Here we reinterpret_cast from `char*` to `uint8_t*`; prefer `const unsigned char*` to match OpenSSL’s type and avoid any subtle signedness/aliasing concerns.\n\nAlso consider explicitly using `key.data()` (not `c_str()`) since key material is binary and not required to be NUL-terminated; it communicates intent better (though both work for `std::string`).\n\n```suggestion\n    if (EVP_EncryptInit_ex(evp_ctx, nullptr, nullptr,\n                                reinterpret_cast<const unsigned char *>(key.data()),\n                                reinterpret_cast<const unsigned char *>(current_iv.data())) != 1)\n            throw Exception(DB::ErrorCodes::OPENSSL_ERROR, \"EVP_EncryptInit_ex failed: {}\", getOpenSSLErrors());\n```",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "`NoDumpString` is a `std::basic_string<char, ..., NoDumpCharAllocator>`, so `data()/size()/c_str()` are contiguous and the SipHash calls are OK.\n\nOne thing to tighten: OpenSSL EVP APIs expect `const unsigned char *` for key/iv. Here we reinterpret_cast from `char*` to `uint8_t*`; prefer `const unsigned char*` to match OpenSSL’s type and avoid any subtle signedness/aliasing concerns.\n\nAlso consider explicitly using `key.data()` (not `c_str()`) since key material is binary and not required to be NUL-terminated; it communicates intent better (though both work for `std::string`).\n\n```suggestion\n    if (EVP_EncryptInit_ex(evp_ctx, nullptr, nullptr,\n                                reinterpret_cast<const unsigned char *>(key.data()),\n                                reinterpret_cast<const unsigned char *>(current_iv.data())) != 1)\n            throw Exception(DB::ErrorCodes::OPENSSL_ERROR, \"EVP_EncryptInit_ex failed: {}\", getOpenSSLErrors());\n```"
+    },
+    {
+      "id": "i13",
+      "file": "src/configure_config.cmake",
+      "line_start": 91,
+      "line_end": 91,
+      "category": "correctness",
+      "severity": null,
+      "title": "The `USE_AWS_MEMORY_MANAGEMENT` flag is incorrectly set for the Google Cloud C++ target;…",
+      "description": "The `USE_AWS_MEMORY_MANAGEMENT` flag is incorrectly set for the Google Cloud C++ target; this AWS-specific memory management setting is only applicable to the S3 client and not required for Google Cloud services.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The `USE_AWS_MEMORY_MANAGEMENT` flag is incorrectly set for the Google Cloud C++ target; this AWS-specific memory management setting is only applicable to the S3 client and not required for Google Cloud services."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/Common/AwsNodumpMemoryManager.cpp",
+      "line_start": 8,
+      "line_end": 8,
+      "description": "The `blockSize` parameter in `AwsNodumpMemoryManager::AllocateMemory` should be renamed to `block_size` to adhere to the project's snake_case variable naming convention."
+    },
+    {
+      "file": "src/Common/JemallocNodumpAllocatorImpl.cpp",
+      "line_start": 36,
+      "line_end": 39,
+      "description": "**Critical Issue**: This function is used as a callback for `jemalloc` (a C library). Throwing C++ exceptions across C stack frames is undefined behavior and may lead to program termination or state corruption.\n\n**Bug**: `madvise` returns -1 on error and sets `errno`. Passing `ret` (which is -1) to `errnoToString` is incorrect. You should use `errno` to get the actual error message.\n\n**Suggestion**: Log the error instead of throwing, and use `errno` for the error message."
+    },
+    {
+      "file": "src/Common/JemallocNodumpAllocatorImpl.cpp",
+      "line_start": 36,
+      "line_end": 39,
+      "description": "`madvise()` returns 0 on success and -1 on failure (with `errno` set). Here `ret` will be -1, but you pass `ret` into `errnoToString(ret)`, which likely prints \"Unknown error -1\". Capture `errno` after failure (or use `errnoToString(errno)`), and consider including address/size in the message for easier debugging.\n\n```suggestion\n        if (madvise(result, size, MADV_DONTDUMP) != 0)\n        {\n            const int err = errno;\n            throw std::runtime_error(Poco::format(\"Failed to run madvise(MADV_DONTDUMP) on %p (size %zu): %s\", result, size, errnoToString(err)));\n        }\n```"
+    },
+    {
+      "file": "src/Common/JemallocNodumpAllocatorImpl.cpp",
+      "line_start": 60,
+      "line_end": 60,
+      "description": "Replace Poco::format with fmt::format for consistent string formatting per project standards."
+    },
+    {
+      "file": "src/Common/JemallocNodumpAllocatorImpl.cpp",
+      "line_start": 74,
+      "line_end": 75,
+      "description": "Copying `*hooks` assumes `hooks` points to a fully initialized struct and that a shallow copy is safe for all fields. In jemalloc, `extent_hooks_t` layout can vary by version and some function pointers may be null. Consider using jemalloc's `extent_hooks_t` initialization conventions (e.g., start from `*hooks` but ensure required callbacks are present), and document/guard against null callbacks if your code relies on them."
+    },
+    {
+      "file": "src/Common/JemallocNodumpSTLAllocator.h",
+      "line_start": 14,
+      "line_end": 15,
+      "description": "Remove unused includes `<limits>` and `<new>` within the `USE_JEMALLOC` conditional block."
+    },
+    {
+      "file": "src/Common/NamedCollections/NamedCollectionsMetadataStorage.cpp",
+      "line_start": 430,
+      "line_end": 433,
+      "description": "Security/behavior note: switching `key` to `NoDumpString` helps avoid core dumps only for heap-allocated storage. With SSO (small-string optimization), a 16/24/32-byte key may be stored inline inside the `basic_string` object, so it can still end up in core dumps. Also, `std::basic_string` doesn’t guarantee zeroization of its buffer on destruction.\n\nIf the intent is to reliably protect encryption keys, consider storing the key in a dedicated secure buffer type that:\n- disables/avoids SSO (e.g., custom string/buffer with heap-only storage), and\n- explicitly wipes memory on destruction / reallocation.\nAt minimum, verify key sizes won’t use SSO on your standard library/ABI and document the limitation."
+    },
+    {
+      "file": "src/IO/WriteBufferFromEncryptedFile.h",
+      "line_start": 7,
+      "line_end": 26,
+      "description": "Potential compile/API risk: `WriteBufferFromEncryptedFile` ctor now requires `const NoDumpString &` instead of `const String &`. This will break any callers still passing `String`/string literals unless they were updated or there is an overload. Please ensure all call sites were migrated (e.g., via `toNoDumpString(...)`) or add an overload taking `String`/`std::string_view` to keep backward compatibility.\n\nAlso note: the new dependency `<Common/JemallocNodumpSTLAllocator.h>` is included under `#if USE_SSL`; if any code wants to use this header while SSL is enabled but wants to avoid jemalloc headers, this header currently includes jemalloc conditionally (safe), but it does add a new common include. Consider forward declaring `NoDumpString` via a dedicated lightweight header if compile-time impact becomes noticeable."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/ClickHouse/ClickHouse/pull/82441). Upstream base 26938d351af00dd87d23cf7778552631439b8ce2 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 531. Severity absent in the source. i1: AI comment (Gemini-3-Pro), Repo Level; i2: AI comment (GPT-5.2), Repo Level; i3: human comment, File Level; i4: AI comment (Deepseek-V3.2), File Level; i5: AI comment (GPT-5.2), File Level; i6: AI comment (GPT-5.2), File Level; i7: AI comment (GLM-4.7), Diff Level; i8: AI comment (Gemini-3-Pro), File Level; i9: human comment, File Level; i10: AI comment (Gemini-3-Pro), Repo Level; i11: AI comment (GPT-5.2), Repo Level; i12: AI comment (GPT-5.2), Diff Level; i13: human comment, Repo Level"
+}

@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-055",
+  "language": "python",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-055/base",
+  "head_branch": "bench/aacr/aacr-055/head",
+  "base_sha": "bba9de45015ee59b49cbf98e1dce10638b868955",
+  "head_sha": "158119c4bc288b94a018f16e1de270486dfac884",
+  "mr_title": "thinking_budget 0",
+  "mr_description": "- thinking_budget 0\n- Force dynamic thinking\n- Logging\n- Refactor API call handling in ChatGoogle class\n- Remove presence_penalty",
+  "origin": {
+    "repository": "https://github.com/browser-use/browser-use",
+    "commit": "72f1585f9add5b72e829eaee3b5bff684e0b08d3",
+    "license": "MIT",
+    "source_case": "https://github.com/browser-use/browser-use/pull/3172",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "browser_use/llm/google/chat.py",
+      "line_start": 202,
+      "line_end": 202,
+      "category": "correctness",
+      "severity": null,
+      "title": "Hardcoded thinking_budget value of -1 overrides user-provided values, preventing users fr…",
+      "description": "Hardcoded thinking_budget value of -1 overrides user-provided values, preventing users from controlling the thinking budget parameter as intended.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Hardcoded thinking_budget value of -1 overrides user-provided values, preventing users from controlling the thinking budget parameter as intended."
+    },
+    {
+      "id": "i2",
+      "file": "browser_use/llm/google/chat.py",
+      "line_start": 376,
+      "line_end": 376,
+      "category": "correctness",
+      "severity": null,
+      "title": "**Critical Issue**: Removed retry logic without replacement",
+      "description": "**Critical Issue**: Removed retry logic without replacement\n\nThe manual retry loop was removed (lines with `for attempt in range(10):`), but the comment says \"Let Google client handle retries internally\". However:\n\n1. **No evidence the Google client has automatic retries** for all error types that were previously handled\n2. The old code had explicit retry logic for rate limits, server errors, and connection issues\n3. **Breaking change**: This could cause failures for users experiencing transient network issues or rate limits that would have previously been handled\n\n**Required verification**:\n- Does the Google Generative AI client (`google-genai`) actually retry on rate limits (429), server errors (500/502/503), and connection timeouts?\n- If not, this is a **regression** that will break existing functionality\n\n**Recommendation**: Either:\n1. Verify and document that the Google client handles these retries, OR\n2. Keep the retry logic but optimize the backoff strategy (which seems to be the actual performance issue)",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "**Critical Issue**: Removed retry logic without replacement\n\nThe manual retry loop was removed (lines with `for attempt in range(10):`), but the comment says \"Let Google client handle retries internally\". However:\n\n1. **No evidence the Google client has automatic retries** for all error types that were previously handled\n2. The old code had explicit retry logic for rate limits, server errors, and connection issues\n3. **Breaking change**: This could cause failures for users experiencing transient network issues or rate limits that would have previously been handled\n\n**Required verification**:\n- Does the Google Generative AI client (`google-genai`) actually retry on rate limits (429), server errors (500/502/503), and connection timeouts?\n- If not, this is a **regression** that will break existing functionality\n\n**Recommendation**: Either:\n1. Verify and document that the Google client handles these retries, OR\n2. Keep the retry logic but optimize the backoff strategy (which seems to be the actual performance issue)"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "browser_use/llm/google/chat.py",
+      "line_start": 78,
+      "line_end": 78,
+      "description": "Changing the default value of `thinking_budget` from `None` to `0` unintentionally enables `thinking_config` for all requests, causing an unintended behavioral regression."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/browser-use/browser-use/pull/3172). Upstream base e85a547378b236c9788802d28e816f10940a7e53 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 324. Severity absent in the source. i1: human comment, Diff Level; i2: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level"
+}

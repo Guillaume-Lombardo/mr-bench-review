@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-001",
+  "language": "java",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-001/base",
+  "head_branch": "bench/curated/case-001/head",
+  "base_sha": "3329fc3ad0056ba054d596eae72ab110fb2d51cf",
+  "head_sha": "1973e11f13c634fc76089c4dfabdd6374e418707",
+  "mr_title": "Make UnorderedTPEExecutor.scheduleAtFixedRate run tasks more than once",
+  "mr_description": "Motivation:\nAll scheduled executors should behave in accordance to their API.\nThe bug here is that scheduled tasks were not run more than once because we executed the runnables directly, instead of through the provided runnable future.\n\nModification:\nWe now run tasks through the provided future, so that when each run completes, the internal state of the task is reset and the ScheduledThreadPoolExecutor is informed of the completion.\nThis allows the executor to prepare the next run.\n\nResult:\nThe UnorderedThreadPoolEventExecutor is now able to run scheduled tasks more than once.\nWhich is what one would expect from the API.",
+  "origin": {
+    "repository": "https://github.com/netty/netty",
+    "commit": "fd8c1874b4e24a18c562c7013efabcb155395459",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "common/src/main/java/io/netty/util/concurrent/UnorderedThreadPoolEventExecutor.java",
+      "line_start": 217,
+      "line_end": 217,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Callable results lost: promise completed with the Runnable result (null)",
+      "description": "RunnableScheduledFutureTask now wraps the JDK future as a Runnable task, so for submit(Callable) the Netty promise is completed with the result of future.run() (null) instead of the callable's value.\n\nPromiseTask stores the task and, for a Runnable, completes with a null result. Passing the inner RunnableScheduledFuture (a Runnable) instead of the original Callable means `executor.submit(() -> 42).get()` now returns null. The callable result must be read from the inner future (future.get()) when the decorated task was a Callable.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/netty/netty/commit/fd8c1874b4e24a18c562c7013efabcb155395459. Primary issue confirmed by the later upstream fix https://github.com/netty/netty/commit/4949d4a0ad271d5d48e4f67f1b691c53c2bafe8c; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

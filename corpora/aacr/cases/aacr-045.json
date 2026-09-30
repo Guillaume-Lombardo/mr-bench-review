@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-045",
+  "language": "c",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-045/base",
+  "head_branch": "bench/aacr/aacr-045/head",
+  "base_sha": "0c82be017f97f96e6221f5a9cf630a09b12a6b71",
+  "head_sha": "14d41f1123b10637fa60d2be0f4ef540a5ae5099",
+  "mr_title": "bugfix(misc): Fix oob read for utf8-next",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/lvgl/lvgl",
+    "commit": "a0067e3984cc95bb3ed0dce9abb664ee6a01a199",
+    "license": "MIT",
+    "source_case": "https://github.com/lvgl/lvgl/pull/7602",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/misc/lv_text.c",
+      "line_start": 653,
+      "line_end": 653,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The added null check for `txt` parameter omits the required logging; include LOG_ERR or L…",
+      "description": "The added null check for `txt` parameter omits the required logging; include LOG_ERR or LOG_WRN specifically when `txt` is NULL.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The added null check for `txt` parameter omits the required logging; include LOG_ERR or LOG_WRN specifically when `txt` is NULL."
+    },
+    {
+      "id": "i2",
+      "file": "src/misc/lv_text.c",
+      "line_start": 653,
+      "line_end": 653,
+      "category": "correctness",
+      "severity": null,
+      "title": "**Potential logic issue**: Checking `txt[*i] == '\\0'` before processing might change the…",
+      "description": "**Potential logic issue**: Checking `txt[*i] == '\\0'` before processing might change the expected behavior of this function. \n\nIf `*i` points to the null terminator, this returns early without incrementing `*i`. Callers might expect `*i` to be incremented even when reaching the end of the string.\n\nConsider whether this early return is the intended behavior, or if the null check should only prevent accessing beyond valid memory while still allowing normal processing of the null terminator case.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "**Potential logic issue**: Checking `txt[*i] == '\\0'` before processing might change the expected behavior of this function. \n\nIf `*i` points to the null terminator, this returns early without incrementing `*i`. Callers might expect `*i` to be incremented even when reaching the end of the string.\n\nConsider whether this early return is the intended behavior, or if the null check should only prevent accessing beyond valid memory while still allowing normal processing of the null terminator case."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/lvgl/lvgl/pull/7602). Upstream base 3f13398673c810ce5b3f7b21a7b89753f5e9ba97 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 109. Severity absent in the source. i1: human comment, File Level; i2: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level"
+}

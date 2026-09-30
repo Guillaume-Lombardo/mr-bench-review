@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-059",
+  "language": "cpp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-059/base",
+  "head_branch": "bench/aacr/aacr-059/head",
+  "base_sha": "58dc54ed9b4341514c226e09f50afd12c19a4723",
+  "head_sha": "1975519a50b8d615bce712ea3fc069f276e5cf4d",
+  "mr_title": "refactor: bluetooth in serial chooser when exclusively wireless serial ports are expected",
+  "mr_description": "https://chromium-review.googlesource.com/c/chromium/src/+/5737296",
+  "origin": {
+    "repository": "https://github.com/electron/electron",
+    "commit": "2cc56562e22cd36c70f0b632c3297d62c3c58b06",
+    "license": "MIT",
+    "source_case": "https://github.com/electron/electron/pull/45671",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "shell/browser/serial/serial_chooser_controller.cc",
+      "line_start": 153,
+      "line_end": 156,
+      "category": "correctness",
+      "severity": null,
+      "title": "Missing error handling for the Bluetooth adapter retrieval failure case",
+      "description": "Missing error handling for the Bluetooth adapter retrieval failure case. Consider adding a timeout or error callback mechanism.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Missing error handling for the Bluetooth adapter retrieval failure case. Consider adding a timeout or error callback mechanism.\n"
+    },
+    {
+      "id": "i2",
+      "file": "shell/browser/serial/serial_chooser_controller.cc",
+      "line_start": 161,
+      "line_end": 162,
+      "category": "correctness",
+      "severity": null,
+      "title": "`GetDevices()` dereferences `chooser_context_` without a null-check",
+      "description": "`GetDevices()` dereferences `chooser_context_` without a null-check. Since `GetDevices()` is posted as a task in the ctor and can also be triggered by Bluetooth events, it may run after `OnSerialChooserContextShutdown()`/`OnPortManagerConnectionError()` resets observation and the weak `chooser_context_` becomes null. Add a guard to avoid a potential crash.\n\n```suggestion\n  if (!chooser_context_)\n    return;\n\n  chooser_context_->GetPortManager()->GetDevices(base::BindOnce(\n      &SerialChooserController::OnGetDevices, weak_factory_.GetWeakPtr()));\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`GetDevices()` dereferences `chooser_context_` without a null-check. Since `GetDevices()` is posted as a task in the ctor and can also be triggered by Bluetooth events, it may run after `OnSerialChooserContextShutdown()`/`OnPortManagerConnectionError()` resets observation and the weak `chooser_context_` becomes null. Add a guard to avoid a potential crash.\n\n```suggestion\n  if (!chooser_context_)\n    return;\n\n  chooser_context_->GetPortManager()->GetDevices(base::BindOnce(\n      &SerialChooserController::OnGetDevices, weak_factory_.GetWeakPtr()));\n```"
+    },
+    {
+      "id": "i3",
+      "file": "shell/browser/serial/serial_chooser_controller.cc",
+      "line_start": 165,
+      "line_end": 170,
+      "category": "correctness",
+      "severity": null,
+      "title": "AdapterPoweredChanged only refreshes when `powered` becomes true",
+      "description": "AdapterPoweredChanged only refreshes when `powered` becomes true. If the adapter is powered off, the chooser may keep showing stale Bluetooth-backed ports until another refresh happens. Consider refreshing on both transitions (or explicitly clearing Bluetooth ports on power-off) to keep UI consistent.\n\n```suggestion\nvoid SerialChooserController::AdapterPoweredChanged(BluetoothAdapter* adapter,\n                                                    bool powered) {\n  // Refresh on any power state change to keep the chooser list in sync.\n  GetDevices();\n}\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "AdapterPoweredChanged only refreshes when `powered` becomes true. If the adapter is powered off, the chooser may keep showing stale Bluetooth-backed ports until another refresh happens. Consider refreshing on both transitions (or explicitly clearing Bluetooth ports on power-off) to keep UI consistent.\n\n```suggestion\nvoid SerialChooserController::AdapterPoweredChanged(BluetoothAdapter* adapter,\n                                                    bool powered) {\n  // Refresh on any power state change to keep the chooser list in sync.\n  GetDevices();\n}\n```"
+    },
+    {
+      "id": "i4",
+      "file": "shell/browser/serial/serial_chooser_controller.cc",
+      "line_start": 268,
+      "line_end": 270,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The callback parameter should be passed as an rvalue reference (base::OnceClosure&&) inst…",
+      "description": "The callback parameter should be passed as an rvalue reference (base::OnceClosure&&) instead of by value to avoid unnecessary copies and improve efficiency.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "The callback parameter should be passed as an rvalue reference (base::OnceClosure&&) instead of by value to avoid unnecessary copies and improve efficiency.\n"
+    },
+    {
+      "id": "i5",
+      "file": "shell/browser/serial/serial_chooser_controller.cc",
+      "line_start": 272,
+      "line_end": 272,
+      "category": "correctness",
+      "severity": null,
+      "title": "The adapter_ member is a scoped_refptr which is good for reference counting, but ensure p…",
+      "description": "The adapter_ member is a scoped_refptr which is good for reference counting, but ensure proper initialization and cleanup in constructor/destructor.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The adapter_ member is a scoped_refptr which is good for reference counting, but ensure proper initialization and cleanup in constructor/destructor.\n"
+    },
+    {
+      "id": "i6",
+      "file": "shell/browser/serial/serial_chooser_controller.cc",
+      "line_start": 277,
+      "line_end": 277,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Method `IsWirelessSerialPortOnly()` should be marked `const` as it's a state-checking met…",
+      "description": "Method `IsWirelessSerialPortOnly()` should be marked `const` as it's a state-checking method that doesn't modify object state. The current implementation lacks the required `const` qualifier for proper C++ semantics.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Method `IsWirelessSerialPortOnly()` should be marked `const` as it's a state-checking method that doesn't modify object state. The current implementation lacks the required `const` qualifier for proper C++ semantics."
+    },
+    {
+      "id": "i7",
+      "file": "shell/browser/serial/serial_chooser_controller.h",
+      "line_start": 74,
+      "line_end": 74,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The `IsWirelessSerialPortOnly` method should be marked `const` as it does not modify obje…",
+      "description": "The `IsWirelessSerialPortOnly` method should be marked `const` as it does not modify object state.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The `IsWirelessSerialPortOnly` method should be marked `const` as it does not modify object state."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "shell/browser/serial/serial_chooser_controller.cc",
+      "line_start": 272,
+      "line_end": 274,
+      "description": "`OnGetAdapter()` starts observing the adapter but there is no explicit reset when the serial chooser context shuts down / port manager connection errors occur. While `base::ScopedObservation` will clean up in the destructor, consider also resetting `adapter_observation_` in `OnSerialChooserContextShutdown()` and `OnPortManagerConnectionError()` to stop receiving Bluetooth callbacks after the chooser context is no longer valid.\n\nAlso, if `OnGetAdapter` can ever be called more than once, calling `Observe()` repeatedly may DCHECK depending on `ScopedObservation` semantics; a defensive `Reset()` before `Observe()` avoids this class of issues.\n\n```suggestion\n  adapter_ = std::move(adapter);\n  adapter_observation_.Reset();\n  adapter_observation_.Observe(adapter_.get());\n  std::move(callback).Run();\n```"
+    },
+    {
+      "file": "shell/browser/serial/serial_chooser_controller.cc",
+      "line_start": 288,
+      "line_end": 293,
+      "description": "The `IsWirelessSerialPortOnly` method lacks a return statement after verifying all filters specify Bluetooth service class IDs, causing undefined behavior when the condition is met."
+    },
+    {
+      "file": "shell/browser/serial/serial_chooser_controller.h",
+      "line_start": 36,
+      "line_end": 36,
+      "description": "Public inheritance of `device::BluetoothAdapter::Observer` is unnecessarily exposing implementation details; change to private inheritance for proper encapsulation."
+    },
+    {
+      "file": "shell/browser/serial/serial_chooser_controller.h",
+      "line_start": 73,
+      "line_end": 74,
+      "description": "The implementation of `GetDevices` (as seen in the .cc file) only initializes the Bluetooth adapter if `IsWirelessSerialPortOnly()` returns true. This implies that for mixed scenarios (wired + wireless filters) or when no filters are present (showing all devices), the Bluetooth adapter will not be observed. Consequently, `AdapterPoweredChanged` will not be triggered, and the device list may not automatically refresh when the Bluetooth adapter is powered on or off. Consider initializing the adapter observer if Bluetooth is allowed, regardless of whether it is 'only' wireless."
+    },
+    {
+      "file": "shell/browser/serial/serial_chooser_controller.h",
+      "line_start": 91,
+      "line_end": 91,
+      "description": "Potential repeated async requests: when `IsWirelessSerialPortOnly()` is true and `adapter_` is still null, `GetDevices()` calls `BluetoothAdapterFactory::Get()->GetAdapter(...)` and returns. If `GetDevices()` is called again before the adapter callback resolves (e.g., multiple `AdapterPoweredChanged` events or other triggers), you can enqueue multiple `GetAdapter` requests. Consider adding a simple in-flight flag or caching the pending callback to avoid redundant requests."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/electron/electron/pull/45671). Upstream base 22b7403cd1beb2aa95bec223ddd6f328c18b7f8c = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 82. Severity absent in the source. i1: AI comment (Qwen-Coder-480B), Diff Level; i2: AI comment (GPT-5.2), Repo Level; i3: AI comment (GPT-5.2), Diff Level; i4: AI comment (Deepseek-V3.2), Repo Level; i5: AI comment (Qwen-Coder-480B), File Level; i6: human comment, Diff Level; i7: human comment, Repo Level"
+}

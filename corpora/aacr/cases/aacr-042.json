@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-042",
+  "language": "c",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-042/base",
+  "head_branch": "bench/aacr/aacr-042/head",
+  "base_sha": "d02c600f5bbe27317355f470bd28255cd4444b44",
+  "head_sha": "faee989565f4fec9e5f867a2b38f1876b902655f",
+  "mr_title": "feat(animiamge) add a new function for reverse play images",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/lvgl/lvgl",
+    "commit": "9cce37c219f95701fecc44f74595aa9c6effbdba",
+    "license": "MIT",
+    "source_case": "https://github.com/lvgl/lvgl/pull/8164",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "docs/src/details/widgets/animimg.rst",
+      "line_start": 34,
+      "line_end": 37,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The doc update matches the new API split, but wording/signature could be more accurate:",
+      "description": "The doc update matches the new API split, but wording/signature could be more accurate:\n\n1) Naming/behavior: `lv_animimg_set_src_reverse` in code sets animation values from `num` to `0` (reverse direction). The docs currently say “flip playback”, which reads like a mirroring/ping-pong effect. Consider renaming the description to “reverse playback” / “play frames in reverse order” (or explicitly define what “flip playback” means).\n\n2) Signature accuracy: header uses `const void * dsc[]` (array of pointers). The docs use `dsc[]` without type; consider documenting it as `const void * dsc[]` (or the higher-level expected type if there is one) to help users migrating from the old 4-arg API.\n\n```suggestion\n:cpp:expr:`lv_animimg_set_src(animimg, const void * dsc[], num)`.\n\nTo set the image sources for reverse playback of the animation, use\n:cpp:expr:`lv_animimg_set_src_reverse(animimg, const void * dsc[], num)`.\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The doc update matches the new API split, but wording/signature could be more accurate:\n\n1) Naming/behavior: `lv_animimg_set_src_reverse` in code sets animation values from `num` to `0` (reverse direction). The docs currently say “flip playback”, which reads like a mirroring/ping-pong effect. Consider renaming the description to “reverse playback” / “play frames in reverse order” (or explicitly define what “flip playback” means).\n\n2) Signature accuracy: header uses `const void * dsc[]` (array of pointers). The docs use `dsc[]` without type; consider documenting it as `const void * dsc[]` (or the higher-level expected type if there is one) to help users migrating from the old 4-arg API.\n\n```suggestion\n:cpp:expr:`lv_animimg_set_src(animimg, const void * dsc[], num)`.\n\nTo set the image sources for reverse playback of the animation, use\n:cpp:expr:`lv_animimg_set_src_reverse(animimg, const void * dsc[], num)`.\n```"
+    },
+    {
+      "id": "i2",
+      "file": "src/widgets/animimage/lv_animimage.c",
+      "line_start": 110,
+      "line_end": 125,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Duplicate setup logic in `lv_animimg_set_src` and `lv_animimg_set_src_reverse` functions…",
+      "description": "Duplicate setup logic in `lv_animimg_set_src` and `lv_animimg_set_src_reverse` functions should be refactored into a private static helper function to eliminate code duplication while maintaining API compatibility.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Duplicate setup logic in `lv_animimg_set_src` and `lv_animimg_set_src_reverse` functions should be refactored into a private static helper function to eliminate code duplication while maintaining API compatibility."
+    },
+    {
+      "id": "i3",
+      "file": "src/widgets/animimage/lv_animimage.c",
+      "line_start": 110,
+      "line_end": 117,
+      "category": "security",
+      "severity": null,
+      "title": "Buffer/OOB risk from animation range: `lv_anim_set_values(..., 0, (int32_t)num)` allows `…",
+      "description": "Buffer/OOB risk from animation range: `lv_anim_set_values(..., 0, (int32_t)num)` allows `idx==num`. `index_change` only clamps `idx >= pic_count` to `pic_count - 1`, so `idx==num` becomes `num-1` (OK) **unless `num==0`**, where it becomes `-1` and then `animimg->dsc[-1]` is accessed. Also in reverse API you start from `(int32_t)num`, which will also become `-1` when `num==0` after clamping. Suggest guarding `num==0` early (set `dsc`, set `pic_count=0`, and return), and ideally use `num-1` as start/end values when `num>0` to avoid ever producing `idx==num`.\n\n```suggestion\nvoid lv_animimg_set_src(lv_obj_t * obj, const void * dsc[], size_t num)\n{\n    LV_ASSERT_OBJ(obj, MY_CLASS);\n    lv_animimg_t * animimg = (lv_animimg_t *)obj;\n    animimg->dsc = dsc;\n    animimg->pic_count = num;\n\n    if(num == 0) {\n        /* No frames: avoid idx underflow in index_change */\n        return;\n    }\n\n    lv_anim_set_values(&animimg->anim, 0, (int32_t)num - 1);\n}\n\nvoid lv_animimg_set_src_reverse(lv_obj_t * obj, const void * dsc[], size_t num)\n{\n    LV_ASSERT_OBJ(obj, MY_CLASS);\n    lv_animimg_t * animimg = (lv_animimg_t *)obj;\n    animimg->dsc = dsc;\n    animimg->pic_count = num;\n\n    if(num == 0) {\n        return;\n    }\n\n    lv_anim_set_values(&animimg->anim, (int32_t)num - 1, 0);\n}\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "Buffer/OOB risk from animation range: `lv_anim_set_values(..., 0, (int32_t)num)` allows `idx==num`. `index_change` only clamps `idx >= pic_count` to `pic_count - 1`, so `idx==num` becomes `num-1` (OK) **unless `num==0`**, where it becomes `-1` and then `animimg->dsc[-1]` is accessed. Also in reverse API you start from `(int32_t)num`, which will also become `-1` when `num==0` after clamping. Suggest guarding `num==0` early (set `dsc`, set `pic_count=0`, and return), and ideally use `num-1` as start/end values when `num>0` to avoid ever producing `idx==num`.\n\n```suggestion\nvoid lv_animimg_set_src(lv_obj_t * obj, const void * dsc[], size_t num)\n{\n    LV_ASSERT_OBJ(obj, MY_CLASS);\n    lv_animimg_t * animimg = (lv_animimg_t *)obj;\n    animimg->dsc = dsc;\n    animimg->pic_count = num;\n\n    if(num == 0) {\n        /* No frames: avoid idx underflow in index_change */\n        return;\n    }\n\n    lv_anim_set_values(&animimg->anim, 0, (int32_t)num - 1);\n}\n\nvoid lv_animimg_set_src_reverse(lv_obj_t * obj, const void * dsc[], size_t num)\n{\n    LV_ASSERT_OBJ(obj, MY_CLASS);\n    lv_animimg_t * animimg = (lv_animimg_t *)obj;\n    animimg->dsc = dsc;\n    animimg->pic_count = num;\n\n    if(num == 0) {\n        return;\n    }\n\n    lv_anim_set_values(&animimg->anim, (int32_t)num - 1, 0);\n}\n```"
+    },
+    {
+      "id": "i4",
+      "file": "src/widgets/animimage/lv_animimage.h",
+      "line_start": 76,
+      "line_end": 76,
+      "category": "maintainability",
+      "severity": null,
+      "title": "**Breaking API Change - This is NOT backwards compatible**",
+      "description": "**Breaking API Change - This is NOT backwards compatible**\n\nThe PR description claims to \"ensure backwards compatibility\" but this change breaks the existing API. The original function signature was:\n```c\nvoid lv_animimg_set_src(lv_obj_t * obj, const void * dsc[], size_t num, bool reverse);\n```\n\nRemoving the `reverse` parameter means any existing code calling this function with 4 arguments will fail to compile. This is a **breaking change**.\n\n**Suggested Fix:**\nTo maintain true backwards compatibility, you should:\n\n1. Keep the original 4-parameter function and mark it as deprecated, OR\n2. Use a macro/inline wrapper to maintain the old signature\n\nFor example:\n```c\n// New implementation\nvoid lv_animimg_set_src(lv_obj_t * obj, const void * dsc[], size_t num);\nvoid lv_animimg_set_src_reverse(lv_obj_t * obj, const void * dsc[], size_t num);\n\n// Backwards compatibility - deprecated\nstatic inline void lv_animimg_set_src_legacy(lv_obj_t * obj, const void * dsc[], size_t num, bool reverse) {\n    if(reverse) {\n        lv_animimg_set_src_reverse(obj, dsc, num);\n    } else {\n        lv_animimg_set_src(obj, dsc, num);\n    }\n}\n```\n\nOr consider if the API design should use a single function with flags/options struct instead of two separate functions.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "**Breaking API Change - This is NOT backwards compatible**\n\nThe PR description claims to \"ensure backwards compatibility\" but this change breaks the existing API. The original function signature was:\n```c\nvoid lv_animimg_set_src(lv_obj_t * obj, const void * dsc[], size_t num, bool reverse);\n```\n\nRemoving the `reverse` parameter means any existing code calling this function with 4 arguments will fail to compile. This is a **breaking change**.\n\n**Suggested Fix:**\nTo maintain true backwards compatibility, you should:\n\n1. Keep the original 4-parameter function and mark it as deprecated, OR\n2. Use a macro/inline wrapper to maintain the old signature\n\nFor example:\n```c\n// New implementation\nvoid lv_animimg_set_src(lv_obj_t * obj, const void * dsc[], size_t num);\nvoid lv_animimg_set_src_reverse(lv_obj_t * obj, const void * dsc[], size_t num);\n\n// Backwards compatibility - deprecated\nstatic inline void lv_animimg_set_src_legacy(lv_obj_t * obj, const void * dsc[], size_t num, bool reverse) {\n    if(reverse) {\n        lv_animimg_set_src_reverse(obj, dsc, num);\n    } else {\n        lv_animimg_set_src(obj, dsc, num);\n    }\n}\n```\n\nOr consider if the API design should use a single function with flags/options struct instead of two separate functions."
+    },
+    {
+      "id": "i5",
+      "file": "src/widgets/animimage/lv_animimage.h",
+      "line_start": 78,
+      "line_end": 84,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The term \"flip playback\" is ambiguous and usually implies image mirroring (flipping) rath…",
+      "description": "The term \"flip playback\" is ambiguous and usually implies image mirroring (flipping) rather than playing the animation backwards. \"Reverse playback\" is the standard term and is clearer. \n\nAlso, there are minor grammatical improvements suggested:\n- \"pointer to a series images\" -> \"pointer to a series of images\"\n- \"images' number\" -> \"number of images\"",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The term \"flip playback\" is ambiguous and usually implies image mirroring (flipping) rather than playing the animation backwards. \"Reverse playback\" is the standard term and is clearer. \n\nAlso, there are minor grammatical improvements suggested:\n- \"pointer to a series images\" -> \"pointer to a series of images\"\n- \"images' number\" -> \"number of images\"\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "docs/src/details/widgets/animimg.rst",
+      "line_start": 36,
+      "line_end": 36,
+      "description": "Grammatical issue: Missing article 'the' before 'animation image'. Should be '...flip playback of the animation image' for proper grammar."
+    },
+    {
+      "file": "docs/src/details/widgets/animimg.rst",
+      "line_start": 36,
+      "line_end": 37,
+      "description": "Grammar issue: 'images source' should be 'image sources' (plural form). This improves consistency and readability of the documentation."
+    },
+    {
+      "file": "src/widgets/animimage/lv_animimage.c",
+      "line_start": 118,
+      "line_end": 118,
+      "description": "**Bug: Missing closing brace**\n\nThe `lv_animimg_set_src` function is missing its closing brace `}`. This will cause a compilation error.\n\nThe function should end with:\n```c\n    lv_anim_set_values(&animimg->anim, 0, (int32_t)num);\n}\n```"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/lvgl/lvgl/pull/8164). Upstream base 344ba9fe99b487f7f5164900679d56acf2d8bff2 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 67. Severity absent in the source. i1: AI comment (GPT-5.2), Repo Level; i2: human comment, File Level; i3: AI comment (GPT-5.2), Diff Level; i4: AI comment (Claude-Code/Claude-4.5-Sonnet), Repo Level; i5: AI comment (Gemini-3-Pro), Diff Level"
+}

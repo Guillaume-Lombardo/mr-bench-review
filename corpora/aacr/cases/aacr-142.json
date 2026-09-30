@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-142",
+  "language": "cpp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-142/base",
+  "head_branch": "bench/aacr/aacr-142/head",
+  "base_sha": "dd6e9ab7c8444914a411178c6c310b507b6d970e",
+  "head_sha": "a1638a55dcde46642c9d1810291b22037873d664",
+  "mr_title": "Fix assert",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/ClickHouse/ClickHouse",
+    "commit": "79224f240cf020f73a9f492ce293d046fc0b7949",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/ClickHouse/ClickHouse/pull/74715",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueIFileMetadata.cpp",
+      "line_start": 265,
+      "line_end": 272,
+      "category": "correctness",
+      "severity": null,
+      "title": "RAII/Locking Issue: The `std::unique_lock` is released when this function returns (at the…",
+      "description": "RAII/Locking Issue: The `std::unique_lock` is released when this function returns (at the end of scope via RAII), but the actual state change happens later when the `requests` are executed by the caller. The lock should be held until the transaction completes to prevent race conditions. Consider either: 1) Passing the lock to the caller to hold until requests are executed, or 2) Using a different synchronization mechanism that spans the entire prepare-and-execute cycle.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "RAII/Locking Issue: The `std::unique_lock` is released when this function returns (at the end of scope via RAII), but the actual state change happens later when the `requests` are executed by the caller. The lock should be held until the transaction completes to prevent race conditions. Consider either: 1) Passing the lock to the caller to hold until requests are executed, or 2) Using a different synchronization mechanism that spans the entire prepare-and-execute cycle."
+    },
+    {
+      "id": "i2",
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueIFileMetadata.cpp",
+      "line_start": 266,
+      "line_end": 272,
+      "category": "correctness",
+      "severity": null,
+      "title": "Consider tightening the wording of the try_lock() log message: currently repeats \"on this…",
+      "description": "Consider tightening the wording of the try_lock() log message: currently repeats \"on this server\" twice. Also note that returning nullopt on lock contention is a behavior change vs the previous chassert; ensure callers treat nullopt as a benign \"skip\" and do not silently drop work without retry/backoff.\n\n```suggestion\n    if (!processing_lock.try_lock())\n    {\n        /// Possible when multiple S3(Azure)Queue tables share the same keeper path on the same server.\n        LOG_TEST(log, \"File {} is already being processed by another table on this server\", path);\n        return std::nullopt;\n    }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Consider tightening the wording of the try_lock() log message: currently repeats \"on this server\" twice. Also note that returning nullopt on lock contention is a behavior change vs the previous chassert; ensure callers treat nullopt as a benign \"skip\" and do not silently drop work without retry/backoff.\n\n```suggestion\n    if (!processing_lock.try_lock())\n    {\n        /// Possible when multiple S3(Azure)Queue tables share the same keeper path on the same server.\n        LOG_TEST(log, \"File {} is already being processed by another table on this server\", path);\n        return std::nullopt;\n    }\n```"
+    },
+    {
+      "id": "i3",
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueIFileMetadata.cpp",
+      "line_start": 268,
+      "line_end": 270,
+      "category": "maintainability",
+      "severity": null,
+      "title": "This log message appears to be a copy-paste error",
+      "description": "This log message appears to be a copy-paste error. It says 'is being processed on this server by another table' but this code path is reached when the file has a non-processable state (Processing/Processed/Failed with max retries), not when another table is processing it. The message should reflect the actual reason - that the file state prevents processing. Consider removing this duplicate log or replacing it with a message that accurately describes why processing cannot proceed based on the file state.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "This log message appears to be a copy-paste error. It says 'is being processed on this server by another table' but this code path is reached when the file has a non-processable state (Processing/Processed/Failed with max retries), not when another table is processing it. The message should reflect the actual reason - that the file state prevents processing. Consider removing this duplicate log or replacing it with a message that accurately describes why processing cannot proceed based on the file state.\n"
+    },
+    {
+      "id": "i4",
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueSource.cpp",
+      "line_start": 242,
+      "line_end": 250,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The current implementation unnecessarily constructs default objects by using `resize()` f…",
+      "description": "The current implementation unnecessarily constructs default objects by using `resize()` followed by indexed assignment when filtering non-null objects. Replace with `reserve()` and `push_back()` for more efficient and idiomatic vector population.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "The current implementation unnecessarily constructs default objects by using `resize()` followed by indexed assignment when filtering non-null objects. Replace with `reserve()` and `push_back()` for more efficient and idiomatic vector population."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueIFileMetadata.cpp",
+      "line_start": 265,
+      "line_end": 274,
+      "description": "Good application of RAII principle through utilization of std::unique_lock which ensures unlocking occurs automatically when going out of scope regardless of how control leaves the block (including early returns due to failure conditions)"
+    },
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueIFileMetadata.h",
+      "line_start": 97,
+      "line_end": 97,
+      "description": "`std::optional` is used in this header but there is no `#include <optional>` here. Relying on transitive includes is brittle and can cause compile failures depending on include order. Please include `<optional>` in this header (or ensure another directly-included header guarantees it).\n\n```suggestion\n    #include <optional>\n    \n    std::optional<SetProcessingResponseIndexes> prepareSetProcessingRequests(Coordination::Requests & requests);\n```"
+    },
+    {
+      "file": "src/Storages/ObjectStorageQueue/ObjectStorageQueueSource.cpp",
+      "line_start": 217,
+      "line_end": 217,
+      "description": "The log message reports `new_batch.size()` as the number of successfully set files, but this includes objects that were filtered out (set to nullptr). It should report `num_successful_objects` instead to accurately reflect the number of files that were actually set as processing.\n\n```suggestion\n                    LOG_TEST(log, \"Successfully set {} files as processing\", num_successful_objects);\n```"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/ClickHouse/ClickHouse/pull/74715). Upstream base 6a1676ef28d3522eb4f74ad3423ad09752c232dc = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 99. Severity absent in the source. i1: AI comment (GLM-4.7), Diff Level; i2: AI comment (GPT-5.2), Diff Level; i3: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i4: human comment, Diff Level"
+}

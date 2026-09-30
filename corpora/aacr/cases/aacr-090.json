@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-090",
+  "language": "cpp",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-090/base",
+  "head_branch": "bench/aacr/aacr-090/head",
+  "base_sha": "6a7e4d7f3bd25b4efb32bd78ea1fceb9024be3d0",
+  "head_sha": "ad0c6d09c3e11cec9167ee02f8ff22066d1d6e48",
+  "mr_title": "config: allow setting -proxy per network",
+  "mr_description": "- config: allow setting -proxy per network\n- doc: update tor.md to mention the new -proxy=addr:port=tor",
+  "origin": {
+    "repository": "https://github.com/bitcoin/bitcoin",
+    "commit": "e98c51fcce9ae3f441a416cab32a5c85756c6c64",
+    "license": "MIT",
+    "source_case": "https://github.com/bitcoin/bitcoin/pull/32425",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/init.cpp",
+      "line_start": 567,
+      "line_end": 572,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Docs/args UX: the new arg form `-proxy=<value>[=<network>]` conflicts with common `-arg=v…",
+      "description": "Docs/args UX: the new arg form `-proxy=<value>[=<network>]` conflicts with common `-arg=value` syntax expectations. Since you also keep `DISALLOW_ELISION`, consider adding explicit examples in the help string (e.g. `-proxy=127.0.0.1:9050`, `-proxy=127.0.0.1:9050=ipv4`, `-proxy=unix:/path=tor`) and clarifying whether multiple `-proxy` entries are order-dependent (they are).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Docs/args UX: the new arg form `-proxy=<value>[=<network>]` conflicts with common `-arg=value` syntax expectations. Since you also keep `DISALLOW_ELISION`, consider adding explicit examples in the help string (e.g. `-proxy=127.0.0.1:9050`, `-proxy=127.0.0.1:9050=ipv4`, `-proxy=unix:/path=tor`) and clarifying whether multiple `-proxy` entries are order-dependent (they are)."
+    },
+    {
+      "id": "i2",
+      "file": "src/init.cpp",
+      "line_start": 1223,
+      "line_end": 1224,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential bug: when `suffix_allowed` is true, `rfind('=')` returning `npos` will make `su…",
+      "description": "Potential bug: when `suffix_allowed` is true, `rfind('=')` returning `npos` will make `substr(0, npos)` return the whole string (fine), but it will also treat values like `\"unix:/path\"` (which may legally contain '=') by stripping from the last '=' even if that '=' is part of the path. Consider parsing `=network` only if the suffix matches one of the supported networks (ipv4/ipv6/tor/cjdns), or require the suffix to be exactly `=<network>` with no additional '=' earlier. Also consider validating that the '=' is not at position 0 (empty proxy) before passing to `SplitHostPort` in non-unix cases to avoid confusing errors.\n\n```suggestion\n            std::string param_value_hostport{param_value};\n            if (suffix_allowed) {\n                const auto eq_pos = param_value.rfind('=');\n                if (eq_pos != std::string::npos) {\n                    const std::string suffix = ToLower(param_value.substr(eq_pos + 1));\n                    if (suffix == \"ipv4\" || suffix == \"ipv6\" || suffix == \"tor\" || suffix == \"onion\" || suffix == \"cjdns\") {\n                        param_value_hostport = param_value.substr(0, eq_pos);\n                    }\n                }\n            }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential bug: when `suffix_allowed` is true, `rfind('=')` returning `npos` will make `substr(0, npos)` return the whole string (fine), but it will also treat values like `\"unix:/path\"` (which may legally contain '=') by stripping from the last '=' even if that '=' is part of the path. Consider parsing `=network` only if the suffix matches one of the supported networks (ipv4/ipv6/tor/cjdns), or require the suffix to be exactly `=<network>` with no additional '=' earlier. Also consider validating that the '=' is not at position 0 (empty proxy) before passing to `SplitHostPort` in non-unix cases to avoid confusing errors.\n\n```suggestion\n            std::string param_value_hostport{param_value};\n            if (suffix_allowed) {\n                const auto eq_pos = param_value.rfind('=');\n                if (eq_pos != std::string::npos) {\n                    const std::string suffix = ToLower(param_value.substr(eq_pos + 1));\n                    if (suffix == \"ipv4\" || suffix == \"ipv6\" || suffix == \"tor\" || suffix == \"onion\" || suffix == \"cjdns\") {\n                        param_value_hostport = param_value.substr(0, eq_pos);\n                    }\n                }\n            }\n```"
+    },
+    {
+      "id": "i3",
+      "file": "src/init.cpp",
+      "line_start": 1600,
+      "line_end": 1607,
+      "category": "correctness",
+      "severity": null,
+      "title": "Robustness: `proxy_str` extraction uses `substr(0, eq_pos)` where `eq_pos` is `npos` if n…",
+      "description": "Robustness: `proxy_str` extraction uses `substr(0, eq_pos)` where `eq_pos` is `npos` if no '='. That yields full string (OK). But for inputs like `-proxy==ipv4` (`proxy_str` empty, `net_str` set), the code will set an *invalid* proxy for ipv4/name (effectively unsetting). If unsetting-per-network is desired, it should probably explicitly allow `proxy_str.empty()`/\"0\" only to *clear* that specific network without affecting others, and maybe disallow empty with suffix to reduce foot-guns. Also consider trimming whitespace.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Robustness: `proxy_str` extraction uses `substr(0, eq_pos)` where `eq_pos` is `npos` if no '='. That yields full string (OK). But for inputs like `-proxy==ipv4` (`proxy_str` empty, `net_str` set), the code will set an *invalid* proxy for ipv4/name (effectively unsetting). If unsetting-per-network is desired, it should probably explicitly allow `proxy_str.empty()`/\"0\" only to *clear* that specific network without affecting others, and maybe disallow empty with suffix to reduce foot-guns. Also consider trimming whitespace."
+    },
+    {
+      "id": "i4",
+      "file": "src/init.cpp",
+      "line_start": 1627,
+      "line_end": 1630,
+      "category": "correctness",
+      "severity": null,
+      "title": "Name resolution proxying remains active when disabling a network-specific proxy (e.g., `-…",
+      "description": "Name resolution proxying remains active when disabling a network-specific proxy (e.g., `-proxy=0=ipv6` disables IPv6 proxying but not name resolution proxying), potentially creating unexpected behavior where DNS requests continue to use the proxy even when the associated network's proxy is disabled.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Name resolution proxying remains active when disabling a network-specific proxy (e.g., `-proxy=0=ipv6` disables IPv6 proxying but not name resolution proxying), potentially creating unexpected behavior where DNS requests continue to use the proxy even when the associated network's proxy is disabled."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/init.cpp",
+      "line_start": 570,
+      "line_end": 570,
+      "description": "Typo in documentation: 'Could end in =network' uses 'Could' which is less direct. Consider using 'Can' or 'May' for better clarity and consistency with other documentation strings in the codebase.\n\n```suggestion\n                   \"Can end in =network to set the proxy only for that network. \"\n```"
+    },
+    {
+      "file": "src/init.cpp",
+      "line_start": 1223,
+      "line_end": 1224,
+      "description": "Bug: When `param_value` contains no '=' character, `rfind('=')` returns `std::string::npos`. Calling `substr(0, npos)` will throw `std::out_of_range` exception. Need to handle the case when `suffix_allowed` is true but no '=' exists in the string.\n\n```suggestion\n            const std::string param_value_hostport{\n                suffix_allowed ? [&param_value]() {\n                    const auto pos = param_value.rfind('=');\n                    return pos == std::string::npos ? param_value : param_value.substr(0, pos);\n                }() : param_value};\n```"
+    },
+    {
+      "file": "src/init.cpp",
+      "line_start": 1599,
+      "line_end": 1600,
+      "description": "Bug: When `param_value` contains no '=' character, `eq_pos` will be `std::string::npos`. Calling `substr(0, npos)` will throw `std::out_of_range` exception because `npos` is a very large value (typically SIZE_MAX), which exceeds the string length. Need to handle the case when `eq_pos == std::string::npos`.\n\n```suggestion\n        const auto eq_pos{param_value.rfind('=')};\n        const std::string proxy_str{eq_pos == std::string::npos ? param_value : param_value.substr(0, eq_pos)}; // e.g. 127.0.0.1:9050=ipv4 -> 127.0.0.1:9050\n```"
+    },
+    {
+      "file": "src/init.cpp",
+      "line_start": 1639,
+      "line_end": 1639,
+      "description": "The validation check for `proxy.IsValid()` before potential `SetProxy()` calls is redundant as `SetProxy()` internally handles invalid proxy values and returns false. Remove the explicit IsValid() check since the function's behavior with invalid inputs is already safely managed internally."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/bitcoin/bitcoin/pull/32425). Upstream base baa848b8d38187ce6b24a57cfadf1ea180209711 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 254. Severity absent in the source. i1: AI comment (GPT-5.2), Diff Level; i2: AI comment (GPT-5.2), Diff Level; i3: AI comment (GPT-5.2), Diff Level; i4: human comment, Diff Level"
+}

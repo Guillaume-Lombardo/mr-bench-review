@@ -1,0 +1,375 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-139",
+  "language": "cpp",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-139/base",
+  "head_branch": "bench/aacr/aacr-139/head",
+  "base_sha": "8f434b5c075446b1b55ef024710a53ca24ff7453",
+  "head_sha": "4287ba2179b875af2115bf7c9a9f12acf3cf4c1d",
+  "mr_title": "Transfer string functions to source code - batch 2",
+  "mr_description": "- Transfer string functions to source code - batch 2\n- fix style, update reference files",
+  "origin": {
+    "repository": "https://github.com/ClickHouse/ClickHouse",
+    "commit": "73ecc7d809300ed1c29e1078712c531ebddcb181",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/ClickHouse/ClickHouse/pull/85873",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/Functions/base64Decode.cpp",
+      "line_start": 36,
+      "line_end": 40,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Consider aligning multi-line raw string literal indentation for better visual consistency",
+      "description": "Consider aligning multi-line raw string literal indentation for better visual consistency.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Consider aligning multi-line raw string literal indentation for better visual consistency.\n"
+    },
+    {
+      "id": "i2",
+      "file": "src/Functions/base64Encode.cpp",
+      "line_start": 26,
+      "line_end": 27,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Logical error in documentation: The function `base64Encode` is for encoding plaintext to…",
+      "description": "Logical error in documentation: The function `base64Encode` is for encoding plaintext to base64, but the argument description says 'to decode'. This appears to be a copy-paste error. The description should say 'to encode' instead.\n\n```suggestion\n        {\"plaintext\", \"Plaintext column or constant to encode.\", {\"String\"}}\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Logical error in documentation: The function `base64Encode` is for encoding plaintext to base64, but the argument description says 'to decode'. This appears to be a copy-paste error. The description should say 'to encode' instead.\n\n```suggestion\n        {\"plaintext\", \"Plaintext column or constant to encode.\", {\"String\"}}\n```"
+    },
+    {
+      "id": "i3",
+      "file": "src/Functions/base64URLDecode.cpp",
+      "line_start": 26,
+      "line_end": 28,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Documentation typo: The function is `base64URLDecode` (a decode function), but the argume…",
+      "description": "Documentation typo: The function is `base64URLDecode` (a decode function), but the argument description says 'to encode'. This should say 'to decode' for consistency and accuracy.\n\n```suggestion\n        {\"encoded\", \"String column or constant to decode. If the string is not valid Base64-encoded, an exception is thrown.\", {\"String\"}}\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Documentation typo: The function is `base64URLDecode` (a decode function), but the argument description says 'to encode'. This should say 'to decode' for consistency and accuracy.\n\n```suggestion\n        {\"encoded\", \"String column or constant to decode. If the string is not valid Base64-encoded, an exception is thrown.\", {\"String\"}}\n```"
+    },
+    {
+      "id": "i4",
+      "file": "src/Functions/compareSubstrings.cpp",
+      "line_start": 385,
+      "line_end": 386,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Inconsistent terminology: `s1_offset` uses \"zero-based\" while `s2_offset` uses \"zero-base…",
+      "description": "Inconsistent terminology: `s1_offset` uses \"zero-based\" while `s2_offset` uses \"zero-based index\". Suggest unifying them to \"zero-based index\" for consistency.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Inconsistent terminology: `s1_offset` uses \"zero-based\" while `s2_offset` uses \"zero-based index\". Suggest unifying them to \"zero-based index\" for consistency.\n"
+    },
+    {
+      "id": "i5",
+      "file": "src/Functions/concat.cpp",
+      "line_start": 293,
+      "line_end": 293,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Documentation typo: duplicate \"for\" in injective concat function description should be co…",
+      "description": "Documentation typo: duplicate \"for\" in injective concat function description should be corrected to single \"for\".",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Documentation typo: duplicate \"for\" in injective concat function description should be corrected to single \"for\"."
+    },
+    {
+      "id": "i6",
+      "file": "src/Functions/concat.cpp",
+      "line_start": 302,
+      "line_end": 302,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Documentation style inconsistency: 'String' should use lowercase 'string' in concatAssume…",
+      "description": "Documentation style inconsistency: 'String' should use lowercase 'string' in concatAssumeInjective return value description to match conventions for conceptual type references rather than specific type names.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Documentation style inconsistency: 'String' should use lowercase 'string' in concatAssumeInjective return value description to match conventions for conceptual type references rather than specific type names."
+    },
+    {
+      "id": "i7",
+      "file": "src/Functions/concatWithSeparator.cpp",
+      "line_start": 210,
+      "line_end": 211,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Minor formatting issue: Missing space after comma in function signature",
+      "description": "Minor formatting issue: Missing space after comma in function signature. Should be `sep[, exp1, exp2, ...]` instead of `sep[,exp1, exp2, ...]` for consistency with the syntax definition below.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Minor formatting issue: Missing space after comma in function signature. Should be `sep[, exp1, exp2, ...]` instead of `sep[,exp1, exp2, ...]` for consistency with the syntax definition below.\n"
+    },
+    {
+      "id": "i8",
+      "file": "src/Functions/convertCharset.cpp",
+      "line_start": 224,
+      "line_end": 247,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Consider declaring all documentation variables as const since they do not change after in…",
+      "description": "Consider declaring all documentation variables as const since they do not change after initialization. This improves code clarity and prevents accidental modification.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Consider declaring all documentation variables as const since they do not change after initialization. This improves code clarity and prevents accidental modification.\n"
+    },
+    {
+      "id": "i9",
+      "file": "src/Functions/convertCharset.cpp",
+      "line_start": 234,
+      "line_end": 244,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The example output looks inconsistent/garbled: header shows `convertChars⋯SO-8859-1')` (l…",
+      "description": "The example output looks inconsistent/garbled: header shows `convertChars⋯SO-8859-1')` (likely truncated/mismatched function name) and the result `Caf�` suggests a display/encoding issue rather than a deterministic expected value. Tests that validate documentation/examples may become flaky or misleading. Prefer using a clean, stable example and output (or omit the output block if it depends on terminal encoding), and ensure the header matches `convertCharset`.\n\nAlso consider escaping/using an example where conversion produces deterministic bytes and display is unambiguous (e.g., convert to UTF-8 or show `hex()` of the result).\n\n```suggestion\n    FunctionDocumentation::Examples examples = {\n        {\n            \"Usage example\",\n            \"SELECT hex(convertCharset('Café', 'UTF-8', 'ISO-8859-1'));\",\n            R\"(\n┌─hex(convertCharset('Café', 'UTF-8', 'ISO-8859-1'))─┐\n│ 436166E9                                      │\n└───────────────────────────────────────────────┘\n            )\"\n        }\n    };\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The example output looks inconsistent/garbled: header shows `convertChars⋯SO-8859-1')` (likely truncated/mismatched function name) and the result `Caf�` suggests a display/encoding issue rather than a deterministic expected value. Tests that validate documentation/examples may become flaky or misleading. Prefer using a clean, stable example and output (or omit the output block if it depends on terminal encoding), and ensure the header matches `convertCharset`.\n\nAlso consider escaping/using an example where conversion produces deterministic bytes and display is unambiguous (e.g., convert to UTF-8 or show `hex()` of the result).\n\n```suggestion\n    FunctionDocumentation::Examples examples = {\n        {\n            \"Usage example\",\n            \"SELECT hex(convertCharset('Café', 'UTF-8', 'ISO-8859-1'));\",\n            R\"(\n┌─hex(convertCharset('Café', 'UTF-8', 'ISO-8859-1'))─┐\n│ 436166E9                                      │\n└───────────────────────────────────────────────┘\n            )\"\n        }\n    };\n```"
+    },
+    {
+      "id": "i10",
+      "file": "src/Functions/decodeHTMLComponent.cpp",
+      "line_start": 223,
+      "line_end": 230,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Const-correctness: these documentation locals are not modified after initialization, so p…",
+      "description": "Const-correctness: these documentation locals are not modified after initialization, so prefer `const` (or `const auto`) to prevent accidental mutation and make intent clear.\n\nExample:\n```cpp\nconst FunctionDocumentation::Description description = ...;\nconst FunctionDocumentation documentation{...};\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Const-correctness: these documentation locals are not modified after initialization, so prefer `const` (or `const auto`) to prevent accidental mutation and make intent clear.\n\nExample:\n```cpp\nconst FunctionDocumentation::Description description = ...;\nconst FunctionDocumentation documentation{...};\n```"
+    },
+    {
+      "id": "i11",
+      "file": "src/Functions/decodeHTMLComponent.cpp",
+      "line_start": 233,
+      "line_end": 239,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Docs example robustness: consider adding a trailing semicolon to the SQL statement for co…",
+      "description": "Docs example robustness: consider adding a trailing semicolon to the SQL statement for copy/paste consistency. Also make sure the rendered output block exactly matches actual ClickHouse output (column width/alignment/quotes). Small mismatches can make doc/reference tests flaky.\n\n```suggestion\n        \"Usage example\",\n        \"SELECT decodeHTMLComponent('&lt;div&gt;Hello &amp; &quot;World&quot;&lt;/div&gt;');\",\n        R\"(\n┌─decodeHTMLComponent('&lt;div&gt;Hello &amp; &quot;World&quot;&lt;/div&gt;')─┐\n│ <div>Hello & \"World\"</div>                                                  │\n└─────────────────────────────────────────────────────────────────────────────┘\n        )\"\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Docs example robustness: consider adding a trailing semicolon to the SQL statement for copy/paste consistency. Also make sure the rendered output block exactly matches actual ClickHouse output (column width/alignment/quotes). Small mismatches can make doc/reference tests flaky.\n\n```suggestion\n        \"Usage example\",\n        \"SELECT decodeHTMLComponent('&lt;div&gt;Hello &amp; &quot;World&quot;&lt;/div&gt;');\",\n        R\"(\n┌─decodeHTMLComponent('&lt;div&gt;Hello &amp; &quot;World&quot;&lt;/div&gt;')─┐\n│ <div>Hello & \"World\"</div>                                                  │\n└─────────────────────────────────────────────────────────────────────────────┘\n        )\"\n```"
+    },
+    {
+      "id": "i12",
+      "file": "src/Functions/empty.cpp",
+      "line_start": 236,
+      "line_end": 237,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The newly created string-specific documentation objects `documentation_empty_string` and…",
+      "description": "The newly created string-specific documentation objects `documentation_empty_string` and `documentation_not_empty_string` are defined but never used. The factory.registerFunction calls on lines 239-240 still use the original `documentation_not_empty` and `documentation_empty` variables (Array category). This dead code should either be removed or the registration should be updated to use these new string documentation objects.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The newly created string-specific documentation objects `documentation_empty_string` and `documentation_not_empty_string` are defined but never used. The factory.registerFunction calls on lines 239-240 still use the original `documentation_not_empty` and `documentation_empty` variables (Array category). This dead code should either be removed or the registration should be updated to use these new string documentation objects."
+    },
+    {
+      "id": "i13",
+      "file": "src/Functions/encodeXMLComponent.cpp",
+      "line_start": 142,
+      "line_end": 166,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Consider adding 'const' qualifier to these local variables to enforce immutability and be…",
+      "description": "Consider adding 'const' qualifier to these local variables to enforce immutability and better express design intent.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Consider adding 'const' qualifier to these local variables to enforce immutability and better express design intent.\n"
+    },
+    {
+      "id": "i14",
+      "file": "src/Functions/encodeXMLComponent.cpp",
+      "line_start": 150,
+      "line_end": 164,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The raw string literals for the example SQL/output include leading indentation and an ext…",
+      "description": "The raw string literals for the example SQL/output include leading indentation and an extra newline after R\"(, which may render with unwanted whitespace in generated documentation/tests. Consider left-aligning the content (or using a helper to trim) so the displayed example matches expected formatting exactly.\n\n```suggestion\n    FunctionDocumentation::Examples examples = {\n        {\n            \"Usage example\",\n            R\"(SELECT\n    '<tag>Hello & \"World\"</tag>' AS original,\n    encodeXMLComponent('<tag>Hello & \"World\"</tag>') AS xml_encoded;)\",\n            R\"(┌─original───────────────────┬─xml_encoded──────────────────────────────────────────┐\n│ <tag>Hello & \"World\"</tag> │ &lt;tag&gt;Hello &amp; &quot;World&quot;&lt;/tag&gt; │\n└────────────────────────────┴──────────────────────────────────────────────────────┘)\"\n        }\n    };\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The raw string literals for the example SQL/output include leading indentation and an extra newline after R\"(, which may render with unwanted whitespace in generated documentation/tests. Consider left-aligning the content (or using a helper to trim) so the displayed example matches expected formatting exactly.\n\n```suggestion\n    FunctionDocumentation::Examples examples = {\n        {\n            \"Usage example\",\n            R\"(SELECT\n    '<tag>Hello & \"World\"</tag>' AS original,\n    encodeXMLComponent('<tag>Hello & \"World\"</tag>') AS xml_encoded;)\",\n            R\"(┌─original───────────────────┬─xml_encoded──────────────────────────────────────────┐\n│ <tag>Hello & \"World\"</tag> │ &lt;tag&gt;Hello &amp; &quot;World&quot;&lt;/tag&gt; │\n└────────────────────────────┴──────────────────────────────────────────────────────┘)\"\n        }\n    };\n```"
+    },
+    {
+      "id": "i15",
+      "file": "src/Functions/endsWith.cpp",
+      "line_start": 13,
+      "line_end": 35,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Consider declaring these local variables as `const` since they are initialized once and n…",
+      "description": "Consider declaring these local variables as `const` since they are initialized once and never modified. This improves const correctness and makes the code's intent clearer.\n\nExample:\n```cpp\nconst FunctionDocumentation::Description description = R\"(...\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Consider declaring these local variables as `const` since they are initialized once and never modified. This improves const correctness and makes the code's intent clearer.\n\nExample:\n```cpp\nconst FunctionDocumentation::Description description = R\"(...\n```\n"
+    },
+    {
+      "id": "i16",
+      "file": "src/Functions/endsWith.cpp",
+      "line_start": 22,
+      "line_end": 32,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The example output header is truncated (`endsWith('Cl⋯', 'House')`)",
+      "description": "The example output header is truncated (`endsWith('Cl⋯', 'House')`). Since the expression `endsWith('ClickHouse', 'House')` is not excessively long, it would be clearer to show the full column name in the documentation example to avoid confusion.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The example output header is truncated (`endsWith('Cl⋯', 'House')`). Since the expression `endsWith('ClickHouse', 'House')` is not excessively long, it would be clearer to show the full column name in the documentation example to avoid confusion.\n"
+    },
+    {
+      "id": "i17",
+      "file": "src/Functions/endsWith.cpp",
+      "line_start": 22,
+      "line_end": 32,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Minor formatting: the `Examples` initializer is a bit hard to scan due to nested braces a…",
+      "description": "Minor formatting: the `Examples` initializer is a bit hard to scan due to nested braces alignment. Consider formatting consistently (one example per brace block, properly indented) to improve readability and reduce future diff noise.\n\n```suggestion\n    FunctionDocumentation::Examples examples =\n    {\n        {\n            \"Usage example\",\n            \"SELECT endsWith('ClickHouse', 'House');\",\n            R\"(\n┌─endsWith('Cl⋯', 'House')─┐\n│                        1 │\n└──────────────────────────┘\n)\"\n        },\n    };\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Minor formatting: the `Examples` initializer is a bit hard to scan due to nested braces alignment. Consider formatting consistently (one example per brace block, properly indented) to improve readability and reduce future diff noise.\n\n```suggestion\n    FunctionDocumentation::Examples examples =\n    {\n        {\n            \"Usage example\",\n            \"SELECT endsWith('ClickHouse', 'House');\",\n            R\"(\n┌─endsWith('Cl⋯', 'House')─┐\n│                        1 │\n└──────────────────────────┘\n)\"\n        },\n    };\n```"
+    },
+    {
+      "id": "i18",
+      "file": "src/Functions/endsWithUTF8.cpp",
+      "line_start": 23,
+      "line_end": 23,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Inconsistency in documentation: The returned_value description uses `str` but the argumen…",
+      "description": "Inconsistency in documentation: The returned_value description uses `str` but the argument is defined as `s` in the Arguments section and syntax. For consistency with the defined parameter name, should use `s` instead of `str`.\n\n```suggestion\n    FunctionDocumentation::ReturnedValue returned_value = {\"Returns `1` if `s` ends with `suffix`, otherwise `0`.\", {\"UInt8\"}};\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Inconsistency in documentation: The returned_value description uses `str` but the argument is defined as `s` in the Arguments section and syntax. For consistency with the defined parameter name, should use `s` instead of `str`.\n\n```suggestion\n    FunctionDocumentation::ReturnedValue returned_value = {\"Returns `1` if `s` ends with `suffix`, otherwise `0`.\", {\"UInt8\"}};\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/Functions/base64Decode.cpp",
+      "line_start": 31,
+      "line_end": 31,
+      "description": "The function documentation's returned value description is unnecessarily verbose; update it to \"Returns the decoded string.\" for conciseness."
+    },
+    {
+      "file": "src/Functions/base64Decode.cpp",
+      "line_start": 32,
+      "line_end": 42,
+      "description": "Potential doc/regression issues in the new FunctionDocumentation block:\n\n1) The text says “according to RFC 4648” but the previous version included a direct link to the RFC section. Consider adding the RFC URL back (either inline or as a separate sentence) for consistency and easier verification.\n\n2) The example output uses a raw string literal with a leading newline and extra indentation before the closing `)`.\nDepending on the renderer, this can introduce unintended leading/trailing whitespace in generated docs/tests. Consider left-aligning the output and avoiding the extra indentation, or use a normal string with explicit `\\n`.\n\n3) Category changed from `Encoding` to `String`. Please double-check project conventions (other base64* functions) to avoid misclassification in function docs.\n\n```suggestion\n    FunctionDocumentation::Examples examples = {\n        {\n            \"Usage example\",\n            \"SELECT base64Decode('Y2xpY2tob3VzZQ==')\",\n            \"┌─base64Decode('Y2xpY2tob3VzZQ==')─┐\\n\"\n            \"│ clickhouse                       │\\n\"\n            \"└──────────────────────────────────┘\"\n        }\n    };\n```"
+    },
+    {
+      "file": "src/Functions/concat.cpp",
+      "line_start": 302,
+      "line_end": 302,
+      "description": "Missing article 'the' before 'argument values'. Consider changing to 'If any of the argument values is `NULL`' for better grammatical correctness."
+    },
+    {
+      "file": "src/Functions/concatWithSeparator.cpp",
+      "line_start": 183,
+      "line_end": 185,
+      "description": "The ConcatWithSeparator function documentation string lacks precision in describing separator usage; update to explicitly state the separator is inserted between the concatenated strings."
+    },
+    {
+      "file": "src/Functions/concatWithSeparator.cpp",
+      "line_start": 186,
+      "line_end": 186,
+      "description": "Likely typo/inconsistency in parameter naming: using `exp1` here but elsewhere/commonly it is `expr1`. Consider renaming to `expr1` for clarity and consistency (also aligns with the older doc text).\n\n```suggestion\n    FunctionDocumentation::Syntax syntax = \"concatWithSeparator(sep[, expr1, expr2, ...])\";\n```"
+    },
+    {
+      "file": "src/Functions/concatWithSeparator.cpp",
+      "line_start": 217,
+      "line_end": 220,
+      "description": "Doc inconsistency for injective variant: the argument type list restricts `exp1, exp2, ...` to {\"String\", \"FixedString\"}, but the description still talks about converting non-String/FixedString args via default serialization. This is contradictory and may confuse users. Either keep types as {\"Any\"} (if conversion is allowed) or adjust the description to state only String/FixedString should be passed for injective assumption.\n\n```suggestion\n    FunctionDocumentation::Arguments arguments_injective = {\n        {\"sep\", \"The separator to use.\", {\"const String\", \"const FixedString\"}},\n        {\"expr1, expr2, ...\", \"Expression to be concatenated.\", {\"String\", \"FixedString\"}}\n    };\n```"
+    },
+    {
+      "file": "src/Functions/convertCharset.cpp",
+      "line_start": 245,
+      "line_end": 245,
+      "description": "`IntroducedIn` is set to `{1, 1}` which is likely not the real version this function was added/introduced in. If this is meant to be the ClickHouse server version, please set it to the actual version when `convertCharset` became available; otherwise the versioning tests/release notes can be incorrect. If unknown, align with project conventions (e.g., current release version or omit if optional)."
+    },
+    {
+      "file": "src/Functions/decodeXMLComponent.cpp",
+      "line_start": 243,
+      "line_end": 244,
+      "description": "The returned value description in decodeXMLComponent documentation lacks clarity; update it to specify \"the provided string\" instead of \"the string\" to accurately reflect input transformation."
+    },
+    {
+      "file": "src/Functions/decodeXMLComponent.cpp",
+      "line_start": 249,
+      "line_end": 251,
+      "description": "Potential typo or malformed example result in documentation. The ellipsis-like character sequence '⋯' followed by ';' may be unintentional or corrupt rendering."
+    },
+    {
+      "file": "src/Functions/empty.cpp",
+      "line_start": 198,
+      "line_end": 202,
+      "description": "Logical inconsistency in documentation: The description for `description_empty_string` (empty function) incorrectly states 'A string is considered non-empty if it contains at least one byte...' This appears to be a copy-paste error from the `notEmpty` description. It should describe when a string is considered empty, not non-empty.\n\n```suggestion\n    FunctionDocumentation::Description description_empty_string = R\"(\nChecks whether the input string is empty.\nA string is considered empty if it contains no bytes, even if this byte is a space or the null byte.\nThe function is also available for [arrays](/sql-reference/functions/array-functions#empty) and [UUIDs](/sql-reference/data-types/uuid).\n)\";\n```"
+    },
+    {
+      "file": "src/Functions/empty.cpp",
+      "line_start": 198,
+      "line_end": 202,
+      "description": "`description_empty_string` says the function is also available for arrays and UUIDs, but `empty(x)` for arrays is a different overload and the link points to `/array-functions#empty`. Since this block is explicitly “String function documentation”, consider narrowing the wording to avoid implying this doc applies to those types, or explicitly say “See also: empty(Array), empty(UUID)” to prevent confusion.\n\n```suggestion\n    FunctionDocumentation::Description description_empty_string = R\"(\n    Checks whether the input string is empty.\n    A string is considered non-empty if it contains at least one byte, even if this byte is a space or the null byte.\n    See also: `empty(Array)` and `empty(UUID)`.\n    )\";\n```"
+    },
+    {
+      "file": "src/Functions/endsWith.cpp",
+      "line_start": 14,
+      "line_end": 14,
+      "description": "The EndsWith function documentation incorrectly describes the ending parameter as a \"string\" rather than a \"suffix\", causing ambiguity in its intended purpose. Update the description to use \"suffix\" for precise technical terminology."
+    },
+    {
+      "file": "src/Functions/endsWith.cpp",
+      "line_start": 16,
+      "line_end": 16,
+      "description": "The endsWith function syntax documentation uses 'str' for the string parameter; change to 's' for consistency with convention."
+    },
+    {
+      "file": "src/Functions/endsWith.cpp",
+      "line_start": 21,
+      "line_end": 21,
+      "description": "The return value description must reference the parameter name `str` (not `s`) to maintain consistency with the function signature's declared arguments."
+    },
+    {
+      "file": "src/Functions/endsWithUTF8.cpp",
+      "line_start": 28,
+      "line_end": 32,
+      "description": "Example output formatting: the raw string literal includes extra leading spaces before closing delimiter; check whether golden tests expect exact whitespace. Prefer aligning the closing \")\" to column 0 and avoiding trailing indentation inside the raw string to reduce diff-noise/format brittleness.\n\n```suggestion\n        R\"(\n┌─endsWithUTF8('данных', 'ых')─┐\n│                            1 │\n└──────────────────────────────┘\n)\"\n```"
+    },
+    {
+      "file": "src/Functions/extractTextFromHTML.cpp",
+      "line_start": 388,
+      "line_end": 392,
+      "description": "The example output string includes extra padding spaces before the closing box (\"│ Page Title Hello World!                │\"). If the function normalizes whitespace, this may not match actual output and can make reference tests brittle. Consider trimming trailing spaces in the documented output or using an output snippet that matches the real formatter exactly."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/ClickHouse/ClickHouse/pull/85873). Upstream base 9e13a594de549fd477e1b90be9fbd57068889548 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 575. Severity absent in the source. i1: AI comment (Qwen-Coder-480B), Diff Level; i2: AI comment (GLM-4.7), Diff Level; i3: AI comment (GLM-4.7), Diff Level; i4: AI comment (Gemini-3-Pro), Diff Level; i5: human comment, Diff Level; i6: human comment, Diff Level; i7: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i8: AI comment (Qwen-Coder-480B), File Level; i9: AI comment (GPT-5.2), Diff Level; i10: AI comment (GPT-5.2), File Level; i11: AI comment (GPT-5.2), Diff Level; i12: AI comment (GLM-4.7), File Level; i13: AI comment (Qwen-Coder-480B), Diff Level; i14: AI comment (GPT-5.2), File Level; i15: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i16: AI comment (Gemini-3-Pro), Diff Level; i17: AI comment (GPT-5.2), Diff Level; i18: AI comment (GLM-4.7), File Level"
+}

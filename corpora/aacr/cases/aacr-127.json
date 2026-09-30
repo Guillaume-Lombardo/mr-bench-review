@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-127",
+  "language": "csharp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-127/base",
+  "head_branch": "bench/aacr/aacr-127/head",
+  "base_sha": "0dee9e3681ba4d7ced585f37f14b8b85fa4596e1",
+  "head_sha": "64e1bc96cb16ffeacc352f557222930c1f5c1e2b",
+  "mr_title": "Some changes to add clarity and align with the Blog Post",
+  "mr_description": "- Some changes to add clarity and align with the Blog Post\n- Extend sample to show how to use MCP Tools from an Agent\n- Merge remote-tracking branch 'origin/main' into users/markwallace/mcp_agent_sample",
+  "origin": {
+    "repository": "https://github.com/microsoft/semantic-kernel",
+    "commit": "a712b62f7804121730a95d34195cad365eb350b7",
+    "license": "MIT",
+    "source_case": "https://github.com/microsoft/semantic-kernel/pull/11361",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "dotnet/samples/Demos/ModelContextProtocolPlugin/Program.cs",
+      "line_start": 79,
+      "line_end": 79,
+      "category": "correctness",
+      "severity": null,
+      "title": "There is a typo in the Instructions text: 'GitGub' should be 'GitHub'",
+      "description": "There is a typo in the Instructions text: 'GitGub' should be 'GitHub'.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "There is a typo in the Instructions text: 'GitGub' should be 'GitHub'.\n"
+    },
+    {
+      "id": "i2",
+      "file": "dotnet/samples/Demos/ModelContextProtocolPlugin/Program.cs",
+      "line_start": 85,
+      "line_end": 86,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Added `ChatCompletionAgent` and `AgentThread` appear unnecessary since the code only perf…",
+      "description": "Added `ChatCompletionAgent` and `AgentThread` appear unnecessary since the code only performs a single `InvokePromptAsync` invocation rather than utilizing the agent for multiple interactions.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Added `ChatCompletionAgent` and `AgentThread` appear unnecessary since the code only performs a single `InvokePromptAsync` invocation rather than utilizing the agent for multiple interactions."
+    },
+    {
+      "id": "i3",
+      "file": "dotnet/samples/Demos/ModelContextProtocolPlugin/Program.cs",
+      "line_start": 86,
+      "line_end": 86,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Thread lifecycle/concurrency: `ChatHistoryAgentThread` captures history",
+      "description": "Thread lifecycle/concurrency: `ChatHistoryAgentThread` captures history. If this sample evolves to multiple turns or parallel usage, ensure the same thread is reused per conversation and not shared across concurrent calls (or reset/replace it between sessions). Consider structuring this in a loop and keeping `thread` scoped per conversation.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Thread lifecycle/concurrency: `ChatHistoryAgentThread` captures history. If this sample evolves to multiple turns or parallel usage, ensure the same thread is reused per conversation and not shared across concurrent calls (or reset/replace it between sessions). Consider structuring this in a loop and keeping `thread` scoped per conversation."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "dotnet/samples/Demos/ModelContextProtocolPlugin/Program.cs",
+      "line_start": 90,
+      "line_end": 93,
+      "description": "The code uses an `await foreach` loop to handle agent responses when only a single response is expected. Replace with `.FirstAsync()` for cleaner implementation since the agent invocation pattern should return just one response."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/microsoft/semantic-kernel/pull/11361). Upstream base 78a67933e3acb418a21f6794a0d25aca519eaff9 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 16. Severity absent in the source. i1: AI comment (GLM-4.7), Diff Level; i2: human comment, File Level; i3: AI comment (GPT-5.2), File Level"
+}

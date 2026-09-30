@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-054",
+  "language": "java",
+  "size": "medium",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-054/base",
+  "head_branch": "bench/curated/case-054/head",
+  "base_sha": "e99e88c24b6022c7f52ac477d7f05a288ea581fb",
+  "head_sha": "cd559294511d90d9f9adb933d76597a703c5357e",
+  "mr_title": "Add Partitioned cookie attribute support for servers",
+  "mr_description": "This commit adds support for the \"Partitioned\" cookie attribute in\nWebFlux servers and the related testing infrastructure.\nNote, Undertow does not support this feature at the moment.",
+  "origin": {
+    "repository": "https://github.com/spring-projects/spring-framework",
+    "commit": "7fc493719962d2ea910866ade9b273b7bac87756",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "spring-test/src/main/java/org/springframework/mock/web/MockCookie.java",
+      "line_start": 168,
+      "line_end": 168,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Custom cookie attribute with a value is passed as 'name=value' attribute name",
+      "description": "For an unknown attribute with a value such as 'Version=1', MockCookie.parse() passes the whole 'Version=1' string as attribute name, which Cookie.setAttribute() rejects with IllegalArgumentException.\n\nThe new catch-all branch was written for the value-less 'Partitioned' attribute. For any other custom `name=value` attribute the name passed to setAttribute() still contains '=' (an invalid token), so parsing Set-Cookie headers that previously worked now throws. The attribute must be split into name and value.",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "spring-web/src/testFixtures/java/org/springframework/web/testfixture/servlet/MockCookie.java",
+          "line_start": 168,
+          "line_end": 168
+        }
+      ],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/spring-projects/spring-framework/commit/7fc493719962d2ea910866ade9b273b7bac87756. Primary issue confirmed by the later upstream fix https://github.com/spring-projects/spring-framework/commit/020f556841a60071add53144365358f4f1fd5d7b; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

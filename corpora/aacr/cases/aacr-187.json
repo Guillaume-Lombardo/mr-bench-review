@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-187",
+  "language": "rust",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-187/base",
+  "head_branch": "bench/aacr/aacr-187/head",
+  "base_sha": "dafc4c1992548032b7bd0bbfbf8024c04f83b67b",
+  "head_sha": "6afa3622f21e61a223e95e8ba359a1844eb2fdd7",
+  "mr_title": "fix grammar errors mod.rs",
+  "mr_description": "- fix grammar errors mod.rs\n- fix grammar errors mod.rs\n- fix grammar errors mod.rs\n- fix grammar errors fungible.rs\n- fix grammar errors transaction.rs\n- fix grammar errors prometheus_util.rs",
+  "origin": {
+    "repository": "https://github.com/linera-io/linera-protocol",
+    "commit": "8fb32bb8a463a3b19e291426f83833027739f868",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/linera-io/linera-protocol/pull/3151",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "linera-base/src/prometheus_util.rs",
+      "line_start": 25,
+      "line_end": 25,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The doc comment uses lowercase for \"prometheus\" and \"linera\"; capitalize as proper nouns…",
+      "description": "The doc comment uses lowercase for \"prometheus\" and \"linera\"; capitalize as proper nouns since they refer to specific projects.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The doc comment uses lowercase for \"prometheus\" and \"linera\"; capitalize as proper nouns since they refer to specific projects."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "linera-core/src/chain_worker/state/mod.rs",
+      "line_start": 31,
+      "line_end": 31,
+      "description": "The misspelling `ClonableView` (should be `CloneableView`) must be corrected throughout the codebase to resolve compilation errors."
+    },
+    {
+      "file": "linera-core/src/chain_worker/state/mod.rs",
+      "line_start": 31,
+      "line_end": 31,
+      "description": "This change modifies an import statement, not a comment or docstring. Changing `ClonableView` to `CloneableView` will break compilation if the actual trait name in the `linera_views::views` module is `ClonableView`.\n\nThis is not a grammar fix - it's a code change that needs verification. Please verify the actual trait name in the linera-views crate before merging this change. If the trait is named `ClonableView`, this change will introduce a compilation error.\n\nThis change should be reverted unless you can confirm that the trait is actually named `CloneableView` in the linera-views crate."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/linera-io/linera-protocol/pull/3151). Upstream base 1468fa524c9d9cdada5334c599252212573f5154 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 8. Severity absent in the source. i1: human comment, Diff Level"
+}

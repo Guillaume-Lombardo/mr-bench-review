@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-003",
+  "language": "java",
+  "size": "large",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-003/base",
+  "head_branch": "bench/curated/case-003/head",
+  "base_sha": "5426ac8d02af38f9eb5fad20943a10a65bebe9be",
+  "head_sha": "8561cdbe0ecb50860a1d8eab5328f3d10e43d038",
+  "mr_title": "Earlier processing of forwarded headers",
+  "mr_description": "Forwarded headers are now processed before ServerWebExchange is created\nthrough ForwardedHeaderTransformer which has the same logic as the\nForwardedHeaderFilter but works on the request only.\n\nForwardedHeaderFilter is deprecated as of 5.1 but if registered it is\nremoved from the list of filters and ForwardedHeaderTransformer is used\ninstead.\n\nIssue: SPR-17072",
+  "origin": {
+    "repository": "https://github.com/spring-projects/spring-framework",
+    "commit": "a8a1fc6de5be2307eb56844ac1df1a09168f2ad9",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "spring-web/src/main/java/org/springframework/web/server/adapter/WebHttpHandlerBuilder.java",
+      "line_start": 194,
+      "line_end": 194,
+      "category": "maintainability",
+      "severity": "low",
+      "title": "LocaleContextResolver lookup block duplicated",
+      "description": "applicationContext() now looks up the LocaleContextResolver bean twice: the try/catch block is duplicated when the forwarded-header transformer lookup is added.\n\nThe block that resolves LOCALE_CONTEXT_RESOLVER_BEAN_NAME appears twice in a row. Behaviour is unchanged (the second lookup overwrites the first with the same bean), but it is a copy/paste slip that performs a redundant bean lookup and makes the method harder to maintain; it should be removed.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/spring-projects/spring-framework/commit/a8a1fc6de5be2307eb56844ac1df1a09168f2ad9. Primary issue confirmed by the later upstream fix https://github.com/spring-projects/spring-framework/commit/fcf20bab2ad1ce4c335927c0f99ac7accdc9d7b3; its regression test reproduces the problem on this head. Curator difficulty: easy. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

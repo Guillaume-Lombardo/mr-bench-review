@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-021",
+  "language": "c",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-021/base",
+  "head_branch": "bench/aacr/aacr-021/head",
+  "base_sha": "f51f45c8a577a5dd46155745be93f03a8c11779f",
+  "head_sha": "5a03c2ae51762e0356edb7d4058eb9c4020b2fad",
+  "mr_title": "GPU Vulkan: Fix recursive Submit calls causing defrag to fail",
+  "mr_description": "- GPU Vulkan: Fix recursive Submit calls causing defrag to fail\n- Remove re-entrancy from defrag process",
+  "origin": {
+    "repository": "https://github.com/libsdl-org/SDL",
+    "commit": "96dfef35c4b0b89f2f8d9c2ecc4f5e3a25d3e7a0",
+    "license": "Zlib",
+    "source_case": "https://github.com/libsdl-org/SDL/pull/12718",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/gpu/vulkan/SDL_gpu_vulkan.c",
+      "line_start": 5799,
+      "line_end": 5800,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The reviewer suggests standardizing the conditional statement formatting by placing the o…",
+      "description": "The reviewer suggests standardizing the conditional statement formatting by placing the opening brace on the same line as the if statement.\n\n`if (transitionToDefaultLayout) {` should replace the multi-line conditional format currently implemented.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The reviewer suggests standardizing the conditional statement formatting by placing the opening brace on the same line as the if statement.\n\n`if (transitionToDefaultLayout) {` should replace the multi-line conditional format currently implemented."
+    },
+    {
+      "id": "i2",
+      "file": "src/gpu/vulkan/SDL_gpu_vulkan.c",
+      "line_start": 5876,
+      "line_end": 5889,
+      "category": "correctness",
+      "severity": null,
+      "title": "Logic/order issue: this call to `VULKAN_INTERNAL_TextureTransitionToDefaultUsage(...)` ha…",
+      "description": "Logic/order issue: this call to `VULKAN_INTERNAL_TextureTransitionToDefaultUsage(...)` happens *before* checking `if (!texture) return;`, so on allocation failure you will dereference `texture` (NULL) inside the transition function. Move the NULL check immediately after `CreateTexture` and only transition when non-NULL.\n\n```suggestion\n    texture = VULKAN_INTERNAL_CreateTexture(\n        renderer,\n        false,\n        &container->header.info);\n\n    if (!texture) {\n        return;\n    }\n\n    VULKAN_INTERNAL_TextureTransitionToDefaultUsage(\n        renderer,\n        commandBuffer,\n        VULKAN_TEXTURE_USAGE_MODE_UNINITIALIZED,\n        texture);\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Logic/order issue: this call to `VULKAN_INTERNAL_TextureTransitionToDefaultUsage(...)` happens *before* checking `if (!texture) return;`, so on allocation failure you will dereference `texture` (NULL) inside the transition function. Move the NULL check immediately after `CreateTexture` and only transition when non-NULL.\n\n```suggestion\n    texture = VULKAN_INTERNAL_CreateTexture(\n        renderer,\n        false,\n        &container->header.info);\n\n    if (!texture) {\n        return;\n    }\n\n    VULKAN_INTERNAL_TextureTransitionToDefaultUsage(\n        renderer,\n        commandBuffer,\n        VULKAN_TEXTURE_USAGE_MODE_UNINITIALIZED,\n        texture);\n```"
+    },
+    {
+      "id": "i3",
+      "file": "src/gpu/vulkan/SDL_gpu_vulkan.c",
+      "line_start": 10453,
+      "line_end": 10453,
+      "category": "correctness",
+      "severity": null,
+      "title": "**Potential Issue: Defrag may fail silently if error occurs**",
+      "description": "**Potential Issue: Defrag may fail silently if error occurs**\n\nIf defragmentation fails (returns false), the error is logged but the function continues execution. This means the command buffer will still be submitted even though the defrag operation failed partway through.\n\nConsider the following scenarios:\n1. If defrag allocated some resources before failing, those resources may be in an inconsistent state\n2. The `renderer->defragInProgress` flag would remain set to 1, blocking future defrag attempts\n\nAt minimum, ensure `renderer->defragInProgress` is reset in the error path. The current code only resets it at the end of `VULKAN_INTERNAL_DefragmentMemory` (line 10773).\n\nSuggested fix in `VULKAN_INTERNAL_DefragmentMemory`:\n```c\nif (newBuffer == NULL) {\n    renderer->defragInProgress = 0;  // Reset flag\n    SDL_UnlockMutex(renderer->allocatorLock);\n    SDL_LogError(SDL_LOG_CATEGORY_GPU, \"%s\", \"Failed to allocate defrag buffer!\");\n    return false;\n}\n```\n\nApply the same fix at line 10701 for texture allocation failure.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "**Potential Issue: Defrag may fail silently if error occurs**\n\nIf defragmentation fails (returns false), the error is logged but the function continues execution. This means the command buffer will still be submitted even though the defrag operation failed partway through.\n\nConsider the following scenarios:\n1. If defrag allocated some resources before failing, those resources may be in an inconsistent state\n2. The `renderer->defragInProgress` flag would remain set to 1, blocking future defrag attempts\n\nAt minimum, ensure `renderer->defragInProgress` is reset in the error path. The current code only resets it at the end of `VULKAN_INTERNAL_DefragmentMemory` (line 10773).\n\nSuggested fix in `VULKAN_INTERNAL_DefragmentMemory`:\n```c\nif (newBuffer == NULL) {\n    renderer->defragInProgress = 0;  // Reset flag\n    SDL_UnlockMutex(renderer->allocatorLock);\n    SDL_LogError(SDL_LOG_CATEGORY_GPU, \"%s\", \"Failed to allocate defrag buffer!\");\n    return false;\n}\n```\n\nApply the same fix at line 10701 for texture allocation failure."
+    },
+    {
+      "id": "i4",
+      "file": "src/gpu/vulkan/SDL_gpu_vulkan.c",
+      "line_start": 10533,
+      "line_end": 10534,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Move opening brace of if statement to same line as condition for style consistency",
+      "description": "Move opening brace of if statement to same line as condition for style consistency.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Move opening brace of if statement to same line as condition for style consistency."
+    },
+    {
+      "id": "i5",
+      "file": "src/gpu/vulkan/SDL_gpu_vulkan.c",
+      "line_start": 10548,
+      "line_end": 10548,
+      "category": "correctness",
+      "severity": null,
+      "title": "The cleanup loop modifying allocation state via `VULKAN_INTERNAL_CleanCommandBuffer` lack…",
+      "description": "The cleanup loop modifying allocation state via `VULKAN_INTERNAL_CleanCommandBuffer` lacks synchronization with `allocatorLock`, risking race conditions against the allocation check when `checkEmptyAllocations` is enabled.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The cleanup loop modifying allocation state via `VULKAN_INTERNAL_CleanCommandBuffer` lacks synchronization with `allocatorLock`, risking race conditions against the allocation check when `checkEmptyAllocations` is enabled."
+    },
+    {
+      "id": "i6",
+      "file": "src/gpu/vulkan/SDL_gpu_vulkan.c",
+      "line_start": 10612,
+      "line_end": 10612,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential buffer underflow: Accessing renderer->allocationsToDefrag[renderer->allocations…",
+      "description": "Potential buffer underflow: Accessing renderer->allocationsToDefrag[renderer->allocationsToDefragCount - 1] without ensuring allocationsToDefragCount > 0 could result in accessing negative indices (-1) when the array is empty. Add a guard condition before this access.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential buffer underflow: Accessing renderer->allocationsToDefrag[renderer->allocationsToDefragCount - 1] without ensuring allocationsToDefragCount > 0 could result in accessing negative indices (-1) when the array is empty. Add a guard condition before this access.\n"
+    },
+    {
+      "id": "i7",
+      "file": "src/gpu/vulkan/SDL_gpu_vulkan.c",
+      "line_start": 10633,
+      "line_end": 10637,
+      "category": "correctness",
+      "severity": null,
+      "title": "Critical bug: If buffer allocation fails, `renderer->defragInProgress` is not reset to 0",
+      "description": "Critical bug: If buffer allocation fails, `renderer->defragInProgress` is not reset to 0. This will permanently block all future defragmentation attempts. Should add `renderer->defragInProgress = 0;` before returning false.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Critical bug: If buffer allocation fails, `renderer->defragInProgress` is not reset to 0. This will permanently block all future defragmentation attempts. Should add `renderer->defragInProgress = 0;` before returning false.\n"
+    },
+    {
+      "id": "i8",
+      "file": "src/gpu/vulkan/SDL_gpu_vulkan.c",
+      "line_start": 10699,
+      "line_end": 10703,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The error message is misleading",
+      "description": "The error message is misleading. This error occurs in the texture allocation path (when newTexture is NULL), but the message says 'Failed to allocate defrag buffer!'. It should say 'Failed to allocate defrag texture!' to accurately reflect what failed.\n\n```suggestion\n            if (newTexture == NULL) {\n                SDL_UnlockMutex(renderer->allocatorLock);\n                SDL_LogError(SDL_LOG_CATEGORY_GPU, \"%s\", \"Failed to allocate defrag texture!\");\n                return false;\n            }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The error message is misleading. This error occurs in the texture allocation path (when newTexture is NULL), but the message says 'Failed to allocate defrag buffer!'. It should say 'Failed to allocate defrag texture!' to accurately reflect what failed.\n\n```suggestion\n            if (newTexture == NULL) {\n                SDL_UnlockMutex(renderer->allocatorLock);\n                SDL_LogError(SDL_LOG_CATEGORY_GPU, \"%s\", \"Failed to allocate defrag texture!\");\n                return false;\n            }\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/gpu/vulkan/SDL_gpu_vulkan.c",
+      "line_start": 10424,
+      "line_end": 10424,
+      "description": "The `presenting` flag is incorrectly initialized to `false` unconditionally, failing to reflect whether presentation operations exist; it should be set to `vulkanCommandBuffer->presentDataCount > 0` to accurately indicate pending presentation work."
+    },
+    {
+      "file": "src/gpu/vulkan/SDL_gpu_vulkan.c",
+      "line_start": 10424,
+      "line_end": 10424,
+      "description": "Consider renaming 'presenting' to 'is_presenting' for better readability and adherence to snake_case naming conventions."
+    },
+    {
+      "file": "src/gpu/vulkan/SDL_gpu_vulkan.c",
+      "line_start": 10605,
+      "line_end": 10605,
+      "description": "**Missing Cleanup: isDefrag flag not reset on error paths**\n\nThe `commandBuffer->isDefrag` flag is set to 1 at the start of the defrag function (line 10605), but it's never explicitly reset. This flag persists on the command buffer object.\n\nWhile this may be acceptable if the command buffer is released/recycled after use, it would be safer to reset the flag at the end of the function (around line 10775) to ensure clean state:\n\n```c\nSDL_UnlockMutex(renderer->allocatorLock);\n\ncommandBuffer->isDefrag = 0;\nreturn true;\n```\n\nAlso consider resetting it in error paths before returning false."
+    },
+    {
+      "file": "src/gpu/vulkan/SDL_gpu_vulkan.c",
+      "line_start": 10607,
+      "line_end": 10608,
+      "description": "State consistency: `renderer->defragInProgress` is set to `1` at the start but is not cleared here on success or any failure path. Verify where it is reset; otherwise defrag may become permanently disabled after first run or after an early return. Also `commandBuffer->isDefrag = 1;` uses integer literal while other changes move to `bool` (`true/false`)—prefer consistent boolean usage if these fields are bools."
+    },
+    {
+      "file": "src/gpu/vulkan/SDL_gpu_vulkan.c",
+      "line_start": 10635,
+      "line_end": 10635,
+      "description": "Typo in error message: \"defrag buffer\" should be \"defrag texture\" since this error occurs during texture creation."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/libsdl-org/SDL/pull/12718). Upstream base ab34ea5a2684766e510de1daf8ae44c41b6af704 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 161. Severity absent in the source. i1: human comment, File Level; i2: AI comment (GPT-5.2), Repo Level; i3: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i4: human comment, File Level; i5: human comment, File Level; i6: AI comment (Qwen-Coder-480B), File Level; i7: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i8: AI comment (GLM-4.7), File Level"
+}

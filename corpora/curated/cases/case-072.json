@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-072",
+  "language": "typescript",
+  "size": "large",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-072/base",
+  "head_branch": "bench/curated/case-072/head",
+  "base_sha": "4696c30f6c5ed07e02d9de707a98b81ebb1cade2",
+  "head_sha": "2c0a15ebf93695fa1e1638ae623cccdffdb68cdf",
+  "mr_title": "feat(v4): parse input containing reference cycles",
+  "mr_description": "Today a cyclic input is a RangeError, safeParse included, so it isn't\neven catchable through the result.\n\nCore gains a $ZodMemoizer seam: a container asks the injected memoizer\nfor the object it is about to build into. Classic injects one per\ncontainer instance; zod/mini injects nothing and links none of this.\nCore's whole share is one interface, one `_zod` field, one changed\nallocation line per container, and one line in runChecks -- the memoizer\nis read once at construction, so a schema without one runs exactly the\ncode it runs today, and the JIT emits byte-identical output for it.\n\nEverything else lives in core/memoizer.ts, which nothing references\nunless a layer asks for it. It registers the real output object before\nany child is parsed, so a reference back to the same input resolves to\nit with nothing to copy. The lookup is keyed on (schema, input), which\nis what makes mutual recursion sound: a node validated against two\nschemas gets an output per schema. A repeat visit returns without\nreaching core, which also stops the node's checks running against a\nhalf-built value. A cycle closing through a transform throws\nZodCyclicError. A schema that cannot re-enter itself removes the\ninterceptor on its first parse.",
+  "origin": {
+    "repository": "https://github.com/colinhacks/zod",
+    "commit": "942bf8cb9a4085e66f785c04b5a9a3ed6877709c",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "packages/zod/src/v4/core/memoizer.ts",
+      "line_start": 66,
+      "line_end": 70,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Cycle detection reads getters and calls user default factories",
+      "description": "isRecursive() reads every enumerable property of a schema def, and `.default(fn)` exposes defaultValue as a getter that calls the user's factory, so the factory runs during the cycle walk (on first parse, even when the key is present, and at compile time).\n\nThe generic `for...in` scan of def assumes plain data properties. Default factories are commonly used for side-effecting or unique values (new Date(), randomUUID(), counters); invoking them from an introspection walk produces extra calls and observable side effects that did not exist before. The walk must enumerate schema-bearing slots explicitly or skip accessor properties.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/colinhacks/zod/commit/942bf8cb9a4085e66f785c04b5a9a3ed6877709c. Primary issue confirmed by the later upstream fix https://github.com/colinhacks/zod/commit/84e416fbf4740527bbc8f319634f4e1b065bb42c; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

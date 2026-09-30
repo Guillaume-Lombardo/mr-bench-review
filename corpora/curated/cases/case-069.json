@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-069",
+  "language": "java",
+  "size": "medium",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-069/base",
+  "head_branch": "bench/curated/case-069/head",
+  "base_sha": "f06c7791f6675596f9e5d1f8ea161931dd84ddf9",
+  "head_sha": "564ebb3ef4c13e4e71a6ac9e1425f888a777c26b",
+  "mr_title": "Allow to configure the maximum number of message to write per eventloop",
+  "mr_description": "Motivation:\n\nAllow to configure the maximum number of messages to write per eventloop run. This can be useful to ensure we read data in a timely manner and not let writes dominate the CPU time. This is especially useful in protocols like QUIC where you need to read \"fast enough\" as otherwise you may not read the ACKs fast enough.\n\nModifications:\n\n- Add new ChannelOption / config that allows to limit the number of messages to write per eventloop run.\n- Respect this setting for DatagramChannels\n\nResult:\n\nReduce the risk of having WRITES block the processing of other events in a timely manner",
+  "origin": {
+    "repository": "https://github.com/netty/netty",
+    "commit": "817052d019e4f5615da2278c67d52a3032f3d94c",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "transport-native-kqueue/src/main/java/io/netty/channel/kqueue/KQueueDatagramChannel.java",
+      "line_start": 282,
+      "line_end": 282,
+      "category": "correctness",
+      "severity": "high",
+      "title": "writeFilter flag inverted after the write loop",
+      "description": "The refactored KQueueDatagramChannel.doWrite() calls writeFilter(in.isEmpty()), inverting the flag: the write filter is registered when everything was written and cleared when messages remain, so pending datagrams stall and the event loop spins on writability.\n\nwriteFilter(true) asks kqueue to notify when the socket becomes writable again, which is needed only while the outbound buffer still has messages. The previous code called writeFilter(false) when all messages were written and writeFilter(true) otherwise. With the new loop bounded by maxMessagesPerWrite, the final call must be writeFilter(!in.isEmpty()).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/netty/netty/commit/817052d019e4f5615da2278c67d52a3032f3d94c. Primary issue confirmed by the later upstream fix https://github.com/netty/netty/commit/bb97d1699da942354084dec792accc331e28b79e; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

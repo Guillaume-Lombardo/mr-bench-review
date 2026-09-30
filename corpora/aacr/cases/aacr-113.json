@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-113",
+  "language": "rust",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-113/base",
+  "head_branch": "bench/aacr/aacr-113/head",
+  "base_sha": "461dde07b35ba811b9faa066cfe5ed5a835ab9ee",
+  "head_sha": "d627402c5cec04a7efd907f49cdb319ba39b4be3",
+  "mr_title": "Add test for install from remote requirements.txt",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/astral-sh/uv",
+    "commit": "61b521f4e9a1e8bdba760394740814f25cc108c2",
+    "license": "Apache-2.0 OR MIT",
+    "source_case": "https://github.com/astral-sh/uv/pull/12941",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "Cargo.lock",
+      "line_start": 4664,
+      "line_end": 4664,
+      "category": "security",
+      "severity": null,
+      "title": "Wiremock is typically used for testing/mocking HTTP servers and should ideally be a dev-d…",
+      "description": "Wiremock is typically used for testing/mocking HTTP servers and should ideally be a dev-dependency rather than a regular dependency to avoid including it in production binaries.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "Wiremock is typically used for testing/mocking HTTP servers and should ideally be a dev-dependency rather than a regular dependency to avoid including it in production binaries.\n"
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/astral-sh/uv/pull/12941). Upstream base 041c7a5e63d5559ce5571a30e177c072b1b357b2 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 122. Severity absent in the source. i1: AI comment (Qwen-Coder-480B), Repo Level"
+}

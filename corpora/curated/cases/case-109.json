@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-109",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-109/base",
+  "head_branch": "bench/curated/case-109/head",
+  "base_sha": "dde3cf6fa88e30315a66e894754a8a705715508f",
+  "head_sha": "c451cbeae210a37cc0e459229d9bdff4d2e90616",
+  "mr_title": "mark/structures: micro-optimize item.keywords/NodeKeywords",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/pytest-dev/pytest",
+    "commit": "c4b9b14a44339ffd440572ad09427876c87ffc61",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/_pytest/mark/structures.py",
+      "line_start": 582,
+      "line_end": 584,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "NodeKeywords iteration and len() count duplicate keys",
+      "description": "__iter__ now yields keys of the node and of its parent without de-duplication, and __len__ adds both sizes, so keywords present at both levels are counted twice.\n\nNodeKeywords is a MutableMapping view merging node markers with the parent's keywords; the removed set-based `_seen()` existed precisely to remove duplicates (e.g. a marker applied at class and function level, or the module name). The micro-optimisation makes iteration yield duplicates and len() over-count, breaking mapping invariants (len(k) != len(set(k)), -k expression matching and plugins iterating keywords).",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "src/_pytest/mark/structures.py",
+          "line_start": 587,
+          "line_end": 589
+        }
+      ],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/pytest-dev/pytest/commit/c4b9b14a44339ffd440572ad09427876c87ffc61. Primary issue confirmed by the later upstream fix https://github.com/pytest-dev/pytest/commit/cf4495ffe1e681db02bb932b9d04d15052667ce4; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

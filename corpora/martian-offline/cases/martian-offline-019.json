@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "martian-offline",
+  "id": "martian-offline-019",
+  "language": "ruby",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/martian-offline/martian-offline-019/base",
+  "head_branch": "bench/martian-offline/martian-offline-019/head",
+  "base_sha": "c58a78ac651b0e25cf610efb2320481262e53e1e",
+  "head_sha": "cf6492ec40f84e9eea5a627d3345241e5f5303fd",
+  "mr_title": "FEATURE: Localization fallbacks (server-side)",
+  "mr_description": "The FallbackLocaleList object tells I18n::Backend::Fallbacks what order the\nlanguages should be attempted in. Because of the translate_accelerator patch,\nthe SiteSetting.default_locale is *not* guaranteed to be fully loaded after the\nserver starts, so a call to ensure_loaded! is added after the locale is set for\nthe current user.\n\nThe declarations of config.i18n.fallbacks = true in the environment files were\nactually garbage, because the I18n.default_locale was\nSiteSetting.default_locale, so there was nothing to fall back to. *derp*",
+  "origin": {
+    "repository": "https://github.com/ai-code-review-evaluation/discourse-graphite",
+    "commit": "ecfa17b5a79dfdc91e7a4d50b42ae78a35d0a293",
+    "license": "GPL-2.0-or-later",
+    "source_case": "https://github.com/ai-code-review-evaluation/discourse-graphite/pull/9",
+    "source_url": "https://github.com/withmartian/code-review-benchmark/blob/e616e849755441da38f18bf3adba2c9583b03803/offline/golden_comments/discourse.json"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "low",
+      "title": "The @loaded_locales instance variable in translate_accelerator.rb is lazily initialized a…",
+      "description": "The @loaded_locales instance variable in translate_accelerator.rb is lazily initialized and accessed by multiple concurrent threads without synchronization.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "concurrency",
+      "source_text": "The @loaded_locales instance variable in translate_accelerator.rb is lazily initialized and accessed by multiple concurrent threads without synchronization."
+    },
+    {
+      "id": "i2",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "maintainability",
+      "severity": "low",
+      "title": "Consider normalizing the input locale (e.g., to a symbol) when checking/loading here to a…",
+      "description": "Consider normalizing the input locale (e.g., to a symbol) when checking/loading here to avoid double-loading if the same locale is passed as a String vs Symbol (also applies to other locations in the PR).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "perf",
+      "source_text": "Consider normalizing the input locale (e.g., to a symbol) when checking/loading here to avoid double-loading if the same locale is passed as a String vs Symbol (also applies to other locations in the PR)."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/ai-code-review-evaluation/discourse-graphite/pull/9). Upstream base 728845d008f06828630a632e5c7d67e11bf15deb (resolved as described in SOURCE.md). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile Core"
+}

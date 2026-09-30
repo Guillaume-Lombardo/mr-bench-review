@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-010",
+  "language": "go",
+  "size": "small",
+  "kind": "clean",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-010/base",
+  "head_branch": "bench/review-bench/review-bench-010/head",
+  "base_sha": "07d067d2dfadc10a9071e86442ff86404114ee33",
+  "head_sha": "1007c6b786af7431e46830a82c80c706deb3d3cf",
+  "mr_title": "feat: support dynamic fish completion",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/urfave/cli",
+    "commit": "600026fe69d2c2354a7a162d10ae43b271911a7f",
+    "license": "MIT",
+    "source_case": "cli-dynamic-fish-completion",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/cli-dynamic-fish-completion"
+  },
+  "expected_issues": [],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench cli-dynamic-fish-completion (corpus corpus/v0.1). Introducing PR https://github.com/urfave/cli/pull/2270."
+}

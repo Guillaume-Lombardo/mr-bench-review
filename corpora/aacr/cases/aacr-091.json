@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-091",
+  "language": "go",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-091/base",
+  "head_branch": "bench/aacr/aacr-091/head",
+  "base_sha": "9c101b13bac5f26916f8fa6450ef15066160188e",
+  "head_sha": "cdabb19879e21a30cc0ea0fac743c4ebc33aae92",
+  "mr_title": "new meta keys to control initscript/env.  working on conn overrides",
+  "mr_description": "- new meta keys to control initscript/env.  working on conn overrides\n- Merge remote-tracking branch 'origin/main' into sawka/initscript\n- remove cmdOpts.Env, add to swaptoken.  use swaptoken for wsl.  implement 'env' for shell controller.  work on initscript cascade.\n- simplify GetConn calls, connunion set up, fix some nowsh flags\n- blockUnion, get shelltype, compute initscript, pass through with swaptoken",
+  "origin": {
+    "repository": "https://github.com/wavetermdev/waveterm",
+    "commit": "90a57d552d15f1b2a4d92cdfc3a4308efcf5c57b",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/wavetermdev/waveterm/pull/1793",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "pkg/blockcontroller/blockcontroller.go",
+      "line_start": 149,
+      "line_end": 156,
+      "category": "correctness",
+      "severity": null,
+      "title": "Improper error comparison may miss wrapped `fs.ErrNotExist` errors",
+      "description": "Improper error comparison may miss wrapped `fs.ErrNotExist` errors. Replace direct `err == fs.ErrNotExist` comparison with `errors.Is(err, fs.ErrNotExist)` to properly handle potentially wrapped filesystem errors when checking for non-existent files.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Improper error comparison may miss wrapped `fs.ErrNotExist` errors. Replace direct `err == fs.ErrNotExist` comparison with `errors.Is(err, fs.ErrNotExist)` to properly handle potentially wrapped filesystem errors when checking for non-existent files."
+    },
+    {
+      "id": "i2",
+      "file": "pkg/blockcontroller/blockcontroller.go",
+      "line_start": 285,
+      "line_end": 310,
+      "category": "security",
+      "severity": null,
+      "title": "Insufficient command string validation when shell execution is disabled; the current spac…",
+      "description": "Insufficient command string validation when shell execution is disabled; the current space check doesn't prevent command injection via other special characters. Implement more robust validation to ensure only valid executable paths are accepted when cmd:shell is false.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "Insufficient command string validation when shell execution is disabled; the current space check doesn't prevent command injection via other special characters. Implement more robust validation to ensure only valid executable paths are accepted when cmd:shell is false."
+    },
+    {
+      "id": "i3",
+      "file": "pkg/shellexec/shellexec.go",
+      "line_start": 258,
+      "line_end": 263,
+      "category": "security",
+      "severity": null,
+      "title": "Debug log outputs sensitive swap token value",
+      "description": "Debug log outputs sensitive swap token value. Remove the token value from the log message to prevent credential exposure.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "Debug log outputs sensitive swap token value. Remove the token value from the log message to prevent credential exposure."
+    },
+    {
+      "id": "i4",
+      "file": "pkg/waveobj/wtypemeta.go",
+      "line_start": 52,
+      "line_end": 62,
+      "category": "maintainability",
+      "severity": null,
+      "title": "These new fields introduce dotted JSON tags like `cmd:initscript.sh`",
+      "description": "These new fields introduce dotted JSON tags like `cmd:initscript.sh`. Plain `encoding/json` treats the tag as a literal key (fine), but if any layer later interprets dots as path separators for nesting, this could break compatibility or create ambiguity with `[conn]` nesting. Suggest verifying the meta parsing/flattening logic expects literal keys and documenting/enforcing one convention. Also consider whether `CmdEnv`/`CmdCwd` being described as nestable under `[conn]` requires special merge behavior; nil vs empty map differences can affect overrides (e.g., clearing env).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "These new fields introduce dotted JSON tags like `cmd:initscript.sh`. Plain `encoding/json` treats the tag as a literal key (fine), but if any layer later interprets dots as path separators for nesting, this could break compatibility or create ambiguity with `[conn]` nesting. Suggest verifying the meta parsing/flattening logic expects literal keys and documenting/enforcing one convention. Also consider whether `CmdEnv`/`CmdCwd` being described as nestable under `[conn]` requires special merge behavior; nil vs empty map differences can affect overrides (e.g., clearing env)."
+    },
+    {
+      "id": "i5",
+      "file": "pkg/wslconn/wslconn.go",
+      "line_start": 121,
+      "line_end": 121,
+      "category": "correctness",
+      "severity": null,
+      "title": "This Debugf method is calling blocklogger.Infof instead of blocklogger.Debugf",
+      "description": "This Debugf method is calling blocklogger.Infof instead of blocklogger.Debugf. This is likely a copy-paste error and should probably use Debugf to match the function's intent.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "This Debugf method is calling blocklogger.Infof instead of blocklogger.Debugf. This is likely a copy-paste error and should probably use Debugf to match the function's intent.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "frontend/types/gotypes.d.ts",
+      "line_start": 483,
+      "line_end": 491,
+      "description": "New meta keys look generally fine, but a few maintainability/type-safety concerns:\n\n1) Dotted keys like \"cmd:initscript.sh\" / \".bash\" / \".zsh\" etc. are easy to mistype and hard to discover via autocomplete. Consider using a structured shape (e.g., \"cmd:initscript\" with a union/enum for shell type, or a nested object) if the consuming code can support it.\n\n2) Having both \"cmd:initscript\" and shell-specific variants may introduce ambiguity (which one wins if multiple are set?). If precedence rules exist, consider encoding that in types (e.g., documentation comment or a discriminated union) to prevent conflicting combinations.\n\n3) \"cmd:allowconnchange\" naming: confirm spelling/semantics (allow *conn* change vs allow *connection* change). If this is a public API, a more explicit name may reduce confusion.\n\nIf these keys are intended to be mutually exclusive, you can model that with a union type to catch invalid combinations at compile time."
+    },
+    {
+      "file": "pkg/blockcontroller/blockcontroller.go",
+      "line_start": 217,
+      "line_end": 217,
+      "description": "**Issue: Incorrect cascade order for bash shell**\n\nThe cascade order for bash appears incorrect. The function returns `[MetaKey_CmdInitScriptBash, MetaKey_CmdInitScriptSh, MetaKey_CmdInitScript]` but bash is a superset of sh, not the other way around. \n\nThe cascade should prioritize more specific configurations over generic ones. Consider if the order should be:\n- First check bash-specific: `cmd:initscript.bash`\n- Then check sh (less specific, as bash is sh-compatible): `cmd:initscript.sh`  \n- Finally check generic: `cmd:initscript`\n\nThis seems correct as written. However, please verify this is the intended behavior - do you want bash to use sh scripts as a fallback, or should bash scripts take priority over sh scripts?"
+    },
+    {
+      "file": "pkg/blockcontroller/blockcontroller.go",
+      "line_start": 252,
+      "line_end": 283,
+      "description": "Type assertion handling in `resolveEnvMap` should capture values during type checks and use else-if chaining to avoid redundant assertions and improve code efficiency. The current implementation performs duplicate type assertions and checks float64 type even after matching string type."
+    },
+    {
+      "file": "pkg/blockcontroller/blockcontroller.go",
+      "line_start": 263,
+      "line_end": 263,
+      "description": "**Issue: Missing nil check**\n\nThe code retrieves `envMap` from `resolveEnvMap()` and checks for error, but if an error occurs, it only logs it and continues. This means `envMap` could be `nil` when you iterate over it on lines 268-270.\n\nWhile iterating over a nil map in Go is safe (it's a no-op), it's better to be explicit:\n\n```go\nif err != nil {\n    log.Printf(\"error resolving env map: %v\\n\", err)\n} else {\n    for k, v := range envMap {\n        token.Env[k] = v\n    }\n}\n```"
+    },
+    {
+      "file": "pkg/blockcontroller/blockcontroller.go",
+      "line_start": 398,
+      "line_end": 398,
+      "description": "**Issue: Inconsistent error handling pattern**\n\nIn `getRemoteInfoAndShellType()`, when `WshEnabled` is false, the function returns `nil` early (line 361). However, for SSH/WSL connections, if there's an error getting remote info, it returns an error.\n\nFor local connections (the else branch at line 366), it calls `getLocalShellPath()` but there's no error checking even though `getLocalShellPath` could theoretically fail.\n\nConsider making the error handling consistent across all connection types."
+    },
+    {
+      "file": "pkg/blockcontroller/blockcontroller.go",
+      "line_start": 456,
+      "line_end": 456,
+      "description": "**Critical Issue: Connection existence check removed without replacement**\n\nThe old code verified connection status before using connections:\n```go\nconn := conncontroller.GetConn(credentialCtx, opts, &wshrpc.ConnKeywords{})\nconnStatus := conn.DeriveConnStatus()\nif connStatus.Status != conncontroller.Status_Connected {\n    return nil, fmt.Errorf(\"not connected, cannot start shellproc\")\n}\n```\n\nThe new code in `getConnUnion()` calls `conncontroller.GetConn(opts)` which may return nil, but you only check `if conn == nil` after assignment. If `GetConn()` can return nil for non-existent connections, this is good. However, if the old version with context was needed for initialization or credential checking, removing the context parameter might cause issues.\n\nPlease verify:\n1. Does the new `GetConn(opts)` signature handle all the same cases as the old `GetConn(credentialCtx, opts, &wshrpc.ConnKeywords{})`?\n2. Is the 60-second timeout from `credentialCtx` no longer needed?"
+    },
+    {
+      "file": "pkg/blockcontroller/blockcontroller.go",
+      "line_start": 513,
+      "line_end": 520,
+      "description": "The error handling for the WSL no-WSH fallback path lacks contextual details when `StartWslShellProcNoWsh` fails, making failures difficult to diagnose in production environments."
+    },
+    {
+      "file": "pkg/blockcontroller/blockcontroller.go",
+      "line_start": 879,
+      "line_end": 879,
+      "description": "Consider adding more context to generic error message for easier debugging."
+    },
+    {
+      "file": "pkg/shellexec/shellexec.go",
+      "line_start": 258,
+      "line_end": 264,
+      "description": "Potential nil pointer dereference: `cmdOpts.SwapToken.PackForClient()` is called without checking if `cmdOpts.SwapToken` is nil first. This could cause a runtime panic if SwapToken is not initialized. Consider adding a nil check before calling PackForClient()."
+    },
+    {
+      "file": "pkg/shellexec/shellexec.go",
+      "line_start": 258,
+      "line_end": 258,
+      "description": "**Issue: Variable name typo**\n\nLine 260: `packedToken` is used but line 258 defines `packedToken` (inconsistent variable naming).\n\nThe variable is defined as:\n```go\npackedToken, err := cmdOpts.SwapToken.PackForClient()\n```\n\nBut used as:\n```go\nconn.Debugf(ctx, \"packed swaptoken %s\\n\", packedToken)\ncmdCombined = fmt.Sprintf(`%s=%s %s`, wavebase.WaveSwapTokenVarName, packedToken, cmdCombined)\n```\n\nWait, reviewing again - this appears correct. The variable `packedToken` is consistently used. Please disregard this comment if the code compiles correctly."
+    },
+    {
+      "file": "pkg/waveobj/metaconsts.go",
+      "line_start": 56,
+      "line_end": 61,
+      "description": "Potential naming/typo risk: adding multiple init-script meta keys with suffixes like \"cmd:initscript.sh\"/\"cmd:initscript.bash\" etc. Ensure downstream code treats these as literal meta keys (not file extensions) and that the dot in key names is intended and consistently handled (e.g., lookups, prefix matching, sanitization). Also confirm \"pwsh\" is the intended token (vs \"ps\"/\"powershell\")."
+    },
+    {
+      "file": "pkg/waveobj/metamap.go",
+      "line_start": 27,
+      "line_end": 29,
+      "description": "The type assertion `v.(map[string]any)` will fail if the stored value is of type `MetaMapType`, even though `MetaMapType` is defined as `map[string]any`. In Go, type assertions on interfaces are strict about named types. If `MetaMapType` is used programmatically to populate the map (which is likely given the type definition), this method will return `nil` unexpectedly. \n\nIt is recommended to handle both `MetaMapType` and `map[string]any`."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/wavetermdev/waveterm/pull/1793). Upstream base 900f4a3ff7574246b188a716f55afe65694d5c40 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 522. Severity absent in the source. i1: human comment, File Level; i2: human comment, Diff Level; i3: human comment, Diff Level; i4: AI comment (GPT-5.2), Diff Level; i5: AI comment (Qwen-Coder-480B), File Level"
+}

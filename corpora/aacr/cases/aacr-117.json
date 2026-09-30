@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-117",
+  "language": "java",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-117/base",
+  "head_branch": "bench/aacr/aacr-117/head",
+  "base_sha": "aa08b3e55f7d0de85e968028adb8164668160bdf",
+  "head_sha": "5c8105df2a351d7e7d912841b4bacd5a6f0b7223",
+  "mr_title": "dbeaver/pro Fix Copy/Paste files in TE",
+  "mr_description": "- dbeaver/pro Fix Copy/Paste files in TE\n- dbeaver/pro Add throwing exception and make copy/paste in a separate task",
+  "origin": {
+    "repository": "https://github.com/dbeaver/dbeaver",
+    "commit": "bc3ac7bb47092a934b344791d8aa3a1c41e6c8f7",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/dbeaver/dbeaver/pull/37564",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/navigator/fs/DBNPathBase.java",
+      "line_start": 293,
+      "line_end": 294,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The InputStream obtained from `node.getAdapter(InputStream.class)` in the null resource h…",
+      "description": "The InputStream obtained from `node.getAdapter(InputStream.class)` in the null resource handling path is not closed, causing a resource leak.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "The InputStream obtained from `node.getAdapter(InputStream.class)` in the null resource handling path is not closed, causing a resource leak."
+    },
+    {
+      "id": "i2",
+      "file": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/navigator/fs/DBNPathBase.java",
+      "line_start": 304,
+      "line_end": 304,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Spelling error in log message: 'doesn't not exists' contains a double negative",
+      "description": "Spelling error in log message: 'doesn't not exists' contains a double negative. It should be 'doesn't exist'.\n\n```suggestion\n                    log.debug(\"Resource \" + resource + \" doesn't exist\");\n```",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Spelling error in log message: 'doesn't not exists' contains a double negative. It should be 'doesn't exist'.\n\n```suggestion\n                    log.debug(\"Resource \" + resource + \" doesn't exist\");\n```"
+    },
+    {
+      "id": "i3",
+      "file": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/navigator/fs/DBNPathBase.java",
+      "line_start": 363,
+      "line_end": 364,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Poor parameter naming: The parameter name 'str' is not descriptive",
+      "description": "Poor parameter naming: The parameter name 'str' is not descriptive. Consider renaming it to 'fileName' to better reflect its purpose and improve code readability.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Poor parameter naming: The parameter name 'str' is not descriptive. Consider renaming it to 'fileName' to better reflect its purpose and improve code readability.\n"
+    },
+    {
+      "id": "i4",
+      "file": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/navigator/fs/DBNPathBase.java",
+      "line_start": 365,
+      "line_end": 369,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The conditional check for existing file before copying is redundant; use `StandardCopyOpt…",
+      "description": "The conditional check for existing file before copying is redundant; use `StandardCopyOption.REPLACE_EXISTING` unconditionally as it safely handles both new and existing files.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The conditional check for existing file before copying is redundant; use `StandardCopyOption.REPLACE_EXISTING` unconditionally as it safely handles both new and existing files."
+    },
+    {
+      "id": "i5",
+      "file": "plugins/org.jkiss.dbeaver.model.rcp/src/org/jkiss/dbeaver/model/navigator/DBNResource.java",
+      "line_start": 428,
+      "line_end": 428,
+      "category": "correctness",
+      "severity": null,
+      "title": "Throwing `RuntimeException` on `CoreException` in the `InputStream` adapter handling viol…",
+      "description": "Throwing `RuntimeException` on `CoreException` in the `InputStream` adapter handling violates `IAdaptable`'s contract. Replace with logging and returning `null` or delegating to the super implementation.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Throwing `RuntimeException` on `CoreException` in the `InputStream` adapter handling violates `IAdaptable`'s contract. Replace with logging and returning `null` or delegating to the super implementation."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/navigator/fs/DBNPathBase.java",
+      "line_start": 296,
+      "line_end": 296,
+      "description": "The `copyInputStream` method should be inlined in `dropNodes` as its extraction does not improve code clarity.  \nAdditionally, methods requiring file paths should accept a pre-resolved `Path` object instead of separate folder and file name arguments to avoid redundant resolution operations."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/dbeaver/dbeaver/pull/37564). Upstream base 2125ab9048023375ae49aa66f65be384f128d4a3 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 22. Severity absent in the source. i1: human comment, File Level; i2: AI comment (GLM-4.7), File Level; i3: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i4: human comment, File Level; i5: human comment, Repo Level"
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-045",
+  "language": "python",
+  "size": "medium",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-045/base",
+  "head_branch": "bench/curated/case-045/head",
+  "base_sha": "abf894e21e18501197e8ca765ea8e5e1a4c27e24",
+  "head_sha": "5f5c87a0479c092999981a8f9d421dd2eb592636",
+  "mr_title": "Moved Index system checks from Model to Index.check().",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/django/django",
+    "commit": "8638d8bf74c1a58302c97d4436ad2eb08438145b",
+    "license": "BSD-3-Clause",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "django/db/models/indexes.py",
+      "line_start": 117,
+      "line_end": 117,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Descending index fields ('-name') reported as nonexistent",
+      "description": "The moved check passes self.fields to _check_local_fields(), but descending index fields keep their '-' prefix there, so Index(fields=['-created']) is reported as referring to a nonexistent field (models.E012).\n\nThe Model-level check that was removed iterated over index.fields_orders, which strips the '-' ordering prefix. The new Index.check() uses the raw self.fields, so a perfectly valid descending index now fails `manage.py check` with 'indexes refers to the nonexistent field -created'. Field names must come from fields_orders.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/8638d8bf74c1a58302c97d4436ad2eb08438145b. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/86e7406cfb839a6c5384e9f72a55ef78eccc9a3c; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

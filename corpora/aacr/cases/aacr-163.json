@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-163",
+  "language": "go",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-163/base",
+  "head_branch": "bench/aacr/aacr-163/head",
+  "base_sha": "6cd90975933c7360d471cacf82a186dc0bb5d12a",
+  "head_sha": "c8e946b39dccf6e90459182157a4fdf06b20d256",
+  "mr_title": "create blobs in parallel",
+  "mr_description": "- create blobs in parallel\n- default max term height",
+  "origin": {
+    "repository": "https://github.com/ollama/ollama",
+    "commit": "0b52f186fb4af8fa7d4f6a71967f922eb6b69cdc",
+    "license": "MIT",
+    "source_case": "https://github.com/ollama/ollama/pull/10135",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "cmd/cmd.go",
+      "line_start": 127,
+      "line_end": 127,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The current mutex-protected map implementation for concurrent file processing is unnecess…",
+      "description": "The current mutex-protected map implementation for concurrent file processing is unnecessarily complex; replace it with a pre-allocated slice since the file count is known upfront, eliminating locking overhead.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "The current mutex-protected map implementation for concurrent file processing is unnecessarily complex; replace it with a pre-allocated slice since the file count is known upfront, eliminating locking overhead."
+    },
+    {
+      "id": "i2",
+      "file": "cmd/cmd.go",
+      "line_start": 128,
+      "line_end": 139,
+      "category": "correctness",
+      "severity": null,
+      "title": "**Critical Bug: Closure Variable Capture Issue**",
+      "description": "**Critical Bug: Closure Variable Capture Issue**\n\nThe loop variables `f` and `digest` are being captured by the goroutine closure. Since goroutines run concurrently, by the time they execute, the loop may have already progressed, causing all goroutines to potentially use the last iteration's values.\n\n**Fix:** Shadow the loop variables before using them in the closure:\n```go\nfor f, digest := range temp {\n    f, digest := f, digest  // Create new variables for each iteration\n    g.Go(func() error {\n        // ... rest of the code\n    })\n}\n```\n\nThis issue affects both the `req.Files` and `req.Adapters` processing loops.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "**Critical Bug: Closure Variable Capture Issue**\n\nThe loop variables `f` and `digest` are being captured by the goroutine closure. Since goroutines run concurrently, by the time they execute, the loop may have already progressed, causing all goroutines to potentially use the last iteration's values.\n\n**Fix:** Shadow the loop variables before using them in the closure:\n```go\nfor f, digest := range temp {\n    f, digest := f, digest  // Create new variables for each iteration\n    g.Go(func() error {\n        // ... rest of the code\n    })\n}\n```\n\nThis issue affects both the `req.Files` and `req.Adapters` processing loops.\n"
+    },
+    {
+      "id": "i3",
+      "file": "progress/progress.go",
+      "line_start": 118,
+      "line_end": 119,
+      "category": "correctness",
+      "severity": null,
+      "title": "The loop now limits rendering to `termHeight-1` states, which truncates progress output w…",
+      "description": "The loop now limits rendering to `termHeight-1` states, which truncates progress output when there are more states than available terminal lines. This is a regression that causes users to lose visibility into progress for items beyond the terminal height. Consider implementing pagination or scrolling, or at minimum ensure users are aware that not all progress is being displayed.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The loop now limits rendering to `termHeight-1` states, which truncates progress output when there are more states than available terminal lines. This is a regression that causes users to lose visibility into progress for items beyond the terminal height. Consider implementing pagination or scrolling, or at minimum ensure users are aware that not all progress is being displayed."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "cmd/cmd.go",
+      "line_start": 122,
+      "line_end": 122,
+      "description": "The mutex added for req.Files synchronization is unnecessary and must be removed."
+    },
+    {
+      "file": "cmd/cmd.go",
+      "line_start": 123,
+      "line_end": 123,
+      "description": "**Performance consideration: SetLimit calculation**\n\nUsing `max(runtime.GOMAXPROCS(0)-1, 1)` means on a single-core system or when GOMAXPROCS=1, only 1 goroutine will run at a time, which defeats the purpose of parallelization.\n\nConsider using `runtime.GOMAXPROCS(0)` directly, or a minimum of 2-4 workers to ensure some level of parallelism even on lower-core systems."
+    },
+    {
+      "file": "cmd/cmd.go",
+      "line_start": 126,
+      "line_end": 126,
+      "description": "The reviewer identifies redundant initialization of `req.Files` in `CreateRequest` since it's immediately overwritten during concurrent processing in `CreateHandler`; instead, skip setting it in `CreateRequest` and have the caller directly provide the processed file list."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/ollama/ollama/pull/10135). Upstream base 16fca86c4a6c43e2752062e7f82d20f00d9fd292 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 132. Severity absent in the source. i1: human comment, Repo Level; i2: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i3: AI comment (GLM-4.7), File Level"
+}

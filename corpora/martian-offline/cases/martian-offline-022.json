@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "corpus": "martian-offline",
+  "id": "martian-offline-022",
+  "language": "go",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/martian-offline/martian-offline-022/base",
+  "head_branch": "bench/martian-offline/martian-offline-022/head",
+  "base_sha": "102fe7f7f3ebb0b84a50ce41c5e859c9345c85e1",
+  "head_sha": "65c10c10fa6b1c0447940cc528037542b6a3a09f",
+  "mr_title": "AuthZService: improve authz caching",
+  "mr_description": "- remove the use of client side cache for in-proc authz client\n- add a permission denial cache, fetch perms if not in either of the caches\n- Clean up tests\n- Cache tests\n- Add test to list + cache\n- Add outdated cache test\n- Re-organize metrics\n- Merge remote-tracking branch 'origin/main' into gabriel-ieva/improve-authz-caching",
+  "origin": {
+    "repository": "https://github.com/grafana/grafana",
+    "commit": "7562f37880367411a62304bcdcdc178bced23906",
+    "license": "AGPL-3.0",
+    "source_case": "https://github.com/grafana/grafana/pull/103633",
+    "source_url": "https://github.com/withmartian/code-review-benchmark/blob/e616e849755441da38f18bf3adba2c9583b03803/offline/golden_comments/grafana.json"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "security",
+      "severity": "high",
+      "title": "The Check operation exhibits asymmetric cache trust logic: cached permission grants are t…",
+      "description": "The Check operation exhibits asymmetric cache trust logic: cached permission grants are trusted and returned immediately, but cached denials from the same permission cache are ignored, leading to a fresh database lookup. This allows stale cached grants to provide access to revoked resources, posing a security risk.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "security",
+      "source_text": "The Check operation exhibits asymmetric cache trust logic: cached permission grants are trusted and returned immediately, but cached denials from the same permission cache are ignored, leading to a fresh database lookup. This allows stale cached grants to provide access to revoked resources, posing a security risk. "
+    },
+    {
+      "id": "i2",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "maintainability",
+      "severity": "low",
+      "title": "The test comment says the cached permissions 'allow access', but the map stores false for…",
+      "description": "The test comment says the cached permissions 'allow access', but the map stores false for dashboards:uid:dash1, so checkPermission will still treat this scope as not allowed.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "doc_defect",
+      "source_text": "The test comment says the cached permissions 'allow access', but the map stores false for dashboards:uid:dash1, so checkPermission will still treat this scope as not allowed."
+    },
+    {
+      "id": "i3",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "The cache key construction in `userPermDenialCacheKey` uses simple string concatenation w…",
+      "description": "The cache key construction in `userPermDenialCacheKey` uses simple string concatenation with underscores, which can lead to ambiguous keys and collision risks when any component contains underscores or is empty. This could result in incorrect denial cache hits, affecting user permissions.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "data",
+      "source_text": "The cache key construction in `userPermDenialCacheKey` uses simple string concatenation with underscores, which can lead to ambiguous keys and collision risks when any component contains underscores or is empty. This could result in incorrect denial cache hits, affecting user permissions."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/grafana/grafana/pull/103633). Upstream base 5634ca44f799a82161f0401dadc286452f3bdbf8 (resolved as described in SOURCE.md). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile Core; i3: Martian profile Strict"
+}

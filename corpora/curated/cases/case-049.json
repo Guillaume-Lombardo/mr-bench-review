@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-049",
+  "language": "java",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-049/base",
+  "head_branch": "bench/curated/case-049/head",
+  "base_sha": "c7bbd99615e1deca73cd99c41ee4dd8e8664233b",
+  "head_sha": "6e8e37203b15ea94a021c63277219dc144be480a",
+  "mr_title": "Fix a potential fd leak in AbstractDiskHttpData.getChunk",
+  "mr_description": "Motivation:\n\n`FileChannel.read()` may throw an IOException. We must deal with this in case of the occurrence of `I/O` error.\n\nModification:\n\nPlace the `FileChannel.read()` method call in the `try-finally` block.\n\nResult:\n\nAdvoid fd leak.",
+  "origin": {
+    "repository": "https://github.com/netty/netty",
+    "commit": "e7c5773162c4e2353c271eff3b86c78e2d7e22d8",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "codec-http/src/main/java/io/netty/handler/codec/http/multipart/AbstractDiskHttpData.java",
+      "line_start": 306,
+      "line_end": 308,
+      "category": "correctness",
+      "severity": "high",
+      "title": "File channel closed after every chunk, so reads restart from the start",
+      "description": "getChunk() now closes and nulls the FileChannel in a finally block after every call, so the next chunk re-opens the file from position 0 and multi-chunk reads return the beginning of the file again (corrupted uploads/copies).\n\ngetChunk(length) is called repeatedly to stream a file; the channel was intentionally kept open between calls and closed only at EOF. To fix a descriptor leak on IOException, the change closes it unconditionally, which resets the read position on each call. The channel must only be closed on EOF or when an exception is thrown.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/netty/netty/commit/e7c5773162c4e2353c271eff3b86c78e2d7e22d8. Primary issue confirmed by the later upstream fix https://github.com/netty/netty/commit/4ce6774336319e920d2fdbb2629978cad5b8a7da; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-068",
+  "language": "typescript",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-068/base",
+  "head_branch": "bench/aacr/aacr-068/head",
+  "base_sha": "2d56ddc90a3a611918008dd2433dc368595705a8",
+  "head_sha": "42756ab163ad68c69b69618d4d5a94519ce0fbe5",
+  "mr_title": "Consolidate isWithinRoot() function calling.",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/google-gemini/gemini-cli",
+    "commit": "e7ed0a410ae510cda8b53ea20f3d758bd90a0f00",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/google-gemini/gemini-cli/pull/4163",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "packages/core/src/config/config.ts",
+      "line_start": 531,
+      "line_end": 531,
+      "category": "correctness",
+      "severity": null,
+      "title": "`registerCoreTool` takes `ToolClass: any`, which removes constructor type-checking (espec…",
+      "description": "`registerCoreTool` takes `ToolClass: any`, which removes constructor type-checking (especially important after changing tool constructor signatures). Consider typing it as a constructor type, e.g. `const registerCoreTool = <T>(ToolClass: new (...args: any[]) => T, ...args: ConstructorParameters<typeof ToolClass>) => { ... }` or at least `ToolClass: new (...args: unknown[]) => BaseTool<any, any>` to keep compile-time safety.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`registerCoreTool` takes `ToolClass: any`, which removes constructor type-checking (especially important after changing tool constructor signatures). Consider typing it as a constructor type, e.g. `const registerCoreTool = <T>(ToolClass: new (...args: any[]) => T, ...args: ConstructorParameters<typeof ToolClass>) => { ... }` or at least `ToolClass: new (...args: unknown[]) => BaseTool<any, any>` to keep compile-time safety."
+    },
+    {
+      "id": "i2",
+      "file": "packages/core/src/tools/grep.ts",
+      "line_start": 322,
+      "line_end": 336,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Consider caching `this.config.getTargetDir()` in a local variable at the start of this co…",
+      "description": "Consider caching `this.config.getTargetDir()` in a local variable at the start of this code block. The method is called 3 times here, which reduces code readability and could impact performance.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "Consider caching `this.config.getTargetDir()` in a local variable at the start of this code block. The method is called 3 times here, which reduces code readability and could impact performance.\n"
+    },
+    {
+      "id": "i3",
+      "file": "packages/core/src/tools/read-file.ts",
+      "line_start": 114,
+      "line_end": 117,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Minor: `this.config.getTargetDir()` is called multiple times; prefer storing in a local v…",
+      "description": "Minor: `this.config.getTargetDir()` is called multiple times; prefer storing in a local variable to avoid redundant calls and keep the error message consistent if the config is mutable.\n\n```suggestion\n    const targetDir = path.resolve(this.config.getTargetDir());\n    const relativePath = makeRelative(params.absolute_path, targetDir);\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "Minor: `this.config.getTargetDir()` is called multiple times; prefer storing in a local variable to avoid redundant calls and keep the error message consistent if the config is mutable.\n\n```suggestion\n    const targetDir = path.resolve(this.config.getTargetDir());\n    const relativePath = makeRelative(params.absolute_path, targetDir);\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "packages/core/src/tools/edit.ts",
+      "line_start": null,
+      "line_end": null,
+      "description": "The removal of the `rootDirectory` field risks redundant `config.getTargetDir()` invocations across tool implementations. Cache the target directory value once and propagate it through parameters to eliminate repeated configuration lookups."
+    },
+    {
+      "file": "packages/core/src/tools/glob.ts",
+      "line_start": 127,
+      "line_end": 134,
+      "description": "Potential security/consistency issue: `this.config.getTargetDir()` may be relative or vary per call. Using it directly in `path.resolve(...)` and as the `rootDir` argument to `isWithinRoot` can lead to inconsistent behavior (and in worst cases allow directory-escape checks to be bypassed if callers change CWD). Consider normalizing once to an absolute root (e.g., `const rootDir = path.resolve(this.config.getTargetDir())`) and reuse it for `path.resolve`, `isWithinRoot`, and error messages, so the boundary is stable and unambiguous.\n\n```suggestion\n    const rootDir = path.resolve(this.config.getTargetDir());\n    const searchDirAbsolute = path.resolve(rootDir, params.path || '.');\n\n    if (!isWithinRoot(searchDirAbsolute, rootDir)) {\n      return `Search path (\"${searchDirAbsolute}\") resolves outside the tool's root directory (\"${rootDir}\").`;\n    }\n```"
+    },
+    {
+      "file": "packages/core/src/tools/glob.ts",
+      "line_start": 133,
+      "line_end": 133,
+      "description": "Consider rephrasing this error message to emphasize dependency on runtime-configured target directory instead of implying fixed/static tool rooting."
+    },
+    {
+      "file": "packages/core/src/tools/grep.ts",
+      "line_start": 104,
+      "line_end": 111,
+      "description": "Replace custom path validation in `resolveAndValidatePath` with `isWithinRoot` utility to ensure consistent and secure path validation across tools."
+    },
+    {
+      "file": "packages/core/src/tools/read-file.ts",
+      "line_start": 88,
+      "line_end": 90,
+      "description": "Potential behavior change: previously rootDirectory was captured once (resolved) in the constructor; now every call reads `this.config.getTargetDir()`. If `getTargetDir()` can change over the tool lifetime (mutable config, per-request overrides), validation and `processSingleFileContent()` could use different roots across calls or even within a single request (called multiple times). Consider caching `const targetDir = path.resolve(this.config.getTargetDir())` once per request (or constructor) and using it consistently.\n\nAlso ensure `getTargetDir()` returns an absolute, resolved path; `isWithinRoot/makeRelative` typically assume normalized absolute inputs to prevent path traversal via symlinks/.. segments.\n\n```suggestion\n    const targetDir = path.resolve(this.config.getTargetDir());\n    if (!isWithinRoot(filePath, targetDir)) {\n      return `File path must be within the root directory (${targetDir}): ${filePath}`;\n    }\n```"
+    },
+    {
+      "file": "packages/core/src/tools/read-many-files.ts",
+      "line_start": 310,
+      "line_end": 316,
+      "description": "Potential security edge case: comparing paths with `startsWith` can be bypassed in some scenarios (e.g., `/base/dir2` startsWith `/base/dir`). Prefer `path.resolve` + `path.relative` check (`!rel.startsWith('..'+path.sep) && rel !== '..'`) to ensure the file is truly within the target dir. Also consider normalizing/realpathing to handle symlinks if that matters for your threat model.\n\n```suggestion\n        const baseDir = this.config.getTargetDir();\n        const rel = path.relative(baseDir, absoluteFilePath);\n        if (rel === '' || rel.startsWith('..' + path.sep) || rel === '..') {\n          skippedFiles.push({\n            path: absoluteFilePath,\n            reason: `Security: Glob library returned path outside target directory. Base: ${baseDir}, Path: ${absoluteFilePath}`,\n          });\n          continue;\n        }\n```"
+    },
+    {
+      "file": "packages/core/src/utils/fileUtils.ts",
+      "line_start": 39,
+      "line_end": 39,
+      "description": "The change replaces `path.normalize` with `path.resolve` for `pathToCheck` while omitting `rootDirectory` normalization, risking incorrect path containment checks due to inconsistent absolute-relative path comparisons."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/google-gemini/gemini-cli/pull/4163). Upstream base 7ffe8038efaa5bf263a2a933819bcd4badd37dc2 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 275. Severity absent in the source. i1: AI comment (GPT-5.2), Diff Level; i2: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i3: AI comment (GPT-5.2), Diff Level"
+}

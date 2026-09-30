@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-005",
+  "language": "javascript",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-005/base",
+  "head_branch": "bench/review-bench/review-bench-005/head",
+  "base_sha": "d8aa56878d1a0759ff27ce4edc62e328e6ded3af",
+  "head_sha": "a1dab28a43800a7026fc1022cfcb0b9e9e9fa777",
+  "mr_title": "fix: added fix for memory leak in sockets",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/axios/axios",
+    "commit": "4709a48fa2717ba97f43f5432d48ca4e26c2d326",
+    "license": "MIT",
+    "source_case": "axios-socket-listener-request-leak",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/axios-socket-listener-request-leak"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "lib/adapters/http.js",
+      "line_start": 55,
+      "line_end": 55,
+      "category": "correctness",
+      "severity": null,
+      "title": "The http adapter installs a once-per-socket 'error' listener whose closure retains the re…",
+      "description": "The http adapter installs a once-per-socket 'error' listener whose closure retains the request context that was installing it; on pooled keep-alive sockets that get reassigned, the retained context leaks (memory leak).\n\nProvenance: fix PR #11091 title and summary (commit e8147e6).",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "lib/adapters/http.js",
+          "line_start": 951,
+          "line_end": 955
+        },
+        {
+          "file": "lib/adapters/http.js",
+          "line_start": 957,
+          "line_end": 962
+        }
+      ],
+      "source_category": null,
+      "source_text": "The http adapter installs a once-per-socket 'error' listener whose closure retains the request context that was installing it; on pooled keep-alive sockets that get reassigned, the retained context leaks (memory leak)."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench axios-socket-listener-request-leak (corpus corpus/v0.1). Introducing PR https://github.com/axios/axios/pull/10788. Fix https://github.com/axios/axios/commit/e8147e6ae25a74793e48b4e00e2f98bc303f5b29 (PR #11091). Category defaulted to correctness and severity left null because the source has neither; to be reviewed. Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 69-69, review-head lines 55-55) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 1270-1274, review-head lines 951-955) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 1276-1281, review-head lines 957-962)"
+}

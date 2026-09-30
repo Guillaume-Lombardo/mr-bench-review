@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-019",
+  "language": "go",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-019/base",
+  "head_branch": "bench/review-bench/review-bench-019/head",
+  "base_sha": "3b4e11010970b1307c4391d9238860f3b5c7fb99",
+  "head_sha": "77f200e6c01980ec36c1349380423f2fcbead626",
+  "mr_title": "Change status package to deal with concrete types instead of interfaces",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/grpc/grpc-go",
+    "commit": "1d27587e10ceeec14017f9ebb5bf9ad3625cf58c",
+    "license": "Apache-2.0",
+    "source_case": "grpc-fromproto-nil-receiver",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/grpc-fromproto-nil-receiver"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "status/status.go",
+      "line_start": 73,
+      "line_end": 73,
+      "category": "correctness",
+      "severity": null,
+      "title": "Status.Code, Status.Message, and Status.Proto dereference the receiver or its inner statu…",
+      "description": "Status.Code, Status.Message, and Status.Proto dereference the receiver or its inner status without nil checks, so a Status with a nil inner proto — which FromProto(nil) returns — panics in s.s dereference as soon as any accessor is called, as does any accessor on a nil *Status.\n\nProvenance: fix PR #1211 (commit 84cd50a): nil guards added to all three accessors.",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "status/status.go",
+          "line_start": 78,
+          "line_end": 78
+        },
+        {
+          "file": "status/status.go",
+          "line_start": 83,
+          "line_end": 83
+        }
+      ],
+      "source_category": null,
+      "source_text": "Status.Code, Status.Message, and Status.Proto dereference the receiver or its inner status without nil checks, so a Status with a nil inner proto — which FromProto(nil) returns — panics in s.s dereference as soon as any accessor is called, as does any accessor on a nil *Status."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench grpc-fromproto-nil-receiver (corpus corpus/v0.1). Introducing PR https://github.com/grpc/grpc-go/pull/1171. Fix https://github.com/grpc/grpc-go/commit/84cd50a2f394888f98188c49558f7806cde76725 (PR #1211). Category defaulted to correctness and severity left null because the source has neither; to be reviewed. Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 73-73, review-head lines 73-73) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 78-78, review-head lines 78-78) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 83-83, review-head lines 83-83)"
+}

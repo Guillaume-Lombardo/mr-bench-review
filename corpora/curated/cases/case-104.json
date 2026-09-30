@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-104",
+  "language": "java",
+  "size": "large",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-104/base",
+  "head_branch": "bench/curated/case-104/head",
+  "base_sha": "2faf3bdb88240eb59e3cfce1754e04dcf5231702",
+  "head_sha": "44026aa6275f393bc6986354ae3f1acd8e620fb8",
+  "mr_title": "Migration of vertx core extension",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/quarkusio/quarkus",
+    "commit": "5e8e1e5d13c9950857e6431ad35acc9bb4891761",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "extensions/vertx/runtime/src/main/java/io/quarkus/vertx/core/runtime/VertxMDC.java",
+      "line_start": 23,
+      "line_end": 24,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Typed MDC context local not inherited by nested contexts",
+      "description": "The MDC moves from the generic context-local map to a typed ContextLocal, which is not copied when a nested operation duplicates the root context (as the REST Client does), so logs of those operations lose the MDC, including OpenTelemetry traceId/spanId.\n\nComponents that create a context for a nested operation copy the old-style context-local map from the caller's context. The typed ContextLocal is not part of that copy, so getContextualDataMap() creates an empty map for the nested context and every log statement there is emitted without the request's MDC. Correlation of client request/response logs with traces breaks. The MDC of the originating context must be inherited (copied) when a context has none.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/quarkusio/quarkus/commit/5e8e1e5d13c9950857e6431ad35acc9bb4891761. Primary issue confirmed by the later upstream fix https://github.com/quarkusio/quarkus/commit/5308985e8fe9230f98997e471efc25db64eb216b; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

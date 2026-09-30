@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-160",
+  "language": "rust",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-160/base",
+  "head_branch": "bench/aacr/aacr-160/head",
+  "base_sha": "386c15dfe6a629059fc5aef0b8a0355b14e0dc74",
+  "head_sha": "f37cb88981f4598ff07e217908bf7799ecef1a5a",
+  "mr_title": "Never store requests",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/openai/codex",
+    "commit": "8c952af20fe791cc0c5d0a59089d3329968b4373",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/openai/codex/pull/3212",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "codex-rs/core/src/config.rs",
+      "line_start": 81,
+      "line_end": 81,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Reviewer questions the necessity of the explanatory comment added for the removal of `dis…",
+      "description": "Reviewer questions the necessity of the explanatory comment added for the removal of `disable_response_storage`.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Reviewer questions the necessity of the explanatory comment added for the removal of `disable_response_storage`."
+    },
+    {
+      "id": "i2",
+      "file": "codex-rs/core/src/config.rs",
+      "line_start": 81,
+      "line_end": 81,
+      "category": "maintainability",
+      "severity": null,
+      "title": "You replaced a Rust doc comment (`///`) with a regular comment (`//`)",
+      "description": "You replaced a Rust doc comment (`///`) with a regular comment (`//`). This removes field-level docs from generated documentation. Prefer keeping it as a `///` doc comment describing the new behavior (or remove the historical comment entirely).\n\n```suggestion\n    /// Server-side response storage control removed; responses are never stored.\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "You replaced a Rust doc comment (`///`) with a regular comment (`//`). This removes field-level docs from generated documentation. Prefer keeping it as a `///` doc comment describing the new behavior (or remove the historical comment entirely).\n\n```suggestion\n    /// Server-side response storage control removed; responses are never stored.\n```"
+    },
+    {
+      "id": "i3",
+      "file": "codex-rs/core/src/config.rs",
+      "line_start": 416,
+      "line_end": 416,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The comment explaining the removal of `disable_response_storage` is redundant and should…",
+      "description": "The comment explaining the removal of `disable_response_storage` is redundant and should be deleted from the struct definition.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The comment explaining the removal of `disable_response_storage` is redundant and should be deleted from the struct definition."
+    },
+    {
+      "id": "i4",
+      "file": "codex-rs/core/src/config.rs",
+      "line_start": 416,
+      "line_end": 416,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Same here: converting `///` to `//` drops the user-facing config docs",
+      "description": "Same here: converting `///` to `//` drops the user-facing config docs. Consider keeping a `///` doc comment explaining that the TOML key was removed and responses are never stored.\n\n```suggestion\n    /// `disable_response_storage` removed; responses are never stored.\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Same here: converting `///` to `//` drops the user-facing config docs. Consider keeping a `///` doc comment explaining that the TOML key was removed and responses are never stored.\n\n```suggestion\n    /// `disable_response_storage` removed; responses are never stored.\n```"
+    },
+    {
+      "id": "i5",
+      "file": "codex-rs/protocol/src/models.rs",
+      "line_start": 50,
+      "line_end": 52,
+      "category": "correctness",
+      "severity": null,
+      "title": "The `id` field in `Reasoning` variant is defined as `String` (non-optional) but marked wi…",
+      "description": "The `id` field in `Reasoning` variant is defined as `String` (non-optional) but marked with `#[serde(skip_serializing)]`. When deserializing from API responses, if the JSON payload still contains an `id` field, serde will fail to deserialize because `skip_serializing` only affects serialization, not deserialization. This could cause parsing failures in `client.rs:509` when calling `serde_json::from_value::<ResponseItem>(item_val)`. Consider either:\n1. Adding `#[serde(skip_deserializing)]` if the id is never needed from API responses\n2. Changing `id: String` to `id: Option<String>` and using `#[serde(default)]` to handle cases where the field might be present or absent\n\n```suggestion\n    Reasoning {\n        #[serde(skip_serializing, skip_deserializing)]\n        id: String,\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The `id` field in `Reasoning` variant is defined as `String` (non-optional) but marked with `#[serde(skip_serializing)]`. When deserializing from API responses, if the JSON payload still contains an `id` field, serde will fail to deserialize because `skip_serializing` only affects serialization, not deserialization. This could cause parsing failures in `client.rs:509` when calling `serde_json::from_value::<ResponseItem>(item_val)`. Consider either:\n1. Adding `#[serde(skip_deserializing)]` if the id is never needed from API responses\n2. Changing `id: String` to `id: Option<String>` and using `#[serde(default)]` to handle cases where the field might be present or absent\n\n```suggestion\n    Reasoning {\n        #[serde(skip_serializing, skip_deserializing)]\n        id: String,\n```"
+    },
+    {
+      "id": "i6",
+      "file": "codex-rs/protocol/src/models.rs",
+      "line_start": 50,
+      "line_end": 52,
+      "category": "correctness",
+      "severity": null,
+      "title": "`Reasoning { id: String }` is now never serialized, yet it is non-optional",
+      "description": "`Reasoning { id: String }` is now never serialized, yet it is non-optional. If this enum is used in any non-request serialization path (e.g., transcript export, debug dumps), this will silently drop data. If the design is “Reasoning.id is response-only”, consider making it `Option<String>` to reflect that it may be absent in serialized forms, or add a doc/test demonstrating the expected (deserialize-only) behavior.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`Reasoning { id: String }` is now never serialized, yet it is non-optional. If this enum is used in any non-request serialization path (e.g., transcript export, debug dumps), this will silently drop data. If the design is “Reasoning.id is response-only”, consider making it `Option<String>` to reflect that it may be absent in serialized forms, or add a doc/test demonstrating the expected (deserialize-only) behavior."
+    },
+    {
+      "id": "i7",
+      "file": "codex-rs/protocol/src/models.rs",
+      "line_start": 82,
+      "line_end": 82,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The `id` field in `FunctionCallOutput` variant is not updated with `#[serde(skip_serializ…",
+      "description": "The `id` field in `FunctionCallOutput` variant is not updated with `#[serde(skip_serializing)]`, while all other `ResponseItem` variants with `id` fields have been updated to skip serialization.\n\nGiven the PR's goal to prevent IDs from being sent to the API (since they're ignored and cause latency), this appears to be an inconsistency.\n\nSuggested fix:\n```rust\nFunctionCallOutput {\n    #[serde(skip_serializing)]\n    id: Option<String>,\n    output: FunctionCallOutputPayload,\n},\n```\n\nIf there's a specific reason `FunctionCallOutput` IDs should be serialized while others shouldn't, please add a comment explaining why.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "The `id` field in `FunctionCallOutput` variant is not updated with `#[serde(skip_serializing)]`, while all other `ResponseItem` variants with `id` fields have been updated to skip serialization.\n\nGiven the PR's goal to prevent IDs from being sent to the API (since they're ignored and cause latency), this appears to be an inconsistency.\n\nSuggested fix:\n```rust\nFunctionCallOutput {\n    #[serde(skip_serializing)]\n    id: Option<String>,\n    output: FunctionCallOutputPayload,\n},\n```\n\nIf there's a specific reason `FunctionCallOutput` IDs should be serialized while others shouldn't, please add a comment explaining why."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "codex-rs/core/src/client.rs",
+      "line_start": 197,
+      "line_end": 199,
+      "description": "`store` is now hard-coded to `false`. Since this PR also removed `Prompt.store` and `disable_response_storage` globally, this is likely intentional. Still, consider whether the server expects the `store` field to be omitted rather than set to `false` (some APIs treat explicit false differently from missing). If the API schema allows omission, using `Option<bool>` and not serializing when None is safer for forward compatibility."
+    },
+    {
+      "file": "codex-rs/core/src/client_common.rs",
+      "line_start": 128,
+      "line_end": 128,
+      "description": "The comment \"/// true when using the Responses API.\" is now misleading. Since this MR hardcodes `store: false` (see client.rs line 198), the comment should be updated or removed to reflect that responses are never stored.\n\nSuggested fix:\n```\n/// Always false; responses are never stored on the server.\npub(crate) store: bool,\n```"
+    },
+    {
+      "file": "codex-rs/protocol/src/models.rs",
+      "line_start": 44,
+      "line_end": 46,
+      "description": "Because `ResponsesApiRequest` serializes `input: &Vec<ResponseItem>` directly, these `#[serde(skip_serializing)]` changes will strip `id` from *all* outbound request payloads. That may be correct (server-generated ids shouldn’t be sent back), but it’s a behavior change vs `skip_serializing_if = Option::is_none` for `CustomToolCall`/`WebSearchCall`. Suggest adding/adjusting a unit test that serializes a `ResponsesApiRequest` containing `ResponseItem::{Message,FunctionCall,CustomToolCall,WebSearchCall}` with `Some(id)` and asserts `id` is absent while other correlation fields like `call_id` remain present, to prevent regressions and clarify intent."
+    },
+    {
+      "file": "codex-rs/protocol/src/models.rs",
+      "line_start": 45,
+      "line_end": 45,
+      "description": "Excluding local shell invocation identifiers from outbound messages could complicate troubleshooting workflows requiring granular event linkage."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/openai/codex/pull/3212). Upstream base 3f40fbc0a886ef54f494a1ff5963971bc42c036a = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 130. Severity absent in the source. i1: human comment, Diff Level; i2: AI comment (GPT-5.2), File Level; i3: human comment, Diff Level; i4: AI comment (GPT-5.2), Diff Level; i5: AI comment (GLM-4.7), Repo Level; i6: AI comment (GPT-5.2), Diff Level; i7: AI comment (Claude-Code/Claude-4.5-Sonnet), Repo Level"
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "martian-offline",
+  "id": "martian-offline-032",
+  "language": "java",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/martian-offline/martian-offline-032/base",
+  "head_branch": "bench/martian-offline/martian-offline-032/head",
+  "base_sha": "5c362b1272a40939d0b49f9d8eea208cb18735ae",
+  "head_sha": "0d8efbbcc04dd0e9721e66bf3a264628556316b4",
+  "mr_title": "Add caching support for IdentityProviderStorageProvider.getForLogin operations",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/keycloak/keycloak",
+    "commit": "e944e2acf1e64421860a8e827f93ad06c169621b",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/keycloak/keycloak/pull/32918",
+    "source_url": "https://github.com/withmartian/code-review-benchmark/blob/e616e849755441da38f18bf3adba2c9583b03803/offline/golden_comments/keycloak.json"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "critical",
+      "title": "InfinispanIdentityProviderStorageProvider.getForLogin() recursively calls session.identit…",
+      "description": "InfinispanIdentityProviderStorageProvider.getForLogin() recursively calls session.identityProviders().getById() instead of idpDelegate.getById(), causing the cache lookup to re-enter the same caching layer.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "bug",
+      "source_text": "InfinispanIdentityProviderStorageProvider.getForLogin() recursively calls session.identityProviders().getById() instead of idpDelegate.getById(), causing the cache lookup to re-enter the same caching layer."
+    },
+    {
+      "id": "i2",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Cleanup reference uses incorrect alias - should be 'idp-alias-' + i instead of 'alias'",
+      "description": "Cleanup reference uses incorrect alias - should be 'idp-alias-' + i instead of 'alias'.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "bug",
+      "source_text": "Cleanup reference uses incorrect alias - should be 'idp-alias-' + i instead of 'alias'."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/keycloak/keycloak/pull/32918). Upstream base 272cfc68dcc88615396ae62ed1571918e9c58ad3 (resolved as described in SOURCE.md). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile Strict"
+}

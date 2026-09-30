@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-094",
+  "language": "typescript",
+  "size": "medium",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-094/base",
+  "head_branch": "bench/curated/case-094/head",
+  "base_sha": "7c612e41e998b3bc5e4b65cc21a1726bac35793c",
+  "head_sha": "720fb251de5c939b93c900d791c2660ee747a59d",
+  "mr_title": "fix(@angular/ssr): return 302 when redirectTo is a function",
+  "mr_description": "Ensure the server returns a 302 status code and sets the correct 'Location' header when the redirectTo value is a function, aligning with expected HTTP redirect behavior.",
+  "origin": {
+    "repository": "https://github.com/angular/angular-cli",
+    "commit": "2d11e8e45b29cf879ee72ffbcf438198d73ffaba",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "packages/angular/ssr/src/utils/ng.ts",
+      "line_start": 101,
+      "line_end": 101,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Router injected unconditionally during server rendering",
+      "description": "renderAngular() now unconditionally injects Router, which throws NullInjectorError for server-rendered applications that do not use @angular/router, breaking SSR for them.\n\n@angular/router is optional for an Angular application. `envInjector.get(Router)` without a not-found value fails when no router providers are registered, so every SSR request of a router-less app now errors. The router must be looked up optionally and redirect/navigation-error handling skipped when absent.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/angular/angular-cli/commit/2d11e8e45b29cf879ee72ffbcf438198d73ffaba. Primary issue confirmed by the later upstream fix https://github.com/angular/angular-cli/commit/dfe68c797d50c02f313d51eca053c1878453ac9f; its regression test reproduces the problem on this head. Curator difficulty: medium. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

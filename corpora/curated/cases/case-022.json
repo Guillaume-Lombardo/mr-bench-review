@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-022",
+  "language": "java",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-022/base",
+  "head_branch": "bench/curated/case-022/head",
+  "base_sha": "77706b3abf9c4ec5a09b957ddb593dadb4e994c1",
+  "head_sha": "461266b10c59ede218cd4df9db059e0aff904ab6",
+  "mr_title": "Allow optional directories without sub-directories",
+  "mr_description": "Update `StandardConfigDataLocationResolver` so that directory resources\nare only required when the location is not optional.",
+  "origin": {
+    "repository": "https://github.com/spring-projects/spring-boot",
+    "commit": "01dd68e29edc43cb52651f568af482d94ade01fe",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "spring-boot-project/spring-boot/src/main/java/org/springframework/boot/context/config/StandardConfigDataLocationResolver.java",
+      "line_start": 270,
+      "line_end": 270,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Optional/mandatory check inverted for empty directory locations",
+      "description": "The condition is inverted: an optional directory location without sub-directories now fails, while a mandatory one without sub-directories is silently accepted.\n\nThe intent (and the commit title) is to only require sub-directories when the location is not optional. `location.isOptional() && isEmpty(...)` throws ConfigDataLocationNotFoundException for `optional:` pattern locations — the exact case meant to be allowed — and removes the check for mandatory ones. It must be `!location.isOptional()`.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/spring-projects/spring-boot/commit/01dd68e29edc43cb52651f568af482d94ade01fe. Primary issue confirmed by the later upstream fix https://github.com/spring-projects/spring-boot/commit/38b9a833bd16b12a4fe73fe3595e15e2c19c4e64; its regression test reproduces the problem on this head. Curator difficulty: easy. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

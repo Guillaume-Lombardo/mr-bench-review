@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-151",
+  "language": "java",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-151/base",
+  "head_branch": "bench/aacr/aacr-151/head",
+  "base_sha": "7222f5879dfa0c68ea72decbe1a058b86f7da4b8",
+  "head_sha": "8616b01573137358327ba61f3d05d42ad368fda6",
+  "mr_title": "Allow for null/empty content field",
+  "mr_description": "- Allow for null/empty content field\n- remove tests which checked for null content\n- [CI] Auto commit changes from spotless",
+  "origin": {
+    "repository": "https://github.com/elastic/elasticsearch",
+    "commit": "902352ac82dfa1d0b0a54ef7f0d86d6733691ba5",
+    "license": "AGPL-3.0-only OR SSPL-1.0 OR Elastic-2.0",
+    "source_case": "https://github.com/elastic/elasticsearch/pull/118998",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "x-pack/plugin/inference/src/main/java/org/elasticsearch/xpack/inference/external/request/openai/OpenAiUnifiedChatCompletionRequestEntity.java",
+      "line_start": 81,
+      "line_end": 83,
+      "category": "correctness",
+      "severity": null,
+      "title": "`Message.content()` is now allowed to be null (server-side parser switched to `optionalCo…",
+      "description": "`Message.content()` is now allowed to be null (server-side parser switched to `optionalConstructorArg()` and tests expecting exceptions were removed). This serializer currently just omits the `content` field when null. Please confirm this matches OpenAI’s expected schema: most roles require `content`, and sending a message object without `content` may 400 at runtime.\n\nIf null is only valid for specific scenarios (e.g., assistant messages with `tool_calls` / tool responses), consider enforcing that here (or earlier):\n- validate `(message.content()==null)` implies `message.toolCalls()!=null` (or other allowed combination)\n- otherwise throw an `IllegalArgumentException` with a clear message\nAlternatively, if API expects explicit `content: []` or `content: \"\"`, serialize that instead of dropping the field.\n\nAlso, add/adjust a unit test to cover the expected JSON shape for null content (omit vs empty) so behavior is locked in.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`Message.content()` is now allowed to be null (server-side parser switched to `optionalConstructorArg()` and tests expecting exceptions were removed). This serializer currently just omits the `content` field when null. Please confirm this matches OpenAI’s expected schema: most roles require `content`, and sending a message object without `content` may 400 at runtime.\n\nIf null is only valid for specific scenarios (e.g., assistant messages with `tool_calls` / tool responses), consider enforcing that here (or earlier):\n- validate `(message.content()==null)` implies `message.toolCalls()!=null` (or other allowed combination)\n- otherwise throw an `IllegalArgumentException` with a clear message\nAlternatively, if API expects explicit `content: []` or `content: \"\"`, serialize that instead of dropping the field.\n\nAlso, add/adjust a unit test to cover the expected JSON shape for null content (omit vs empty) so behavior is locked in."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "server/src/main/java/org/elasticsearch/inference/UnifiedCompletionRequest.java",
+      "line_start": 125,
+      "line_end": 125,
+      "description": "**Critical: Missing validation for null content**\n\nMaking `content` optional without validation logic is problematic. A message with no content, no tool calls, and no other meaningful data would be semantically invalid for most use cases.\n\n**Suggestions:**\n1. Add validation to ensure that if `content` is null, at least one of the following should be present: `toolCalls`, or this should be restricted to specific roles (like `tool` role messages where `toolCallId` might be sufficient)\n2. Document when null content is acceptable (e.g., for tool response messages)\n3. Consider adding a validation method in the Message record to check invariants\n\nExample validation:\n```java\npublic Message {\n    if (content == null && toolCalls == null && role.equals(\"user\")) {\n        throw new IllegalArgumentException(\"Message must have either content or tool calls\");\n    }\n}\n```"
+    },
+    {
+      "file": "server/src/main/java/org/elasticsearch/inference/UnifiedCompletionRequest.java",
+      "line_start": 126,
+      "line_end": 126,
+      "description": "Content field in Message must be handled as optional in stream serialization; update constructor to use `in.readOptionalNamedWriteable(Content.class)` and adjust writeTo accordingly."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/elastic/elasticsearch/pull/118998). Upstream base dbbcb09244cd65b52c13f78e500deb5fdcd3edd9 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 160. Severity absent in the source. i1: AI comment (GPT-5.2), Repo Level"
+}

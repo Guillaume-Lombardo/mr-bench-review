@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-121",
+  "language": "php",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-121/base",
+  "head_branch": "bench/aacr/aacr-121/head",
+  "base_sha": "ff00ddda06065473dd5a34c7fcd2b16781fdcb0f",
+  "head_sha": "fd24688e4bd0defd2e698a03bfb7f41f38f89d19",
+  "mr_title": "Fix: Add conditions to DISTINCT and modify reorder conditions in PostgreSQL",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/filamentphp/filament",
+    "commit": "77874d0c3782a257101c3fb578144a6950f3dc9c",
+    "license": "MIT",
+    "source_case": "https://github.com/filamentphp/filament/pull/15181",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "packages/actions/src/Exports/Jobs/PrepareCsvExport.php",
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": null,
+      "title": "The removal of the primary key column rejection logic causes the original descending orde…",
+      "description": "The removal of the primary key column rejection logic causes the original descending order on the non-qualified primary key (`id`) to persist after reapplying the ascending order via `reorder()`, resulting in unexpected sort behavior where records are incorrectly ordered within date groups. Specifically, the conflict between preserved `id DESC` and enforced `qualifiedKeyName ASC` produces non-sequential ID sequences like 100→99→...→1 followed by 150→149 in the output.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The removal of the primary key column rejection logic causes the original descending order on the non-qualified primary key (`id`) to persist after reapplying the ascending order via `reorder()`, resulting in unexpected sort behavior where records are incorrectly ordered within date groups. Specifically, the conflict between preserved `id DESC` and enforced `qualifiedKeyName ASC` produces non-sequential ID sequences like 100→99→...→1 followed by 150→149 in the output."
+    },
+    {
+      "id": "i2",
+      "file": "packages/actions/src/Exports/Jobs/PrepareCsvExport.php",
+      "line_start": 72,
+      "line_end": 72,
+      "category": "correctness",
+      "severity": null,
+      "title": "The `in_array` check for a single column name should be replaced with direct equality (`=…",
+      "description": "The `in_array` check for a single column name should be replaced with direct equality (`===`) to prevent type juggling issues and improve efficiency.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The `in_array` check for a single column name should be replaced with direct equality (`===`) to prevent type juggling issues and improve efficiency."
+    },
+    {
+      "id": "i3",
+      "file": "packages/actions/src/Exports/Jobs/PrepareCsvExport.php",
+      "line_start": 78,
+      "line_end": 80,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Using array index access [0] on a Collection object is not recommended",
+      "description": "Using array index access [0] on a Collection object is not recommended. Use Collection methods like first() and shift() instead for better readability and safety.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Using array index access [0] on a Collection object is not recommended. Use Collection methods like first() and shift() instead for better readability and safety.\n"
+    },
+    {
+      "id": "i4",
+      "file": "packages/actions/src/Exports/Jobs/PrepareCsvExport.php",
+      "line_start": 153,
+      "line_end": 155,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential runtime error: The code accesses `$query->getQuery()->orders[0]` without first…",
+      "description": "Potential runtime error: The code accesses `$query->getQuery()->orders[0]` without first checking if the `orders` array exists or is non-empty. If `orders` is null or an empty array, this will cause an \"Undefined array key 0\" error or \"Attempt to read property on null\" error. Consider checking if orders exist and have at least one element before accessing index 0, similar to how `$baseQueryOrders` is handled on line 158.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential runtime error: The code accesses `$query->getQuery()->orders[0]` without first checking if the `orders` array exists or is non-empty. If `orders` is null or an empty array, this will cause an \"Undefined array key 0\" error or \"Attempt to read property on null\" error. Consider checking if orders exist and have at least one element before accessing index 0, similar to how `$baseQueryOrders` is handled on line 158.\n"
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/filamentphp/filament/pull/15181). Upstream base 753ceeac007a0d0aa4423971b01d651288720873 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 14. Severity absent in the source. i1: human comment, Diff Level, left-side comment (source lines 72-72, side left); i2: human comment, Diff Level; i3: AI comment (Deepseek-V3.2), File Level; i4: AI comment (GLM-4.7), File Level"
+}

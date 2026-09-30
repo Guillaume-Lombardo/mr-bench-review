@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-037",
+  "language": "python",
+  "size": "medium",
+  "kind": "clean",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-037/base",
+  "head_branch": "bench/curated/case-037/head",
+  "base_sha": "d626f4456cef45b50fbc116a176508ae683770a6",
+  "head_sha": "cd16f6a2a6bb8e03dd867c8b9221cdf636526013",
+  "mr_title": "python: fix instance handling in static and class method tests",
+  "mr_description": "and also fixes a regression in pytest 8.0.0 where `setup_method` crashes\nif the class has static or class method tests.\n\nIt is allowed to have a test class with static/class methods which\nrequest non-static/class method fixtures (including `setup_method`\nxunit-fixture). I take it as a given that we need to support this\nsomewhat odd scenario (stdlib unittest also supports it).\n\nThis raises a question -- when a staticmethod test requests a bound\nfixture, what is that fixture's `self`?\n\nstdlib unittest says - a fresh instance for the test.\n\nPreviously, pytest said - some instance that is shared by all\nstatic/class methods. This is definitely broken since it breaks test\nisolation.\n\nChange pytest to behave like stdlib unittest here.\n\nIn practice, this means stopping to rely on `self.obj.__self__` to get\nto the instance from the test function's binding. This doesn't work\nbecause staticmethods are not bound to anything.\n\nInstead, keep the instance explicitly and use that.\n\nBTW, I think this will allow us to change `Class`'s fixture collection\n(`parsefactories`) to happen on the class itself instead of a class\ninstance, allowing us to avoid one class instantiation. But needs more\nwork.",
+  "origin": {
+    "repository": "https://github.com/pytest-dev/pytest",
+    "commit": "0dc036035107b213c9b73bf965cbd7356111b85a",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/pytest-dev/pytest/commit/0dc036035107b213c9b73bf965cbd7356111b85a. No known defect: at least 90% of its added lines were still unchanged upstream on 2026-09-30 and no later commit reports it as faulty. This is not proof of absence. Curator difficulty: easy. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-018",
+  "language": "go",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-018/base",
+  "head_branch": "bench/review-bench/review-bench-018/head",
+  "base_sha": "5dbafe59e4287eb390e0bcd98d67c44343a66192",
+  "head_sha": "cfe367bc1877a3ca2921999bbec49d9e218ec472",
+  "mr_title": "Don't return an error from dial if the balancer returns no initial servers",
+  "mr_description": "This modifies the WithBlock behavior somewhat to block until there is at least\none valid connection.  Previously, each connection would be made serially until\nall had completed successfully, with any errors returned to the caller.  Errors\nare now only returned due to connecting to a backend if a balancer is not used,\nor if there is an error starting the balancer itself.",
+  "origin": {
+    "repository": "https://github.com/grpc/grpc-go",
+    "commit": "c5a5dbc5005d9153f67df476a7b561c07b22dbc2",
+    "license": "Apache-2.0",
+    "source_case": "grpc-dialcontext-goroutine-leak",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/grpc-dialcontext-goroutine-leak"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "clientconn.go",
+      "line_start": 463,
+      "line_end": 463,
+      "category": "correctness",
+      "severity": null,
+      "title": "ClientConn.lbWatcher consumes the balancer's Notify channel but never closes doneChan whe…",
+      "description": "ClientConn.lbWatcher consumes the balancer's Notify channel but never closes doneChan when that channel closes or the loop breaks; when DialContext times out before the balancer returns addresses or a connection is established, the goroutine waiting on doneChan is never released — a goroutine leak.\n\nProvenance: fix PR #1424 body (commit 4e56696): 'The loop in ClientConn.lbWatcher breaks and doneChan never gets closed'.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": "ClientConn.lbWatcher consumes the balancer's Notify channel but never closes doneChan when that channel closes or the loop breaks; when DialContext times out before the balancer returns addresses or a connection is established, the goroutine waiting on doneChan is never released — a goroutine leak."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench grpc-dialcontext-goroutine-leak (corpus corpus/v0.1). Introducing PR https://github.com/grpc/grpc-go/pull/1112. Fix https://github.com/grpc/grpc-go/commit/4e56696c6c5a8cd7b711a1eb8936463559361da5 (PR #1424). Category defaulted to correctness and severity left null because the source has neither; to be reviewed. Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 613-613, review-head lines 463-463)"
+}

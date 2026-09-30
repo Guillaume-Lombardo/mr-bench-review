@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-099",
+  "language": "python",
+  "size": "medium",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-099/base",
+  "head_branch": "bench/curated/case-099/head",
+  "base_sha": "40b83f454be692d5c923a6be4782a2230b9fb91a",
+  "head_sha": "4a7b80c881ad162ffeca6869ad62f600e5f866e6",
+  "mr_title": "Removed casting from exact lookups in admin searches.",
+  "mr_description": "Instead of casting non-text fields to CharField (which prevents index\nusage), skip exact lookups when the search term fails\nformfield.to_python().\n\nThis preserves index usage for valid searches while gracefully handling\ninvalid search terms by simply not including them in the query for that\nfield.\n\nFor multi-term searches like 'foo 123' on search_fields=['name', 'age__exact']:\n- 'foo': invalid for age, so only name lookup is used\n- '123': valid for both, so both lookups are used\n\nThis entails a slight increase in permissiveness for search terms that\ncan be normalized by formfield.to_python().",
+  "origin": {
+    "repository": "https://github.com/django/django",
+    "commit": "4cecf3039586ea738afafb9a28c946bff42c37c1",
+    "license": "BSD-3-Clause",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "django/contrib/admin/options.py",
+      "line_start": 1196,
+      "line_end": 1196,
+      "category": "correctness",
+      "severity": "high",
+      "title": "to_python() used as validator: crash on typed choices, over-match on booleans",
+      "description": "formfield().to_python() is not a validator for every field type: TypedChoiceField returns the raw string and forms.BooleanField maps almost any string to True, so search crashes (HTTP 500) or over-matches.\n\nThe new admin search skips exact lookups whose term fails formfield.to_python(). For fields with choices the form field is a TypedChoiceField whose to_python() does not coerce, so a term like 'john' against an IntegerField with choices reaches the ORM and raises ValueError in the changelist. For BooleanField, forms.BooleanField.to_python('anything') returns True, so any search term OR-matches every row with a True value instead of nothing. The validation needs strict, type-aware parsing (coerce for typed choices, strict boolean parsing).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/4cecf3039586ea738afafb9a28c946bff42c37c1. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/fe81969e83d03b61e587a28ddebb92b9fca2b441; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

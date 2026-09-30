@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-120",
+  "language": "php",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-120/base",
+  "head_branch": "bench/aacr/aacr-120/head",
+  "base_sha": "85d82b994f7669fa0e2830a94a40925dc4298b43",
+  "head_sha": "a8e45ff4523775e5f84fcee973cdb8bd6e886969",
+  "mr_title": "Update pt_BR reset-password translations",
+  "mr_description": "- Update pt_BR reset-password translations\n- Update pt_BR login translations\n- Update pt_BR register translations",
+  "origin": {
+    "repository": "https://github.com/filamentphp/filament",
+    "commit": "912f080f3bf9873c1d059bcb9df485e3d8939220",
+    "license": "MIT",
+    "source_case": "https://github.com/filamentphp/filament/pull/15756",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "packages/panels/resources/lang/pt_BR/pages/auth/register.php",
+      "line_start": 30,
+      "line_end": 30,
+      "category": "correctness",
+      "severity": null,
+      "title": "The validation_attribute for the password field must retain the field name 'password' as…",
+      "description": "The validation_attribute for the password field must retain the field name 'password' as the translation key, not the translated string 'senha', to ensure proper validation error message generation.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The validation_attribute for the password field must retain the field name 'password' as the translation key, not the translated string 'senha', to ensure proper validation error message generation."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/filamentphp/filament/pull/15756). Upstream base 8b44845f2bfab244f650d38e1b0ac00e733612e7 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 6. Severity absent in the source. i1: human comment, Diff Level"
+}

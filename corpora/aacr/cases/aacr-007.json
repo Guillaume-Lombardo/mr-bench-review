@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-007",
+  "language": "cpp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-007/base",
+  "head_branch": "bench/aacr/aacr-007/head",
+  "base_sha": "589190cdb5287cdd80d55b2398ace0bb5c6aad3c",
+  "head_sha": "cc6bdb3c776bc024e91511f140769f96e43caed3",
+  "mr_title": "App: Don't use std::forward inside loop",
+  "mr_description": "- App: Don't use std::forward inside loop\n- TD: Ensure WalkerEdge is fully initialized\n- App: Check for an invalid enum before proceeding\n- Gui: Don't allow manipulator to delete the menubar",
+  "origin": {
+    "repository": "https://github.com/FreeCAD/FreeCAD",
+    "commit": "290bdc79d1ad92669431458a62205d694522586e",
+    "license": "LGPL-2.0-or-later",
+    "source_case": "https://github.com/FreeCAD/FreeCAD/pull/20336",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/App/PropertyStandard.cpp",
+      "line_start": 604,
+      "line_end": 604,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Consider declaring `maxEnumValue` as `const auto` since it's never modified after initial…",
+      "description": "Consider declaring `maxEnumValue` as `const auto` since it's never modified after initialization. This improves const correctness and makes the intent clearer.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Consider declaring `maxEnumValue` as `const auto` since it's never modified after initialization. This improves const correctness and makes the intent clearer.\n"
+    },
+    {
+      "id": "i2",
+      "file": "src/Gui/WorkbenchManipulatorPython.cpp",
+      "line_start": 160,
+      "line_end": 161,
+      "category": "correctness",
+      "severity": null,
+      "title": "Consider using smart pointers instead of raw pointers and manual delete operations",
+      "description": "Consider using smart pointers instead of raw pointers and manual delete operations. This would provide automatic memory management and exception safety.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Consider using smart pointers instead of raw pointers and manual delete operations. This would provide automatic memory management and exception safety.\n"
+    },
+    {
+      "id": "i3",
+      "file": "src/Gui/WorkbenchManipulatorPython.cpp",
+      "line_start": 162,
+      "line_end": 162,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Add FC_DEBUG logging when the menuBar removal guard is triggered to capture unexpected at…",
+      "description": "Add FC_DEBUG logging when the menuBar removal guard is triggered to capture unexpected attempts to remove the menuBar itself, as silent returns may mask underlying command structure errors.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Add FC_DEBUG logging when the menuBar removal guard is triggered to capture unexpected attempts to remove the menuBar itself, as silent returns may mask underlying command structure errors."
+    },
+    {
+      "id": "i4",
+      "file": "src/Gui/WorkbenchManipulatorPython.cpp",
+      "line_start": 317,
+      "line_end": 325,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Add FC_DEBUG() logging to the condition that skips removing the toolbar itself (item == t…",
+      "description": "Add FC_DEBUG() logging to the condition that skips removing the toolbar itself (item == toolBar) to maintain debugging consistency and visibility for Coverity issue 513838.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Add FC_DEBUG() logging to the condition that skips removing the toolbar itself (item == toolBar) to maintain debugging consistency and visibility for Coverity issue 513838."
+    },
+    {
+      "id": "i5",
+      "file": "src/Gui/WorkbenchManipulatorPython.cpp",
+      "line_start": 321,
+      "line_end": 322,
+      "category": "correctness",
+      "severity": null,
+      "title": "Consider using smart pointers instead of raw pointers and manual delete operations",
+      "description": "Consider using smart pointers instead of raw pointers and manual delete operations. This would provide automatic memory management and exception safety.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Consider using smart pointers instead of raw pointers and manual delete operations. This would provide automatic memory management and exception safety.\n"
+    },
+    {
+      "id": "i6",
+      "file": "src/Mod/TechDraw/App/EdgeWalker.cpp",
+      "line_start": 453,
+      "line_end": 458,
+      "category": "correctness",
+      "severity": null,
+      "title": "The `edge_t` type (boost::adjacency_list edge descriptor) contains three members: `m_sour…",
+      "description": "The `edge_t` type (boost::adjacency_list edge descriptor) contains three members: `m_source`, `m_target`, and `m_eproperty`. Only `m_source` and `m_target` are initialized here, but `m_eproperty` is left uninitialized. This could lead to undefined behavior if the property is accessed. Consider using `{}` to zero-initialize the entire `ed` member. Additionally, prefer using a member initializer list for better performance and readability following RAII principles.\n\n```suggestion\nWalkerEdge::WalkerEdge() : ed{} {}\n// or explicitly:\n// WalkerEdge::WalkerEdge() : ed{0, 0, {}} {}\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The `edge_t` type (boost::adjacency_list edge descriptor) contains three members: `m_source`, `m_target`, and `m_eproperty`. Only `m_source` and `m_target` are initialized here, but `m_eproperty` is left uninitialized. This could lead to undefined behavior if the property is accessed. Consider using `{}` to zero-initialize the entire `ed` member. Additionally, prefer using a member initializer list for better performance and readability following RAII principles.\n\n```suggestion\nWalkerEdge::WalkerEdge() : ed{} {}\n// or explicitly:\n// WalkerEdge::WalkerEdge() : ed{0, 0, {}} {}\n```"
+    },
+    {
+      "id": "i7",
+      "file": "src/Mod/TechDraw/App/EdgeWalker.cpp",
+      "line_start": 453,
+      "line_end": 458,
+      "category": "correctness",
+      "severity": null,
+      "title": "Constructor initializes only ed.m_source/ed.m_target via assignment in the body",
+      "description": "Constructor initializes only ed.m_source/ed.m_target via assignment in the body. Prefer a member-initializer list for correct/efficient initialization, and consider initializing the other WalkerEdge members (e.g., v1/v2/idx) here as well—otherwise they may remain indeterminate and later reads (e.g., dump(), weCompare(), isEqual()) can observe garbage unless always set elsewhere.\n\n```suggestion\nWalkerEdge::WalkerEdge()\n    : v1(0)\n    , v2(0)\n    , idx(0)\n{\n    // Ensure the edge is properly initialized (Coverity defect 316559)\n    ed.m_source = 0;\n    ed.m_target = 0;\n}\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Constructor initializes only ed.m_source/ed.m_target via assignment in the body. Prefer a member-initializer list for correct/efficient initialization, and consider initializing the other WalkerEdge members (e.g., v1/v2/idx) here as well—otherwise they may remain indeterminate and later reads (e.g., dump(), weCompare(), isEqual()) can observe garbage unless always set elsewhere.\n\n```suggestion\nWalkerEdge::WalkerEdge()\n    : v1(0)\n    , v2(0)\n    , idx(0)\n{\n    // Ensure the edge is properly initialized (Coverity defect 316559)\n    ed.m_source = 0;\n    ed.m_target = 0;\n}\n```"
+    },
+    {
+      "id": "i8",
+      "file": "src/Mod/TechDraw/App/EdgeWalker.h",
+      "line_start": 81,
+      "line_end": 81,
+      "category": "correctness",
+      "severity": null,
+      "title": "The edge_t member 'ed' is only partially initialized here",
+      "description": "The edge_t member 'ed' is only partially initialized here. Consider ensuring all members of edge_t are properly initialized to prevent undefined behavior.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The edge_t member 'ed' is only partially initialized here. Consider ensuring all members of edge_t are properly initialized to prevent undefined behavior.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/App/PropertyLinks.cpp",
+      "line_start": 1958,
+      "line_end": 1958,
+      "description": "The function parameter uses forwarding references (`Args&&... args`) but the forwarding call to `(*f)` removes `std::forward`. This breaks the perfect forwarding pattern. While the current call sites only pass pointers and const references (so no functional bug exists now), this makes the API misleading and could cause issues if future callers pass rvalues or if the target functions expect rvalue references. The `std::forward` should be kept to maintain the intended perfect forwarding semantics.\n\n```suggestion\n        auto new_sub = (*f)(obj, sub.c_str(), std::forward<Args>(args)...);\n```"
+    },
+    {
+      "file": "src/App/PropertyStandard.cpp",
+      "line_start": 604,
+      "line_end": 608,
+      "description": "Returning `false` here changes behavior for invalid enums, but it may leave the Python call without a Python exception set. If `getPyPathValue()` is expected to either return `true` or set a Python error on failure, consider setting an appropriate exception (e.g., `PyErr_SetString(PyExc_RuntimeError, ...)`) before returning `false`, or handling invalid enums by returning an empty tuple to keep behavior consistent.\n\nAlso consider making the type explicit (`const int maxEnumValue = ...`) since this is a simple scalar and `auto` reduces readability slightly here.\n\n```suggestion\n        const int maxEnumValue = _enum.maxValue();\n        if (maxEnumValue < 0) {\n            PyErr_SetString(PyExc_RuntimeError, \"Invalid enumeration\");\n            return false;\n        }\n        Py::Tuple res(maxEnumValue + 1);\n```"
+    },
+    {
+      "file": "src/Gui/WorkbenchManipulatorPython.cpp",
+      "line_start": 156,
+      "line_end": 159,
+      "description": "The new `return` prevents removing the menubar itself, but it also exits the whole `tryModifyMenuBar` early. If the dict contains multiple operations/entries, this may skip remaining modifications. Consider `break`/`continue` (or handling just this command) instead of returning from the function, unless the intent is to abort all further processing on this call."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/FreeCAD/FreeCAD/pull/20336). Upstream base 7bf1b5d78722549775386e50feb3894f44b40e0b = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 98. Severity absent in the source. i1: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i2: AI comment (Deepseek-V3.2), File Level; i3: human comment, Diff Level; i4: human comment, File Level; i5: AI comment (Deepseek-V3.2), File Level; i6: AI comment (GLM-4.7), Repo Level; i7: AI comment (GPT-5.2), Repo Level; i8: AI comment (Qwen-Coder-480B), Repo Level"
+}

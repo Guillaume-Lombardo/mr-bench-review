@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-156",
+  "language": "java",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-156/base",
+  "head_branch": "bench/aacr/aacr-156/head",
+  "base_sha": "f6bf19c29532533cd05a65e4b54e349ea76621dc",
+  "head_sha": "7774f35b136107c011f72c8e08e027f2fc45055d",
+  "mr_title": "Add ability to set \"max_analyzed_offet\" implicitly to \"index.highlight .max_analyzed_offset\", by setting it excplicitly to \"-1\".",
+  "mr_description": "- Add ability to set \"max_analyzed_offet\" implicitly to \"index.highlight .max_analyzed_offset\", by setting it excplicitly to \"-1\".\n- Add test\n- Tweak tests\n- Merge branch 'main' into svilen-mihaylov/112822",
+  "origin": {
+    "repository": "https://github.com/elastic/elasticsearch",
+    "commit": "a6a4623f4a0216b515a8cb323110305504431459",
+    "license": "AGPL-3.0-only OR SSPL-1.0 OR Elastic-2.0",
+    "source_case": "https://github.com/elastic/elasticsearch/pull/118895",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "server/src/main/java/org/elasticsearch/lucene/search/uhighlight/CustomFieldHighlighter.java",
+      "line_start": 116,
+      "line_end": 116,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Minor clarity: `getNotNull()` is called after a null-check, but it returns a primitive `i…",
+      "description": "Minor clarity: `getNotNull()` is called after a null-check, but it returns a primitive `int` and can never be null. The name reads like it might perform a nullability check/throw. Consider renaming to something like `get()`/`value()`/`asInt()` (or at least aligning naming across usages) to reduce confusion for future readers.\n\n```suggestion\n            off = new LimitedOffsetsEnum(off, queryMaxAnalyzedOffset.value());\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Minor clarity: `getNotNull()` is called after a null-check, but it returns a primitive `int` and can never be null. The name reads like it might perform a nullability check/throw. Consider renaming to something like `get()`/`value()`/`asInt()` (or at least aligning naming across usages) to reduce confusion for future readers.\n\n```suggestion\n            off = new LimitedOffsetsEnum(off, queryMaxAnalyzedOffset.value());\n```"
+    },
+    {
+      "id": "i2",
+      "file": "server/src/main/java/org/elasticsearch/lucene/search/uhighlight/QueryMaxAnalyzedOffset.java",
+      "line_start": 15,
+      "line_end": 18,
+      "category": "correctness",
+      "severity": null,
+      "title": "There appears to be a mismatch between the comment indicating special handling for negati…",
+      "description": "There appears to be a mismatch between the comment indicating special handling for negative values and the actual constructor implementation which directly assigns the value. Either the comment should be updated or the constructor should implement the described behavior.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "There appears to be a mismatch between the comment indicating special handling for negative values and the actual constructor implementation which directly assigns the value. Either the comment should be updated or the constructor should implement the described behavior.\n"
+    },
+    {
+      "id": "i3",
+      "file": "server/src/main/java/org/elasticsearch/lucene/search/uhighlight/QueryMaxAnalyzedOffset.java",
+      "line_start": 27,
+      "line_end": 29,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Confusing method name: The name `getNotNull()` is misleading because: 1) It returns a pri…",
+      "description": "Confusing method name: The name `getNotNull()` is misleading because: 1) It returns a primitive int which cannot be null anyway, 2) The QueryMaxAnalyzedOffset instance itself could be null (when `create` returns null), potentially causing NPE when calling this method, 3) The name doesn't clearly convey what value is being returned. Consider renaming to something more descriptive like `getValue()` or `getMaxAnalyzedOffset()`.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Confusing method name: The name `getNotNull()` is misleading because: 1) It returns a primitive int which cannot be null anyway, 2) The QueryMaxAnalyzedOffset instance itself could be null (when `create` returns null), potentially causing NPE when calling this method, 3) The name doesn't clearly convey what value is being returned. Consider renaming to something more descriptive like `getValue()` or `getMaxAnalyzedOffset()`.\n"
+    },
+    {
+      "id": "i4",
+      "file": "server/src/main/java/org/elasticsearch/search/fetch/subphase/highlight/AbstractHighlighterBuilder.java",
+      "line_start": 568,
+      "line_end": 568,
+      "category": "correctness",
+      "severity": null,
+      "title": "The current validation condition for `maxAnalyzedOffset` incorrectly allows 0, which is i…",
+      "description": "The current validation condition for `maxAnalyzedOffset` incorrectly allows 0, which is invalid as highlighting zero characters is nonsensical and may cause undefined behavior. The condition should reject 0 while permitting -1 (special default) and positive integers.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The current validation condition for `maxAnalyzedOffset` incorrectly allows 0, which is invalid as highlighting zero characters is nonsensical and may cause undefined behavior. The condition should reject 0 while permitting -1 (special default) and positive integers."
+    },
+    {
+      "id": "i5",
+      "file": "server/src/main/java/org/elasticsearch/search/fetch/subphase/highlight/PlainHighlighter.java",
+      "line_start": 111,
+      "line_end": 118,
+      "category": "maintainability",
+      "severity": null,
+      "title": "`QueryMaxAnalyzedOffset.create(...)` returns `null` when the query param is unset",
+      "description": "`QueryMaxAnalyzedOffset.create(...)` returns `null` when the query param is unset. That part is fine, but the current code mixes wrapper-vs-null semantics in a confusing way:\n\n- In the `if` guard, `queryMaxAnalyzedOffset == null || queryMaxAnalyzedOffset.getNotNull() > maxAnalyzedOffset` is logically equivalent to the previous Integer-based check, but it obscures intent and invites mistakes.\n- `wrapAnalyzer(...)` takes a `QueryMaxAnalyzedOffset` yet still checks for null; this is OK functionally, but the naming (`maxAnalyzedOffset`) suggests a primitive/int, and makes it easy to accidentally call `getNotNull()` without guarding in future edits.\n\nSuggestion: keep an `Integer` variable for the query param and only construct the wrapper when non-null (or rename the wrapper variable to `queryMaxAnalyzedOffsetWrapper` / `queryMaxOffset`), so nullability is obvious and `getNotNull()` is only used on a clearly non-null reference.\n\n```suggestion\n        final Integer queryMaxAnalyzedOffset = fieldContext.field.fieldOptions().maxAnalyzedOffset();\n        final QueryMaxAnalyzedOffset queryMaxAnalyzedOffsetWrapper = QueryMaxAnalyzedOffset.create(queryMaxAnalyzedOffset, maxAnalyzedOffset);\n        Analyzer analyzer = wrapAnalyzer(\n            context.getSearchExecutionContext().getIndexAnalyzer(f -> Lucene.KEYWORD_ANALYZER),\n            queryMaxAnalyzedOffsetWrapper\n        );\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "`QueryMaxAnalyzedOffset.create(...)` returns `null` when the query param is unset. That part is fine, but the current code mixes wrapper-vs-null semantics in a confusing way:\n\n- In the `if` guard, `queryMaxAnalyzedOffset == null || queryMaxAnalyzedOffset.getNotNull() > maxAnalyzedOffset` is logically equivalent to the previous Integer-based check, but it obscures intent and invites mistakes.\n- `wrapAnalyzer(...)` takes a `QueryMaxAnalyzedOffset` yet still checks for null; this is OK functionally, but the naming (`maxAnalyzedOffset`) suggests a primitive/int, and makes it easy to accidentally call `getNotNull()` without guarding in future edits.\n\nSuggestion: keep an `Integer` variable for the query param and only construct the wrapper when non-null (or rename the wrapper variable to `queryMaxAnalyzedOffsetWrapper` / `queryMaxOffset`), so nullability is obvious and `getNotNull()` is only used on a clearly non-null reference.\n\n```suggestion\n        final Integer queryMaxAnalyzedOffset = fieldContext.field.fieldOptions().maxAnalyzedOffset();\n        final QueryMaxAnalyzedOffset queryMaxAnalyzedOffsetWrapper = QueryMaxAnalyzedOffset.create(queryMaxAnalyzedOffset, maxAnalyzedOffset);\n        Analyzer analyzer = wrapAnalyzer(\n            context.getSearchExecutionContext().getIndexAnalyzer(f -> Lucene.KEYWORD_ANALYZER),\n            queryMaxAnalyzedOffsetWrapper\n        );\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "server/src/main/java/org/elasticsearch/lucene/search/uhighlight/CustomUnifiedHighlighter.java",
+      "line_start": 128,
+      "line_end": 128,
+      "description": "This condition relies on Java's short-circuit evaluation to prevent a NullPointerException when queryMaxAnalyzedOffset is null. If the order of conditions changes or the logic is modified, this could lead to runtime exceptions. Consider making the null check more explicit for better readability and maintainability."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/elastic/elasticsearch/pull/118895). Upstream base d3f2956116eea89543dc4979bd3cdfc5c54d8bd7 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 211. Severity absent in the source. i1: AI comment (GPT-5.2), Repo Level; i2: AI comment (Qwen-Coder-480B), Diff Level; i3: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i4: human comment, Diff Level; i5: AI comment (GPT-5.2), Repo Level"
+}

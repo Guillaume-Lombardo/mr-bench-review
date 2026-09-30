@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-126",
+  "language": "csharp",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-126/base",
+  "head_branch": "bench/aacr/aacr-126/head",
+  "base_sha": "93eff22729a21598cce74114168e2c952c28bf76",
+  "head_sha": "5a76f0e50d1af7833119f2c970248f61c51aff65",
+  "mr_title": "get rid of memoryStream usage",
+  "mr_description": "- get rid of memoryStream usage\n- dont console writeline :)",
+  "origin": {
+    "repository": "https://github.com/dotnet/aspnetcore",
+    "commit": "8ac940ff581aa344ab8f859874f6d4c0ecaec6b6",
+    "license": "MIT",
+    "source_case": "https://github.com/dotnet/aspnetcore/pull/59322",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/DataProtection/DataProtection/src/KeyManagement/KeyRingBasedDataProtector.cs",
+      "line_start": 356,
+      "line_end": 356,
+      "category": "correctness",
+      "severity": null,
+      "title": "- `BitOperations.LeadingZeroCount` is unsupported in netstandard2.0 and .NET Framework; i…",
+      "description": "- `BitOperations.LeadingZeroCount` is unsupported in netstandard2.0 and .NET Framework; implement a cross-TFM fallback using a loop or math-based alternative.  \n- The span-based `Encoding.GetBytes` overload lacks compatibility with lower TFMs; replace with the array-indexed overload (`GetBytes(char[], int, int, byte[], int)`).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "- `BitOperations.LeadingZeroCount` is unsupported in netstandard2.0 and .NET Framework; implement a cross-TFM fallback using a loop or math-based alternative.  \n- The span-based `Encoding.GetBytes` overload lacks compatibility with lower TFMs; replace with the array-indexed overload (`GetBytes(char[], int, int, byte[], int)`)."
+    },
+    {
+      "id": "i2",
+      "file": "src/DataProtection/DataProtection/src/KeyManagement/KeyRingBasedDataProtector.cs",
+      "line_start": 357,
+      "line_end": 363,
+      "category": "correctness",
+      "severity": null,
+      "title": "Missing null validation: The constructor doesn't validate if the `purposes` parameter or…",
+      "description": "Missing null validation: The constructor doesn't validate if the `purposes` parameter or its elements are null. This could lead to NullReferenceException when calling `GetByteCount` or `GetBytes`. Consider adding validation at the beginning of the constructor:\n\n```csharp\nArgumentNullException.ThrowIfNull(purposes);\nfor (int i = 0; i < purposes.Length; i++)\n{\n    ArgumentNullException.ThrowIfNull(purposes[i], $\"purposes[{i}]\");\n}\n```\n\nOr at minimum, add Debug.Assert statements similar to the original implementation.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Missing null validation: The constructor doesn't validate if the `purposes` parameter or its elements are null. This could lead to NullReferenceException when calling `GetByteCount` or `GetBytes`. Consider adding validation at the beginning of the constructor:\n\n```csharp\nArgumentNullException.ThrowIfNull(purposes);\nfor (int i = 0; i < purposes.Length; i++)\n{\n    ArgumentNullException.ThrowIfNull(purposes[i], $\"purposes[{i}]\");\n}\n```\n\nOr at minimum, add Debug.Assert statements similar to the original implementation.\n"
+    },
+    {
+      "id": "i3",
+      "file": "src/DataProtection/DataProtection/src/KeyManagement/KeyRingBasedDataProtector.cs",
+      "line_start": 363,
+      "line_end": 365,
+      "category": "security",
+      "severity": null,
+      "title": "Potential integer overflow: totalPurposeLen is int and accumulates user-controlled purpos…",
+      "description": "Potential integer overflow: totalPurposeLen is int and accumulates user-controlled purpose lengths. Consider checked arithmetic (as in the old code) when adding lengths and when allocating the byte[] to avoid silent overflow leading to undersized buffer and out-of-range writes.\n\n```suggestion\n            int totalPurposeLen = checked(4 + keySize + 4);\n\n            var purposeLengthsPool = ArrayPool<int>.Shared.Rent(purposes.Length);\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "Potential integer overflow: totalPurposeLen is int and accumulates user-controlled purpose lengths. Consider checked arithmetic (as in the old code) when adding lengths and when allocating the byte[] to avoid silent overflow leading to undersized buffer and out-of-range writes.\n\n```suggestion\n            int totalPurposeLen = checked(4 + keySize + 4);\n\n            var purposeLengthsPool = ArrayPool<int>.Shared.Rent(purposes.Length);\n```"
+    },
+    {
+      "id": "i4",
+      "file": "src/DataProtection/DataProtection/src/KeyManagement/KeyRingBasedDataProtector.cs",
+      "line_start": 365,
+      "line_end": 365,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The current implementation unconditionally rents an array from `ArrayPool` for purpose le…",
+      "description": "The current implementation unconditionally rents an array from `ArrayPool` for purpose length calculations despite expecting few purposes, introducing unnecessary overhead; replace with stack allocation for arrays ≤32 elements using `stackalloc` with `ArrayPool` fallback for larger arrays.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "The current implementation unconditionally rents an array from `ArrayPool` for purpose length calculations despite expecting few purposes, introducing unnecessary overhead; replace with stack allocation for arrays ≤32 elements using `stackalloc` with `ArrayPool` fallback for larger arrays."
+    },
+    {
+      "id": "i5",
+      "file": "src/DataProtection/DataProtection/src/KeyManagement/KeyRingBasedDataProtector.cs",
+      "line_start": 365,
+      "line_end": 397,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Consider wrapping the logic that uses the rented array pool in a try-finally block to ens…",
+      "description": "Consider wrapping the logic that uses the rented array pool in a try-finally block to ensure the array is always returned to the pool, even if an exception occurs during processing. This prevents potential resource leaks.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "Consider wrapping the logic that uses the rented array pool in a try-finally block to ensure the array is always returned to the pool, even if an exception occurs during processing. This prevents potential resource leaks.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/DataProtection/DataProtection/src/KeyManagement/KeyRingBasedDataProtector.cs",
+      "line_start": 393,
+      "line_end": 394,
+      "description": "Consider ensuring the pooled array is always returned and that `index` cannot run past `targetSpan` if any length computations mismatch. Using `Span.Slice(index, purposeLengthsPool[i])` (with explicit length) for the GetBytes call can make bounds expectations explicit."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/dotnet/aspnetcore/pull/59322). Upstream base 3fe06183a8d3ef32de0d16863d232d5652b1fe9b = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 226. Severity absent in the source. i1: human comment, File Level; i2: AI comment (Claude-Code/Claude-4.5-Sonnet), Repo Level; i3: AI comment (GPT-5.2), File Level; i4: human comment, Diff Level; i5: AI comment (Qwen-Coder-480B), File Level"
+}

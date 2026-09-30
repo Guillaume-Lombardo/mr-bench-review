@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-076",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-076/base",
+  "head_branch": "bench/aacr/aacr-076/head",
+  "base_sha": "d9e3a67cbe09624d862b478c96b71d3a75fff7c8",
+  "head_sha": "061293d765a06c00865f3eec0c82ff04d467546e",
+  "mr_title": "add option",
+  "mr_description": "- add option\n- update promt Rewrite",
+  "origin": {
+    "repository": "https://github.com/infiniflow/ragflow",
+    "commit": "2d06022b78536bd22a0fd83f38804f39aa34cce8",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/infiniflow/ragflow/pull/5065",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "agent/component/rewrite.py",
+      "line_start": 49,
+      "line_end": 49,
+      "category": "maintainability",
+      "severity": null,
+      "title": "**Issue: Typo in prompt text**",
+      "description": "**Issue: Typo in prompt text**\n\nThe text \"If the user's latest question is completely\" is incomplete and grammatically incorrect. It should say something like \"If the user's latest question is complete\" or \"If the user's latest question is completely self-contained\".\n\n**Suggested fix:**\n```python\n    - If the user's latest question is complete, don't do anything, just return the original question.\n```\n\nThis typo exists in the original code too, but since you're refactoring this section, it's a good opportunity to fix it.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "**Issue: Typo in prompt text**\n\nThe text \"If the user's latest question is completely\" is incomplete and grammatically incorrect. It should say something like \"If the user's latest question is complete\" or \"If the user's latest question is completely self-contained\".\n\n**Suggested fix:**\n```python\n    - If the user's latest question is complete, don't do anything, just return the original question.\n```\n\nThis typo exists in the original code too, but since you're refactoring this section, it's a good opportunity to fix it."
+    },
+    {
+      "id": "i2",
+      "file": "web/src/components/api-service/embed-modal/index.tsx",
+      "line_start": 42,
+      "line_end": 49,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Semantic mismatch: The checkbox label is 'avatarHidden' but when checked, it adds 'visibl…",
+      "description": "Semantic mismatch: The checkbox label is 'avatarHidden' but when checked, it adds 'visible_avatar=1' to the URL. This is confusing. If the label means 'hide avatar', checking it should hide the avatar (not make it visible). Consider either: 1) Renaming the state to 'hideAvatar' and inverting the logic (!hideAvatar for URL param), or 2) Changing the label to something like 'showAvatar' or 'visibleAvatar' to match the current behavior.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Semantic mismatch: The checkbox label is 'avatarHidden' but when checked, it adds 'visible_avatar=1' to the URL. This is confusing. If the label means 'hide avatar', checking it should hide the avatar (not make it visible). Consider either: 1) Renaming the state to 'hideAvatar' and inverting the logic (!hideAvatar for URL param), or 2) Changing the label to something like 'showAvatar' or 'visibleAvatar' to match the current behavior.\n"
+    },
+    {
+      "id": "i3",
+      "file": "web/src/components/api-service/embed-modal/index.tsx",
+      "line_start": 45,
+      "line_end": 56,
+      "category": "correctness",
+      "severity": null,
+      "title": "The `iframeSrc` is computed by calling `generateIframeSrc()` during render, but this func…",
+      "description": "The `iframeSrc` is computed by calling `generateIframeSrc()` during render, but this function is only called once at component initialization. When `visibleAvatar` or `locale` state changes via the Checkbox or Select components, the `iframeSrc` variable won't be recalculated, so the displayed iframe code won't reflect the user's selected options. The `text` template will always show the initial iframe src.\n\n**Suggestion**: Move the `generateIframeSrc` logic inside the component body to recalculate on every render, or use `useMemo` to memoize the computed value based on state dependencies:\n\n```typescript\nconst iframeSrc = useMemo(() => {\n  let src = `${location.origin}/chat/share?shared_id=${token}&from=${form}&auth=${beta}`;\n  if (visibleAvatar) {\n    src += '&visible_avatar=1';\n  }\n  if (locale) {\n    src += `&locale=${locale}`;\n  }\n  return src;\n}, [token, form, beta, visibleAvatar, locale]);\n```\n\n```suggestion\n  const iframeSrc = useMemo(() => {\n    let src = `${location.origin}/chat/share?shared_id=${token}&from=${form}&auth=${beta}`;\n    if (visibleAvatar) {\n      src += '&visible_avatar=1';\n    }\n    if (locale) {\n      src += `&locale=${locale}`;\n    }\n    return src;\n  }, [token, form, beta, visibleAvatar, locale]);\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The `iframeSrc` is computed by calling `generateIframeSrc()` during render, but this function is only called once at component initialization. When `visibleAvatar` or `locale` state changes via the Checkbox or Select components, the `iframeSrc` variable won't be recalculated, so the displayed iframe code won't reflect the user's selected options. The `text` template will always show the initial iframe src.\n\n**Suggestion**: Move the `generateIframeSrc` logic inside the component body to recalculate on every render, or use `useMemo` to memoize the computed value based on state dependencies:\n\n```typescript\nconst iframeSrc = useMemo(() => {\n  let src = `${location.origin}/chat/share?shared_id=${token}&from=${form}&auth=${beta}`;\n  if (visibleAvatar) {\n    src += '&visible_avatar=1';\n  }\n  if (locale) {\n    src += `&locale=${locale}`;\n  }\n  return src;\n}, [token, form, beta, visibleAvatar, locale]);\n```\n\n```suggestion\n  const iframeSrc = useMemo(() => {\n    let src = `${location.origin}/chat/share?shared_id=${token}&from=${form}&auth=${beta}`;\n    if (visibleAvatar) {\n      src += '&visible_avatar=1';\n    }\n    if (locale) {\n      src += `&locale=${locale}`;\n    }\n    return src;\n  }, [token, form, beta, visibleAvatar, locale]);\n```"
+    },
+    {
+      "id": "i4",
+      "file": "web/src/components/api-service/embed-modal/index.tsx",
+      "line_start": 56,
+      "line_end": 56,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Performance: The iframeSrc is recalculated on every render",
+      "description": "Performance: The iframeSrc is recalculated on every render. Since it depends on state variables, consider wrapping it with useMemo to avoid unnecessary recalculations: `const iframeSrc = useMemo(() => generateIframeSrc(), [visibleAvatar, locale, token, form, beta]);`",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "Performance: The iframeSrc is recalculated on every render. Since it depends on state variables, consider wrapping it with useMemo to avoid unnecessary recalculations: `const iframeSrc = useMemo(() => generateIframeSrc(), [visibleAvatar, locale, token, form, beta]);`\n"
+    },
+    {
+      "id": "i5",
+      "file": "web/src/components/api-service/embed-modal/index.tsx",
+      "line_start": 81,
+      "line_end": 81,
+      "category": "correctness",
+      "severity": null,
+      "title": "Label 'avatarHidden' implies checking hides avatar, but implementation shows avatar when…",
+      "description": "Label 'avatarHidden' implies checking hides avatar, but implementation shows avatar when checked. Consider renaming label to 'showAvatar' or invert logic for intuitive UX.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Label 'avatarHidden' implies checking hides avatar, but implementation shows avatar when checked. Consider renaming label to 'showAvatar' or invert logic for intuitive UX.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "agent/component/rewrite.py",
+      "line_start": null,
+      "line_end": null,
+      "description": "Removing the explicit language requirement in the prompt may cause low-performance models to generate responses in an incorrect language, particularly when the `language` parameter is empty."
+    },
+    {
+      "file": "agent/component/rewrite.py",
+      "line_start": 45,
+      "line_end": 45,
+      "description": "**Issue: Incorrect indentation**\n\nThe `else` block and its content have incorrect indentation. The `else` clause should align with the `if language:` statement. Additionally, the closing triple quotes inside the else block should not have extra indentation.\n\n**Suggested fix:**\n```python\nif language:\n    prompt += f\"\"\"\n    - Text generated MUST be in {language}\"\"\"\nelse:\n    prompt += \"\"\"\n    - Text generated MUST be in the same language of the original user's question.\n    \"\"\"\n```\n\nThis improves code readability and maintains consistent formatting."
+    },
+    {
+      "file": "web/src/components/api-service/embed-modal/index.tsx",
+      "line_start": 50,
+      "line_end": 52,
+      "description": "When locale is selected and then cleared, it might result in an empty locale parameter (&locale=) in the URL. Consider checking if locale has a truthy value before appending it: `if (locale) { src += \\`&locale=${locale}\\`; }`"
+    },
+    {
+      "file": "web/src/components/api-service/embed-modal/index.tsx",
+      "line_start": 80,
+      "line_end": 80,
+      "description": "Consider translating the 'Option' heading using the same translation mechanism (useTranslate) for consistency."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/infiniflow/ragflow/pull/5065). Upstream base 409310aae90c12ad8a85320c4a71b2108485edc9 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 65. Severity absent in the source. i1: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i2: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i3: AI comment (GLM-4.7), File Level; i4: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i5: AI comment (Qwen-Coder-480B), File Level"
+}

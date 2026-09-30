@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-046",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": "pilot",
+  "base_branch": "bench/curated/case-046/base",
+  "head_branch": "bench/curated/case-046/head",
+  "base_sha": "f43aa179e01c4b26ab29cb6ae9a0bb765506c4a5",
+  "head_sha": "a2dd8eaa2986bc381ec194650df1178ec4f05f5d",
+  "mr_title": "Safeguard against schedule entry without kwargs",
+  "mr_description": "* Possible fix for\n\nverification & test needed\n\n* Update celery/beat.py\n\n* Extract logic to methods.\n\n* Add test.",
+  "origin": {
+    "repository": "https://github.com/celery/celery",
+    "commit": "1c955bf76a9a33052d87f2bccf0889fb21f27d41",
+    "license": "BSD-3-Clause",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "celery/beat.py",
+      "line_start": 211,
+      "line_end": 211,
+      "category": "correctness",
+      "severity": "high",
+      "title": "entry_args.args accessed on a plain sequence",
+      "description": "_evaluate_entry_args() iterates entry_args.args, but entry.args is a list/tuple, so every scheduled entry with positional args raises AttributeError and is not sent.\n\nThe helper receives `entry.args` (a sequence), not the entry. `entry_args.args` fails with AttributeError: 'list' object has no attribute 'args' for any periodic task with arguments, which beat logs and skips. Iterate over entry_args directly.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    },
+    {
+      "id": "i2",
+      "file": "t/unit/app/test_beat.py",
+      "line_start": 199,
+      "line_end": 213,
+      "category": "tests",
+      "severity": "medium",
+      "title": "New test only covers None args; no test with positional arguments",
+      "description": "The added test sets entry.args and entry.kwargs to None, which takes the early-return branch of the new helpers. No test schedules an entry with non-empty positional arguments, the common case, so the AttributeError in _evaluate_entry_args() is not detected.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/celery/celery/commit/1c955bf76a9a33052d87f2bccf0889fb21f27d41. Primary issue confirmed by the later upstream fix https://github.com/celery/celery/commit/1901ea8594185c015d1518d89f3b90180275c0b9; its regression test reproduces the problem on this head. Curator difficulty: easy. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}
