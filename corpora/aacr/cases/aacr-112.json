@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-112",
+  "language": "python",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-112/base",
+  "head_branch": "bench/aacr/aacr-112/head",
+  "base_sha": "44cc933cdbf7766d0a1b38747e78da52079ec2fd",
+  "head_sha": "a0f7e03abe58687ad3330b93c69ad7fd0f2a9455",
+  "mr_title": "chore: support printing once for logging",
+  "mr_description": "- chore: support printing once for logging\n- chore: update type hashable\n- chore: update usage",
+  "origin": {
+    "repository": "https://github.com/vllm-project/vllm",
+    "commit": "134705b1474ddcfac234a0a01313874f7c8b59bc",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/vllm-project/vllm/pull/17425",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "vllm/logger.py",
+      "line_start": 55,
+      "line_end": 58,
+      "category": "correctness",
+      "severity": null,
+      "title": "Serious logic issue: The @lru_cache decorator caches based on ALL arguments including *ar…",
+      "description": "Serious logic issue: The @lru_cache decorator caches based on ALL arguments including *args, which breaks the 'print once' semantics. When the same message format is logged with different argument values (e.g., logger.info_once('Value: %s', 1) then logger.info_once('Value: %s', 2)), both will be printed because they create different cache entries. The cache should only consider the message format string, not the formatting arguments. Consider using a different caching strategy that only caches based on (logger, msg) or implementing a custom cache that ignores the *args for cache key generation.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Serious logic issue: The @lru_cache decorator caches based on ALL arguments including *args, which breaks the 'print once' semantics. When the same message format is logged with different argument values (e.g., logger.info_once('Value: %s', 1) then logger.info_once('Value: %s', 2)), both will be printed because they create different cache entries. The cache should only consider the message format string, not the formatting arguments. Consider using a different caching strategy that only caches based on (logger, msg) or implementing a custom cache that ignores the *args for cache key generation.\n"
+    },
+    {
+      "id": "i2",
+      "file": "vllm/logger.py",
+      "line_start": 55,
+      "line_end": 58,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Potential memory growth: these functions are decorated with @lru_cache and now include `*…",
+      "description": "Potential memory growth: these functions are decorated with @lru_cache and now include `*args` in the cache key. If call sites pass many distinct argument combinations (e.g., dynamic values), the cache can grow without bound over a long-running process. Consider setting `@lru_cache(maxsize=...)`, caching only on the formatted message key you intend to dedupe, or using a bounded set per logger.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "Potential memory growth: these functions are decorated with @lru_cache and now include `*args` in the cache key. If call sites pass many distinct argument combinations (e.g., dynamic values), the cache can grow without bound over a long-running process. Consider setting `@lru_cache(maxsize=...)`, caching only on the formatted message key you intend to dedupe, or using a bounded set per logger."
+    },
+    {
+      "id": "i3",
+      "file": "vllm/model_executor/model_loader/weight_utils.py",
+      "line_start": 718,
+      "line_end": 721,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential issue: this change switches `warning_once` from f-string to %-style formatting…",
+      "description": "Potential issue: this change switches `warning_once` from f-string to %-style formatting with extra args. Please confirm `logger.warning_once` supports the standard logging signature `warning_once(msg, *args, **kwargs)` and forwards args to the logger. If `warning_once` only accepts a single pre-formatted string, this will raise `TypeError` at runtime and also break the intended message. If it doesn’t support args, keep f-strings or explicitly format via `msg % (..)` / `.format()` before passing.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential issue: this change switches `warning_once` from f-string to %-style formatting with extra args. Please confirm `logger.warning_once` supports the standard logging signature `warning_once(msg, *args, **kwargs)` and forwards args to the logger. If `warning_once` only accepts a single pre-formatted string, this will raise `TypeError` at runtime and also break the intended message. If it doesn’t support args, keep f-strings or explicitly format via `msg % (..)` / `.format()` before passing."
+    },
+    {
+      "id": "i4",
+      "file": "vllm/model_executor/model_loader/weight_utils.py",
+      "line_start": 719,
+      "line_end": 719,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Formatting issue: There are two spaces before `noqa` instead of one",
+      "description": "Formatting issue: There are two spaces before `noqa` instead of one. Should be `# noqa:` not `#  noqa:`.\n\n**Suggested Fix:**\n```python\n\"Found kv_scale in the checkpoint (e.g. %s), but not found the expected name in the model (e.g. %s). kv_scale is not loaded.\",  # noqa: E501\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Formatting issue: There are two spaces before `noqa` instead of one. Should be `# noqa:` not `#  noqa:`.\n\n**Suggested Fix:**\n```python\n\"Found kv_scale in the checkpoint (e.g. %s), but not found the expected name in the model (e.g. %s). kv_scale is not loaded.\",  # noqa: E501\n```"
+    },
+    {
+      "id": "i5",
+      "file": "vllm/model_executor/models/qwen2_moe.py",
+      "line_start": 465,
+      "line_end": 465,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Formatting issue: There are two spaces before `noqa` instead of one",
+      "description": "Formatting issue: There are two spaces before `noqa` instead of one. Should be `# noqa:` not `#  noqa:`.\n\n**Suggested Fix:**\n```python\n\"Found kv_scale in the checkpoint (e.g. %s), but not found the expected name in the model (e.g. %s). kv_scale is not loaded.\",  # noqa: E501\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Formatting issue: There are two spaces before `noqa` instead of one. Should be `# noqa:` not `#  noqa:`.\n\n**Suggested Fix:**\n```python\n\"Found kv_scale in the checkpoint (e.g. %s), but not found the expected name in the model (e.g. %s). kv_scale is not loaded.\",  # noqa: E501\n```"
+    },
+    {
+      "id": "i6",
+      "file": "vllm/multimodal/profiling.py",
+      "line_start": 218,
+      "line_end": 224,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential formatting issue: the placeholder for `self._get_mm_num_tokens(mm_inputs)` is `…",
+      "description": "Potential formatting issue: the placeholder for `self._get_mm_num_tokens(mm_inputs)` is `%s`, but the value appears to be numeric (token count). Prefer `%d` to avoid accidental non-int formatting and to communicate intent; also consider casting to `int` if it can be a numpy scalar/torch scalar to avoid surprising output.\n\n```suggestion\n                \"The encoder sequence length used for profiling (max_num_batched_tokens / max_num_seqs = %d) \"  # noqa: E501\n                \"is too short to hold the multi-modal embeddings in the worst case (%d tokens in total, out of which %d are reserved for multi-modal embeddings). \"  # noqa: E501\n                \"This may cause certain multi-modal inputs to fail during inference, even when the input text is short. \"  # noqa: E501\n                \"To avoid this, you should increase `max_model_len`, reduce `max_num_seqs`, and/or reduce `mm_counts`.\",  # noqa: E501\n                seq_len,\n                total_len,\n                int(self._get_mm_num_tokens(mm_inputs)),\n            )\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential formatting issue: the placeholder for `self._get_mm_num_tokens(mm_inputs)` is `%s`, but the value appears to be numeric (token count). Prefer `%d` to avoid accidental non-int formatting and to communicate intent; also consider casting to `int` if it can be a numpy scalar/torch scalar to avoid surprising output.\n\n```suggestion\n                \"The encoder sequence length used for profiling (max_num_batched_tokens / max_num_seqs = %d) \"  # noqa: E501\n                \"is too short to hold the multi-modal embeddings in the worst case (%d tokens in total, out of which %d are reserved for multi-modal embeddings). \"  # noqa: E501\n                \"This may cause certain multi-modal inputs to fail during inference, even when the input text is short. \"  # noqa: E501\n                \"To avoid this, you should increase `max_model_len`, reduce `max_num_seqs`, and/or reduce `mm_counts`.\",  # noqa: E501\n                seq_len,\n                total_len,\n                int(self._get_mm_num_tokens(mm_inputs)),\n            )\n```"
+    },
+    {
+      "id": "i7",
+      "file": "vllm/multimodal/profiling.py",
+      "line_start": 243,
+      "line_end": 249,
+      "category": "correctness",
+      "severity": null,
+      "title": "Same as above: use `%d` for token count placeholder (and possibly `int(...)`) to keep for…",
+      "description": "Same as above: use `%d` for token count placeholder (and possibly `int(...)`) to keep formatting consistent and avoid unexpected stringification if the return type is a scalar tensor/np scalar.\n\n```suggestion\n                \"The sequence length used for profiling (max_num_batched_tokens / max_num_seqs = %d) \"  # noqa: E501\n                \"is too short to hold the multi-modal embeddings in the worst case (%d tokens in total, out of which %d are reserved for multi-modal embeddings). \"  # noqa: E501\n                \"This may cause certain multi-modal inputs to fail during inference, even when the input text is short. \"  # noqa: E501\n                \"To avoid this, you should increase `max_model_len`, reduce `max_num_seqs`, and/or reduce `mm_counts`.\",  # noqa: E501\n                seq_len,\n                total_len,\n                int(self._get_mm_num_tokens(mm_inputs)),\n            )\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Same as above: use `%d` for token count placeholder (and possibly `int(...)`) to keep formatting consistent and avoid unexpected stringification if the return type is a scalar tensor/np scalar.\n\n```suggestion\n                \"The sequence length used for profiling (max_num_batched_tokens / max_num_seqs = %d) \"  # noqa: E501\n                \"is too short to hold the multi-modal embeddings in the worst case (%d tokens in total, out of which %d are reserved for multi-modal embeddings). \"  # noqa: E501\n                \"This may cause certain multi-modal inputs to fail during inference, even when the input text is short. \"  # noqa: E501\n                \"To avoid this, you should increase `max_model_len`, reduce `max_num_seqs`, and/or reduce `mm_counts`.\",  # noqa: E501\n                seq_len,\n                total_len,\n                int(self._get_mm_num_tokens(mm_inputs)),\n            )\n```"
+    },
+    {
+      "id": "i8",
+      "file": "vllm/multimodal/profiling.py",
+      "line_start": 249,
+      "line_end": 249,
+      "category": "correctness",
+      "severity": null,
+      "title": "The change to % formatting passes unhashable objects as arguments to `logger.warning_once…",
+      "description": "The change to % formatting passes unhashable objects as arguments to `logger.warning_once`, which is wrapped in `lru_cache` and requires hashable inputs for caching. This breaks when non-hashable values (e.g., complex objects from `self._get_mm_num_tokens()`) are logged.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The change to % formatting passes unhashable objects as arguments to `logger.warning_once`, which is wrapped in `lru_cache` and requires hashable inputs for caching. This breaks when non-hashable values (e.g., complex objects from `self._get_mm_num_tokens()`) are logged."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "vllm/config.py",
+      "line_start": 500,
+      "line_end": 504,
+      "description": "The argument order matches the format specifiers correctly (model_type -> %s, backend -> %s, sliding_window_len_min -> %s). However, there is a trailing comma after the last argument which, while not causing an error in multi-line function calls, is unnecessary and inconsistent with Python style guidelines. If this follows a project-specific style convention that always uses trailing commas in multi-line calls, it is acceptable to keep it.\n\n```suggestion\n                    \"%s has interleaved attention, which is currently not supported by the %s backend. Disabling sliding window and capping the max length to the sliding window size (%s).\",  # noqa: E501\n                        self.hf_text_config.model_type,\n                        backend,\n                        sliding_window_len_min\n                    )\n```"
+    },
+    {
+      "file": "vllm/logger.py",
+      "line_start": 55,
+      "line_end": 58,
+      "description": "The `@lru_cache` decorator requires all arguments to be hashable. The `logger` parameter is a Logger instance, which is not hashable (doesn't implement `__hash__`). This will cause a `TypeError: unhashable type: 'Logger'` at runtime when `_print_info_once` or `_print_warning_once` is called. The lru_cache cannot work with non-hashable arguments like Logger instances.\n\n```suggestion\ndef _print_info_once(logger: Logger, msg: str, *args: Hashable) -> None:\n    # Set the stacklevel to 2 to print the original caller's line info\n    logger.info(msg, *args, stacklevel=2)\n```"
+    },
+    {
+      "file": "vllm/multimodal/profiling.py",
+      "line_start": 224,
+      "line_end": 224,
+      "description": "The logger call was changed from f-string formatting to parameterized arguments to safely handle non-string return values from `self._get_mm_num_tokens(mm_inputs)`, addressing the issue where dictionary return values would cause logging failures due to improper string conversion."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/vllm-project/vllm/pull/17425). Upstream base 7489ec0bab2904dcc4001af59a942a16756fdbbc = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 154. Severity absent in the source. i1: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i2: AI comment (GPT-5.2), Diff Level; i3: AI comment (GPT-5.2), Repo Level; i4: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i5: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i6: AI comment (GPT-5.2), Repo Level; i7: AI comment (GPT-5.2), Repo Level; i8: human comment, Repo Level"
+}

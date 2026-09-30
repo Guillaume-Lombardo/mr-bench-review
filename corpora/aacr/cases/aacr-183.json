@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-183",
+  "language": "php",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-183/base",
+  "head_branch": "bench/aacr/aacr-183/head",
+  "base_sha": "befd11d3dd995671df763a83da18c408685eb012",
+  "head_sha": "5c442ad8095c8d7306fbb420f9aa7ec390b30847",
+  "mr_title": "[DependencyInjection] Add test case to ensure XML parse exception message includes filename and position",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/symfony/symfony",
+    "commit": "942f8fa5384d34f2b5c9bd1b73a169d8fd049fd5",
+    "license": "MIT",
+    "source_case": "https://github.com/symfony/symfony/pull/61601",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/Symfony/Component/DependencyInjection/Tests/Fixtures/xml/services31.xml",
+      "line_start": 1,
+      "line_end": 8,
+      "category": "correctness",
+      "severity": null,
+      "title": "Fixture is used to trigger a schema validation error message (\"This element is not expect…",
+      "description": "Fixture is used to trigger a schema validation error message (\"This element is not expected\") with line/column info. Two suggestions to make this deterministic across XML parsers/environments:\n1) Use the conventional XML declaration `encoding=\"UTF-8\"` (Symfony fixtures typically use uppercase) to avoid any edge-case differences.\n2) Consider placing the bogus element on its own line with stable indentation (already mostly done) and avoid self-closing if some validators report slightly different column numbers for `<bogusTag/>` vs `<bogusTag />`.\nIf tests assert line/column via regex only, this is mostly fine; just ensure the loader runs with XSD validation enabled so the message is consistently schema-related (as opposed to loader-level unknown tag handling).\n\n```suggestion\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<container xmlns=\"http://symfony.com/schema/dic/services\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd\">\n    <services>\n        <service id=\"invalid_service\" class=\"App\\Foo\">\n            <bogusTag/>\n        </service>\n    </services>\n</container>\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Fixture is used to trigger a schema validation error message (\"This element is not expected\") with line/column info. Two suggestions to make this deterministic across XML parsers/environments:\n1) Use the conventional XML declaration `encoding=\"UTF-8\"` (Symfony fixtures typically use uppercase) to avoid any edge-case differences.\n2) Consider placing the bogus element on its own line with stable indentation (already mostly done) and avoid self-closing if some validators report slightly different column numbers for `<bogusTag/>` vs `<bogusTag />`.\nIf tests assert line/column via regex only, this is mostly fine; just ensure the loader runs with XSD validation enabled so the message is consistently schema-related (as opposed to loader-level unknown tag handling).\n\n```suggestion\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<container xmlns=\"http://symfony.com/schema/dic/services\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd\">\n    <services>\n        <service id=\"invalid_service\" class=\"App\\Foo\">\n            <bogusTag/>\n        </service>\n    </services>\n</container>\n```"
+    },
+    {
+      "id": "i2",
+      "file": "src/Symfony/Component/DependencyInjection/Tests/Loader/XmlFileLoaderTest.php",
+      "line_start": 1298,
+      "line_end": 1298,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Minor style/readability: consider renaming to $invalidXmlFileName (Xml) to match common P…",
+      "description": "Minor style/readability: consider renaming to $invalidXmlFileName (Xml) to match common PHP/Symfony camelCase conventions; also the extra assertion messages are usually redundant in PHPUnit and can be removed unless they add unique context.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Minor style/readability: consider renaming to $invalidXmlFileName (Xml) to match common PHP/Symfony camelCase conventions; also the extra assertion messages are usually redundant in PHPUnit and can be removed unless they add unique context."
+    },
+    {
+      "id": "i3",
+      "file": "src/Symfony/Component/DependencyInjection/Tests/Loader/XmlFileLoaderTest.php",
+      "line_start": 1300,
+      "line_end": 1309,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The test `testXmlParseExceptionIncludesFilenameAndPosition` uses a try-catch block for ex…",
+      "description": "The test `testXmlParseExceptionIncludesFilenameAndPosition` uses a try-catch block for exception testing, reducing readability and introducing potential instability; replace with PHPUnit's `expectException` and related methods for clearer, more maintainable assertions.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The test `testXmlParseExceptionIncludesFilenameAndPosition` uses a try-catch block for exception testing, reducing readability and introducing potential instability; replace with PHPUnit's `expectException` and related methods for clearer, more maintainable assertions."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/Symfony/Component/DependencyInjection/Tests/Loader/XmlFileLoaderTest.php",
+      "line_start": 1302,
+      "line_end": 1309,
+      "description": "The exception class has an incorrect namespace separator. It should be `\\InvalidArgumentException` (single backslash) instead of `\\\\InvalidArgumentException` (double backslash). \n\nThe double backslash `\\\\` would attempt to catch an exception from a relative namespace `\\InvalidArgumentException` rather than the global namespace `InvalidArgumentException`. This will cause the catch block to fail and the test will throw an uncaught exception.\n\n**Suggested fix:**\n```php\n} catch (\\InvalidArgumentException $e) {\n```"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/symfony/symfony/pull/61601). Upstream base 7d2e564ffdd807d31c5e60c174adc7930ee8ddcd = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 24. Severity absent in the source. i1: AI comment (GPT-5.2), Diff Level; i2: AI comment (GPT-5.2), Diff Level; i3: human comment, Diff Level"
+}

@@ -12,14 +12,15 @@ at commit `e616e849755441da38f18bf3adba2c9583b03803`, `offline/golden_comments/*
   licence files are kept on both branches. Sentry (Functional Source License, source-available)
   and Cal.com (enterprise code under the Cal.com Commercial License) are excluded; see
   EXCLUDED.md.
-- `discourse-graphite` PR 3 (`martian-offline-013`) is excluded because GitHub push protection
-  flags strings in its snapshot as secrets (`tools/sources/martian-offline.push-protection.json`);
-  re-including it needs the owner's confirmation that they are public test values.
+- The snapshot of `martian-offline-013` (`discourse-graphite` PR 3) contains test tokens in
+  `spec/fixtures/oneboxer/amazon.response` that GitHub secret scanning classifies as secrets.
+  They are part of the public upstream history; the owner chose to keep the case and the
+  branches were pushed with GitHub push protection lifted.
 
 ## Figures
 
-50 source PRs; 29 imported (all real, 93 unlocated expected issues), 21 excluded: 20 Sentry and
-Cal.com PRs for licence reasons and one blocked by push protection.
+50 source PRs; 30 imported (all real, 96 unlocated expected issues), 20 Sentry and Cal.com PRs
+excluded for licence reasons.
 
 ## Rebuilding base and head
 

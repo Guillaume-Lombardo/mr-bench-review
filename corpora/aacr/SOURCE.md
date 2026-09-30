@@ -8,10 +8,10 @@ Imported 2026-09-30 from [alibaba/aacr-bench](https://github.com/alibaba/aacr-be
 
 - Annotations: AACR-Bench © Alibaba, **Apache-2.0**.
 - Code: each case snapshots an upstream project under its own licence, recorded in
-  `origin.license` and checked against the licence file of the head snapshot: Apache-2.0 (52
-  cases), MIT (51), AGPL-3.0-only OR SSPL-1.0 OR Elastic-2.0 (Elasticsearch, redistributed under
+  `origin.license` and checked against the licence file of the head snapshot: Apache-2.0 (71
+  cases), MIT (54), AGPL-3.0-only OR SSPL-1.0 OR Elastic-2.0 (Elasticsearch, redistributed under
   the AGPL option, 14), LGPL-2.0-or-later (11), AGPL-3.0 (10), BSD-3-Clause (6), GPL-2.0-or-later
-  OR LGPL-2.1-or-later (4), GPL-3.0 (3), Zlib (2), Apache-2.0 OR MIT (1).
+  OR LGPL-2.1-or-later (4), GPL-3.0 (3), Zlib (2), Apache-2.0 OR MIT (2).
 - Excluded for licence reasons (see EXCLUDED.md): n8n (Sustainable Use License), timescaledb
   (Timescale License portions) and cherry-studio (user-segmented dual licence with a commercial
   licence for larger organisations).
@@ -37,11 +37,11 @@ Eleven PR heads were force-pushed away upstream and cannot be rebuilt; they are 
 | `category` | `source_category` |
 | no severity | `severity: null` |
 | `path`, `from_line`, `to_line` (right side) | `file`, `line_start`, `line_end` (swapped when inverted) |
-| lines not on a changed line | `outside_diff: true` (60 issues) |
+| lines not on a changed line | `outside_diff: true` (65 issues) |
 | `side: "left"` (8 comments) or lines out of range at head | file-level issue (8 issues) |
-| negative comment | `known_false_positives` (513 entries) |
+| negative comment | `known_false_positives` (570 entries) |
 | `is_ai_comment`, `source_model`, `context` | `annotator_notes` per issue |
-| PR with only negative comments (4, 3 imported) | `kind: clean` with its `known_false_positives` |
+| PR with only negative comments (4) | `kind: clean` with its `known_false_positives` |
 | PR with positive comments | `kind: real` |
 
 `comments` is parsed with `ast.literal_eval` when it is a string (it is already a list in this
@@ -51,20 +51,18 @@ order of `positive_samples.json`, then negative-only PRs; excluded PRs keep thei
 
 ## Figures
 
-196 positive PRs + 4 negative-only PRs = 200 source PRs; 154 imported (151 real, 3 clean),
-46 excluded: 12 for licence reasons, 11 with an unreachable PR head and 23 whose snapshots
-GitHub push protection rejects (see below). 1,156 expected issues (1,088 on changed lines) out
-of the 1,506 source comments; the remainder belongs to excluded PRs.
+196 positive PRs + 4 negative-only PRs = 200 source PRs; 177 imported (173 real, 4 clean),
+23 excluded. 1,297 expected issues (1,224 on changed lines) out of the 1,506 source comments;
+the remainder belongs to excluded PRs.
 
-## Push protection
+## Strings flagged by secret scanning
 
-GitHub push protection (GH013) refuses the snapshots of 23 PRs because files in the upstream
-tree contain strings it classifies as secrets (gemini-cli `oauth2.ts`, vLLM `registry.py`, uv
-`pip_install.rs`, DBeaver `plugin.xml`, Kestra `Count.java`, Symfony Twilio fixtures). Most are
-probably public client ids or test fixtures, but the public repository must not contain secrets,
-so these cases are excluded rather than pushed with a bypass. `tools/sources/aacr.push-protection.json`
-lists them with the flagged paths; re-including a case needs the owner's confirmation and a
-push-protection bypass, and bumps the dataset major version.
+The upstream snapshots of 23 cases contain strings that GitHub secret scanning classifies as
+secrets: gemini-cli `oauth2.ts` (aacr-066 to 072), vLLM `registry.py` (aacr-109 to 112 and
+aacr-200), uv `pip_install.rs` (aacr-113), DBeaver `plugin.xml` (aacr-115 to 118), Kestra
+`Count.java` (aacr-128 to 130) and Symfony Twilio test fixtures (aacr-182 to 184). They are part
+of the public upstream history (public client ids and test values). The owner reviewed them and
+chose to keep these cases; the branches were pushed with GitHub push protection lifted.
 
 ## Known gaps
 

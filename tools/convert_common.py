@@ -207,13 +207,3 @@ def base_before_merge(hist: Path, head: str, tip: str) -> str:
             high = middle
     stop = chain[low] if low < len(chain) else f"{chain[-1]}^1" if chain else tip
     return git(hist, "merge-base", stop, head)
-
-
-def secret_reason(paths: list[str]) -> str:
-    """Exclusion reason for a snapshot that GitHub push protection rejects."""
-    return (
-        "GitHub push protection flags strings in the upstream snapshot as secrets ("
-        + ", ".join(f"`{path}`" for path in paths)
-        + "); the public repository must not contain secrets. Re-include only after the owner "
-        "confirms they are public test values and allows them."
-    )

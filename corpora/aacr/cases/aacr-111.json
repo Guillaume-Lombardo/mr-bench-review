@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-111",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-111/base",
+  "head_branch": "bench/aacr/aacr-111/head",
+  "base_sha": "71453ef0c4d7bf04f0265261a8db67c398bb4198",
+  "head_sha": "5cbbc811b1add4cc6c3b3e41f8c458a27b9e3817",
+  "mr_title": "[Multimodal] Optimize Qwen2/2.5-VL startup time",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/vllm-project/vllm",
+    "commit": "3fe18934d7f33b98812d7402463fe171c24efc77",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/vllm-project/vllm/pull/19756",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "vllm/model_executor/models/qwen2_vl.py",
+      "line_start": 822,
+      "line_end": 823,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Hardcoded token limits (16384 for images, 98304 for videos) in `get_max_tokens_per_item`…",
+      "description": "Hardcoded token limits (16384 for images, 98304 for videos) in `get_max_tokens_per_item` should be replaced with named constants to improve readability and maintainability.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Hardcoded token limits (16384 for images, 98304 for videos) in `get_max_tokens_per_item` should be replaced with named constants to improve readability and maintainability."
+    },
+    {
+      "id": "i2",
+      "file": "vllm/model_executor/models/qwen2_vl.py",
+      "line_start": 822,
+      "line_end": 823,
+      "category": "correctness",
+      "severity": null,
+      "title": "`get_max_tokens_per_item()` now hard-codes max token counts for image/video",
+      "description": "`get_max_tokens_per_item()` now hard-codes max token counts for image/video. Please verify these values are correct for **Qwen2-VL** and match the intended *token* definition used by vLLM (i.e., number of vision tokens produced by the encoder after preprocessing), not context length or pixels. If these are off by a factor (e.g., frames vs tokens), it can either (a) allow inputs that later OOM, or (b) unnecessarily reject valid inputs / underutilize capacity. Consider deriving these from the HF config (vision grid/patch/merge sizes, max frames) or referencing a shared constant used elsewhere to avoid silent drift.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`get_max_tokens_per_item()` now hard-codes max token counts for image/video. Please verify these values are correct for **Qwen2-VL** and match the intended *token* definition used by vLLM (i.e., number of vision tokens produced by the encoder after preprocessing), not context length or pixels. If these are off by a factor (e.g., frames vs tokens), it can either (a) allow inputs that later OOM, or (b) unnecessarily reject valid inputs / underutilize capacity. Consider deriving these from the HF config (vision grid/patch/merge sizes, max frames) or referencing a shared constant used elsewhere to avoid silent drift."
+    },
+    {
+      "id": "i3",
+      "file": "vllm/multimodal/processing.py",
+      "line_start": 1104,
+      "line_end": 1104,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The docstring for `get_max_tokens_per_item` lacks precision regarding the scope of token…",
+      "description": "The docstring for `get_max_tokens_per_item` lacks precision regarding the scope of token limits. It should specify \"per item\" as suggested in the review comment to accurately describe that the method returns maximum tokens per individual item rather than global modality limits.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The docstring for `get_max_tokens_per_item` lacks precision regarding the scope of token limits. It should specify \"per item\" as suggested in the review comment to accurately describe that the method returns maximum tokens per individual item rather than global modality limits."
+    },
+    {
+      "id": "i4",
+      "file": "vllm/multimodal/profiling.py",
+      "line_start": 256,
+      "line_end": 258,
+      "category": "correctness",
+      "severity": null,
+      "title": "The implementation incorrectly returns per-modality max tokens without aggregating to the…",
+      "description": "The implementation incorrectly returns per-modality max tokens without aggregating to the required total max tokens (sum of max tokens per modality multiplied by counts).  \n- Video modality handling is broken due to removal of `_get_dummy_mm_inputs` call, which uses sequence length to determine maximum frames.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The implementation incorrectly returns per-modality max tokens without aggregating to the required total max tokens (sum of max tokens per modality multiplied by counts).  \n- Video modality handling is broken due to removal of `_get_dummy_mm_inputs` call, which uses sequence length to determine maximum frames."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/vllm-project/vllm/pull/19756). Upstream base ca94d7fa007d113f2daf74e2f2278c03be676e93 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 51. Severity absent in the source. i1: human comment, Diff Level; i2: AI comment (GPT-5.2), Repo Level; i3: human comment, File Level; i4: human comment, Repo Level"
+}

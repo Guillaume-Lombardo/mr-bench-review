@@ -19,11 +19,9 @@ under Apache-2.0.
 - 27 cases (17 real, 10 clean) imported from hyperneolabs/review-bench corpus v0.1.
 
 ### aacr (created 2026-09-30)
-- 154 cases (151 real, 3 clean) and 1,156 expected issues imported from alibaba/aacr-bench;
-  46 PRs excluded (12 for licence reasons, 11 with an unreachable PR head, 23 rejected by
-  GitHub push protection as containing secrets).
+- 177 cases (173 real, 4 clean) and 1,297 expected issues imported from alibaba/aacr-bench;
+  23 PRs excluded (12 for licence reasons, 11 with an unreachable PR head).
 
 ### martian-offline (created 2026-09-30)
-- 29 cases imported from withmartian/code-review-benchmark (Keycloak, Grafana, Discourse);
-  20 Sentry and Cal.com PRs excluded for licence reasons and one rejected by GitHub push
-  protection.
+- 30 cases imported from withmartian/code-review-benchmark (Keycloak, Grafana, Discourse);
+  20 Sentry and Cal.com PRs excluded for licence reasons.

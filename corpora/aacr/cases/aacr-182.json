@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-182",
+  "language": "php",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-182/base",
+  "head_branch": "bench/aacr/aacr-182/head",
+  "base_sha": "7cba0e65628b012b72ef84539718811ea1e8e410",
+  "head_sha": "68eca98c112ed23a9accd5bac950afb86427756f",
+  "mr_title": "[TypeInfo] Fix `Type::fromValue` incorrectly setting object type instead of enum",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/symfony/symfony",
+    "commit": "647870557cf275de666557e552e11e9a295b9d4a",
+    "license": "MIT",
+    "source_case": "https://github.com/symfony/symfony/pull/60956",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/Symfony/Component/TypeInfo/TypeFactoryTrait.php",
+      "line_start": 415,
+      "line_end": 415,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Potential performance impact from `is_subclass_of` call in enum detection, which must exe…",
+      "description": "Potential performance impact from `is_subclass_of` call in enum detection, which must execute for every object and cannot be moved lower without breaking enum handling logic.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "Potential performance impact from `is_subclass_of` call in enum detection, which must execute for every object and cannot be moved lower without breaking enum handling logic."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/Symfony/Component/TypeInfo/TypeFactoryTrait.php",
+      "line_start": 415,
+      "line_end": 415,
+      "description": "Since `BackedEnum` extends `UnitEnum` in PHP, `is_subclass_of($value::class, \\UnitEnum::class)` will return true for both UnitEnum and BackedEnum instances. This means BackedEnum values are also caught by this condition. While `Type::enum()` correctly handles both cases internally, it's better to explicitly exclude BackedEnum to make the intent clearer and avoid potential confusion.\n\n```suggestion\n            \\is_object($value) && is_subclass_of($value::class, \\UnitEnum::class) && !is_subclass_of($value::class, \\BackedEnum::class) => Type::enum($value::class),\n```"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/symfony/symfony/pull/60956). Upstream base e06b10c4f0088e2966c510d335531f7daed61915 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 5. Severity absent in the source. i1: human comment, Diff Level"
+}
