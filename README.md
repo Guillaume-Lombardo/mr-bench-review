@@ -21,7 +21,7 @@ Suspend the destination CI before mirroring, since snapshots include upstream wo
 | Corpus | Created | Default | Cases | Clean | Issues | Location | Severity | Licence |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
 | `aacr` | 2026-09-30 | no | 177 | 4 | 1297 | lines | no | Apache-2.0 annotations; upstream code per case, see cases/*.json |
-| `curated` | 2026-09-30 | yes | 113 | 18 | 106 | lines | yes | Apache-2.0 annotations; upstream code per case, see cases/*.json |
+| `curated` | 2026-09-30 | yes | 113 | 18 | 106 | lines | yes | CC-BY-4.0 original annotations; upstream code per case, see cases/*.json |
 | `martian-offline` | 2026-09-30 | no | 30 | 0 | 96 | none | yes | MIT golden comments; upstream code per case, see cases/*.json |
 | `review-bench` | 2026-09-30 | no | 27 | 10 | 17 | lines | no | CC-BY-4.0 annotations; upstream code per case (MIT, BSD-3-Clause, Apache-2.0) |
 
@@ -137,7 +137,7 @@ git fetch --depth=1 https://github.com/Guillaume-Lombardo/mr-bench-review \
   "title": "Curated MRs selected for bdf-review",
   "origin": "internal selection",
   "source_url": null,
-  "licence": "Apache-2.0 annotations; upstream code per case, see cases/*.json",
+  "licence": "CC-BY-4.0 original annotations; upstream code per case, see cases/*.json",
   "default": true,
   "annotation": "human",
   "location_precision": "lines",
@@ -266,7 +266,7 @@ second.
 
 ## Credits and licences
 
-- `curated`: annotations by the bdf-review project, Apache-2.0; code from the upstream projects named in
+- `curated`: original annotations by the bdf-review project, CC BY 4.0; code from the upstream projects named in
   each case, under their licences (MIT, Apache-2.0, BSD-3-Clause, EPL-2.0).
 - `review-bench`: © review-bench contributors (hyperneolabs), CC BY 4.0.
 - `aacr`: AACR-Bench © Alibaba, Apache-2.0.
@@ -274,6 +274,8 @@ second.
 
 Upstream code keeps its own licence; the licence files are part of every snapshot. Cases whose
 code cannot be publicly redistributed are excluded and listed in the corpus's `EXCLUDED.md`.
-The repository's own content (tools, documentation and curated annotations) is licensed under
-the Apache License 2.0; see `LICENSE`. It does not apply to the upstream code in the `bench/*`
-branches, nor to the annotations of the imported corpora, which keep their source licences.
+The project's own tools, scripts and tests remain under Apache-2.0; see [LICENSE](LICENSE).
+Original `curated` annotations, the [annotation guide](ANNOTATION_GUIDE.md) and original project
+documentation are under [CC BY 4.0](LICENSE-CC-BY-4.0). See [LICENSING.md](LICENSING.md) for the
+precise scope and attribution. Imported annotations and all upstream material, including the
+`bench/*` snapshots, retain their existing licences.

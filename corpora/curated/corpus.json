@@ -4,7 +4,7 @@
   "title": "Curated MRs selected for bdf-review",
   "origin": "internal selection",
   "source_url": null,
-  "licence": "Apache-2.0 annotations; upstream code per case, see cases/*.json",
+  "licence": "CC-BY-4.0 original annotations; upstream code per case, see cases/*.json",
   "default": true,
   "annotation": "human",
   "location_precision": "lines",

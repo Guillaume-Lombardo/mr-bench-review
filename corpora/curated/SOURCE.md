@@ -43,6 +43,11 @@ introducing commit. Author `mr-bench-review <bench@mr-bench-review.invalid>`, da
 
 ## Licences
 
+Original annotations by the bdf-review project are licensed under
+[CC BY 4.0](../../LICENSE-CC-BY-4.0); see [LICENSING.md](../../LICENSING.md).
+This grant excludes upstream MR titles, descriptions, quoted material and code, which retain
+their existing licences.
+
 All upstream projects allow public redistribution: MIT (50 cases), Apache-2.0 (32),
 BSD-3-Clause (30), EPL-2.0 (1). Each snapshot keeps its upstream licence file (at the root, or
 for one older Spring Framework tree under `src/docs/dist/license.txt`).
