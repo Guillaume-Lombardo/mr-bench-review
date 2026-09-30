@@ -6,7 +6,7 @@ recreates ``base``/``head`` with the neutral author, messages and date, and chec
 resulting commits match the pinned ``base_sha``/``head_sha``.
 
     uv run tools/build_curated.py --work work/bench.git [--only case-001 case-002]
-    git -C work/bench.git push <remote> 'refs/heads/bench/curated/*:refs/heads/bench/curated/*'
+    uv run tools/push_snapshots.py --work work/bench.git --repository OWNER/REPO --corpus curated
 """
 
 from __future__ import annotations

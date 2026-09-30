@@ -5,6 +5,10 @@ All changes per corpus. Versions follow the rules in README.md ("Versioning").
 ## 1.0.0 — unreleased (not yet tagged)
 
 Initial dataset, contract v1, validator, converters and CI.
+- Validate alternative locations and known false-positive locations against snapshot files.
+- Preserve trailing blank lines when counting file lines; empty files have zero lines.
+- Add an Actions-suspended GitHub snapshot publisher and exclude snapshot branches from
+  the project validation workflow. Existing imported workflows are disabled on GitHub.
 The repository's own content (tools, documentation, curated annotations) is licensed
 under Apache-2.0.
 Snapshots leave out the media and other binary files that the change does not touch (see

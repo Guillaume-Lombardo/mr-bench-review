@@ -169,6 +169,29 @@ def check_git(
                 f"{issue.id}: {issue.file}:{issue.line_start}-{issue.line_end} is not on a "
                 "changed line and outside_diff is false",
             )
+    # Alternative locations and rejected comments can legitimately be outside the diff.
+    locations = [
+        (f"{issue.id} alternative {index}", location)
+        for issue in case.expected_issues
+        for index, location in enumerate(issue.alternative_locations, 1)
+    ]
+    locations.extend(
+        (f"false positive {index}", location)
+        for index, location in enumerate(case.known_false_positives, 1)
+    )
+    for label, location in locations:
+        if location.file is None:
+            continue
+        length = file_line_count(repo, case.head_sha, location.file)
+        if length is None:
+            # File-level comments may refer to a file deleted by the change.
+            if (
+                location.line_start is not None
+                or file_line_count(repo, case.base_sha, location.file) is None
+            ):
+                report.error(where, f"{label}: {location.file} does not exist at head")
+        elif location.line_end is not None and location.line_end > length:
+            report.error(where, f"{label}: lines {location.line_end} > {length} in {location.file}")
     if deny is not None:
         text = "\n".join([case.mr_title, case.mr_description, *paths])
         added = added_text(repo, case.base_sha, case.head_sha)

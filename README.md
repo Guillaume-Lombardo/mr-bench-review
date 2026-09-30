@@ -13,6 +13,7 @@ findings against the expected issues.
 
 Everything is plain Git: branches and files. The repository can be mirrored with
 `git push --mirror` (for example to an internal GitLab) and cloned over anonymous HTTPS.
+Suspend the destination CI before mirroring, since snapshots include upstream workflow files.
 
 ## Corpora
 
@@ -231,15 +232,29 @@ uv run pytest && uv run ruff check .
 The validator fails, with one message per case, when a file does not match the contract, an id
 is duplicated or more than one corpus is default; when a branch is missing or does not resolve to
 the pinned SHA, `head` is not a single commit on an orphan `base`, the diff is empty, a
-snapshot has no licence file or still holds a media file the change does not touch; when a located issue's file is missing at `head_sha`, its lines
+snapshot has no licence file or still holds a media file the change does not touch; when an issue, alternative location or known false positive points to a missing file or has out-of-range lines (file-level annotations may reference a deleted file); when a located issue's file is missing at `head_sha`, its lines
 are out of range, or it is not on a changed line while `outside_diff` is false; when a curated
 issue is unlocated or a curated case has no tier; when the curated MR text, file names or added
 lines match `tools/leak_denylist.txt`; and when `size` does not match the changed lines. It also
-prints each corpus's distribution. CI runs it on every push after a blob-less fetch of the
+prints each corpus's distribution. CI runs it on non-snapshot branch pushes and PRs after a blob-less fetch of the
 benchmark branches.
 
-Builders and converters write branches into a local bare repository (`--work`). Push them with
-`git push <remote> 'refs/heads/bench/<corpus>/*:refs/heads/bench/<corpus>/*'` in batches.
+Builders and converters write branches into a local bare repository (`--work`). On GitHub,
+use the guarded publisher (requires `gh` access to repository Actions settings):
+
+```bash
+uv run tools/push_snapshots.py --work work/bench.git \
+  --repository Guillaume-Lombardo/mr-bench-review --corpus curated
+```
+
+Snapshots include upstream `.github/workflows` files. A direct push can execute those
+workflows in the benchmark repository. The publisher suspends Actions before pushing and
+restores the previous enabled state even if the push fails; other Actions settings are kept.
+Do not run concurrent pushes or change Actions settings during publication. If the process
+is forcibly terminated, check the repository Actions setting and restore it manually.
+Imported workflows already registered on GitHub must remain disabled; only this project's
+`validate` workflow should be enabled. On another hosting service, disable its CI for
+snapshot branches before publishing. Snapshot trees and pinned SHAs are unchanged.
 
 ## Versioning
 

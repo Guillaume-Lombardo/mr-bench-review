@@ -52,8 +52,14 @@ class GitError(RuntimeError):
     """A git command failed."""
 
 
-def git(repo: Path, *args: str, stdin: str | None = None, env: dict[str, str] | None = None) -> str:
-    """Run git in ``repo`` and return stdout without the trailing newline."""
+def git(
+    repo: Path,
+    *args: str,
+    stdin: str | None = None,
+    env: dict[str, str] | None = None,
+    strip_newlines: bool = True,
+) -> str:
+    """Run git in ``repo``; optionally preserve trailing newlines for file contents."""
     result = subprocess.run(
         ["git", "-C", str(repo), *args],
         capture_output=True,
@@ -65,7 +71,7 @@ def git(repo: Path, *args: str, stdin: str | None = None, env: dict[str, str] | 
     )
     if result.returncode != 0:
         raise GitError(f"git {' '.join(args[:3])}: {result.stderr.strip()[:500]}")
-    return result.stdout.rstrip("\n")
+    return result.stdout.rstrip("\n") if strip_newlines else result.stdout
 
 
 def init_bare(repo: Path) -> None:
@@ -195,10 +201,10 @@ def added_text(repo: Path, base: str, head: str) -> str:
 def file_line_count(repo: Path, rev: str, path: str) -> int | None:
     """Number of lines of a file at ``rev``, or None when absent."""
     try:
-        content = git(repo, "show", f"{rev}:{path}")
+        content = git(repo, "show", f"{rev}:{path}", strip_newlines=False)
     except GitError:
         return None
-    return len(content.split("\n"))
+    return content.count("\n") + int(bool(content) and not content.endswith("\n"))
 
 
 def has_license_file(repo: Path, rev: str) -> bool:

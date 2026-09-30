@@ -260,3 +260,79 @@ def test_neutral_text() -> None:
     assert title == "Allowed optional passwords"
     assert neutral_description("Improve X.\n\nFixes #12\nCo-authored-by: A <a@a>") == "Improve X."
     assert short_title("First sentence. Second one.") == "First sentence"
+
+
+@pytest.mark.parametrize("kind", ["alternative", "false_positive"])
+@pytest.mark.parametrize("file,end", [("missing.py", 2), ("app.py", 99999)])
+def test_extra_locations_rejected(
+    dataset: tuple[Path, Path], kind: str, file: str, end: int
+) -> None:
+    root, work = dataset
+    path = root / "corpora/demo/cases/case-001.json"
+    case = json.loads(path.read_text())
+    location = {"file": file, "line_start": end, "line_end": end}
+    if kind == "alternative":
+        case["expected_issues"][0]["alternative_locations"] = [location]
+    else:
+        case["known_false_positives"] = [{**location, "description": "Rejected"}]
+    path.write_text(json.dumps(case))
+    assert run(root, work) == 1
+
+
+def test_extra_locations_allow_context(dataset: tuple[Path, Path]) -> None:
+    root, work = dataset
+    path = root / "corpora/demo/cases/case-001.json"
+    case = json.loads(path.read_text())
+    case["expected_issues"][0]["alternative_locations"] = [
+        {"file": "app.py", "line_start": 5, "line_end": 5}
+    ]
+    case["known_false_positives"] = [
+        {"file": "app.py", "line_start": None, "line_end": None, "description": "Rejected"},
+        {"file": None, "line_start": None, "line_end": None, "description": "Unlocated"},
+    ]
+    path.write_text(json.dumps(case))
+    assert run(root, work) == 0
+
+
+@pytest.mark.parametrize(
+    "content,count", [("", 0), ("a", 1), ("a\n", 1), ("a\n\n\n", 3), ("\n\n", 2), ("a\nb", 2)]
+)
+def test_line_count_preserves_blank_lines(tmp_path: Path, content: str, count: int) -> None:
+    from gitsnap import file_line_count
+
+    repo, _, _ = make_upstream(tmp_path)
+    (repo / "app.py").write_text(content)
+    git(repo, "add", "app.py")
+    tree = git(repo, "write-tree")
+    assert file_line_count(repo, tree, "app.py") == count
+    assert file_line_count(repo, tree, "missing.py") is None
+
+
+@pytest.mark.parametrize("kind", ["alternative", "false_positive"])
+def test_extra_file_level_location_can_reference_deleted_file(
+    dataset: tuple[Path, Path], kind: str
+) -> None:
+    from gitsnap import without_paths
+
+    root, work = dataset
+    path = root / "corpora/demo/cases/case-001.json"
+    case = json.loads(path.read_text())
+    tree = without_paths(work, case["head_sha"], ["app.py"])
+    base, head = build_branches(
+        work, case["base_branch"], case["head_branch"], case["base_sha"], tree
+    )
+    case.update(base_sha=base, head_sha=head)
+    case["expected_issues"][0].update(line_start=None, line_end=None, outside_diff=True)
+    location = {"file": "app.py", "line_start": None, "line_end": None}
+    if kind == "alternative":
+        case["expected_issues"][0]["alternative_locations"] = [location]
+    else:
+        case["known_false_positives"] = [{**location, "description": "Rejected"}]
+    path.write_text(json.dumps(case))
+    assert run(root, work) == 0
+    if kind == "alternative":
+        case["expected_issues"][0]["alternative_locations"][0].update(line_start=2, line_end=2)
+    else:
+        case["known_false_positives"][0].update(line_start=2, line_end=2)
+    path.write_text(json.dumps(case))
+    assert run(root, work) == 1
