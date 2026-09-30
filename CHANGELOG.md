@@ -9,8 +9,9 @@ Initial dataset, contract v1, validator, converters and CI.
 - Preserve trailing blank lines when counting file lines; empty files have zero lines.
 - Add an Actions-suspended GitHub snapshot publisher and exclude snapshot branches from
   the project validation workflow. Existing imported workflows are disabled on GitHub.
-The repository's own content (tools, documentation, curated annotations) is licensed
-under Apache-2.0.
+- License original curated annotations, the annotation guide and original project documentation
+  under CC BY 4.0; retain Apache-2.0 for tools, scripts and tests. Imported annotations and
+  upstream snapshot licences are unchanged. See LICENSING.md.
 Snapshots leave out the media and other binary files that the change does not touch (see
 README.md, "Branches"); the repository shrinks from about 2.7 GB to about 1.2 GB and the diffs
 are unchanged.

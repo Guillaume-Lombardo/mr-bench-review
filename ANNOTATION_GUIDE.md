@@ -1,5 +1,7 @@
 # Annotation guide
 
+Licensed under [CC BY 4.0](LICENSE-CC-BY-4.0); see [LICENSING.md](LICENSING.md).
+
 How to write and check `expected_issues` for a case. The reviewer under test never sees case
 files; it sees the `head` branch, the diff against `base`, and `mr_title`/`mr_description`.
 
