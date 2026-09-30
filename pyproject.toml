@@ -2,6 +2,8 @@
 name = "mr-bench-review"
 version = "1.0.0"
 description = "Merge-request review benchmark: corpora, contract v1, validator and converters"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 requires-python = ">=3.12"
 dependencies = ["pydantic>=2.10,<3"]
 

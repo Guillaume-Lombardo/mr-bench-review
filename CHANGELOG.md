@@ -5,6 +5,8 @@ All changes per corpus. Versions follow the rules in README.md ("Versioning").
 ## 1.0.0 — unreleased (not yet tagged)
 
 Initial dataset, contract v1, validator, converters and CI.
+The repository's own content (tools, documentation, curated annotations) is licensed
+under Apache-2.0.
 
 ### curated (created 2026-09-30)
 - 113 cases (95 real, 18 clean) from the selection made for bdf-review, with 5 pilot, 30 core

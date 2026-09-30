@@ -20,7 +20,7 @@ Everything is plain Git: branches and files. The repository can be mirrored with
 | Corpus | Created | Default | Cases | Clean | Issues | Location | Severity | Licence |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
 | `aacr` | 2026-09-30 | no | 154 | 3 | 1156 | lines | no | Apache-2.0 annotations; upstream code per case, see cases/*.json |
-| `curated` | 2026-09-30 | yes | 113 | 18 | 106 | lines | yes | per case, see cases/*.json |
+| `curated` | 2026-09-30 | yes | 113 | 18 | 106 | lines | yes | Apache-2.0 annotations; upstream code per case, see cases/*.json |
 | `martian-offline` | 2026-09-30 | no | 29 | 0 | 93 | none | yes | MIT golden comments; upstream code per case, see cases/*.json |
 | `review-bench` | 2026-09-30 | no | 27 | 10 | 17 | lines | no | CC-BY-4.0 annotations; upstream code per case (MIT, BSD-3-Clause, Apache-2.0) |
 
@@ -132,7 +132,7 @@ git fetch --depth=1 https://github.com/Guillaume-Lombardo/mr-bench-review \
   "title": "Curated MRs selected for bdf-review",
   "origin": "internal selection",
   "source_url": null,
-  "licence": "per case, see cases/*.json",
+  "licence": "Apache-2.0 annotations; upstream code per case, see cases/*.json",
   "default": true,
   "annotation": "human",
   "location_precision": "lines",
@@ -247,7 +247,7 @@ second.
 
 ## Credits and licences
 
-- `curated`: annotations by the bdf-review project; code from the upstream projects named in
+- `curated`: annotations by the bdf-review project, Apache-2.0; code from the upstream projects named in
   each case, under their licences (MIT, Apache-2.0, BSD-3-Clause, EPL-2.0).
 - `review-bench`: © review-bench contributors (hyperneolabs), CC BY 4.0.
 - `aacr`: AACR-Bench © Alibaba, Apache-2.0.
@@ -255,5 +255,6 @@ second.
 
 Upstream code keeps its own licence; the licence files are part of every snapshot. Cases whose
 code cannot be publicly redistributed are excluded and listed in the corpus's `EXCLUDED.md`.
-The tools and the curated annotations do not yet carry a repository licence: choosing one is
-left to the owner.
+The repository's own content (tools, documentation and curated annotations) is licensed under
+the Apache License 2.0; see `LICENSE`. It does not apply to the upstream code in the `bench/*`
+branches, nor to the annotations of the imported corpora, which keep their source licences.
