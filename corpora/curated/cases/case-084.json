@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-084/base",
   "head_branch": "bench/curated/case-084/head",
-  "base_sha": "66483ee858879ade5dcf9a5c70bb1b6fe1de029a",
-  "head_sha": "ad565570b605c94e40a5254af22e7b89cd64927c",
+  "base_sha": "e6140a240dee83fb4a6452833b599fbfe73db128",
+  "head_sha": "c4400de48adff899b7be640bec4e654bf77c7101",
   "mr_title": "Added model field fetch modes.",
   "mr_description": "May your database queries be much reduced with minimal effort.",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-038/base",
   "head_branch": "bench/aacr/aacr-038/head",
-  "base_sha": "c0910ef9df838fc23ee4e39690dff7f86935367c",
-  "head_sha": "db8f270c926498bbf020a1df5e090ca07b10ea34",
+  "base_sha": "369b4dc42726b807a4938f981e3f66ac4dcf54aa",
+  "head_sha": "0f2e7e1de2dc20bd5f9f756a7a8429b2c956d1d5",
   "mr_title": "Replaced sprintf with snprintf in aruco_samples_utility.hpp for safer buffer handling",
   "mr_description": "Replaced sprintf with snprintf in sample programs for safer buffer handling",
   "origin": {

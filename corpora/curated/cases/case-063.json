@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-063/base",
   "head_branch": "bench/curated/case-063/head",
-  "base_sha": "9283939f90c1166f2ac93f77e12801a77f8c76e8",
-  "head_sha": "16744aa1e82621ddbf8d28995b8f1c4ca7a9b5ea",
+  "base_sha": "a39d73a8ad18ad39fbdf8407f69a6444d869a07b",
+  "head_sha": "eec16712d7db422b1bb0c7e9fb4681629492242f",
   "mr_title": "Improving ux for search in webviews on web",
   "mr_description": "",
   "origin": {

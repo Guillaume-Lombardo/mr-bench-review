@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-018/base",
   "head_branch": "bench/curated/case-018/head",
-  "base_sha": "08826fd7b59c7c623cf24906933c9bc271a12b94",
-  "head_sha": "8f4eb32e91df4e0b7bea81ddf4142b3f96af91f6",
+  "base_sha": "4dab65e9f16e43bc217379d70ab49329cc383e7d",
+  "head_sha": "4995c1a471e99d8333a7d89084e86a35659458cb",
   "mr_title": "Use converter beans in preference to ObjectToObjectConverter",
   "mr_description": "Previously, with the converter beans in a conversion service that\nappears after the bean factory's conversion service, they would not\nbe called for a conversion that could be handled by the\nObjectToObjectConverter in the bean factory's conversion service.\n\nThis commit creates a new FormattingConversionService that is empty\nexcept for the converter beans and places it first in the list.\nIt's followed by the bean factory's conversion service. The shared\napplication conversion service is added to the end of the list to\npick up any conversions that the previous two services could not\nhandle. This should maintain backwards compatibility with the\nprevious arrangement where the converter beans were added to an\napplication conversion service that went after the bean factory's\nconversion service.",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-063/base",
   "head_branch": "bench/aacr/aacr-063/head",
-  "base_sha": "c371d2c867b15eb3687440b9be9546fe78a97c24",
-  "head_sha": "01fdaf6f9ea8bb1dec68018f30438e91f9a70f0a",
+  "base_sha": "cefe74e400ce547c6ec12dcf9eba09af45a07561",
+  "head_sha": "fd2dc698ff8bb3ba8ad37d6a57588b324abba141",
   "mr_title": "fix: use fine grained for template if the component is not explicitly in legacy mode",
   "mr_description": "",
   "origin": {

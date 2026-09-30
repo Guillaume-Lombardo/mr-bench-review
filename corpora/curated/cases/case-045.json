@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-045/base",
   "head_branch": "bench/curated/case-045/head",
-  "base_sha": "0c2da9b4511d5dd1d19f9de21ca27d9a430e794b",
-  "head_sha": "0ac8918f215390d265e83a6b6b7a9bcafd94973a",
+  "base_sha": "abf894e21e18501197e8ca765ea8e5e1a4c27e24",
+  "head_sha": "5f5c87a0479c092999981a8f9d421dd2eb592636",
   "mr_title": "Moved Index system checks from Model to Index.check().",
   "mr_description": "",
   "origin": {

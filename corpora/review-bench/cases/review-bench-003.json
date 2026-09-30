@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/review-bench/review-bench-003/base",
   "head_branch": "bench/review-bench/review-bench-003/head",
-  "base_sha": "c825528d5136e9d7e87e39e7ec6514d38f68a0f1",
-  "head_sha": "755d29a2218c1dae75be15a0a3f1b8bb708d49d7",
+  "base_sha": "77714754d072f54018f5f9a764c7bc9c93a03d16",
+  "head_sha": "4ff2b46a25007df5bc0fa678ca00f76ee6af5ba4",
   "mr_title": "fix: no_proxy hostname normalization bypass leads to ssrf",
   "mr_description": "",
   "origin": {

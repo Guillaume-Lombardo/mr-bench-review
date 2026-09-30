@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-042/base",
   "head_branch": "bench/aacr/aacr-042/head",
-  "base_sha": "2444e861d929227fa0ff77d65b64b8388f87c6ba",
-  "head_sha": "7a669426d0fe2cc90a426bcad20608137df28b14",
+  "base_sha": "d02c600f5bbe27317355f470bd28255cd4444b44",
+  "head_sha": "faee989565f4fec9e5f867a2b38f1876b902655f",
   "mr_title": "feat(animiamge) add a new function for reverse play images",
   "mr_description": "",
   "origin": {

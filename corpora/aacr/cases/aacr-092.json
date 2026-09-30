@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-092/base",
   "head_branch": "bench/aacr/aacr-092/head",
-  "base_sha": "bbd29b95b2f4a0ed076a0e6b5847a286ea000a1f",
-  "head_sha": "f9c7f1a36b91ba5d12738d9894d79db58ec1a162",
+  "base_sha": "2ffcb4d0cecc3632232e0c1dbc9399319d7e8b49",
+  "head_sha": "7c4dacd9baa5cb1122cc577a5f83fd5dc094ff7d",
   "mr_title": "implement token swap rpc, types, and map",
   "mr_description": "- implement token swap rpc, types, and map\n- lots of small changes.  use swaptoken in bashrc.  more robust path setting.  run initrc files on connserver startup.  use exec for running connserver.  more logging, pass logCtx through more blockcontroller funcs.  setup swaptoken variables\n- modifications for zsh, fish, and pwsh\n- checkpoint.  fixed bugs with new init scripts, moved swap token, working on new authentication, write jwt directly to connserver\n- checkpoint, fix multiple bugs around token/auth.  implement WAVETERM_WSHFORCEUPDATE, improve/fix conn logging\n- fish/bash working now, had to update shell syntax.  other bug fixes, logging, etc",
   "origin": {

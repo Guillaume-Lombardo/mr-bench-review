@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/review-bench/review-bench-004/base",
   "head_branch": "bench/review-bench/review-bench-004/head",
-  "base_sha": "8e84479703e6a89d23ee9d3f79909c1ce7f23e46",
-  "head_sha": "9c666a4b76dfb57fbcc38f2bb9d813761cac0e1c",
+  "base_sha": "a549f1081bceb3988c21be7082610ce28a067ba8",
+  "head_sha": "03477f39b0b8f94a4c22d659a798d9c6d50ca287",
   "mr_title": "fix(interceptors): trim trailing ejected handlers",
   "mr_description": "",
   "origin": {

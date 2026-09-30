@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-088/base",
   "head_branch": "bench/curated/case-088/head",
-  "base_sha": "b19ed30e2fdc7ff9ee1ba2bfd1f67fc790e64d21",
-  "head_sha": "f86f9736057230543906d0ca6b332c838154b1e5",
+  "base_sha": "75011b8789620d8f883c076090be23f98a6ea0eb",
+  "head_sha": "d5338c6a8e79a798b51c82e4973d9cccd8bd1020",
   "mr_title": "Fixed bulk_create() crash with nullable geometry fields on PostGIS.",
   "mr_description": "Swapped to an allow list instead of a deny list for field types to\ndetermine if the UNNEST optimization can be enabled to avoid further\nsurprises with other types that would require further specialization to\nadapt.\n\nThanks Joshua Goodwin for the report and Sarah Boyce for the test.",
   "origin": {

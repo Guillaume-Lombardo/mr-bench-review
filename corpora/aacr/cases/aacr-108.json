@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-108/base",
   "head_branch": "bench/aacr/aacr-108/head",
-  "base_sha": "0a2e28bb11e99a13f62a685e3303c3ee9851ac2c",
-  "head_sha": "49456f87ecbdf2f1e14e4163ad0c029a2092def8",
+  "base_sha": "82cb03f04f227441f0b773a8d94db67db12a6f95",
+  "head_sha": "ff895af4678acb72913246fbf74da58a6c55c00a",
   "mr_title": "Add _untouch() to reverse touch() if not enough blocks",
   "mr_description": "- Add _untouch() to reverse touch() if not enough blocks\n- Combine allocate_slots and append_slots\n- Delete append_slots\n- Modify test case in prefix caching\n- Address static checkers",
   "origin": {

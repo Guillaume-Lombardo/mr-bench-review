@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-183/base",
   "head_branch": "bench/aacr/aacr-183/head",
-  "base_sha": "befd11d3dd995671df763a83da18c408685eb012",
-  "head_sha": "5c442ad8095c8d7306fbb420f9aa7ec390b30847",
+  "base_sha": "b4430c2f149d6e92e9839bae782ab205570ec48d",
+  "head_sha": "7163c9d74626f7ac369ba9312f77e52a06af3dae",
   "mr_title": "[DependencyInjection] Add test case to ensure XML parse exception message includes filename and position",
   "mr_description": "",
   "origin": {

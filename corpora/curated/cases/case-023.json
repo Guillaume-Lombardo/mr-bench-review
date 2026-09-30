@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-023/base",
   "head_branch": "bench/curated/case-023/head",
-  "base_sha": "b9fd512aa84ca76f37a3eea45575ce410caf21b5",
-  "head_sha": "bfd564bce20cb17dcc42a6cbf9aa3510979b5014",
+  "base_sha": "3f2a5a3e4896476b7173b502201910b675ce3159",
+  "head_sha": "773ca71f7347e5ea0e519e72e5e9394ea7abefec",
   "mr_title": "refactor(router): Avoid unnecessary href updates on navigations for routerlink",
   "mr_description": "The `RouterLink` href does not depend on the state of the router unless\nit uses the `fragment` or `queryParams`. This doesn't bother\nunsubscribing from the events if the inputs change in a way to no longer\ndepend on those values since inputs changing is quite rare (and even\nmore rare for query params handling or preserveFragment to change).",
   "origin": {

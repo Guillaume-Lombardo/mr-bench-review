@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-160/base",
   "head_branch": "bench/aacr/aacr-160/head",
-  "base_sha": "a607050f723dbfd7f193023203985349a94b2558",
-  "head_sha": "111e261f0f92634be07928f225ebf1d824eb0235",
+  "base_sha": "386c15dfe6a629059fc5aef0b8a0355b14e0dc74",
+  "head_sha": "f37cb88981f4598ff07e217908bf7799ecef1a5a",
   "mr_title": "Never store requests",
   "mr_description": "",
   "origin": {

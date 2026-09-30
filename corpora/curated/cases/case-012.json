@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-012/base",
   "head_branch": "bench/curated/case-012/head",
-  "base_sha": "4692319512692932fb5a5178d2ba0693b5a74c6b",
-  "head_sha": "0d3f28d4e9e6855e5c574c62bc7d8503853835fe",
+  "base_sha": "c06b86c829c113f5ec6b76d86561b31c1859c2a9",
+  "head_sha": "53e0216b95491a9e8a3430e7973d84aa8a118f68",
   "mr_title": "Improve caching by comparing file hashes as fallback for mtime and size",
   "mr_description": "",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-043/base",
   "head_branch": "bench/aacr/aacr-043/head",
-  "base_sha": "fb84e364365fbd9bf398a2d68abb57086e3a5876",
-  "head_sha": "d96d3289d1e85c5b4f4479960c7b2bc960bbdd22",
+  "base_sha": "ac247dc59f8e6a4c3148abdbfe0bd3d357707277",
+  "head_sha": "43b1b61b511648c4a21ea3d7e03670462a08f114",
   "mr_title": "perf(label): reduce the time of calling lv_text_get_size when drawing",
   "mr_description": "",
   "origin": {

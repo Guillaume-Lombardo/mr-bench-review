@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-013/base",
   "head_branch": "bench/curated/case-013/head",
-  "base_sha": "ae936e8d694848901ace6a9324e80914f1eabe24",
-  "head_sha": "416207b5bff025d2898bdd81e7e039f111e63f5d",
+  "base_sha": "fc92f965b741b9a18d595799acd75733a9399771",
+  "head_sha": "2805f0fcd3d07828ff7e2fde9ba18c101f9c329f",
   "mr_title": "Change __getstate__ and __setstate__ to use a dict",
   "mr_description": "",
   "origin": {

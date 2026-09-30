@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-080/base",
   "head_branch": "bench/curated/case-080/head",
-  "base_sha": "b9f1856e8280759cb1af2a4469b1c07571fe36b9",
-  "head_sha": "f0f5480eea9de5d83b37479289741333df059f7e",
+  "base_sha": "7d87b8535c0f092c593051a5808caa8fa4d2b917",
+  "head_sha": "d497e8a1134b7f848ffa28abb04e9d94c7c83f15",
   "mr_title": "fix: verify token for HMR WebSocket connection",
   "mr_description": "",
   "origin": {

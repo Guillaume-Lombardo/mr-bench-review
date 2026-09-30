@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-003/base",
   "head_branch": "bench/curated/case-003/head",
-  "base_sha": "938f195712572d8ab9a24e4e656f644638f95704",
-  "head_sha": "7ae25afc431881fe61e882f6ca64e5b30f93c640",
+  "base_sha": "5426ac8d02af38f9eb5fad20943a10a65bebe9be",
+  "head_sha": "8561cdbe0ecb50860a1d8eab5328f3d10e43d038",
   "mr_title": "Earlier processing of forwarded headers",
   "mr_description": "Forwarded headers are now processed before ServerWebExchange is created\nthrough ForwardedHeaderTransformer which has the same logic as the\nForwardedHeaderFilter but works on the request only.\n\nForwardedHeaderFilter is deprecated as of 5.1 but if registered it is\nremoved from the list of filters and ForwardedHeaderTransformer is used\ninstead.\n\nIssue: SPR-17072",
   "origin": {

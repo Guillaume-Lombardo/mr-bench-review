@@ -10,7 +10,15 @@ import pytest
 import validate
 from contract import Case, size_for
 from convert_common import neutral_description, neutral_title, short_title
-from gitsnap import build_branches, changed_new_lines, git, init_bare
+from gitsnap import (
+    NEUTRAL,
+    build_branches,
+    changed_new_lines,
+    changed_paths,
+    git,
+    init_bare,
+    tree_paths,
+)
 from pydantic import ValidationError
 
 CORPUS = {
@@ -40,10 +48,14 @@ def make_upstream(tmp_path: Path) -> tuple[Path, str, str]:
     }
     (upstream / "LICENSE").write_text("MIT\n")
     (upstream / "app.py").write_text("def f(x):\n    return x\n\n\nprint(f(1))\n")
+    (upstream / "docs").mkdir()
+    (upstream / "docs" / "logo.PNG").write_bytes(b"\x89PNG\x00logo")
+    (upstream / "icon.png").write_bytes(b"\x89PNG\x00old")
     git(upstream, "add", ".")
     git(upstream, "commit", "-q", "-m", "one", env=env)
     base = git(upstream, "rev-parse", "HEAD")
     (upstream / "app.py").write_text("def f(x):\n    return x + 1\n\n\nprint(f(1))\n")
+    (upstream / "icon.png").write_bytes(b"\x89PNG\x00new")
     git(upstream, "commit", "-q", "-am", "two", env=env)
     return upstream, base, git(upstream, "rev-parse", "HEAD")
 
@@ -112,6 +124,31 @@ def run(root: Path, work: Path, *extra: str) -> int:
 
 def test_valid_dataset_passes(dataset: tuple[Path, Path]) -> None:
     assert run(*dataset) == 0
+
+
+def test_untouched_media_left_out(dataset: tuple[Path, Path]) -> None:
+    root, work = dataset
+    case = json.loads((root / "corpora/demo/cases/case-001.json").read_text())
+    for sha in (case["base_sha"], case["head_sha"]):
+        assert tree_paths(work, sha) == ["LICENSE", "app.py", "icon.png"]
+    assert changed_paths(work, case["base_sha"], case["head_sha"]) == ["app.py", "icon.png"]
+
+
+def test_untrimmed_snapshot_rejected(dataset: tuple[Path, Path]) -> None:
+    root, work = dataset
+    path = root / "corpora/demo/cases/case-001.json"
+    case = json.loads(path.read_text())
+    upstream_head = git(work, "rev-parse", "FETCH_HEAD")
+    base = git(
+        work, "commit-tree", f"{upstream_head}^^{{tree}}", stdin="base snapshot\n", env=NEUTRAL
+    )
+    head = git(
+        work, "commit-tree", f"{upstream_head}^{{tree}}", "-p", base, stdin="change\n", env=NEUTRAL
+    )
+    git(work, "update-ref", "refs/heads/bench/demo/case-001/base", base)
+    git(work, "update-ref", "refs/heads/bench/demo/case-001/head", head)
+    path.write_text(json.dumps({**case, "base_sha": base, "head_sha": head}))
+    assert run(root, work) == 1
 
 
 def test_branches_are_deterministic(dataset: tuple[Path, Path], tmp_path: Path) -> None:

@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-194/base",
   "head_branch": "bench/aacr/aacr-194/head",
-  "base_sha": "0f7f9fa7915296baf21f89ceb7de57ecc3200fad",
-  "head_sha": "d2ad9d692587c50171338d7b51eb274a0542f3eb",
+  "base_sha": "5b44ec3e67d1c5d58fe179d494540508e6eed4ef",
+  "head_sha": "995e9238aeaee6bb69ba439d275ebb41c0358e5a",
   "mr_title": "⚡️ Speed up function `update_target_handle` by 27% Sure, here are the optimized versions of the given functions. The key optimizations include avoiding redundant dictionary lookups, removing unnecessary condition checks, and simplifying the logic where possible.",
   "mr_description": "- ⚡️ Speed up function `update_target_handle` by 27% Sure, here are the optimized versions of the given functions. The key optimizations include avoiding redundant dictionary lookups, removing unnecessary condition checks, and simplifying the logic where possible.\n- lint fix\n- Merge branch 'main' into codeflash/optimize-update_target_handle-2024-12-11T13.51.21",
   "origin": {

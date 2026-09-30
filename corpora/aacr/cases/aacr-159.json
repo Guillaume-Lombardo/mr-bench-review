@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-159/base",
   "head_branch": "bench/aacr/aacr-159/head",
-  "base_sha": "aa588054554823176c38ef3b64a899d2654de8b6",
-  "head_sha": "7effa14057f887c4fd2a288271857c684424df24",
+  "base_sha": "d2946df80cb4f838fd5f0ea2e80a6d6f28678ea1",
+  "head_sha": "ffbb0f0357236d4eed7ddd19cc5ad2214f43469d",
   "mr_title": "Debug log stack trace before it is cleared",
   "mr_description": "- Debug log stack trace before it is cleared\n- Update docs/changelog/125732.yaml\n- Just set log level to debug",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-006/base",
   "head_branch": "bench/curated/case-006/head",
-  "base_sha": "ff61f05e6281a2985ca09724c67e9e1e713ec9b7",
-  "head_sha": "45c06401ffc0bb39638fce0d4e226ac77359af4f",
+  "base_sha": "068baeec5f414126dcd38e3e0406a85046e00df4",
+  "head_sha": "629b95594200fef5291e3f3762a6a39512c4875d",
   "mr_title": "Made max_query_params respect SQLITE_LIMIT_VARIABLE_NUMBER.",
   "mr_description": "",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-094/base",
   "head_branch": "bench/curated/case-094/head",
-  "base_sha": "6eee7a0774d26fc0bc3bcf8d5025063eee345a1f",
-  "head_sha": "bebef302c35297589ecb318c033accb310f5a730",
+  "base_sha": "7c612e41e998b3bc5e4b65cc21a1726bac35793c",
+  "head_sha": "720fb251de5c939b93c900d791c2660ee747a59d",
   "mr_title": "fix(@angular/ssr): return 302 when redirectTo is a function",
   "mr_description": "Ensure the server returns a 302 status code and sets the correct 'Location' header when the redirectTo value is a function, aligning with expected HTTP redirect behavior.",
   "origin": {

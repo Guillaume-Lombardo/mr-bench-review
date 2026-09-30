@@ -8,8 +8,8 @@
   "tier": "pilot",
   "base_branch": "bench/curated/case-040/base",
   "head_branch": "bench/curated/case-040/head",
-  "base_sha": "09513350f165dcd2a36081b194e4b998f34eb192",
-  "head_sha": "eff4071e29d32d33e234d19b3b5c9e5291793f2b",
+  "base_sha": "8ec4fb1939e11680438b8b682da4395acdae804f",
+  "head_sha": "03e3c09ea8292a1b122773dbc3a74786910d256d",
   "mr_title": "feat(@angular-devkit/build-angular): providing a karma config is now optional",
   "mr_description": "Karma will now use a builtin config when the `karmaConfig` is not specified.",
   "origin": {

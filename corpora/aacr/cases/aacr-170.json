@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-170/base",
   "head_branch": "bench/aacr/aacr-170/head",
-  "base_sha": "11662142fa7a0842a4e69f1c99e05877a17c5f1c",
-  "head_sha": "3a1d57303fd8efabf083b21111b0f7bafa60e027",
+  "base_sha": "a58ebbbf39cdd0d72b7e1af130930ad358bbdedb",
+  "head_sha": "23eb63ce4c1619ab9b2a71f2a812137c23f8f99d",
   "mr_title": "filters: automatically flip video if displaymatrix indicates so",
   "mr_description": "Currently we check AV_FRAME_DATA_DISPLAYMATRIX for its rotation factor\nbut not for its flip factor, which could happen with some input files.\nThis commit adds and autovflip filter, which is applied before the\nautorotate filter to flip vertically before rotating. It also changes\nthe displaymatrix reading code to output to mp_image->params.vflip so\nit can be autoinserted as necessary.",
   "origin": {

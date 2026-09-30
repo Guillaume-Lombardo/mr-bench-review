@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-077/base",
   "head_branch": "bench/curated/case-077/head",
-  "base_sha": "c7bb0930f034ca595710db1f08c6e7f32df621d3",
-  "head_sha": "2bdeac2fd9547b2a2337a9a52ca821029059252e",
+  "base_sha": "35ac5c9a6585428994f0848ddd5c1239088e1485",
+  "head_sha": "8a6046119e29b04dc82552456e6a3e4d0db09fce",
   "mr_title": "consumeSubQuery should not drop leading combinators",
   "mr_description": "Refactored so that it eats until a combinator is seen after non-combinator content, and returns it all.\n\nAnd corrected unit tests that were incorrectly relying on that behavior.\n\nNote that a leading combinator will combine against the root element, which is either the Document, or the context element.",
   "origin": {

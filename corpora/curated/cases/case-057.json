@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-057/base",
   "head_branch": "bench/curated/case-057/head",
-  "base_sha": "149087cd2e32417443a46b714d3fba8033c6efdd",
-  "head_sha": "3b557a00edbcc790809ceb1bbbab66c9de2517e9",
+  "base_sha": "a8a0c55c63b69d095a93fa889142ed5a0c5e65a6",
+  "head_sha": "07c0cbb63c69ea8f40a6fb5e14c4f74b1fff1d1c",
   "mr_title": "Enforce custom agent subagent allowlists",
   "mr_description": "* Initial plan\n\n* Add subagent allowlist tests\n\n* Enforce subagent allowlist\n\n* Fix run subagent test string quotes\n\n---------",
   "origin": {

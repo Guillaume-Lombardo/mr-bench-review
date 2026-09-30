@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-049/base",
   "head_branch": "bench/curated/case-049/head",
-  "base_sha": "ed7acac53911f7196794f0e38e1a88b6b8c20172",
-  "head_sha": "8c2e53f2bd0d103f32b47c285db90b52a438cd0e",
+  "base_sha": "c7bbd99615e1deca73cd99c41ee4dd8e8664233b",
+  "head_sha": "6e8e37203b15ea94a021c63277219dc144be480a",
   "mr_title": "Fix a potential fd leak in AbstractDiskHttpData.getChunk",
   "mr_description": "Motivation:\n\n`FileChannel.read()` may throw an IOException. We must deal with this in case of the occurrence of `I/O` error.\n\nModification:\n\nPlace the `FileChannel.read()` method call in the `try-finally` block.\n\nResult:\n\nAdvoid fd leak.",
   "origin": {

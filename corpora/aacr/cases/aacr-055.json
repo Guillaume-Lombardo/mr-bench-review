@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-055/base",
   "head_branch": "bench/aacr/aacr-055/head",
-  "base_sha": "cf71982b0aee2c69887cd2a0898bd8ff17bd4040",
-  "head_sha": "cbcbcacd6313f37671cacc2e627e3d8342f5210a",
+  "base_sha": "bba9de45015ee59b49cbf98e1dce10638b868955",
+  "head_sha": "158119c4bc288b94a018f16e1de270486dfac884",
   "mr_title": "thinking_budget 0",
   "mr_description": "- thinking_budget 0\n- Force dynamic thinking\n- Logging\n- Refactor API call handling in ChatGoogle class\n- Remove presence_penalty",
   "origin": {

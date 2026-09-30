@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-156/base",
   "head_branch": "bench/aacr/aacr-156/head",
-  "base_sha": "b9ed51826a9a05caf18ee727b94a53417ff3b023",
-  "head_sha": "b8b02484dad455792d3d4c9284e44c568d6f0709",
+  "base_sha": "f6bf19c29532533cd05a65e4b54e349ea76621dc",
+  "head_sha": "7774f35b136107c011f72c8e08e027f2fc45055d",
   "mr_title": "Add ability to set \"max_analyzed_offet\" implicitly to \"index.highlight .max_analyzed_offset\", by setting it excplicitly to \"-1\".",
   "mr_description": "- Add ability to set \"max_analyzed_offet\" implicitly to \"index.highlight .max_analyzed_offset\", by setting it excplicitly to \"-1\".\n- Add test\n- Tweak tests\n- Merge branch 'main' into svilen-mihaylov/112822",
   "origin": {

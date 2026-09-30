@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-028/base",
   "head_branch": "bench/curated/case-028/head",
-  "base_sha": "ef60cba90916627ebaccc4d429dbe047fc638948",
-  "head_sha": "9795fe92dba5a51fceb3aa8c8bca09fd950a8136",
+  "base_sha": "c25eba3fc1b13077919ec4de4247d8657f2184d5",
+  "head_sha": "2ed441c238f48d7da23d77e6d7123e49a6caef76",
   "mr_title": "Fix sequence input stream parsing",
   "mr_description": "Fix sequence input stream parsing",
   "origin": {

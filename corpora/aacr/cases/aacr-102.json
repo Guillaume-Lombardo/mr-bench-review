@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-102/base",
   "head_branch": "bench/aacr/aacr-102/head",
-  "base_sha": "4ac47854cbe9bc63697e93464ae28ee6974a2bc8",
-  "head_sha": "b981ab8a2a6d35d32fd82d74daeb5b20b168867b",
+  "base_sha": "235b93f3448284da40202e6437604bd075ae8078",
+  "head_sha": "c5ea9715ef7ffc07e51e39b268106f81f3c46863",
   "mr_title": "fix(server) optimize number of sql calls for GET /api/albums",
   "mr_description": "- fix(server) optimize number of sql calls for GET /api/albums\n- fix(server) remove unnecessary getLastUpdatedAssetForAlbumId call for GET /api/album/:id",
   "origin": {

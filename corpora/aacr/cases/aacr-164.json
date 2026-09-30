@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-164/base",
   "head_branch": "bench/aacr/aacr-164/head",
-  "base_sha": "85569f23ed7bfdce80a6ef96d50f1a5312a449d1",
-  "head_sha": "48d74e27e4fe5f26da84bb74a9c415fd3cfb11a3",
+  "base_sha": "5a598e1fbf16b341036490003968392e82fa59fd",
+  "head_sha": "5e61c9a627a465e1564db17c1e56c9ed6a30cb78",
   "mr_title": "server/internal/client: use chunksums for concurrent blob verification",
   "mr_description": "Replace large-chunk blob downloads with parallel small-chunk\nverification to solve timeout and performance issues. Registry users\nexperienced progressively slowing download speeds as large-chunk\ntransfers aged, often timing out completely.\n\nThe previous approach downloaded blobs in a few large chunks but\nrequired a separate, single-threaded pass to read the entire blob back\nfrom disk for verification after download completion.\n\nThis change uses the new chunksums API to fetch many smaller\nchunk+digest pairs, allowing concurrent downloads and immediate\nverification as each chunk arrives. Chunks are written directly to their\nfinal positions, eliminating the entire separate verification pass.\n\nThe result is more reliable downloads that maintain speed throughout the\ntransfer process and significantly faster overall completion, especially\nover unstable connections or with large blobs.",
   "origin": {

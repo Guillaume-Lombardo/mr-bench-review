@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-055/base",
   "head_branch": "bench/curated/case-055/head",
-  "base_sha": "67bb222074602e16c372feffad684b99fd06ee9b",
-  "head_sha": "4ff54aa9d41460e69a560ffd83d4a634b7508f04",
+  "base_sha": "f9c618fee04a47c363ba54974b0c3ffd9e940060",
+  "head_sha": "3b87c698566fb25f6798d6abfe10dc17a486febb",
   "mr_title": "perf(material/tooltip): Defer injection of injectables not needed until tooltip is shown.",
   "mr_description": "",
   "origin": {

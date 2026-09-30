@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/martian-offline/martian-offline-019/base",
   "head_branch": "bench/martian-offline/martian-offline-019/head",
-  "base_sha": "40dcbe2af545805adad37631ef077db5ce7e2295",
-  "head_sha": "e0830399c1d1c3f7f76daa3e96877e4595809b3a",
+  "base_sha": "c58a78ac651b0e25cf610efb2320481262e53e1e",
+  "head_sha": "cf6492ec40f84e9eea5a627d3345241e5f5303fd",
   "mr_title": "FEATURE: Localization fallbacks (server-side)",
   "mr_description": "The FallbackLocaleList object tells I18n::Backend::Fallbacks what order the\nlanguages should be attempted in. Because of the translate_accelerator patch,\nthe SiteSetting.default_locale is *not* guaranteed to be fully loaded after the\nserver starts, so a call to ensure_loaded! is added after the locale is set for\nthe current user.\n\nThe declarations of config.i18n.fallbacks = true in the environment files were\nactually garbage, because the I18n.default_locale was\nSiteSetting.default_locale, so there was nothing to fall back to. *derp*",
   "origin": {

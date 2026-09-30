@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-009/base",
   "head_branch": "bench/aacr/aacr-009/head",
-  "base_sha": "1cb2554932074a49725dc07404836dd5b46083dd",
-  "head_sha": "19e541b7b0a16786f807263d3c606d403a49989e",
+  "base_sha": "a3f444b0a4bfb00bf3640ffb71d12e028a7e0300",
+  "head_sha": "f8c3bb8bc87267611d4823446112bdd95a80d9e9",
   "mr_title": "DRY",
   "mr_description": "- DRY\n- Simplify expression\n- Use auto\n- Join declaration and assignment\n- C++ style cast instead of C\n- Declaration hides previous\n- Else after return\n- Redundant c_str()\n- Reserve vector size\n- Don't use endl\n- Narrowing conversion\n- Calling static via instance\n- App: Minor formatting from review",
   "origin": {

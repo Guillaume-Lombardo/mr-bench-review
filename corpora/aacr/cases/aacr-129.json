@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-129/base",
   "head_branch": "bench/aacr/aacr-129/head",
-  "base_sha": "a10ef9582171546ee6b5a699ec6f81dcb63efd6b",
-  "head_sha": "9a2fc05d15ea53169ec7e65b1368384f8123e5e3",
+  "base_sha": "a7b9c45e8f906377bf495e850cc7f61831041d29",
+  "head_sha": "edc9e34572cdcbe517dd4088635c8bafb2630809",
   "mr_title": "fix: move commands to Property",
   "mr_description": "migrate to Property in TaskCommands and CommandsWrapper\nimplement beforeCommand and interpreter",
   "origin": {

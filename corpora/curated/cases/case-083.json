@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-083/base",
   "head_branch": "bench/curated/case-083/head",
-  "base_sha": "14e22c424a955e6ca447d6f149396781b46a9a7d",
-  "head_sha": "3f7031eb7adfe92fad61e6fa46ce38a72ff26669",
+  "base_sha": "2c5c28ec83800be164479db317125b91d767cdfd",
+  "head_sha": "836dae148f751651b3f0663b9e2ed8e330f94d96",
   "mr_title": "Optimize ByteBuf.setCharSequence for adaptive allocator",
   "mr_description": "Motivation:\nThe `setCharSequence` method is used a fair bit when encoding HTTP\nheaders. I noticed the AdaptiveByteBuf was sending the call down a path\nwith a more indirections than strictly necessary.\n\nModification:\nImplement `setCharSequence` in the `AdaptiveByteBuf` so we skip a level\nof indirections. This is especially profitable for direct/off-heap\nbuffers, where we see up to a 50% performance improvement in the\nbenchmark. The benefit is greater the longer the string is.\n\nInterestingly, the benchmark also show that it isn't profitable to do\nthis for the `getCharSequence` sibling method.\n\nResult:\nDirect buffers from the adaptive allocator now have much faster\n`setCharSequence`, which will help with HTTP header encoding.",
   "origin": {

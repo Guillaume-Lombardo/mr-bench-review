@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-072/base",
   "head_branch": "bench/aacr/aacr-072/head",
-  "base_sha": "fa2e826e28f7c279a06fe1cf4b45c2503be5aa63",
-  "head_sha": "e8d6a2243232f0759e3b90de112a32841e0ed3c6",
+  "base_sha": "ed33b8a4871b487475b839b236e1601a14383905",
+  "head_sha": "3f17ed0dc29fbb6eba7d5be263c9f8205e4e9d60",
   "mr_title": "fix: 8077 use comment-json",
   "mr_description": "- fix: 8077 use comment-json\n- fix: parse error not rewrite json\n- Merge branch 'main' into fix-8077-comment\n- Merge branch 'main' into fix-8077-comment\n- fix: prevent prototype pollution\n- Merge branch 'main' into fix-8077-comment",
   "origin": {

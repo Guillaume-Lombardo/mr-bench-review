@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-107/base",
   "head_branch": "bench/aacr/aacr-107/head",
-  "base_sha": "9234c7ff531207ee23cca6ac501545bb557f4141",
-  "head_sha": "82884c02d4c4250db541b67f01933faeb2c3e47d",
+  "base_sha": "03a10f7f993f7d46cf47f803b1e73e38288dc7e3",
+  "head_sha": "08b2167509ece5cf418d30cc371352f6fd6305c5",
   "mr_title": "chore(server): split album update notifications into multiple jobs",
   "mr_description": "We would like to move away from the concept of finding and removing pending\njobs. The only place this is used is for album update notifications, and this\nis done so that users who initially uploaded assets to an album will also\nreceive a notification if someone else then adds assets to the same album. This\ncan also be achieved with a job for each recipient. Multiple jobs also has the\nadvantage that it will scale better for albums with many users, it's possible\nto send notifications concurrently, retries are possible without sending\nduplicate notifications, and it's clear what recipient a job failed for.",
   "origin": {

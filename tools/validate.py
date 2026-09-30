@@ -28,6 +28,7 @@ from gitsnap import (
     git,
     has_license_file,
     numstat_changed_lines,
+    untouched_media,
 )
 from pydantic import ValidationError
 
@@ -132,6 +133,10 @@ def check_git(
     for rev, name in ((case.base_sha, "base"), (case.head_sha, "head")):
         if not has_license_file(repo, rev):
             report.error(where, f"no upstream licence file in {name}")
+    for rev, extra in untouched_media(repo, case.base_sha, case.head_sha).items():
+        if extra:
+            name = "base" if rev == case.base_sha else "head"
+            report.error(where, f"{len(extra)} untouched media file(s) in {name}, e.g. {extra[0]}")
     changed = numstat_changed_lines(repo, case.base_sha, case.head_sha)
     paths = changed_paths(repo, case.base_sha, case.head_sha)
     if not paths:

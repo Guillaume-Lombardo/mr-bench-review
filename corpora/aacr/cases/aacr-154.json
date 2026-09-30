@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-154/base",
   "head_branch": "bench/aacr/aacr-154/head",
-  "base_sha": "07516521a35e14b3eca60a2e921dc45a11610b0a",
-  "head_sha": "d4ee98f284762d1636af1ea5583838d6605d964d",
+  "base_sha": "e62bcffc3b5246b899a771c29902c360333a88e9",
+  "head_sha": "3f40c39a473b03044df3bce41e3001b1e6ff7d42",
   "mr_title": "Use $$ for static check methods",
   "mr_description": "- Use $$ for static check methods\n- Always use class name from checker method name\n- Spotless\n- Varargs assertParseCheckerMethodSignatureThrows\n- Merge branch 'main' into mandatory-class-name",
   "origin": {

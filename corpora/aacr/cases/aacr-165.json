@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-165/base",
   "head_branch": "bench/aacr/aacr-165/head",
-  "base_sha": "b311ca2138282b2f745a17b55e6e955b6d01fd19",
-  "head_sha": "e6ffe619c7144cd552606fdb77cc3b7f49d89789",
+  "base_sha": "fa5decaeee8c853a8735babd84ab38843d48ba83",
+  "head_sha": "6d5b5f124a22e1f5e1c405499d665aca65ed8fe3",
   "mr_title": "batch: use tensors for positions/sequences/outputs",
   "mr_description": "this cleans up the model interface nicely without too much impact in\nother areas. it's slightly harder now to access the position and\nsequence values but since they're inputs, it's relatively easy to get\nthe values out",
   "origin": {

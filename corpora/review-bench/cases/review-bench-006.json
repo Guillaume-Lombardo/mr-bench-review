@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/review-bench/review-bench-006/base",
   "head_branch": "bench/review-bench/review-bench-006/head",
-  "base_sha": "07ebda492db03a9709eab73fc9ade6ac06cf3bd0",
-  "head_sha": "6e14b7be2d1f690c11fa89494918fcc82c30a55f",
+  "base_sha": "86504392f328cc86acdcabd5481f52778da767f1",
+  "head_sha": "41b625ba6b087ad3ca3954c817e261988fdff779",
   "mr_title": "feat(types): Allow the Params property to be typed, instead of `any`",
   "mr_description": "",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-035/base",
   "head_branch": "bench/curated/case-035/head",
-  "base_sha": "cc0997c3cf590e236dace10c8d84eb91e508a601",
-  "head_sha": "90940e298a9cf43a48a5484ae54d687462823a81",
+  "base_sha": "d738d44ee94a1f958369c96ba09cd8a548f8a8ad",
+  "head_sha": "9244e2184c6c4b9a1aef81bb34a29407b6199758",
   "mr_title": "Check scoped proxy target for isDefaultCandidate",
   "mr_description": "Update `OnBeanCondition` to check the scoped proxy target for\n`isDefaultCandidate`. This fixes an issue introduced by\nhttps://github.com/spring-projects/spring-framework/pull/35627.",
   "origin": {

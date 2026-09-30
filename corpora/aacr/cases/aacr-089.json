@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-089/base",
   "head_branch": "bench/aacr/aacr-089/head",
-  "base_sha": "90438f5434ff7ea320c823c1ee70048d16fb549a",
-  "head_sha": "9c6682c8b5be7ca1bb3b87581a516e3bf639ac3f",
+  "base_sha": "78fd8c936a79a416fc4f51bb9b883c1d5111c8d6",
+  "head_sha": "57926ad3effdafc6ea346165bbd774e224709083",
   "mr_title": "validation: call InvalidChainfound also from AcceptBlock",
   "mr_description": "- validation: call InvalidChainfound also from AcceptBlock\n- validation: in invalidateblock, mark children as invalid right away\n- validation: in invalidateblock, calculate m_best_header right away\n- validation: Add more checks to CheckBlockIndex()\n- validation: remove m_failed_blocks",
   "origin": {

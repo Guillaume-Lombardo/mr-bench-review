@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-125/base",
   "head_branch": "bench/aacr/aacr-125/head",
-  "base_sha": "58b74a3a8e4860ea72e786f938e9be3229369754",
-  "head_sha": "01b46feed344bc8af8cf5a7c3967408e7623e79b",
+  "base_sha": "87968d355ad3ddc9dbfb4b540bce2bf6a21e7db8",
+  "head_sha": "64bbfde53a8396f93a769191c2ddb0505eacfa5a",
   "mr_title": "Update SignalR Redis tests to use internal Docker Hub mirror",
   "mr_description": "Docker Hub is prone to rate limiting. To prevent this in dotnet builds we should use our internal container registry.",
   "origin": {

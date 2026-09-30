@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-015/base",
   "head_branch": "bench/curated/case-015/head",
-  "base_sha": "8bb76590de8e2df12ac5f5abf4faf571527f218f",
-  "head_sha": "1380f5c241cda29c54b5064aad1df1adadffaca4",
+  "base_sha": "3a053473c8983452bed3d5a3f5982796d8034979",
+  "head_sha": "00d6b11e7ccae76e2f442bc6705520743ae20834",
   "mr_title": "Fix producer callback handling when partition is missing",
   "mr_description": "Sometimes, the Kafka producer encounters an error prior to selecting a topic partition. In this case, we\nwould like to acknowledge the failure in the producer interceptors, if any are configured. We should also\npass a non-null Metadata object to the producer callback, if there is one. This PR implements that\nbehavior. It also updates the JavaDoc to clarify that if a partition cannot be selected, we will pass\nback a partition id of -1 in the metadata. This is in keeping with KAFKA-3303.\n\nCo-authors: Kirk True <kirk@mustardgrain.com>",
   "origin": {

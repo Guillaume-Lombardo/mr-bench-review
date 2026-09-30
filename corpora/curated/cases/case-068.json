@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-068/base",
   "head_branch": "bench/curated/case-068/head",
-  "base_sha": "e4e6c351eb28bcfcf9efa18d6425b163a2af59a5",
-  "head_sha": "df0e707be2957b91c10ba550b4ec9919dffe318a",
+  "base_sha": "088eabef8e86762196c1e9a37fa53f26ec0752a3",
+  "head_sha": "1e8397b60de80f823255e0a051789a9322c54b9a",
   "mr_title": "Renamed permissions upon model renaming in migrations.",
   "mr_description": "",
   "origin": {

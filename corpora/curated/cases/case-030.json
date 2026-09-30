@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-030/base",
   "head_branch": "bench/curated/case-030/head",
-  "base_sha": "04c2106022d7811c316214115a8be96daa77c8dd",
-  "head_sha": "4cc3e43ce70f4bcecec19b87aa39d344bf466986",
+  "base_sha": "dcd634ade56b3ac14fdd8cae84c7c9d51158dab9",
+  "head_sha": "99c338ae3fddbe05cac11059ba94891c97993eda",
   "mr_title": "Rendered named choice groups with <optgroup> in FilteredSelectMultiple.",
   "mr_description": "This patch adds support for <optgroup>s in FilteredSelectMultiple widgets.\nWhen a popup returns a new object, if the source field contains optgroup\nchoices, the optgroup is now also included in the response data.\n\nAdditionally, this adds error handling for invalid source_model parameters\nto prevent crashes and display user-friendly error messages instead.",
   "origin": {

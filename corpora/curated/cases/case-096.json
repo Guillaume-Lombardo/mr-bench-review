@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-096/base",
   "head_branch": "bench/curated/case-096/head",
-  "base_sha": "3b0254846994dc722cc38f957b7d9038912bb0aa",
-  "head_sha": "27fe8fb0cb1dd0aa8099e218386b7cf0d2dacc7f",
+  "base_sha": "d166846d1cb755e48fc6bd902e3fee5c158d016a",
+  "head_sha": "060954d2f7555000e3aed8680f123996373c4148",
   "mr_title": "Pass CA and client TLS certificates to build subprocesses",
   "mr_description": "The _PIP_STANDALONE_CERT environment variable hack is no longer required\nas pip doesn't run a zip archive of itself to provision build dependencies\nthese days (which due to a CPython bug would leave behind temporary certifi\nfiles).\n\nSome people do depend on this private envvar in the wild, so the removal\nhas been called out in the news entry.",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-025/base",
   "head_branch": "bench/curated/case-025/head",
-  "base_sha": "ddc7f91fc54983521b975e7be465bf90fea39d8d",
-  "head_sha": "b11e87c2d5de68799e4c1f59cf980afa72023e04",
+  "base_sha": "24ad162f599b94ae0b923e21c34bb9d8de4b032e",
+  "head_sha": "95b98e19d9d3a222d779370c2d41e143f74e8464",
   "mr_title": "Introduce experimental memory cleanup mode",
   "mr_description": "",
   "origin": {

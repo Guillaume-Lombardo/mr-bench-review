@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-072/base",
   "head_branch": "bench/curated/case-072/head",
-  "base_sha": "cda29d417c358c0b8eb0952994ea5d0993c571dd",
-  "head_sha": "7eac9b7007fec22873545e4ec756e87ad9fdfd09",
+  "base_sha": "4696c30f6c5ed07e02d9de707a98b81ebb1cade2",
+  "head_sha": "2c0a15ebf93695fa1e1638ae623cccdffdb68cdf",
   "mr_title": "feat(v4): parse input containing reference cycles",
   "mr_description": "Today a cyclic input is a RangeError, safeParse included, so it isn't\neven catchable through the result.\n\nCore gains a $ZodMemoizer seam: a container asks the injected memoizer\nfor the object it is about to build into. Classic injects one per\ncontainer instance; zod/mini injects nothing and links none of this.\nCore's whole share is one interface, one `_zod` field, one changed\nallocation line per container, and one line in runChecks -- the memoizer\nis read once at construction, so a schema without one runs exactly the\ncode it runs today, and the JIT emits byte-identical output for it.\n\nEverything else lives in core/memoizer.ts, which nothing references\nunless a layer asks for it. It registers the real output object before\nany child is parsed, so a reference back to the same input resolves to\nit with nothing to copy. The lookup is keyed on (schema, input), which\nis what makes mutual recursion sound: a node validated against two\nschemas gets an output per schema. A repeat visit returns without\nreaching core, which also stops the node's checks running against a\nhalf-built value. A cycle closing through a transform throws\nZodCyclicError. A schema that cannot re-enter itself removes the\ninterceptor on its first parse.",
   "origin": {

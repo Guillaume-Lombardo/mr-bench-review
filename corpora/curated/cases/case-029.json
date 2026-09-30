@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-029/base",
   "head_branch": "bench/curated/case-029/head",
-  "base_sha": "7d8248953e54d5eb2371ab40830cb16b8dc16899",
-  "head_sha": "f91df764a2c7e37416b954ab3cc362a6940dddc3",
+  "base_sha": "9452c590bfe52acbe50ec07d6065b1f926f2c726",
+  "head_sha": "53cd69ef776d57904d0fa755ada193614edff13d",
   "mr_title": "fix(material-experimental/mdc-slider): thumb incorrectly positioned when inside an overlay",
   "mr_description": "Fixes an issue where the thumb of an MDC slider wasn't positioned correctly when it has an initial value inside an overlay that is being animated.\n\nThere are multiple ways to resolve this, but I ended up doing it by removing our logic that skips the first `ResizeObserver` emission since we can get around the performance issues with the `layout` call by reusing the dimensions provided in the callback.",
   "origin": {

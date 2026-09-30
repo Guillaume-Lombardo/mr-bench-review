@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-120/base",
   "head_branch": "bench/aacr/aacr-120/head",
-  "base_sha": "7f2e40028a44e4539811c56a7a7eb38aa37f3a47",
-  "head_sha": "8d3ccec85738655d784deeea83eaa784caf5d697",
+  "base_sha": "85d82b994f7669fa0e2830a94a40925dc4298b43",
+  "head_sha": "a8e45ff4523775e5f84fcee973cdb8bd6e886969",
   "mr_title": "Update pt_BR reset-password translations",
   "mr_description": "- Update pt_BR reset-password translations\n- Update pt_BR login translations\n- Update pt_BR register translations",
   "origin": {

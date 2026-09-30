@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-036/base",
   "head_branch": "bench/curated/case-036/head",
-  "base_sha": "0338c29676a0b5042ae03af3344f94a5aff7a913",
-  "head_sha": "23f8957be294a374cb84a101c50bd127efd35dec",
+  "base_sha": "c56d9b79a8995f07643a9cd74f9aa9017c3606fc",
+  "head_sha": "04020e5475801131d08938cce0cdafbb4901c7a6",
   "mr_title": "Made HttpRequest.get_preferred_type() consider media type parameters.",
   "mr_description": "HttpRequest.get_preferred_type() did not account for parameters in\nAccept header media types (e.g., \"text/vcard; version=3.0\"). This caused\nincorrect content negotiation when multiple types differed only by\nparameters, reducing specificity as per RFC 7231 section 5.3.2\n(https://datatracker.ietf.org/doc/html/rfc7231.html#section-5.3.2).\n\nThis fix updates get_preferred_type() to treat media types with\nparameters as distinct, allowing more precise and standards-compliant\nmatching.\n\nThanks to magicfelix for the report, and to David Sanders and Sarah\nBoyce for the reviews.",
   "origin": {

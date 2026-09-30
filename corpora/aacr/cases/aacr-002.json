@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-002/base",
   "head_branch": "bench/aacr/aacr-002/head",
-  "base_sha": "fcd0cc142ece0b6ddff6e55383ff3b9033652d0a",
-  "head_sha": "369b543db14bf525a2a7b2cc5bc3483814fdeea4",
+  "base_sha": "f74c84cbfcbc8e8db4bd5aba9a2aaf58c5cf34b4",
+  "head_sha": "095008527a20f1871f1a1513dc32efc2c1aab89a",
   "mr_title": "Light refactor of getTopoShape function",
   "mr_description": "- Light refactor of getTopoShape function\n- Fix hole edge case\n- [pre-commit.ci] auto fixes from pre-commit.com hooks",
   "origin": {

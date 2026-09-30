@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-038/base",
   "head_branch": "bench/curated/case-038/head",
-  "base_sha": "f7bc3cf36b7078f149681c53125b76f40b359db2",
-  "head_sha": "5b54b16f9780a1b12026379bd9d9fc3ae6e1debb",
+  "base_sha": "2a7e04e86e69892044f65dea9ee4de640568252b",
+  "head_sha": "3ef08563be56598ef5f1c8d3204c7dab0be9e8bb",
   "mr_title": "Complete refactoring to move empty-String-defaulting out of (Std)ValueInstantiator",
   "mr_description": "",
   "origin": {

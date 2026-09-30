@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-110/base",
   "head_branch": "bench/curated/case-110/head",
-  "base_sha": "b900086275d684f4986fd05695d9021ef9768a6e",
-  "head_sha": "c589b4d35dd6e4b9cb8a96ceb03d9527005980af",
+  "base_sha": "80c4429974120f799438d19d6fac733147c09081",
+  "head_sha": "ce2219bf034f86ad638b8be805d5eaf8aa8c8883",
   "mr_title": "feat(devtools): implement CD analyzer",
   "mr_description": "Implement component highlighting on change detection cycles along with embedding\nthe component-specific data to the directive/component tree explorer.",
   "origin": {

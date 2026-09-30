@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-050/base",
   "head_branch": "bench/aacr/aacr-050/head",
-  "base_sha": "86acfc5229f9875b92e2eac2d680bb06e6d8d4c4",
-  "head_sha": "4fbf39b6ada44b84121feabdafc024af6d7c6577",
+  "base_sha": "3430819a52936d2e4695327db7f9e1174e33840e",
+  "head_sha": "bf5519f60be665184f8ba7511c8de969abe02294",
   "mr_title": "Fix: Improve auth flow and state validation",
   "mr_description": "Improves the authentication flow and state validation process.  We no longer reset the auth nounce after each sign in as AuthService is a singleton and there is no risk of nonce collision between different users as only one user can be signed in at a time.\n\nChanges:\n    - The `authNonce` is now generated once during `AuthService` instantiation and stored as a read-only property. This ensures that the nonce remains consistent throughout the authentication process.\n    - The `resetAuthNonce` method has been removed, as the nonce is no longer meant to be reset.\n    - The `createAuthRequest` method now uses the URL object for more graceful query construction.\n- **Controller:**\n    - The `validateAuthState` method has been simplified to directly compare the provided state with the stored `authNonce`.\n- **Extension:**\n    - The extension now prompts the user for confirmation if the state parameter in the auth callback does not match the stored `authNonce`. This allows sign-ins initiated from outside the extension (e.g., Cline web) to be handled correctly.\n\nIssue: The issue is that the authNonce is being reset in the validateAuthState method in the Controller, but the extension.ts is directly accessing authService.authNonce without going through the validation method. This creates a race condition where:\n\nUser initiates auth, nonce is generated\nAuth callback comes back with the state\nIf there are multiple auth attempts or the callback is processed multiple times, the nonce might be reset before the validation in extension.ts happens\nUser gets \"Invalid auth state\" error",
   "origin": {

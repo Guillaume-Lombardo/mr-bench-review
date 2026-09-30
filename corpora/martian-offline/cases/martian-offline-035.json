@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/martian-offline/martian-offline-035/base",
   "head_branch": "bench/martian-offline/martian-offline-035/head",
-  "base_sha": "de37d5268ac52e1ce8bb4b2b667b9ee536a7d6f3",
-  "head_sha": "aa7a326550423ece5041d1d5606162ffda650abb",
+  "base_sha": "8f5319b71356c8dc96787f638a622a6f07e9ab38",
+  "head_sha": "08c2ef9c010c9d29318acb58446e436dd2179abd",
   "mr_title": "Add Client resource type and scopes to authorization schema",
   "mr_description": "",
   "origin": {

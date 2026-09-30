@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-019/base",
   "head_branch": "bench/curated/case-019/head",
-  "base_sha": "6f85e2901e2f27b237065b83b9d3b0c69f4de732",
-  "head_sha": "4950b886bc976024180d94633305ab1cb3b9fd9b",
+  "base_sha": "c0b008fb4a0edb84f33437377ee84afb16f8b2ec",
+  "head_sha": "8d2a7cad4f8e5756abf3657f57e141c8c2deb4d9",
   "mr_title": "Prevented urlize creating broken links given a markdown link input.",
   "mr_description": "",
   "origin": {

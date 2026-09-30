@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-101/base",
   "head_branch": "bench/curated/case-101/head",
-  "base_sha": "eb081464e888c170ae8ecc1538615eb780d73bab",
-  "head_sha": "f781449334cd4fed7e65282446a70fdb9e6cb2c9",
+  "base_sha": "741be144aa0f0d381870a880570cb5526ee82572",
+  "head_sha": "2c552a60ea6bd3832e5551bfdf7895299bcecfef",
   "mr_title": "Avoid iterating over all clients in UserResource.getConsents()",
   "mr_description": "",
   "origin": {

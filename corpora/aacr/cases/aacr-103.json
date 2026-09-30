@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-103/base",
   "head_branch": "bench/aacr/aacr-103/head",
-  "base_sha": "4eb3f84a313a73f2db7509e1631e8a2bfb173c77",
-  "head_sha": "6d181e1bfa974a853cf382fefffbf50af4f4238a",
+  "base_sha": "1ac71351924d831e41500e34d1a8dde6e0fec6d6",
+  "head_sha": "74c702c93348d4d145ad964df2aa8f748f30b6ce",
   "mr_title": "remove face, person and face search entities",
   "mr_description": "- remove face, person and face search entities\n- update sql\n- unused imports",
   "origin": {

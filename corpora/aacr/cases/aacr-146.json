@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-146/base",
   "head_branch": "bench/aacr/aacr-146/head",
-  "base_sha": "7c0e9a49892f6af0bc74f17b9c3fd16b1be4ca48",
-  "head_sha": "00ec6da993c76a5c61edd7d59b0f4abc86bbe77e",
+  "base_sha": "4a5d5ca690ff9a053385de2983b58b3ed520450d",
+  "head_sha": "84cc6c6505a5093adcb8233a3b92a1249591beaa",
   "mr_title": "Use TestEntitlementsRule and closable node grants for better isolation and management of entitlement related state during tests.",
   "mr_description": "- Use TestEntitlementsRule and closable node grants for better isolation and management of entitlement related state during tests.\n- Disable revoking individual node grants on close until ES-10920 is fixed\n- Merge branch 'main' into entitlements/test_rule\n- Merge branch 'main' into entitlements/test_rule\n- Merge branch 'main' into entitlements/test_rule\n- fix test\n- Merge branch 'main' into entitlements/test_rule\n- only enable TestPolicyManager in TestEntitlementsRule while evaluating a suite\n- guard against parallel evaluation",
   "origin": {

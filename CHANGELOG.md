@@ -7,6 +7,9 @@ All changes per corpus. Versions follow the rules in README.md ("Versioning").
 Initial dataset, contract v1, validator, converters and CI.
 The repository's own content (tools, documentation, curated annotations) is licensed
 under Apache-2.0.
+Snapshots leave out the media and other binary files that the change does not touch (see
+README.md, "Branches"); the repository shrinks from about 2.7 GB to about 1.2 GB and the diffs
+are unchanged.
 
 ### curated (created 2026-09-30)
 - 113 cases (95 real, 18 clean) from the selection made for bdf-review, with 5 pilot, 30 core

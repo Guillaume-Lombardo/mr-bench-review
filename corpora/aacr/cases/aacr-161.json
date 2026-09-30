@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-161/base",
   "head_branch": "bench/aacr/aacr-161/head",
-  "base_sha": "1719c3ea34328f152acac3143a19169dd4d8469e",
-  "head_sha": "6d763d936cdc8fa39b6402a07c42e42354cfac28",
+  "base_sha": "3ebbcd931b59000bb09cafe6858dca58bfc2679a",
+  "head_sha": "da72ec431a99614445728c98182e3d3addee2326",
   "mr_title": "server: validate local path on safetensor create",
   "mr_description": "- server: validate local path on safetensor create\n- Revert \"server: validate local path on safetensor create\"\n- server: validate local path on safetensor create\n- move where error comes from\n- Update create.go\n- use cleaned path in root.Stat\n- use rel\n- Update create.go\n- add positive cases to test\n- unneeded clean\n- format\n- close layer bin\n- more early validation",
   "origin": {

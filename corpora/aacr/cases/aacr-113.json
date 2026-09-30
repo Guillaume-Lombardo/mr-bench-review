@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-113/base",
   "head_branch": "bench/aacr/aacr-113/head",
-  "base_sha": "5bf659041b74671e230698e915060141fa041813",
-  "head_sha": "8845c9ed26031a2bb8540e1e031c271f52184f23",
+  "base_sha": "461dde07b35ba811b9faa066cfe5ed5a835ab9ee",
+  "head_sha": "d627402c5cec04a7efd907f49cdb319ba39b4be3",
   "mr_title": "Add test for install from remote requirements.txt",
   "mr_description": "",
   "origin": {

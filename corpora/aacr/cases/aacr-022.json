@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-022/base",
   "head_branch": "bench/aacr/aacr-022/head",
-  "base_sha": "13221dfbc9ff1f9c97f234bea1af75493abb166b",
-  "head_sha": "fd10489bb182eef430a7504f4d0f99ff0ae22fca",
+  "base_sha": "d59472f12791f16985870712c77b6f361b0d7f84",
+  "head_sha": "c385026de688ebe2ff6ed312c18d4e144eccb360",
   "mr_title": "fix: disable logs for healthcheck endpoints",
   "mr_description": "- fix: disable logs for healthcheck endpoints\n- Merge branch 'development' into development\n- Merge branch 'gofr-dev:development' into development\n- fix: add env variable to control logs probe\n- fix: change the middleware config\n- fix: middleware logging\n- fix: logging without probes test\n- fix: test logger\n- fix: middleware config\n- Merge branch 'development' into development\n- Merge branch 'development' into development",
   "origin": {

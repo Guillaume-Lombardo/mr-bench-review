@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-046/base",
   "head_branch": "bench/aacr/aacr-046/head",
-  "base_sha": "90451e2140708d2a73544ccbc10279cc9ffecca7",
-  "head_sha": "27872101b77c4d00d28848c78fe03fc74637395f",
+  "base_sha": "6de8c636d47816c4097f97fa94d8f1bf27d865f6",
+  "head_sha": "f235e0f03b1b391e17425eec9a35a7d6690e9a67",
   "mr_title": "Fix issue where checkpointing blocked UI",
   "mr_description": "",
   "origin": {

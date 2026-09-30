@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-081/base",
   "head_branch": "bench/aacr/aacr-081/head",
-  "base_sha": "7aab2481141b759f7db2d2a391e2b993de55b126",
-  "head_sha": "ad088fc3c77d02e6f89192be74139b53420ceb56",
+  "base_sha": "54e9224ccd978af1d99cbbcac868368d59710ac8",
+  "head_sha": "e31e9271a79b76252ad9ec6ad7467fe53d145483",
   "mr_title": "Redact protocol error log when hide-user-data-from-log enabled",
   "mr_description": "",
   "origin": {

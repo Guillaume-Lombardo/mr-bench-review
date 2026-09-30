@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/martian-offline/martian-offline-018/base",
   "head_branch": "bench/martian-offline/martian-offline-018/head",
-  "base_sha": "04bb36b58d78953ab64de267e5bff09bd203dec1",
-  "head_sha": "504abbd848b717dc0e3994a908996205b6ac6231",
+  "base_sha": "c163b89721a2a441e4ff15b0c10a4d55d28e7d98",
+  "head_sha": "f0b79f350cbc9071e1efff9a6c61e937ac3402a6",
   "mr_title": "FIX: proper handling of group memberships",
   "mr_description": "",
   "origin": {

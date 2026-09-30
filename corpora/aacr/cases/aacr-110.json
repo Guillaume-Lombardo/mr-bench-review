@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-110/base",
   "head_branch": "bench/aacr/aacr-110/head",
-  "base_sha": "cf85afd695ecdc3836e49e493c4bef7e34f3af34",
-  "head_sha": "9c164a010794fed058279df49f746ba1aa77b2fd",
+  "base_sha": "25d2cf7abda36f817a6a0257251bb0d81aa2f42e",
+  "head_sha": "e68b906234ee908ebec4ce243af9631bbc12a176",
   "mr_title": "[P/D] MultiConnector supports shutdown",
   "mr_description": "- [P/D] MultiConnector supports shutdown\n- [P/D] MultiConnector supports shutdown\n- [P/D] MultiConnector supports shutdown\n- [P/D] MultiConnector supports shutdown\n- [P/D] MultiConnector supports shutdown\n- [P/D] MultiConnector supports shutdown\n- [P/D] MultiConnector supports shutdown",
   "origin": {

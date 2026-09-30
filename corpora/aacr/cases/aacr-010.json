@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-010/base",
   "head_branch": "bench/aacr/aacr-010/head",
-  "base_sha": "4abcffe2b49a75d91207abd06ec95d87c4619b01",
-  "head_sha": "be6089b2af45b74f5f0f957d0973dd49ddcbe91b",
+  "base_sha": "44d623b7419318a70ae676ec538636ee25ce310e",
+  "head_sha": "7930b79b71bc6fce11f7d6b7fd8887f537eaca9b",
   "mr_title": "FreeCAD: Compiler warning fixes",
   "mr_description": "",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-001/base",
   "head_branch": "bench/curated/case-001/head",
-  "base_sha": "6c4490f7073e33f8f12af70e6cdc7b1095d8abc7",
-  "head_sha": "7d5dbac1796cf4344c17c9cb5b4192e6e8bfe912",
+  "base_sha": "3329fc3ad0056ba054d596eae72ab110fb2d51cf",
+  "head_sha": "1973e11f13c634fc76089c4dfabdd6374e418707",
   "mr_title": "Make UnorderedTPEExecutor.scheduleAtFixedRate run tasks more than once",
   "mr_description": "Motivation:\nAll scheduled executors should behave in accordance to their API.\nThe bug here is that scheduled tasks were not run more than once because we executed the runnables directly, instead of through the provided runnable future.\n\nModification:\nWe now run tasks through the provided future, so that when each run completes, the internal state of the task is reset and the ScheduledThreadPoolExecutor is informed of the completion.\nThis allows the executor to prepare the next run.\n\nResult:\nThe UnorderedThreadPoolEventExecutor is now able to run scheduled tasks more than once.\nWhich is what one would expect from the API.",
   "origin": {

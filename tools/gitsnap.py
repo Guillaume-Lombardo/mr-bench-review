@@ -1,8 +1,10 @@
 """Build benchmark base/head branches from upstream snapshots, and read them back.
 
 Branches hold no upstream history: ``base`` is an orphan commit with the upstream tree before
-the change and ``head`` is one commit on top of it with the tree after the change. Commits use
-a neutral author, neutral messages and a fixed date, so rebuilding a case gives the same SHAs.
+the change and ``head`` is one commit on top of it with the tree after the change. Media and
+other binary files the change does not touch (``MEDIA_SUFFIXES``) are left out of both trees;
+every other file is kept, so the diff is the upstream diff. Commits use a neutral author,
+neutral messages and a fixed date, so rebuilding a case gives the same SHAs.
 """
 
 from __future__ import annotations
@@ -10,8 +12,9 @@ from __future__ import annotations
 import os
 import re
 import subprocess
+import tempfile
 from collections import defaultdict
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 NEUTRAL = {
     "GIT_AUTHOR_NAME": "mr-bench-review",
@@ -24,6 +27,25 @@ NEUTRAL = {
 BASE_MESSAGE = "base snapshot\n"
 HEAD_MESSAGE = "change\n"
 LICENSE_FILE = re.compile(r"^(licen[cs]e|copying|unlicense)([.-].*)?$", re.IGNORECASE)
+# Binary files a reviewer cannot read: images, audio, video, fonts, 3D models, documents,
+# archives, compiled code and model weights. Matched on the last suffix, case-insensitively.
+MEDIA_SUFFIXES = frozenset(
+    {
+        # images
+        ".png", ".gif", ".jpg", ".jpeg", ".webp", ".bmp", ".ico", ".tif", ".tiff", ".avif",
+        ".psd", ".hdr", ".exr", ".ktx2", ".dds", ".basis",
+        # audio and video
+        ".mp4", ".webm", ".mov", ".avi", ".mkv", ".mp3", ".wav", ".ogg", ".flac", ".m4a",
+        # fonts
+        ".ttf", ".otf", ".woff", ".woff2", ".eot",
+        # 3D models
+        ".glb", ".fbx", ".blend", ".3ds", ".usdz", ".drc",
+        # documents and archives
+        ".pdf", ".gz", ".bz2", ".xz", ".zip", ".tgz", ".7z", ".jar", ".war",
+        # compiled code and model weights
+        ".so", ".dll", ".dylib", ".exe", ".class", ".pt", ".onnx", ".pb", ".npy", ".h5",
+    }
+)  # fmt: skip
 
 
 class GitError(RuntimeError):
@@ -69,14 +91,56 @@ def fetch_snapshots(repo: Path, url: str, *shas: str, refs: tuple[str, ...] = ()
         git(repo, "fetch", "--quiet", "--depth=1", "--no-tags", url, *wanted)
 
 
+def is_media(path: str) -> bool:
+    return PurePosixPath(path).suffix.lower() in MEDIA_SUFFIXES
+
+
+def tree_paths(repo: Path, rev: str) -> list[str]:
+    """Every file path of a tree (reads tree objects only, no blobs)."""
+    return [p for p in git(repo, "ls-tree", "-r", "-z", "--name-only", rev).split("\0") if p]
+
+
+def untouched_media(repo: Path, base: str, head: str) -> dict[str, list[str]]:
+    """Media paths of each side that the change between ``base`` and ``head`` does not touch."""
+    changed = set(changed_paths(repo, base, head))
+    return {
+        rev: [p for p in tree_paths(repo, rev) if is_media(p) and p not in changed]
+        for rev in (base, head)
+    }
+
+
+def without_paths(repo: Path, rev: str, paths: list[str]) -> str:
+    """Tree of ``rev`` minus ``paths``, written through a temporary index.
+
+    ``update-index`` insists on a work tree even for removals; an empty one is given and never
+    read.
+    """
+    if not paths:
+        return git(repo, "rev-parse", f"{rev}^{{tree}}")
+    with tempfile.TemporaryDirectory() as tmp:
+        env = {"GIT_INDEX_FILE": str(Path(tmp) / "index"), "GIT_WORK_TREE": tmp}
+        git(repo, "read-tree", f"{rev}^{{tree}}", env=env)
+        git(
+            repo,
+            "update-index",
+            "--force-remove",
+            "-z",
+            "--stdin",
+            stdin="\0".join(paths) + "\0",
+            env=env,
+        )
+        return git(repo, "write-tree", env=env)
+
+
 def build_branches(
     repo: Path, base_ref: str, head_ref: str, base_tree_of: str, head_tree_of: str
 ) -> tuple[str, str]:
     """Create the orphan base commit and the single head commit; point both branches at them."""
-    base = git(repo, "commit-tree", f"{base_tree_of}^{{tree}}", stdin=BASE_MESSAGE, env=NEUTRAL)
-    head = git(
-        repo, "commit-tree", f"{head_tree_of}^{{tree}}", "-p", base, stdin=HEAD_MESSAGE, env=NEUTRAL
-    )
+    drop = untouched_media(repo, base_tree_of, head_tree_of)
+    base_tree = without_paths(repo, base_tree_of, drop[base_tree_of])
+    head_tree = without_paths(repo, head_tree_of, drop[head_tree_of])
+    base = git(repo, "commit-tree", base_tree, stdin=BASE_MESSAGE, env=NEUTRAL)
+    head = git(repo, "commit-tree", head_tree, "-p", base, stdin=HEAD_MESSAGE, env=NEUTRAL)
     git(repo, "update-ref", f"refs/heads/{base_ref}", base)
     git(repo, "update-ref", f"refs/heads/{head_ref}", head)
     return base, head

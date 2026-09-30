@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-177/base",
   "head_branch": "bench/aacr/aacr-177/head",
-  "base_sha": "7b5486c54afbdd86d6a20eb975b65cc0f082a410",
-  "head_sha": "9aaae042433e8b4356d47b604bca693d95816139",
+  "base_sha": "35d96a4ddfcaec9b8ad37b9194fbef3a6d57b3a6",
+  "head_sha": "a39b685225b1cd2b25f444a0ca8dccba4f2cf4b6",
   "mr_title": "wip...",
   "mr_description": "- wip...\n- wip...\n- Cleanup\n- Support copying providers and config files to container\n- Move classes to clustering module\n- Introduce LoadBalancer class\n- Use JBossLogConsumer for consuming logs from Keycloak cluster\n- Update README",
   "origin": {

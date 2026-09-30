@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-103/base",
   "head_branch": "bench/curated/case-103/head",
-  "base_sha": "afcdc05162f35a985914eb2b637d49900e89c728",
-  "head_sha": "72a79952c18e6e30162267c8ea44bdb9015740c9",
+  "base_sha": "84482661168ba97e66ba2a5122a60500ac02f613",
+  "head_sha": "ffec2e3ff3553628051e0655922445839b3e9f1a",
   "mr_title": "extract chat input widget",
   "mr_description": "",
   "origin": {

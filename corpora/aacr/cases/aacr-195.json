@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-195/base",
   "head_branch": "bench/aacr/aacr-195/head",
-  "base_sha": "0779d0cb0b64b8a4d4463e9064d436f6477d6b50",
-  "head_sha": "6df10de8dd7524ca551547ccc682c36a0ca3392b",
+  "base_sha": "22a372a6b7c88d0f1574572eccb0a2b59c59ddb5",
+  "head_sha": "bc6e896c14e8cdfa43a69248ed4aa8fa36536adb",
   "mr_title": "refactor: Update _log_transaction_async to be asynchronous and improve task management",
   "mr_description": "- Changed _log_transaction_async method from synchronous to asynchronous to allow proper handling of transaction logging.\n- Added error handling for task cancellation and ensured that pending tasks are managed correctly.\n- Updated calls to _log_transaction_async in the ComponentVertex class to await the asynchronous method, ensuring proper flow execution and error handling.",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/martian-offline/martian-offline-033/base",
   "head_branch": "bench/martian-offline/martian-offline-033/head",
-  "base_sha": "876ba83d0555320c8fb0959373342c7f2042f808",
-  "head_sha": "dd483e3ec77d63770aa30501b0aff82671026c22",
+  "base_sha": "877019d50c09565ebadbc0cbaf9086fe6b921f11",
+  "head_sha": "7dced2e54ef18f82941aaead8d0fea9c89411592",
   "mr_title": "Add AuthzClientCryptoProvider for authorization client cryptographic operations",
   "mr_description": "",
   "origin": {

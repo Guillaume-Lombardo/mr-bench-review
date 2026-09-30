@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-058/base",
   "head_branch": "bench/curated/case-058/head",
-  "base_sha": "af3d358de7b4829e6f5803096ea370a48b287359",
-  "head_sha": "62e18283b3fdb71bff24f15de1cc25c91db7f094",
+  "base_sha": "2f9e32e9f7a7964e29f3a0bd3fc0432bb9ee5d01",
+  "head_sha": "aeee822e5c9913c74deb5e7426c3e5b6e04f40d5",
   "mr_title": "fix(material/paginator): ignore clicks on disabled buttons",
   "mr_description": "The changes in made the paginator interactive while they're disabled in order to improve accessibility, but as a result it also allows for the buttons to navigate while they're disabled.\n\nThese changes add internal checks to ensure that the buttons don't navigate while disabled. I've also cleaned up the logic a bit so we don't have four different places that deal with navigations.",
   "origin": {

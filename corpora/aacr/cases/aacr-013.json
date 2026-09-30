@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-013/base",
   "head_branch": "bench/aacr/aacr-013/head",
-  "base_sha": "90db3cb1744101db12fd4fc79656ef6f0ac69a6c",
-  "head_sha": "9daf4e66de320ed054caf3d1dcc76e0956a4dc42",
+  "base_sha": "3e2c4c23859de3446128d716f3427e4176322d58",
+  "head_sha": "260ffe0fd6492def915c8f070c2e4c431171623e",
   "mr_title": "Reparse `@import` as synthetic type-only import declaration",
   "mr_description": "- Reparse `@import` as synthetic type-only import declaration\n- revert diff that should go in\n- Remove JSDocImportTag code\n- Merge branch 'main' into add-jsdoc-import",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-054/base",
   "head_branch": "bench/aacr/aacr-054/head",
-  "base_sha": "d62dd73dbe6e8b8ed1be40ff14de50bd465a1f9a",
-  "head_sha": "74b6abe32c148e1add13cf544e709346a8b901bc",
+  "base_sha": "47c199afc518d35aec3f892e7588d15784c5f8b1",
+  "head_sha": "487d97a70d01741f6bec03085bbfb9810aa03790",
   "mr_title": "add anti detection via rebrowser",
   "mr_description": "- add anti detection via rebrowser\n- Merge branch 'main' into bot-detection-batch\n- Add back Chromium arguments to browser launch configuration\n- add changes\n- Merge branch 'main' into bot-detection-batch\n- Merge branch 'main' into bot-detection-batch\n- Merge branch 'main' into bot-detection-batch\n- fix CSP, Shadow DOM & Migrate to Patchright\n- Merge branch 'main' into bot-detection-batch\n- Revert examples/notebook/agent_browsing.ipynb to upstream main version\n- Merge branch 'main' into bot-detection-batch\n- Merge branch 'main' into bot-detection-batch\n- run lint\n- fix lint",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-074/base",
   "head_branch": "bench/aacr/aacr-074/head",
-  "base_sha": "787645440724fe93f1065f22b17e4ffed7e1d884",
-  "head_sha": "c14a726538010d8bc8382a18ac484f88db2f3a84",
+  "base_sha": "a6fe122b8066b5c88dc4fd664af1643db3e8e833",
+  "head_sha": "9925dbfd76f6fc883dd0631f264e43dfc8958fbd",
   "mr_title": "fix: using elastic search database, open lightrag 'entity resolution and community report' error",
   "mr_description": "",
   "origin": {

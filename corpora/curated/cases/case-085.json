@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-085/base",
   "head_branch": "bench/curated/case-085/head",
-  "base_sha": "5a818dca4650b3b71899d131ec93966ce58f49d5",
-  "head_sha": "ac14bb2e44291ec23451736ec3aa3ed699f90b2d",
+  "base_sha": "9b3b3a1541bc7041081fe08d1f30cea6e93e0c34",
+  "head_sha": "e0d404569dd6e40e1933a61113c3065ab0516c12",
   "mr_title": "Start building against Spring LDAP 4.1.0-M1 snapshots",
   "mr_description": "",
   "origin": {

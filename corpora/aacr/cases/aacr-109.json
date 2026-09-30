@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-109/base",
   "head_branch": "bench/aacr/aacr-109/head",
-  "base_sha": "2ae43adec15f22aa5fc1c23233495a8d3ff94f7f",
-  "head_sha": "f276b776177b6bf876d216d732bfc2f45ced5eb6",
+  "base_sha": "af62fdd5ed6ec569f283be4bf0baef43716a6d14",
+  "head_sha": "e2932c81a9974e67fabd9fb5f797ebf7947902ee",
   "mr_title": "[Benchmark] Update readme and throughput benchmark",
   "mr_description": "- [Benchmark] Update readme and throughput benchmark\n- add aimo dataset split",
   "origin": {

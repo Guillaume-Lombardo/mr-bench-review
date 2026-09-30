@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-017/base",
   "head_branch": "bench/curated/case-017/head",
-  "base_sha": "c19a6deb86c42afeae9a419b128724de2d8ba2d2",
-  "head_sha": "c4909e8d18d4ce4b38eba4e747e3448ca4bfd9a0",
+  "base_sha": "ca9cd00e2dd6c0aefb9057321a93c1c475517a77",
+  "head_sha": "fda7aa9a83ce54e953df32081ae15c39ffd1c3d2",
   "mr_title": "Removed faulty clearing of ordering field when missing from explicit grouping.",
   "mr_description": "",
   "origin": {

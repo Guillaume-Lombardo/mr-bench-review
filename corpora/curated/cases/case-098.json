@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-098/base",
   "head_branch": "bench/curated/case-098/head",
-  "base_sha": "8da89bfdc5557219c5e0e7c793610a6743c7cb53",
-  "head_sha": "c4eb404c741bdca00ff03c4a85cf5ba4df31d84d",
+  "base_sha": "5b369052a8272b2f7d33ab31ea1cb891524e89f2",
+  "head_sha": "8973678a36eeb4ff6433634c6ce201e665be17c0",
   "mr_title": "fix(@angular-devkit/build-angular): set base-href in service worker manifest when using i18n and app-shell",
   "mr_description": "Previously, the base href was not set when using the app-shell builder and i18n.",
   "origin": {

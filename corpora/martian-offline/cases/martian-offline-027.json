@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/martian-offline/martian-offline-027/base",
   "head_branch": "bench/martian-offline/martian-offline-027/head",
-  "base_sha": "65a33a33398637a88be6a5c2ff20b20f1bb6cb48",
-  "head_sha": "f4014e76ab5bdcfa533b3142ebbc1555c616fcc9",
+  "base_sha": "f87d27b63df587302fc314712eaba518a6745936",
+  "head_sha": "bb6df5cad075f23c720a26701e7a98a9812beec8",
   "mr_title": "Database Performance Optimizations",
   "mr_description": "- Split subquery when cleaning annotations\n- update comment\n- Raise batch size, now that we pay attention to it\n- Iterate in batches\n- Separate cancellable batch implementation to allow for multi-statement callbacks, add overload for single-statement use\n- Use split-out utility in outer batching loop so it respects context cancellation\n- guard against empty queries\n- Use SQL parameters\n- Use same approach for tags\n- drop unused function\n- Work around parameter limit on sqlite for large batches\n- Bulk insert test data in DB\n- Refactor test to customise test data creation\n- Add test for catching SQLITE_MAX_VARIABLE_NUMBER limit\n- Turn annotation cleanup test to integration tests\n- lint",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/review-bench/review-bench-021/base",
   "head_branch": "bench/review-bench/review-bench-021/head",
-  "base_sha": "d06f74cb83fef8bbb4a8d9fd67659d125e258e40",
-  "head_sha": "7489bc8e0d51b938d10c3df4807aa59bad253b54",
+  "base_sha": "23f93033b9407ce7504a53767bc551debbab3b57",
+  "head_sha": "43b38eb589989fd2423eaf622e7f0114366e3eaa",
   "mr_title": "Add support for Python 3.13",
   "mr_description": "",
   "origin": {

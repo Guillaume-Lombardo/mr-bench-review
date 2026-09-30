@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-116/base",
   "head_branch": "bench/aacr/aacr-116/head",
-  "base_sha": "0ef928883c6b718ada2b3055212fb3ef6f67fae5",
-  "head_sha": "c9894e7d56ac52336f0028b35394c1dfa3c6f42f",
+  "base_sha": "20fe2cda55bb145c4c337fc6c3d8032e77542a68",
+  "head_sha": "2cd741589e72af8e4f903c291c3a8d529a6248aa",
   "mr_title": "add hana table partitions",
   "mr_description": "",
   "origin": {

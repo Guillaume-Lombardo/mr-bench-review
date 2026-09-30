@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-006/base",
   "head_branch": "bench/aacr/aacr-006/head",
-  "base_sha": "bea022c1baca7797cd166913cff1a2907b1926fe",
-  "head_sha": "3bb17e8c1b54f44acc6b10c2ba1aa0dbaa11651f",
+  "base_sha": "ece1e3acb024e3c811f4b5bf926417bcaa5dd7e8",
+  "head_sha": "7f1c468312d8f480a55027882547eeb1be98e0be",
   "mr_title": "ReverseEngineering: Update UI strings for consistency",
   "mr_description": "",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-163/base",
   "head_branch": "bench/aacr/aacr-163/head",
-  "base_sha": "17942c5090a572866b15cd9c2c25764e42638371",
-  "head_sha": "a33087f0e604003f9a36acb34884960151f1daec",
+  "base_sha": "6cd90975933c7360d471cacf82a186dc0bb5d12a",
+  "head_sha": "c8e946b39dccf6e90459182157a4fdf06b20d256",
   "mr_title": "create blobs in parallel",
   "mr_description": "- create blobs in parallel\n- default max term height",
   "origin": {

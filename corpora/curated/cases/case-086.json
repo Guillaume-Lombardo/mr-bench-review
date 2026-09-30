@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-086/base",
   "head_branch": "bench/curated/case-086/head",
-  "base_sha": "b5011bf025a368b585ec09dce78d36bf4741655d",
-  "head_sha": "6de21d5181ba357d0018ace919b04b94aaa909ad",
+  "base_sha": "f8c5d80fe6cd92a3079399817564626bffcb7edf",
+  "head_sha": "8927960c6f67df87d55c5017af3303928f692f89",
   "mr_title": "perf(memory): install derived internals on a per-constructor prototype",
   "mr_description": "Moves lazily-derived `_zod` internals (`values`, `pattern`, `optin`, `optout`, `propValues`) onto a per-constructor prototype instead of installing an accessor on every instance.\n\nWrapper schemas shrink the most: `.nullable()`/`.readonly()` 2.4 KB to 665 B, `.optional()` 1.9 KB to 694 B. Construction of `.optional()` is ~1.96x faster; parse is unchanged. Costs +77 B classic and +13 B mini gzipped.",
   "origin": {

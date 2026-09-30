@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-008/base",
   "head_branch": "bench/curated/case-008/head",
-  "base_sha": "6d05b2021e68cc65e5d2c3766adadc43c314e4aa",
-  "head_sha": "47ac4cadabbb1cc73f763701298aeb4692456a98",
+  "base_sha": "855b216c291c580a5e60fea341eafaf7b0ae2de4",
+  "head_sha": "e9ce1d6b2b92b6d11912d9b26052e32a52a38bb8",
   "mr_title": "Updated request.auser() in contrib.auth.alogin() and contrib.auth.alogout().",
   "mr_description": "",
   "origin": {

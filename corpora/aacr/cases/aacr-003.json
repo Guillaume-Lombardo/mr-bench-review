@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-003/base",
   "head_branch": "bench/aacr/aacr-003/head",
-  "base_sha": "c1b581f091572de1c1791d1a8309f164b990c086",
-  "head_sha": "b94d8d920ad2382281dd7f83b6535f81223586fa",
+  "base_sha": "e432d8cf112f448771ab2bdc1d08b2b6f0fe11e1",
+  "head_sha": "843c109f0bdec60997d3af01f9cbedbc1a6efeb7",
   "mr_title": "Base: Clean up ParameterManager::LoadDocument",
   "mr_description": "",
   "origin": {

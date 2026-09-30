@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-093/base",
   "head_branch": "bench/curated/case-093/head",
-  "base_sha": "629334b562dce51bf949f8a8a99cacd1fc7276a0",
-  "head_sha": "2576e5d1ed75c8c3dd5f5a0f41be204041e6ecf1",
+  "base_sha": "ade304b67911c933f8cfa0c7f9b87bd206639193",
+  "head_sha": "236d4ad71f885b21ad9d91f4ddfe0421e687b3ec",
   "mr_title": "fix(router): Ensure newly resolved data is inherited by child routes",
   "mr_description": "The current way of computing a route's params and data recomputes\ninherited data from the inheritance root every time. When the\ninheritance strategy is \"emptyOnly\", this isn't necessarily the root of\nthe tree, but some point along the way (it stops once it reaches an\nancestor route with a component).\n\nInstead, this commit updates parameter inheritance to only inherit data\ndirectly from the parent route (again, instead of recomputing all\ninherited data back to the inheritance root). The only requirement for\nmaking this work is that the parent route data has already calculated\nand updated its own inherited data. This was really already a\nrequirement -- parents need to be processed before children.\n\nIn addition, the update to the inheritance algorithm in this commit\nrequires more of an understanding that a resolver running higher up in\nthe tree has to propagate inherited data downwards. The previous\nalgorithm hid this knowledge because resolvers would recompute inherited\ndata from the root when run. However, routes that did not have resolvers\nrerun or never had resolvers at all would not get the updated resolved data.",
   "origin": {

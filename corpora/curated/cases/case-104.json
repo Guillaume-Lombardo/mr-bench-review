@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-104/base",
   "head_branch": "bench/curated/case-104/head",
-  "base_sha": "457372e0d46f38335b83f6bac0892ea34b582b66",
-  "head_sha": "84197f48a16d60d7747a32b6a9b15d789565c005",
+  "base_sha": "2faf3bdb88240eb59e3cfce1754e04dcf5231702",
+  "head_sha": "44026aa6275f393bc6986354ae3f1acd8e620fb8",
   "mr_title": "Migration of vertx core extension",
   "mr_description": "",
   "origin": {

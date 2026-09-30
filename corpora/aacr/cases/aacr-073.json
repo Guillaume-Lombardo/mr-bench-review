@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-073/base",
   "head_branch": "bench/aacr/aacr-073/head",
-  "base_sha": "3243c3904c24f38b32a916e08e0eb81356919557",
-  "head_sha": "52dfcce8f0e3dfa575d15970999ece0ecfb414dc",
+  "base_sha": "d0631258812299b5ee56bc45d8c1100b14ad997a",
+  "head_sha": "c013b8fda073a9a0a07e5b58822c363c4d31da83",
   "mr_title": "fix: whole knowledge graph lost after removing any document in the knowledge base",
   "mr_description": "",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/martian-offline/martian-offline-040/base",
   "head_branch": "bench/martian-offline/martian-offline-040/head",
-  "base_sha": "90366b0d08fde44a50d0a2ac5dfe4d275f5de5a5",
-  "head_sha": "552b1f71ac022cd759d7c7b8fe332e265f54ad4d",
+  "base_sha": "791da9e2d60c9dd70f03dbc061e7214d0501feee",
+  "head_sha": "4f98293c37cde2284209ebd0a45585b437f557e7",
   "mr_title": "Fix concurrent group access to prevent NullPointerException",
   "mr_description": "",
   "origin": {

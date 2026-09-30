@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-090/base",
   "head_branch": "bench/curated/case-090/head",
-  "base_sha": "1e4cf2ac549bd6aed87e1cc95a2812721dead20d",
-  "head_sha": "ee1681fb0b9f463e4d99d2da2f1431c516177a0c",
+  "base_sha": "fd5f106461df47b8b547d7be3c22c742baedb992",
+  "head_sha": "0ced32182860102494adc50dae4d32f5776dab86",
   "mr_title": "fix(cdk/drag-drop): resolve helper directives with DI for proper hostDirectives support",
   "mr_description": "Currently `CdkDrag` resolve its helper directives (e.g. handle or preview) using a content query, but that doesn't work when it's applied as a host directive, because no content is being projected.\n\nThese changes switch to having the helper directives inject the closest drag directive and register themselves manually.",
   "origin": {

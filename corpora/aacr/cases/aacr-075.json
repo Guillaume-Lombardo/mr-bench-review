@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-075/base",
   "head_branch": "bench/aacr/aacr-075/head",
-  "base_sha": "0a1b69497060d47b69e491c4c275550fb5635500",
-  "head_sha": "9a3f4e4cbc20ce57d3fa4599a14bdd136fd67b5f",
+  "base_sha": "401575da3c70e71a0b0936f71fba6c12985e9605",
+  "head_sha": "267d4b8148dbf222d72d9425b1661d2dbe807e75",
   "mr_title": "Improve ppt_parser",
   "mr_description": "- Improve ppt_parser\n- Update ppt_parser.py\n- Merge branch 'main' into main\n- For Recognizer when create_input base on np.array operator to improve performance\n- Merge branch 'infiniflow:main' into main\n- support picture bullet cases\n- Update http_api_reference.md\n- Merge branch 'infiniflow:main' into main\n- Update file2document_app.py\n- Update file2document_app.py\n- Merge branch 'infiniflow:main' into main\n- Update file_app.py\n- Merge branch 'infiniflow:main' into main\n- Update file_app.py\n- Merge branch 'infiniflow:main' into main\n- improve  user_canvas_version performance\n- Merge branch 'infiniflow:main' into main\n- improve io logics\n- Merge branch 'main' of https://github.com/Woody-Hu/ragflow\n- Merge branch 'infiniflow:main' into main\n- Merge branch 'main' into main\n- Merge branch 'main' into main\n- Merge branch 'infiniflow:main' into main\n- Merge branch 'main' into main\n- Merge branch 'main' into main\n- Merge branch 'main' into main\n- Merge branch 'infiniflow:main' into main\n- Merge branch 'main' into main\n- Merge branch 'main' into main\n- Merge branch 'infiniflow:main' into main\n- Merge branch 'infiniflow:main' into main",
   "origin": {

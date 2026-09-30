@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-024/base",
   "head_branch": "bench/curated/case-024/head",
-  "base_sha": "66b338fbcfc5d5e968707ff60d7404ece02645ba",
-  "head_sha": "42abc166b4507d1c9450f79690c497b965bb8856",
+  "base_sha": "c8424553852715d264a7f499b1f17e217eca5bcf",
+  "head_sha": "f5f657b5d70e26ffdcffb4eef63c168cd524c2b5",
   "mr_title": "Added async interface to Paginator.",
   "mr_description": "",
   "origin": {

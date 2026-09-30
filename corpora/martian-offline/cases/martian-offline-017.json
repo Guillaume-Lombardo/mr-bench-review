@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/martian-offline/martian-offline-017/base",
   "head_branch": "bench/martian-offline/martian-offline-017/head",
-  "base_sha": "181f382e3b72185f1c92f889a7be5ad2185e6605",
-  "head_sha": "66d668aa3fa47bc9421561df8de3d0e198795992",
+  "base_sha": "4de23a1bdb81dec4ef205ddb76dcf9ecede9a04e",
+  "head_sha": "57b1e6f26d6a9ffcbe3e2e50e46ed03d3c1b4b5b",
   "mr_title": "scale-color $lightness must use $secondary for dark themes",
   "mr_description": "",
   "origin": {

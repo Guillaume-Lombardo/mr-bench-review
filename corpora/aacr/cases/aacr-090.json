@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-090/base",
   "head_branch": "bench/aacr/aacr-090/head",
-  "base_sha": "a2978908e25c77bd2afe70b45a48bbfd2edac029",
-  "head_sha": "f885d20e824ccd25f160b02e24c97e382d3305cf",
+  "base_sha": "6a7e4d7f3bd25b4efb32bd78ea1fceb9024be3d0",
+  "head_sha": "ad0c6d09c3e11cec9167ee02f8ff22066d1d6e48",
   "mr_title": "config: allow setting -proxy per network",
   "mr_description": "- config: allow setting -proxy per network\n- doc: update tor.md to mention the new -proxy=addr:port=tor",
   "origin": {

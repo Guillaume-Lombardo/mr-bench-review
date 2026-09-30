@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-095/base",
   "head_branch": "bench/curated/case-095/head",
-  "base_sha": "bd1e551cfb0f5588dc936b7cc3985cc3ff3143a3",
-  "head_sha": "446d79adad6c87346cc175e6672efa2c18581531",
+  "base_sha": "4fc11863dc9436963a09b688f5e03ca7dc483d8c",
+  "head_sha": "492653db9a4872e106611db1764825e3ea5491b9",
   "mr_title": "fix(assets): make srcset parsing HTML spec compliant",
   "mr_description": "",
   "origin": {

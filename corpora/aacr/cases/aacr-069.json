@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-069/base",
   "head_branch": "bench/aacr/aacr-069/head",
-  "base_sha": "eb37bf21a19997d109a5104daab65292cacb8517",
-  "head_sha": "13d2aa90c226c75b077b81c0edec7dec9d6d98aa",
+  "base_sha": "a1b616bb76eb91b07f1e1c05cd92edf282585924",
+  "head_sha": "829a4be973fa0a0e475212c38c1b4ce674085df3",
   "mr_title": "avoid loading and initializing CLI config twice in non-interactive mode",
   "mr_description": "",
   "origin": {

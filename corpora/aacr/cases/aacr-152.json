@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-152/base",
   "head_branch": "bench/aacr/aacr-152/head",
-  "base_sha": "b34da3f5faf9d1f800fc49511beb5e6d606b0f83",
-  "head_sha": "85519a14eed531c3c7a65290b7eb43cf6dd834f1",
+  "base_sha": "c19ed62342d1c9c4b0e96535a162835f60089358",
+  "head_sha": "8863df9df56863c669b7f8b55b951d4b6577c09f",
   "mr_title": "restrict agent entitlement checks to only the unnamed module in the system classloader",
   "mr_description": "- restrict agent entitlement checks to only the unnamed module in the system classloader\n- Update docs/changelog/120546.yaml\n- Merge branch 'main' into scriptmodule",
   "origin": {

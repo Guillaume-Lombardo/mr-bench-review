@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-001/base",
   "head_branch": "bench/aacr/aacr-001/head",
-  "base_sha": "60b5e293894a40b519b898af41c7f42a223b2979",
-  "head_sha": "63b9ef85bd434cc5d9ba05b0154a9fe90a9bf503",
+  "base_sha": "40e83a3e867711e0a924cf0444e1594bb8749395",
+  "head_sha": "973320140475161c5028065193044f08ef9eedf8",
   "mr_title": "Remove magic number and hard type enums in ArrowPropEnum.h",
   "mr_description": "- Remove magic number and hard type enums in ArrowPropEnum.h\n- Remove magic number and hard type enums in BalloonPropEnum.h\n- Remove magic number and hard type enums in DrawViewDimension.h\n- Remove magic number and hard type enums in DimensionValidator.h\n- Remove magic number and hard type enums in DrawViewPart.h",
   "origin": {

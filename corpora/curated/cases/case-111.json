@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-111/base",
   "head_branch": "bench/curated/case-111/head",
-  "base_sha": "3d218d84e435bba97996b9cae05ddd4c9ca141c0",
-  "head_sha": "357fae14ebf23d10e827afed0d3cb77df5a2bd19",
+  "base_sha": "085399bcc91a158163380d9673aadeed0e66bc1f",
+  "head_sha": "043649e7b211567f84bc89fea677ab8df37136a9",
   "mr_title": "Support TimeUnit in the @Scheduled annotation",
   "mr_description": "This commit introduces a new `timeUnit` attribute in the @Scheduled\nannotation to allow the user to specify a time unit other than\nmilliseconds.",
   "origin": {

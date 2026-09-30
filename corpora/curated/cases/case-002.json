@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-002/base",
   "head_branch": "bench/curated/case-002/head",
-  "base_sha": "e79696dab1e0651f755ff90ad4f29fda1defc6d2",
-  "head_sha": "2a037832075bb6df99f241d5840e6f4cca573a7b",
+  "base_sha": "ec841a1a6879d39151806e20224a8b7da5085ab1",
+  "head_sha": "8fbde78d552cc22305bca89eefb5f6985dcb0fd7",
   "mr_title": "fix(cdk/listbox): make tabindex zoneless compatible",
   "mr_description": "",
   "origin": {

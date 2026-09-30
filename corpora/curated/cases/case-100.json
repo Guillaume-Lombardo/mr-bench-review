@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-100/base",
   "head_branch": "bench/curated/case-100/head",
-  "base_sha": "249d4dcf70d8e06ae5ebb2c9aaf8002862a18ce8",
-  "head_sha": "88487f176760f606ecc78be96d7cd9386263fbc7",
+  "base_sha": "11b323c5116605dd7dab745e3ee27015ef58568a",
+  "head_sha": "7741c1e77bf36890866e5d1db70b7a6d7fc5ebbb",
   "mr_title": "Optimize ObjectNode findValue(s) and findParent(s) fast paths",
   "mr_description": "",
   "origin": {

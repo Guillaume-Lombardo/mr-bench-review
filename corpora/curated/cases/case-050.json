@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-050/base",
   "head_branch": "bench/curated/case-050/head",
-  "base_sha": "310e11a12a5efa249d7e30f12ff92d7cf779050c",
-  "head_sha": "46a3e87438bdc07927896de78f9335b27100806c",
+  "base_sha": "7ca87b540ff3da2daf6060c808fab78f06f1f4f4",
+  "head_sha": "e26096fce1e954db64a92f7fd1d6bf5c5d2adf00",
   "mr_title": "Refreshed model field values assigned expressions on save().",
   "mr_description": "Removed the can_return_columns_from_insert skip gates on existing\nfield_defaults tests to confirm the expected number of queries are\nperformed and that returning field overrides are respected.",
   "origin": {

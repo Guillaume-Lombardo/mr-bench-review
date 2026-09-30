@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-023/base",
   "head_branch": "bench/aacr/aacr-023/head",
-  "base_sha": "953b017a38d0b22ccf3d45c966818c09d8136109",
-  "head_sha": "b0f69f451274db7094eb55ea29027e38e848400e",
+  "base_sha": "604d4845491de0af6ead434a9d0c537e2dc6a527",
+  "head_sha": "3eb760d2dfe71e9e7594d4d6aeed30c05d2d5cf5",
   "mr_title": "Removed async nats connection creation",
   "mr_description": "- Removed async nats connection creation\n- Merge remote-tracking branch 'origin/development' into FIX/nats-connection\n- Removed retry logic for nats connection manager, added nil client checks\n- Added retry for NATS client, nil checks for NATS operations\n- Extracted out client nil check to a new fucntion\n- Added tests for newly added retry and nil checks\n- Updated publish client check step\n- Merge branch 'gofr-dev:development' into FIX/nats-connection\n- Updated NATS retry tests and fixed linter issues",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-035/base",
   "head_branch": "bench/aacr/aacr-035/head",
-  "base_sha": "1c9a144fdfd5d9c22d3aee7bebfc1d743a6e4a78",
-  "head_sha": "8dacb300ccb22771dde4f4e5379657dd6f934016",
+  "base_sha": "c46a53a6b470349474aa62abc4f203bfbb340f15",
+  "head_sha": "2aa90f5f520204502b950cea9b838d766464021f",
   "mr_title": "Automatically clean shape data passed to ExtrudeGeometry",
   "mr_description": "Before triangulating a shape, ExtrudeGeometry now welds any index-adjacent points within a small hardcoded distance threshold of each other. This resolves common triangulation artifacts caused by improperly formatted shape data.",
   "origin": {

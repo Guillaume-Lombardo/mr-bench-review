@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/martian-offline/martian-offline-028/base",
   "head_branch": "bench/martian-offline/martian-offline-028/head",
-  "base_sha": "322e84ac4843fa0ade069b012db2ade824f554d7",
-  "head_sha": "f1856fbd920ca21754c1499f81c256e97fdc221e",
+  "base_sha": "ad82ff94adaf9c6a8afb697f14ba57f35d592771",
+  "head_sha": "7893f01eefa9486dd4c046f64090d39363806b99",
   "mr_title": "Frontend Asset Optimization",
   "mr_description": "",
   "origin": {

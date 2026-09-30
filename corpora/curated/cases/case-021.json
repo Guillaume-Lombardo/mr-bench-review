@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-021/base",
   "head_branch": "bench/curated/case-021/head",
-  "base_sha": "a1243eec4c7ad207f8c507e877884aeb20b85ade",
-  "head_sha": "205ae79ba0777c56e7730963b60389f048723ec6",
+  "base_sha": "42a51397bce61703fe48314753796912a6102b94",
+  "head_sha": "e332783a5f4bf59b6ced5d5ff83adbf30c1f772b",
   "mr_title": "fix(@angular-devkit/build-angular): correctly handle data URIs with escaped quotes in stylesheets",
   "mr_description": "Previously, the RegExp didn't correctly handle cases where data URIs had escaped quotes like the below\n\n```css\nurl(\"data:image/svg+xml;charset=utf-8,<svg width=/\"16/\" height=/\"15/\"></svg>\")\n```",
   "origin": {

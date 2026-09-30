@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-065/base",
   "head_branch": "bench/aacr/aacr-065/head",
-  "base_sha": "ebf0a97665231c84d9ca917a607abe34d7acb26d",
-  "head_sha": "6331d85e97b3f72c504c9741d23c35f182177dfc",
+  "base_sha": "809b55bd7799a3e32f6a6276b502b48d28a49c5a",
+  "head_sha": "0fe9a08209032afbe95378c8d5a1f414a05182ac",
   "mr_title": "chore: 更新版本号至0.1.1，调整系统提示字段，优化输入文本操作，增强导航功能",
   "mr_description": "- chore: 更新版本号至0.1.1，调整系统提示字段，优化输入文本操作，增强导航功能\n- Merge remote-tracking branch 'upstream/main' into hotfix/browserusecase01\n- style: 格式化代码，调整注释和换行以提高可读性",
   "origin": {

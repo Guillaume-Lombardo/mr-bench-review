@@ -113,8 +113,12 @@ For each case: `bench/<corpus>/<case_id>/base` and `bench/<corpus>/<case_id>/hea
 - Commits use a neutral author (`mr-bench-review <bench@mr-bench-review.invalid>`), a fixed
   date (2026-01-01T00:00:00Z) and the messages `base snapshot` and `change`, so rebuilding a case
   reproduces the same SHAs.
-- Trees are complete upstream snapshots: callers, definitions, tests, build files and the
-  upstream licence file are all present.
+- Trees are upstream snapshots with every text file: callers, definitions, tests, build files
+  and the upstream licence file are all present. Only media and other binary files that the
+  change does not touch are left out (images, audio, video, fonts, 3D models, PDFs, archives,
+  compiled code and model weights; the list is `MEDIA_SUFFIXES` in `tools/gitsnap.py`). A
+  reviewer cannot read them, and they made up more than half of the repository. Binary files the
+  change adds, modifies or deletes are kept, so the diff is exactly the upstream diff.
 
 A runner fetches one case with, for example:
 
@@ -226,8 +230,8 @@ uv run pytest && uv run ruff check .
 
 The validator fails, with one message per case, when a file does not match the contract, an id
 is duplicated or more than one corpus is default; when a branch is missing or does not resolve to
-the pinned SHA, `head` is not a single commit on an orphan `base`, the diff is empty or a
-snapshot has no licence file; when a located issue's file is missing at `head_sha`, its lines
+the pinned SHA, `head` is not a single commit on an orphan `base`, the diff is empty, a
+snapshot has no licence file or still holds a media file the change does not touch; when a located issue's file is missing at `head_sha`, its lines
 are out of range, or it is not on a changed line while `outside_diff` is false; when a curated
 issue is unlocated or a curated case has no tier; when the curated MR text, file names or added
 lines match `tools/leak_denylist.txt`; and when `size` does not match the changed lines. It also

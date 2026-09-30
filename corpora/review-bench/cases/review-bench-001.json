@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/review-bench/review-bench-001/base",
   "head_branch": "bench/review-bench/review-bench-001/head",
-  "base_sha": "9cc19057c6cd1c362449154ec97166dd3234e276",
-  "head_sha": "c7cfa3f95cb31fd953f465466a60903735beab6c",
+  "base_sha": "314617a59629a038c501a6b76ed0bce96e377fb6",
+  "head_sha": "1c0bb6c729bdb55ff20c722d9d6093a5a5062ce7",
   "mr_title": "feat(HttpStatusCode): add RFC 9110 aliases for 413 and 422",
   "mr_description": "",
   "origin": {

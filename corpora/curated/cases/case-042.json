@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-042/base",
   "head_branch": "bench/curated/case-042/head",
-  "base_sha": "7bf889b68a17361c82b7f97fb4efb336376993b6",
-  "head_sha": "6f6e65f32891e7ca502857e54ffd27e70dee53d6",
+  "base_sha": "3e0e6e74e84d30bb31bb4377dc3ac49ac77de9bd",
+  "head_sha": "71f55b531a2ebcea35753d51d116f8b35eefa8c8",
   "mr_title": "Fix JSON logging excluded keys config ignoring nested fields",
   "mr_description": "",
   "origin": {

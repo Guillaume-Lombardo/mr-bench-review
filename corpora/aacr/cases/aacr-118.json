@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-118/base",
   "head_branch": "bench/aacr/aacr-118/head",
-  "base_sha": "03293d8951e541b457d01820d61056e5056cb824",
-  "head_sha": "2436b8dcc6c10056ece0a50029bca96d2525d6c5",
+  "base_sha": "1f8e1fe620ba162f80f9ac58ff465d3559a33c34",
+  "head_sha": "901cbe25386f736922fe422e08ffc6f2e3822042",
   "mr_title": "dbeaver/pro Fix databricks default catalog name",
   "mr_description": "",
   "origin": {

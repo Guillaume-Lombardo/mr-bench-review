@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-091/base",
   "head_branch": "bench/curated/case-091/head",
-  "base_sha": "5ae71b29466310c788779b2584b52dfa581118ec",
-  "head_sha": "8dddc3826efbad85bba7fdea4c32917749146b15",
+  "base_sha": "aefe773cbe929fd2ea171d42fd53a2283fa48717",
+  "head_sha": "a184b6bb42f92445db44f5ddeaab36984ba3eeb1",
   "mr_title": "Made get_prep_lookup() pass output_field when wrapping direct values in Value.",
   "mr_description": "Previously, only strings were supplied with an output_field when wrapping\ndirect value iterable elements in Value expressions for ExpressionList. This\ncaused problems for __in lookups on JSONField when using expressions\nalongside direct values, as JSONField values can have different types which\nneed to be adapted by the field's get_db_prep_value().\n\nThanks Jacob Walls for the review.",
   "origin": {

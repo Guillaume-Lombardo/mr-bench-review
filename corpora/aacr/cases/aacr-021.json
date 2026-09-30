@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-021/base",
   "head_branch": "bench/aacr/aacr-021/head",
-  "base_sha": "404c7113f1a220429851555fd04b24a397e1a0cd",
-  "head_sha": "ca28af7cf65c3f1d8db104010e2be9f0b11ee80f",
+  "base_sha": "f51f45c8a577a5dd46155745be93f03a8c11779f",
+  "head_sha": "5a03c2ae51762e0356edb7d4058eb9c4020b2fad",
   "mr_title": "GPU Vulkan: Fix recursive Submit calls causing defrag to fail",
   "mr_description": "- GPU Vulkan: Fix recursive Submit calls causing defrag to fail\n- Remove re-entrancy from defrag process",
   "origin": {

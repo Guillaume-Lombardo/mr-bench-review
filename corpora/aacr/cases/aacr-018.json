@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-018/base",
   "head_branch": "bench/aacr/aacr-018/head",
-  "base_sha": "45e6f9aa209d54f5e699ce752014e283281e3c9e",
-  "head_sha": "30c944e1eaa0351befeb7e73b771a8afdb4c20f2",
+  "base_sha": "9c699230680dc5090c449edaa1761aba10a0ccf3",
+  "head_sha": "38f71da96910e0df67238f1c2a792ff4f7620d86",
   "mr_title": "Filter out nested modules from tab completion results for `Get-Module`",
   "mr_description": "- Filter out nested modules from tab completion results for `Get-Module`\n- Remove unneeded using directive",
   "origin": {

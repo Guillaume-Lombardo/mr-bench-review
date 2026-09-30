@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-073/base",
   "head_branch": "bench/curated/case-073/head",
-  "base_sha": "c1ddbaf096618f50ce7bae44e36431ddde336ad3",
-  "head_sha": "21f83c9140f8031fb09eb0cf796f0ab567be6f31",
+  "base_sha": "7eb66a256c3b3a31c6909f1fb4216dfbb1b39d99",
+  "head_sha": "a87d6e6d69182455a6e364d616842bccf081e5f6",
   "mr_title": "fix(cdk/overlay): not setting correct opacity in high contrast mode on Firefox",
   "mr_description": "The backdrop styles were never switches to the `cdk-high-contrast` mixin which means that\nthey won't work on Firefox. These changes switch to using the mixin and update the docs.",
   "origin": {

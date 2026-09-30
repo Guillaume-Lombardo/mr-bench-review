@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/review-bench/review-bench-010/base",
   "head_branch": "bench/review-bench/review-bench-010/head",
-  "base_sha": "778b6269aa32a5e5dce95565a43388813fab04ca",
-  "head_sha": "a3d8cf2db73b5bbff895cf48f5f0702e5fb80371",
+  "base_sha": "07d067d2dfadc10a9071e86442ff86404114ee33",
+  "head_sha": "1007c6b786af7431e46830a82c80c706deb3d3cf",
   "mr_title": "feat: support dynamic fish completion",
   "mr_description": "",
   "origin": {

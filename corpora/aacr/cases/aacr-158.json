@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-158/base",
   "head_branch": "bench/aacr/aacr-158/head",
-  "base_sha": "2383f86940a978d0ad8a7b104535971fc7a21662",
-  "head_sha": "e87b921128370d2d9ea222373453216a9f1a602b",
+  "base_sha": "3a2160b92886eef9546ac696b858252edc8f620a",
+  "head_sha": "c888de7b4dbdf957be7dba1e3d876554f97300d8",
   "mr_title": "Set `keyUsage` for generated HTTP certificates and self-signed CA",
   "mr_description": "- Set `keyUsage` for generated HTTP certificates and self-signed CA\n- Update docs/changelog/126376.yaml\n- Merge branch 'main' into sa-include-key-usage-in-http-certs\n- make default HTTP `keyUsage` overridable\n- [CI] Auto commit changes from spotless\n- respect custom keyUsage\n- fix terminal messages and ignore leading and trailing whitespaces\n- nit: error message\n- add extra line after error message\n- more test coverage\n- nit: error message\n- add `ca-keyusage` option\n- cleanup, test and update docs\n- update ca-keyusage description\n- Merge branch 'main' into sa-include-key-usage-in-http-certs\n- remove randomization to avoid raising ValidatorException:\n- Merge branch 'sa-include-key-usage-in-http-certs' of github.com:slobodanadamovic/elasticsearch into sa-include-key-usage-in-http-certs",
   "origin": {

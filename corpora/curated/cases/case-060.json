@@ -8,8 +8,8 @@
   "tier": "pilot",
   "base_branch": "bench/curated/case-060/base",
   "head_branch": "bench/curated/case-060/head",
-  "base_sha": "bbc7bd2141e2707063d5d7a4e67be4d67069d43b",
-  "head_sha": "a3d69638f60913fc9e48654adeb8bf2e1e8d7e9f",
+  "base_sha": "57268e7824821ccb98af2dd5c940141458f3cab7",
+  "head_sha": "39bb1927a26c9108e042bd1caf92f0387eebfd05",
   "mr_title": "Allowed BaseUserCreationForm to define non required password fields.",
   "mr_description": "Thanks buffgecko12 for the report and Sarah Boyce for the review.",
   "origin": {

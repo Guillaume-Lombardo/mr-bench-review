@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-057/base",
   "head_branch": "bench/aacr/aacr-057/head",
-  "base_sha": "0aaf4e0c54b501db6f38cbd84cba1061c707f56b",
-  "head_sha": "74e2953ea6c2d41e50bc8f3001264bd0113e8b1f",
+  "base_sha": "a6b0ce68293fa23a6e1a962867e00b6d1b718c4d",
+  "head_sha": "6e152090a03a03c8472a5198f98a2e7f84fef976",
   "mr_title": "fix: rework lifetime mgmt of ClearDataTask/ClearDataOperation",
   "mr_description": "",
   "origin": {

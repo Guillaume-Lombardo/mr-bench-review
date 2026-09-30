@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-070/base",
   "head_branch": "bench/aacr/aacr-070/head",
-  "base_sha": "a320fca1a4655319e104801ba34008198c8a5127",
-  "head_sha": "ed098cfff3df30b12da288571c7c5f878595e872",
+  "base_sha": "c170258a44a48a41a653031a1753e1e5f62f74a5",
+  "head_sha": "327125465d31b3de5d338ec349ae5ec546a19e58",
   "mr_title": "Add integration test for extensions",
   "mr_description": "",
   "origin": {

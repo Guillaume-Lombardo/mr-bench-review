@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-186/base",
   "head_branch": "bench/aacr/aacr-186/head",
-  "base_sha": "a76533b69cd85f7d584234b8e6080fd7b28a701f",
-  "head_sha": "01fe5104d61c91382f60f00f2ff7ad6d2ec42f03",
+  "base_sha": "51a5a9b6c380c8daec03caa18ffecabe778e4ab7",
+  "head_sha": "8335cfe568c9fc8eaa11b91aed101611ff3451ab",
   "mr_title": "Add a limit for the number of received_log entries in a chain info response",
   "mr_description": "- Add a limit for the number of received_log entries in a chain info response\n- Fix a rename gone wrong",
   "origin": {

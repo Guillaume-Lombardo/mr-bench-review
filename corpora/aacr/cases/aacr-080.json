@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-080/base",
   "head_branch": "bench/aacr/aacr-080/head",
-  "base_sha": "25097a8fe42d9a825d1f7cf1ed25eb78da5090db",
-  "head_sha": "2a896d850b062c9d25eb7920aa2acfc29208e97f",
+  "base_sha": "12595a493fa88535ab8d3eb0dfea23ef807e51f8",
+  "head_sha": "2fcbb17f93be961709bb431fefd21e950a4829dc",
   "mr_title": "update redis to server",
   "mr_description": "",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-132/base",
   "head_branch": "bench/aacr/aacr-132/head",
-  "base_sha": "c0c941388d3308310d05347bdeddc2727d02a065",
-  "head_sha": "63590c61aecace4ede62ec2335baf238e23bf9e3",
+  "base_sha": "be9e016a45787bd4fbf351d91fb0ae2a6fc03975",
+  "head_sha": "e7ed8004982cf4d8cbb1db3c851ea50953a6f252",
   "mr_title": "chore: resolve v2 warnings in api_models",
   "mr_description": "- chore: resolve v2 warnings in api_models\n- chore: fix formatting",
   "origin": {

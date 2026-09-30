@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-149/base",
   "head_branch": "bench/aacr/aacr-149/head",
-  "base_sha": "26956bef422d595ac4799de06efbd74053274bb3",
-  "head_sha": "9452da1c5200eb6b7e6147f450334c39b7abba3b",
+  "base_sha": "cf3a3baaafc66ca308182b21e669057466007175",
+  "head_sha": "b0fdc5b1ad3db4cdfa18f8558dcc9352a3136eb1",
   "mr_title": "Skip iterating DISI when reading metric values",
   "mr_description": "",
   "origin": {

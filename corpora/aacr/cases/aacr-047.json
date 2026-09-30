@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-047/base",
   "head_branch": "bench/aacr/aacr-047/head",
-  "base_sha": "29842f9e934925104b030ab6374a68750005a663",
-  "head_sha": "26baeeabdfc7977a841efa5a5940b5315c529834",
+  "base_sha": "43d968b1124de0fa84ccf3373308fdf1d4b1d1d7",
+  "head_sha": "4652d1cca9f102432354285b0f68450eb0bb1336",
   "mr_title": "Add telemetry tracking for terminal hang detection and user interventions",
   "mr_description": "- Add terminal hang detection with configurable timeouts for buffer stuck, stream timeout, and completion waiting stages\n- Track user interventions when clicking \"Process while Running\" button\n- Add telemetry for terminal output failures with specific failure reasons\n- Implement comprehensive monitoring of terminal process lifecycle events\n- Add metrics for shell integration usage and terminal operation performance",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/martian-offline/martian-offline-022/base",
   "head_branch": "bench/martian-offline/martian-offline-022/head",
-  "base_sha": "781fde8d3a78f05d030fdb3d3e1360bd204593cd",
-  "head_sha": "b3efe3038f8950888318cb7ec94bc4ddd5fbce1c",
+  "base_sha": "102fe7f7f3ebb0b84a50ce41c5e859c9345c85e1",
+  "head_sha": "65c10c10fa6b1c0447940cc528037542b6a3a09f",
   "mr_title": "AuthZService: improve authz caching",
   "mr_description": "- remove the use of client side cache for in-proc authz client\n- add a permission denial cache, fetch perms if not in either of the caches\n- Clean up tests\n- Cache tests\n- Add test to list + cache\n- Add outdated cache test\n- Re-organize metrics\n- Merge remote-tracking branch 'origin/main' into gabriel-ieva/improve-authz-caching",
   "origin": {

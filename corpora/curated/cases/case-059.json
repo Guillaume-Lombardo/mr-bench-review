@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-059/base",
   "head_branch": "bench/curated/case-059/head",
-  "base_sha": "d99d638bdb02b832e5580acd49a2f7b0cd474c2a",
-  "head_sha": "08c15ac3e07073b8d1c24f32f7e9d32e73075bef",
+  "base_sha": "91722fd9572c7396081f5385a60a33a52adf6263",
+  "head_sha": "d5c6a13b293bc9e2a9c3de0ed991d73f22969aeb",
   "mr_title": "Introduce callback for singleton availability",
   "mr_description": "",
   "origin": {

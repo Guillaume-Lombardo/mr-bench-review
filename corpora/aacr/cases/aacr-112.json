@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-112/base",
   "head_branch": "bench/aacr/aacr-112/head",
-  "base_sha": "44cc933cdbf7766d0a1b38747e78da52079ec2fd",
-  "head_sha": "a0f7e03abe58687ad3330b93c69ad7fd0f2a9455",
+  "base_sha": "8eb5e8be049063bb878cf126e6a8e763a30c14f8",
+  "head_sha": "ff4552832a6f1f60082458b241616756d5cd139c",
   "mr_title": "chore: support printing once for logging",
   "mr_description": "- chore: support printing once for logging\n- chore: update type hashable\n- chore: update usage",
   "origin": {

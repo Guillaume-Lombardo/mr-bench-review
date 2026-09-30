@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-007/base",
   "head_branch": "bench/aacr/aacr-007/head",
-  "base_sha": "995581d2391f29cd9e0ba1260de09319b272c2c6",
-  "head_sha": "af58df463185528ff3f27a43e8c2edaa0efd6d6a",
+  "base_sha": "589190cdb5287cdd80d55b2398ace0bb5c6aad3c",
+  "head_sha": "cc6bdb3c776bc024e91511f140769f96e43caed3",
   "mr_title": "App: Don't use std::forward inside loop",
   "mr_description": "- App: Don't use std::forward inside loop\n- TD: Ensure WalkerEdge is fully initialized\n- App: Check for an invalid enum before proceeding\n- Gui: Don't allow manipulator to delete the menubar",
   "origin": {

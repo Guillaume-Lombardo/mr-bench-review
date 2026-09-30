@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/martian-offline/martian-offline-034/base",
   "head_branch": "bench/martian-offline/martian-offline-034/head",
-  "base_sha": "fc81abf18af9df42e51739d2c5d1274998f21046",
-  "head_sha": "261b0603a3b532b14d6e0c3a2766b3f40ed2791b",
+  "base_sha": "1bcf94ef94bd0d7979d8bbc402d3744d11d04f09",
+  "head_sha": "96ab98e45a466ca2bb5b53379b1ac4fa29799da9",
   "mr_title": "Add rolling-updates feature flag and compatibility framework",
   "mr_description": "- Feature flag: rolling-updates\n- do not use custom image, it fails\n- Enable feature in custom image\n- feedback\n- fix test failure",
   "origin": {

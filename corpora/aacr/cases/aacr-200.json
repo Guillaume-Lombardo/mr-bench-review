@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-200/base",
   "head_branch": "bench/aacr/aacr-200/head",
-  "base_sha": "cacc223300becd21e73c5bce8571c828abcc8e00",
-  "head_sha": "c01ceb95f3957abfc4cd8cd44750cc6aa92fce6f",
+  "base_sha": "e0ce9a26f1bbc0e524033a249a4b95e300b2b5bb",
+  "head_sha": "70dee96e2fdf408c10cd641eb92801dcebc9cfb9",
   "mr_title": "[TPU] update torch_xla pin",
   "mr_description": "",
   "origin": {

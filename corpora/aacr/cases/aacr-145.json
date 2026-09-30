@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-145/base",
   "head_branch": "bench/aacr/aacr-145/head",
-  "base_sha": "ae7577f3529cb9b79d8549059c51fd144c55a3f9",
-  "head_sha": "52a89ef776922cc4def30152a8072a19ef52622c",
+  "base_sha": "f8f821c5e0dc342395d3c978dda920dc17d8b2e8",
+  "head_sha": "10d239b6f11cae59a6bc6f84f7999b313879b240",
   "mr_title": "Only allow one thread to spawn in pipeline",
   "mr_description": "- Only allow one thread to spawn in pipeline\n- Avoid spawn too many idle threads\n- Use a better way to do try_lock\n- Fix style-check failure\n- Fix CI fail for the assumption of thread count\n- Continue fix thread count assumption\n- Avoid the lock in shouldSpawn()\n- Fix py style check\n- Make test_concurrent_threads_soft_limit_defined_50  more robust\n- Merge branch 'master' into limit-idle-threads",
   "origin": {

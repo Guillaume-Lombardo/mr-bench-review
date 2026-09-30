@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-069/base",
   "head_branch": "bench/curated/case-069/head",
-  "base_sha": "9aefa956f3adf3c6fb5a7ba2e5b686bed9baaec0",
-  "head_sha": "8002dbecd1be5deb29a3203a9e804c6da1dcbb80",
+  "base_sha": "f06c7791f6675596f9e5d1f8ea161931dd84ddf9",
+  "head_sha": "564ebb3ef4c13e4e71a6ac9e1425f888a777c26b",
   "mr_title": "Allow to configure the maximum number of message to write per eventloop",
   "mr_description": "Motivation:\n\nAllow to configure the maximum number of messages to write per eventloop run. This can be useful to ensure we read data in a timely manner and not let writes dominate the CPU time. This is especially useful in protocols like QUIC where you need to read \"fast enough\" as otherwise you may not read the ACKs fast enough.\n\nModifications:\n\n- Add new ChannelOption / config that allows to limit the number of messages to write per eventloop run.\n- Respect this setting for DatagramChannels\n\nResult:\n\nReduce the risk of having WRITES block the processing of other events in a timely manner",
   "origin": {

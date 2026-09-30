@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-064/base",
   "head_branch": "bench/aacr/aacr-064/head",
-  "base_sha": "63febfa09359514eefdfcaa0625f5e6ec463ba06",
-  "head_sha": "3a6c876fccb765b5589f6f86c13d1c24aaf5a77e",
+  "base_sha": "b5d4fb4f5802b5755f273229ce5b422765d7187f",
+  "head_sha": "53392b582b9eb83032cdea980015030049b743e8",
   "mr_title": "refactor(spring-ai-alibaba-starter-tool-calling-alitranslate): refactor alitranslate tool-calls module",
   "mr_description": "- refactor(spring-ai-alibaba-starter-tool-calling-alitranslate): refactor alitranslate tool-calls module\n- Merge branch 'main' into feature/optimization-tool-calls-for-allen\n- fix: SQLiteChatMemory.java:[32,17] no suitable constructor found for JdbcChatMemory(java.lang.String,java.lang.String,java.lang.String,java.lang.String)\n- Merge remote-tracking branch 'origin/main' into feature/optimization-tool-calls-for-allen",
   "origin": {

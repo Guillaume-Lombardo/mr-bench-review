@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-124/base",
   "head_branch": "bench/aacr/aacr-124/head",
-  "base_sha": "a20f6adf2eead41931e7ce2fc19da4ad6325bbb9",
-  "head_sha": "b6b5bb7e5edd4677706021b4897a290e87a842a9",
+  "base_sha": "c12a80bf361a05364c1034b76bdfefe166df4e2f",
+  "head_sha": "5bba82fc852fe2cd39bdd32f14e8dc7dfee222ac",
   "mr_title": "Fix password validation in PasswordHasher`1: add check for upper bound for salt size before allocation an array",
   "mr_description": "",
   "origin": {

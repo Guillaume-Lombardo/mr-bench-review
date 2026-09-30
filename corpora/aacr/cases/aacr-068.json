@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-068/base",
   "head_branch": "bench/aacr/aacr-068/head",
-  "base_sha": "1ba48ba4c5a5d0c0d3f39f1737b6624887479f78",
-  "head_sha": "5c6821abefb6a140255535219315ea0ef7f8f07d",
+  "base_sha": "2d56ddc90a3a611918008dd2433dc368595705a8",
+  "head_sha": "42756ab163ad68c69b69618d4d5a94519ce0fbe5",
   "mr_title": "Consolidate isWithinRoot() function calling.",
   "mr_description": "",
   "origin": {

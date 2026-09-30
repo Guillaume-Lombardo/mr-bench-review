@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-016/base",
   "head_branch": "bench/aacr/aacr-016/head",
-  "base_sha": "0479fc7108f82306bef68b8f3306614d32986224",
-  "head_sha": "83a6f99701ceb825b590651b5387a5bd81c25758",
+  "base_sha": "8e1a79086ed6cd7aec20888307e50f6fc1484d43",
+  "head_sha": "92d233e6b4c5f70aef72195dfab68e907ee0f8fd",
   "mr_title": "Get declaration diagnostics in LSP",
   "mr_description": "",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-108/base",
   "head_branch": "bench/curated/case-108/head",
-  "base_sha": "61d7a5974298631111c77734dd257c8ee7a07911",
-  "head_sha": "a13eb9b982c065a58c140ae7c43351ed44bd0060",
+  "base_sha": "037bbf152a82d139deff99daa5ea9c2a100bffda",
+  "head_sha": "026ea9b9dce3d732ea3438f2181d0803d763a6ff",
   "mr_title": "Implemented async auth backends and utils.",
   "mr_description": "",
   "origin": {

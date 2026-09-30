@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/review-bench/review-bench-002/base",
   "head_branch": "bench/review-bench/review-bench-002/head",
-  "base_sha": "7094688cf1161aade4bc8b1d1d83573db8ed9974",
-  "head_sha": "7c532380db8736f532c265db14c650200e376cb9",
+  "base_sha": "5504b780704c307b64ee4811947d424b3155c24f",
+  "head_sha": "ca5f021569364b0362fb3b7490c6b9eb5b2328c9",
   "mr_title": "fix: unrestricted cloud metadata exfiltration via header injection chain",
   "mr_description": "* fix: unrestricted cloud metadata exfiltration via header injection chain\n\n* fix: address pattern issue highlighted by cubic\n\n* fix: code ql feedback\n\n* fix: code ql feedback",
   "origin": {

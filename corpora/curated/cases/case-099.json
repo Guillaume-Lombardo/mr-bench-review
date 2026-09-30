@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-099/base",
   "head_branch": "bench/curated/case-099/head",
-  "base_sha": "fc2d37673c01d1c59b3354c3bf3c152afda308a1",
-  "head_sha": "30f14793dcfbc4a038cb9d97298defcff56584a6",
+  "base_sha": "40b83f454be692d5c923a6be4782a2230b9fb91a",
+  "head_sha": "4a7b80c881ad162ffeca6869ad62f600e5f866e6",
   "mr_title": "Removed casting from exact lookups in admin searches.",
   "mr_description": "Instead of casting non-text fields to CharField (which prevents index\nusage), skip exact lookups when the search term fails\nformfield.to_python().\n\nThis preserves index usage for valid searches while gracefully handling\ninvalid search terms by simply not including them in the query for that\nfield.\n\nFor multi-term searches like 'foo 123' on search_fields=['name', 'age__exact']:\n- 'foo': invalid for age, so only name lookup is used\n- '123': valid for both, so both lookups are used\n\nThis entails a slight increase in permissiveness for search terms that\ncan be normalized by formfield.to_python().",
   "origin": {

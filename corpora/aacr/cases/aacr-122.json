@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-122/base",
   "head_branch": "bench/aacr/aacr-122/head",
-  "base_sha": "5c9e25ba7596da9b1df15176e7b2ffdef92d9ffd",
-  "head_sha": "9fe5f184bf08fc681dc70089018eafad1861d64a",
+  "base_sha": "b7c290b4ec80fe610a415a4ae26144dc7a5e736a",
+  "head_sha": "f1e97123be717c036f5597be225c5903dbd1df49",
   "mr_title": "In CanGenerateModelForms trait",
   "mr_description": "- In CanGenerateModelForms trait\n- In CanGenerateModelTables trait",
   "origin": {

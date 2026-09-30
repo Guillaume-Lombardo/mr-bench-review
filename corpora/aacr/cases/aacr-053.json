@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-053/base",
   "head_branch": "bench/aacr/aacr-053/head",
-  "base_sha": "28a9fa3b2276ced605774f8179275d38d015903a",
-  "head_sha": "3ad18b2f70b897e3f7ca46dd433e5045c632e36e",
+  "base_sha": "be50e0c91de6aa22c0528719035b2ac60c24bd9d",
+  "head_sha": "5e3bdbbd84552a373abb279de120dff91c4f6121",
   "mr_title": "allow providing chrome_remote_debugging_port in browser config. fix launching user provided chrome browser.",
   "mr_description": "",
   "origin": {

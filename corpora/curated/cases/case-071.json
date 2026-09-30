@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-071/base",
   "head_branch": "bench/curated/case-071/head",
-  "base_sha": "559ff69c83cba753ca6ef9c24767e25a6700cd2d",
-  "head_sha": "e33f7d57c7aa01280ef71f1093d4bb70df5dd0d2",
+  "base_sha": "851d73274c7abf0768e6cf8d887f4884ae4cb55e",
+  "head_sha": "78cc28ef7531355e39714a3cabe676a0b3147923",
   "mr_title": "Excluded fields by per-object permissions for ModelAdmin.list_editable.",
   "mr_description": "Instead of going over all objects in a queryset and filtering\nby user permissions, added skipping while saving the formset\nso there is no need to refetch objects again.",
   "origin": {

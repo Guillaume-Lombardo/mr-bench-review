@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-039/base",
   "head_branch": "bench/curated/case-039/head",
-  "base_sha": "b5c1e76f16339d59853ab64b485aca4108a82913",
-  "head_sha": "5d483fe30332b603e5a22b579d522ec7b75ee0a1",
+  "base_sha": "d7226a333ba8c46beed67ca62ecbc0039cd51dad",
+  "head_sha": "b6531d586d1a6c25ba682e527d6a39022c8b30bd",
   "mr_title": "feat(google-maps): Add support for some mouse events",
   "mr_description": "",
   "origin": {

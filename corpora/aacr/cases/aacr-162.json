@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-162/base",
   "head_branch": "bench/aacr/aacr-162/head",
-  "base_sha": "8976fe4214e7ec54ab3739c8b1285d97f6076870",
-  "head_sha": "990fcec0737fb80b9d6f4289337734ecf46a3389",
+  "base_sha": "d73825750121076af5f9e6ef442d30970bd1134c",
+  "head_sha": "251ba0833d6c1456444abfe026346fe438791e28",
   "mr_title": "Integration test improvements",
   "mr_description": "Add some new test coverage for various model architectures,\nand switch from orca-mini to the small llama model.",
   "origin": {

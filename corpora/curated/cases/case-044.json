@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-044/base",
   "head_branch": "bench/curated/case-044/head",
-  "base_sha": "4738a38365998affd2dd22dd29f3bdab71431303",
-  "head_sha": "a834b81a05e5d030887acac8e0582fd38d09f835",
+  "base_sha": "775faf7b887e92af79aa8c07fddb5211732750d9",
+  "head_sha": "c9cf2e6d5b5b3f1c08efc540538b3b152b603f91",
   "mr_title": "Comments panel appears without having GHPR installed",
   "mr_description": "",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": "pilot",
   "base_branch": "bench/curated/case-031/base",
   "head_branch": "bench/curated/case-031/head",
-  "base_sha": "aefad83e24670ebfc71d257141436fb942d629f0",
-  "head_sha": "a496cc93939331556b2eeb261213f002ca763698",
+  "base_sha": "f0fb4631d1a7fc1d1465ccb9e2666ef4b522469e",
+  "head_sha": "7c65224e8933f3ae98cba1a70bbbc43251dc8ed7",
   "mr_title": "Type mysql dialect",
   "mr_description": "",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-005/base",
   "head_branch": "bench/aacr/aacr-005/head",
-  "base_sha": "9c20772d4303bb173f7b6727e6e1c14905e663fa",
-  "head_sha": "be63cb5462f7b14f6acf4143fa9d511b887484d0",
+  "base_sha": "57b9a5fe3e3293266b80bf7e16aa0b29c84480a0",
+  "head_sha": "883be7c07bb375ddf798149c2d7727102c7ce63b",
   "mr_title": "Fixes spelling of \"Allow to\" to \"Allow one to\"",
   "mr_description": "- Fixes spelling of \"Allow to\" to \"Allow one to\"\n- Fix \"Let's -> Lets\"\n- Fix spelling of segments.\n- [pre-commit.ci] auto fixes from pre-commit.com hooks\n- Update src/3rdParty/salomesmesh/inc/MED_Wrapper.hxx\n- Update src/Base/PyObjectBase.cpp Update src/App/ExtensionContainer.h Update src/App/PropertyContainer.h\n- Use gerund in user-facing texts.",
   "origin": {

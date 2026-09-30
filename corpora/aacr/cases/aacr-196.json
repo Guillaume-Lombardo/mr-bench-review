@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-196/base",
   "head_branch": "bench/aacr/aacr-196/head",
-  "base_sha": "f9c713cf4809cc07fe66c77b5a4c1788c2859be1",
-  "head_sha": "c6735b5656e8907666c6cfa54b7780bc615b4c8e",
+  "base_sha": "a06d4ca9beeefcb1239f0f264c86c6ae3d6781c4",
+  "head_sha": "11009886a911124cd184fc42f4c96314a24909e8",
   "mr_title": "update to parser",
   "mr_description": "- update to parser\n- error handling\n- solve lint error and added tests\n- [autofix.ci] apply automated fixes\n- Merge branch 'main' into new_parser\n- [autofix.ci] apply automated fixes\n- Update parser.py\n- Merge branch 'new_parser' of https://github.com/langflow-ai/langflow into new_parser\n- Merge branch 'main' into new_parser\n- fix format errors\n- Merge branch 'new_parser' of https://github.com/langflow-ai/langflow into new_parser\n- [autofix.ci] apply automated fixes\n- Merge branch 'main' into new_parser\n- Merge branch 'main' into new_parser\n- Merge branch 'main' into new_parser\n- Merge branch 'main' into new_parser",
   "origin": {

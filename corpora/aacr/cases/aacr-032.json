@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-032/base",
   "head_branch": "bench/aacr/aacr-032/head",
-  "base_sha": "9623208504d2a4f264a63bfbf1ea8b18425985e4",
-  "head_sha": "a068cc51f0ba0ee1dc98ddecf712c9fa4bb0bce8",
+  "base_sha": "a779a85ef09b8eeccfa2a5f6d90ddc3f369fcd3a",
+  "head_sha": "019412bfc68ab42ff24ac28d8e2d0e752cd26ed2",
   "mr_title": "Fix for running via DirectML",
   "mr_description": "- Fix for running via DirectML\n- fix formating\n- Merge branch 'master' into directMLChanges",
   "origin": {

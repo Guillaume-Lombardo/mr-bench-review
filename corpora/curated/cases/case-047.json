@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-047/base",
   "head_branch": "bench/curated/case-047/head",
-  "base_sha": "82f31efbaa4126fcb1080d1864b5cd5a91eacfaf",
-  "head_sha": "a92a41f88e856b80c4a11c21bd9a1bad49b6c474",
+  "base_sha": "9f33c0a4d409e773da9639dfd179ac37020e6f6a",
+  "head_sha": "ef0881958fdcd9059db41ae0ef968dd79f452e49",
   "mr_title": "refactor(@angular-devkit/build-angular): use Node.js promise fs API in service-worker augmentation",
   "mr_description": "With the minimum version of Node.js now set to v12, the promise fs API can now be leveraged within the tooling.\nThis change also uses `copyFile` (with copy-on-write where available) to setup the the service worker files as well a streaming APIs to generate service worker hashes. Both of which improves performance and reduces memory usage.",
   "origin": {

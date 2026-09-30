@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-185/base",
   "head_branch": "bench/aacr/aacr-185/head",
-  "base_sha": "a66aa8e1f58e2d9499db005cd92b9cf6971b41f1",
-  "head_sha": "e08c3bbdc59ed1f4c00b2d4aff07a47b6026547c",
+  "base_sha": "53d76b144bad97e34b24a7ac6abf3eece32c68be",
+  "head_sha": "06aef2c6ddeede37ec7a1ab2b6669af90f3c5e9b",
   "mr_title": "refactor: Make the communicate_with_quorum grace period configurable",
   "mr_description": "- Renamed `GRACE_PERIOD` to `DEFAULT_GRACE_PERIOD` and altered its value,\n- added grace period argument in communicate with quorum,\n- Refactored the `end_time` setting logic in the `communicate_with_quorum` function to improve the handling of unreachable quorum on any key,",
   "origin": {

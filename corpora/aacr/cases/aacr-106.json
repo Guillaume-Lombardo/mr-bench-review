@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-106/base",
   "head_branch": "bench/aacr/aacr-106/head",
-  "base_sha": "3ab21480bcadeae14ef56f58836026abae65b571",
-  "head_sha": "6671d18187629f7862a75815568c476ec727b54b",
+  "base_sha": "de718fe9a4db3c618a034128ee6d4b6a0b202318",
+  "head_sha": "2eb847a0665327c46bd1161dd08fc34d70e5cfd9",
   "mr_title": "feat: Service Worker to preload/cancel images and other resources",
   "mr_description": "- feat: Service Worker to preload/cancel images and other resources\n- Remove caddy configuration, localhost is secure if port-forwarded\n- fix e2e tests\n- Cache/return the app.html for all web entry points\n- Only handle preload/cancel\n- Merge remote-tracking branch 'origin/main' into service_worker2\n- fix e2e\n- fix e2e\n- e2e-2\n- that'll do it\n- Merge branch 'main' into service_worker2\n- Merge branch 'main' into service_worker2\n- Merge branch 'main' into service_worker2\n- Merge remote-tracking branch 'origin/main' into service_worker2\n- format\n- Merge remote-tracking branch 'origin/main' into service_worker2\n- Merge branch 'main' into service_worker2\n- Merge branch 'main' into service_worker2\n- fix test\n- Merge remote-tracking branch 'origin/main' into service_worker0\n- lint",
   "origin": {

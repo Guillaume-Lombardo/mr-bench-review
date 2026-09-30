@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-044/base",
   "head_branch": "bench/aacr/aacr-044/head",
-  "base_sha": "58da094c284871738f5bfaddf04a3bc0c43f74bc",
-  "head_sha": "83adaada59d81b7b8ef932b3d5c31be6b35d8f63",
+  "base_sha": "70819ca8e14fb98651ac4fd6c88ff64eb63d251a",
+  "head_sha": "1e7e869c7375179acefa697ab8f27a82e087dd1e",
   "mr_title": "fix(xml): add missing lv_xml_widget.h include",
   "mr_description": "- fix(xml): add missing lv_xml_widget.h include\n- fix(texarea xml): rename placeholder to placeholder_text\n- feat(span): add lv_spangroup_bind_span_text and lv_spangroup_set_span_text_fmt\n- feat(scale): add lv_scale_bind_section_min/max_value\n- feat(xml): add lv_switch\n- fix(obj xml): fix typo in style_shadow_width\n- fix(keyboard xml): add number mode\n- fix(grid): ignore grids without row or column descriptors\n- feat(tabview): support getting tab buttons by index\n- revert: revert examples\n- feat(xml): add grid support",
   "origin": {

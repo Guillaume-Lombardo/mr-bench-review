@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-082/base",
   "head_branch": "bench/aacr/aacr-082/head",
-  "base_sha": "e7b5eb64e0c8cdf8d48abb01a2bdabd7157e7243",
-  "head_sha": "e9d9eb6a3f477ec983f886835ffadaae459964e0",
+  "base_sha": "d60ad420b26957d9bc956d7e5576b47e616159a8",
+  "head_sha": "6f9eecd2a8b27e156b13217cb5b45e9b39ab8d3e",
   "mr_title": "Support RDMA for client and benchmark",
   "mr_description": "vakley has already replaced dependency `hiredis` with `libvalkey`, and libvalkey also supports RDMA. Add '--rdma' for both\nvalkey-cli and valkey-benchmark to enable RDMA.",
   "origin": {

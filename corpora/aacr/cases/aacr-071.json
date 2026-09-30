@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-071/base",
   "head_branch": "bench/aacr/aacr-071/head",
-  "base_sha": "f71558e875cca2af6f0fd1eaeff4b6ecc772d360",
-  "head_sha": "46b9d4a43749ff2499f7dc79dd0290849984d4f1",
+  "base_sha": "6e0e8cc82d637ceab872b067d6ef94c227db72e3",
+  "head_sha": "ed07159d43b8606d59bac4a058880b7d08c4fbd7",
   "mr_title": "feat(planning-tool): Add streaming and improve output",
   "mr_description": "- feat(planning-tool): Add streaming and improve output\n- feat(planner): Add read-only file tools to planner\n- fix(subagent): Correct ToolRegistry API usage\n- feat(planning): enhance planning tool for detailed plans\n- feat(config): add setting to enable planning tool\n- fix(config): pass usePlanningTool setting to core config\n- fix(subagent): handle tool instances in configuration\n- Merge branch 'main' into adh/feature/planning-tool-updates",
   "origin": {

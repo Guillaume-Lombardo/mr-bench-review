@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-139/base",
   "head_branch": "bench/aacr/aacr-139/head",
-  "base_sha": "b6934a465f3e6e1f1e63fddefed752e1658b1bee",
-  "head_sha": "502f2bafd9fd09fe726db1df4f97b1d435172227",
+  "base_sha": "8f434b5c075446b1b55ef024710a53ca24ff7453",
+  "head_sha": "4287ba2179b875af2115bf7c9a9f12acf3cf4c1d",
   "mr_title": "Transfer string functions to source code - batch 2",
   "mr_description": "- Transfer string functions to source code - batch 2\n- fix style, update reference files",
   "origin": {

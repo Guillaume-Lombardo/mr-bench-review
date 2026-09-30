@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-105/base",
   "head_branch": "bench/curated/case-105/head",
-  "base_sha": "6b1740aefcd8cac3aea5966d8755995ebe93e794",
-  "head_sha": "ecba555bac904b9b002464d21deca5a5db1ea279",
+  "base_sha": "388e0e243824a6d0bb08a6c6522ff0d1c2b3cb9b",
+  "head_sha": "116389a3a24fe15e542bf7760f1923a8795d846d",
   "mr_title": "fix(cdk/portal): remove ComponentFactoryResolver usages",
   "mr_description": "We now have all the necessary APIs to allow to remove our usages of the deprecated `ComponentFactoryResolver`.",
   "origin": {

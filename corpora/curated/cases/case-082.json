@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-082/base",
   "head_branch": "bench/curated/case-082/head",
-  "base_sha": "39eb62fdec85b4b0f3a39a9be1fd3f44fbb2d11d",
-  "head_sha": "e2b6cb03653dbfa0cce4411aaf7ce0e691b19904",
+  "base_sha": "a76c79f4eebeb17bb7d359b3903d94a3eee4e140",
+  "head_sha": "d3e48e76a3bee4ca486f9e2263b55a17f50942b7",
   "mr_title": "Polish 'Fix inconsistent ordering of config imports'",
   "mr_description": "",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-180/base",
   "head_branch": "bench/aacr/aacr-180/head",
-  "base_sha": "7b0b619d7bb491e1716e52859228fa3ff1729515",
-  "head_sha": "01d8fbf9c0db2cd07ed8bc0799b7a717fb0d65db",
+  "base_sha": "42a96015ca7cdf67fb67b7c4e640639fa812ac32",
+  "head_sha": "f9811500db6349f2ce299d518671fa21079cc9af",
   "mr_title": "feat: Sync strings from poeditor with github workfliw",
   "mr_description": "",
   "origin": {

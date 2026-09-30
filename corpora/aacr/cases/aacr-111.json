@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-111/base",
   "head_branch": "bench/aacr/aacr-111/head",
-  "base_sha": "71453ef0c4d7bf04f0265261a8db67c398bb4198",
-  "head_sha": "5cbbc811b1add4cc6c3b3e41f8c458a27b9e3817",
+  "base_sha": "efddbef94c6cf5edee9f18c7286d5ea964df79e0",
+  "head_sha": "b00a2743e5b6793fe79af49a38d9176bf9cf37f8",
   "mr_title": "[Multimodal] Optimize Qwen2/2.5-VL startup time",
   "mr_description": "",
   "origin": {

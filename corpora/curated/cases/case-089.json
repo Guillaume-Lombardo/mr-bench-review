@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-089/base",
   "head_branch": "bench/curated/case-089/head",
-  "base_sha": "278af8cccc418ca7b0ce7402682319269f6bd604",
-  "head_sha": "4bacbaeffae8d1e1e504f1f7494c1ca4daf75127",
+  "base_sha": "20fc9c326b59b723099ae0a9ed74e9dc7f684c15",
+  "head_sha": "f17bae1f9ee94d6bd26c047a564982bf82198297",
   "mr_title": "Made admin use boolean icons for related BooleanFields in list_display.",
   "mr_description": "When using related field lookups like 'parent__is_active' in list_display,\nthe admin now correctly detects if the final field is a BooleanField and\ndisplays boolean icons instead of 'True'/'False' text.\n\nModified lookup_field() in django/contrib/admin/utils.py to retrieve the\nfinal field from the path when traversing relations using LOOKUP_SEP (__),\nallowing display_for_field() to properly handle BooleanFields.",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-075/base",
   "head_branch": "bench/curated/case-075/head",
-  "base_sha": "f2e2a6735b458cedf6125c544f94496e88952949",
-  "head_sha": "8a1bed5d93d3f939cb42b58837c3b0917887da3f",
+  "base_sha": "393f3dba020bf30ff167f95b9e4370639b3ef489",
+  "head_sha": "8491f3dd08053ff05c9c0927857ebaf04c560674",
   "mr_title": "Add JSONArray to django.db.models.functions.",
   "mr_description": "",
   "origin": {

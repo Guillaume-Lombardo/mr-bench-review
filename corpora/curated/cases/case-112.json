@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-112/base",
   "head_branch": "bench/curated/case-112/head",
-  "base_sha": "433c2e94eede35604e16b47d8c2d7832f857a300",
-  "head_sha": "11a3468ac584e0fda12c62a2b04711007e2e368d",
+  "base_sha": "f999d31722e9530831f83d8cae695dc9166bd96a",
+  "head_sha": "cc743ddd3ad489433c9ce31b6cbb00830a347538",
   "mr_title": "Use SelectionQuery/MutationQuery wherever possible in Panache + avoid warning HHH000104",
   "mr_description": "",
   "origin": {

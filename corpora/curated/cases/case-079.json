@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-079/base",
   "head_branch": "bench/curated/case-079/head",
-  "base_sha": "5d56ac0498aa0bb8cd20c47293ec167bb9f8d3d0",
-  "head_sha": "72ab9993e827b06ff759c3b47836ac457a7fe9e1",
+  "base_sha": "943ded74207b6eedd3bc4ec92e637351a9b71cae",
+  "head_sha": "d27bb0dfba5da6d7cef1c660d6a67b5b0290db6a",
   "mr_title": "TypeConversionDict.get type can be a callable",
   "mr_description": "",
   "origin": {

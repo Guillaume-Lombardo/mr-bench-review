@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/martian-offline/martian-offline-036/base",
   "head_branch": "bench/martian-offline/martian-offline-036/head",
-  "base_sha": "183ba69de55f4386d57991ec5ed67344237fe386",
-  "head_sha": "c8c997b5c4294700230a3e3f29669379f51d0a58",
+  "base_sha": "47acfc6de29864a909fa8c60079b62298d14167b",
+  "head_sha": "1a1967507de46503d0daf1b115649016d860fb91",
   "mr_title": "Add Groups resource type and scopes to authorization schema",
   "mr_description": "",
   "origin": {

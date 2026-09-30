@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-056/base",
   "head_branch": "bench/curated/case-056/head",
-  "base_sha": "3851b1b072e0002c2bb40fdf655af2922a6c8668",
-  "head_sha": "1d61806c71fd9403bc3ce7778aadde0882feeade",
+  "base_sha": "e0e11a1943f5616c3c018ce9ac70e784ab174538",
+  "head_sha": "7fbdeba1cac7db530c768eccc08f88397d25979f",
   "mr_title": "refactor(router): Add `firstValueFrom` helper",
   "mr_description": "This fixes a bug introduced in where `toPromise` was used. This\ndoesn't work in all situations here because some observables don't\ncomplete. This only affected the redirect path, since the others are\nalready behind other rxjs code which takes the first value from the user\nguards.\n\nNote: This is marked as a refactor rather than fix because the commit above is not in\nany release yet.",
   "origin": {

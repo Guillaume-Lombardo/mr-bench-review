@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-077/base",
   "head_branch": "bench/aacr/aacr-077/head",
-  "base_sha": "5ec956e2305d69a3bdb51fed35cb404a0842289e",
-  "head_sha": "addc5cbe7023007bcac7cb51cf59e812b3a2ae6d",
+  "base_sha": "0b747938f7b003f661e1a0a7cad05ab93d84fc87",
+  "head_sha": "7262e7ad8285da15d80a21038aba9b8f74754098",
   "mr_title": "Use _APP_CONSOLE_DOMAIN, if not found, then use _APP_DOMAIN",
   "mr_description": "",
   "origin": {

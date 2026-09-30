@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-041/base",
   "head_branch": "bench/aacr/aacr-041/head",
-  "base_sha": "2ac7d23b4580a7c9f9d372863cdf0b47c4a36db6",
-  "head_sha": "f5e01446c3105787df439dccb10080f931fb3cc3",
+  "base_sha": "a5a27bf72fc2335b19d13f35745a3d17b14e3d35",
+  "head_sha": "ddee739e392662a997449051c624dfd7ee09152d",
   "mr_title": "refactor: add missing template implements where needed",
   "mr_description": "- refactor: add missing template implements where needed\n- refactor: migrate from OC to OCP in public interfaces",
   "origin": {

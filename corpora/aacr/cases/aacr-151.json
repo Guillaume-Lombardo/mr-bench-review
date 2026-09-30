@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-151/base",
   "head_branch": "bench/aacr/aacr-151/head",
-  "base_sha": "f581a03bad879128f8f53f1dacef9c7ea0171f36",
-  "head_sha": "b416877a182e2292c3d51621039125ff4caf73c8",
+  "base_sha": "7222f5879dfa0c68ea72decbe1a058b86f7da4b8",
+  "head_sha": "8616b01573137358327ba61f3d05d42ad368fda6",
   "mr_title": "Allow for null/empty content field",
   "mr_description": "- Allow for null/empty content field\n- remove tests which checked for null content\n- [CI] Auto commit changes from spotless",
   "origin": {

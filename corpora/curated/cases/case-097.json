@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-097/base",
   "head_branch": "bench/curated/case-097/head",
-  "base_sha": "c8188cc1924c8c65914de095786472a7b9e6e35b",
-  "head_sha": "c02359be671eb53a28b54cb9ba803d42a0174702",
+  "base_sha": "36ae2e50ab5beb88faf5004fe8799bd43fbdcc70",
+  "head_sha": "70dc4056a8a71fd04883b6cce12627f3d17ecbdf",
   "mr_title": "Added UDP multicast (with caveats: getInterface, getNetworkInterface, block or loopback-mode-disabled operations).",
   "mr_description": "Motivation:\n\nProvide epoll/native multicast to support high load multicast users (we are using it for a high load telecomm app at my day job).\n\nModification:\n\nAdded support for source specific and any source multicast for epoll transport. Some caveats: no support for disabling loop back mode, retrieval of interface and block operation, all of which tend to be less frequently used.\n\nResult:\n\nProvides epoll transport multicast for common use cases.",
   "origin": {

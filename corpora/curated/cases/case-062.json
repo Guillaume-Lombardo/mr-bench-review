@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-062/base",
   "head_branch": "bench/curated/case-062/head",
-  "base_sha": "4e3d4c95f4d349a51d8907a299fb7663b71a3579",
-  "head_sha": "157907396c005f3d7db4f461643b054f1d8f3567",
+  "base_sha": "31beadd099477bd47f2325dfdf437942a48808f3",
+  "head_sha": "dda4722157fa3dd1c417d0ca8f7ff2848181117b",
   "mr_title": "Remove hard-to-mock RestClient calls",
   "mr_description": "",
   "origin": {

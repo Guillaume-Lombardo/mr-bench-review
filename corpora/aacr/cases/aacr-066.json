@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-066/base",
   "head_branch": "bench/aacr/aacr-066/head",
-  "base_sha": "3f81519a1f9953706a505f890f72c1c1215437f7",
-  "head_sha": "d58bc613afaca4432fb878fc3faa826e580179be",
+  "base_sha": "a823c314298cf559ba8c46ce520c9eb2edce52c3",
+  "head_sha": "ea3fe9b6aa4afdc3d6d3451cc8d8edd84a546004",
   "mr_title": "update arch to make mcp prompts discoverable",
   "mr_description": "- update arch to make mcp prompts discoverable\n- Merge branch 'main' into prompts\n- added unit tests\n- Merge branch 'prompts' of https://github.com/haroldmciver-go/gemini-cli into prompts\n- Merge branch 'main' into prompts\n- Update packages/core/src/tools/mcp-client.ts\n- Update packages/core/src/tools/mcp-client.ts\n- Merge branch 'main' into prompts\n- update ui for /mcp to display prompt\n- merge\n- update prompt schema to use mcp sdk and fix tests\n- Add prompts\n- More changes\n- remove unnecessary file\n- Clean up\n- Update tests etc\n- Add help subcommand\n- Merge branch 'main' into cb/prompts\n- Fix tests\n- Address comments\n- Remove unused\n- update test\n- Fix test",
   "origin": {

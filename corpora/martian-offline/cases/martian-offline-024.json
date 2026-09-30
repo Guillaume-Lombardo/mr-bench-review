@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/martian-offline/martian-offline-024/base",
   "head_branch": "bench/martian-offline/martian-offline-024/head",
-  "base_sha": "bf6b00710e4a6b58a447303805cbc68fbb2fcaa8",
-  "head_sha": "1300fe44b00db628795e097a36136ad5716af17b",
+  "base_sha": "398bb4395e9eca44e6a61d93c78ec2ebdd350ce9",
+  "head_sha": "a977df43a3ff8a8e2b0c467efc87e5237560af68",
   "mr_title": "Advanced Query Processing Architecture",
   "mr_description": "- Loki query splitting: interpolate queries before execution\n- Update tests\n- Prettier\n- shardQuerySplitting: remove unnecessary call\n- shardQuerySplitting: fix target filtering\n- Update test",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-048/base",
   "head_branch": "bench/curated/case-048/head",
-  "base_sha": "b4bc1f842dadf26fd74e58f73f3eaaa3a7d5deda",
-  "head_sha": "38784942aeb5c085cab61e0da9e6056ed8eb529c",
+  "base_sha": "ce6f5c9f75480029c0b40808fb065ef48c68fc35",
+  "head_sha": "b418974bc0fdbf56a72716916bb808c33a5ce30a",
   "mr_title": "made dependencies on certifi and httpcore only load when required",
   "mr_description": "",
   "origin": {

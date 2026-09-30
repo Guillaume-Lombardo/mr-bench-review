@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-143/base",
   "head_branch": "bench/aacr/aacr-143/head",
-  "base_sha": "785a7cd6372176bf72b18b2c17cb542be7364155",
-  "head_sha": "c93ef1ea28f0f7d23b9677b18f44d027b56edfb0",
+  "base_sha": "469da44d8edaa313234ff0c023e72e93c66ffcf3",
+  "head_sha": "b3947dad31fe90bb74a0161f26c5319773d0f9eb",
   "mr_title": "Metrics and Logs for DiskChecker",
   "mr_description": "- Metrics and Logs for DiskChecker\n- revert server async metrics",
   "origin": {

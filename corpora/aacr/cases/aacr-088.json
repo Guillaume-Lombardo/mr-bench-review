@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-088/base",
   "head_branch": "bench/aacr/aacr-088/head",
-  "base_sha": "32d575a565a2d4effa6c8c90d01956cf212c2bc9",
-  "head_sha": "bb30064b400c9cee66c3c0e09c93b05feb2fffdd",
+  "base_sha": "3f041677816a2d98a6eaa5eebce890388f0bd121",
+  "head_sha": "2a187630204c264709ab7b62714571268df74b67",
   "mr_title": "netinfo: return local services in the default report",
   "mr_description": "- netinfo: return local services in the default report\n- netinfo: return shortened services, if peers list requested",
   "origin": {

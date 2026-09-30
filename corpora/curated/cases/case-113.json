@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-113/base",
   "head_branch": "bench/curated/case-113/head",
-  "base_sha": "d97ea552519a631b57011580be03886bfcf9e918",
-  "head_sha": "0eca369c6234952a1a42299384f0b1fad269a0c3",
+  "base_sha": "817db0403483fbb0d366219dc5600393e7f49974",
+  "head_sha": "e93423b75f6778207556046e993ae2a13970c36c",
   "mr_title": "fix(drag-drop): drop-list wrong enter position",
   "mr_description": "* fix(drag-drop): drop-list wrong enter position\nParent rect should be cached again when the new item has been added.\nIf item is entering from start (left/top) it should be inserted in the first position.\nWhen looking for item index from pointer position exclude right/bottom pixel: that pixel is external.\n\n* Corrected a bug when entering with no active draggables.\n\n* Corrected enter behavior on reversed container\nAdded unit tests to cover fixed scenarios\n\n* Fixed view-engine broken test",
   "origin": {

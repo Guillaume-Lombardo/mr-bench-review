@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-005/base",
   "head_branch": "bench/curated/case-005/head",
-  "base_sha": "47cb03946e06947c01b6793a1db1d1521b5007c6",
-  "head_sha": "5e36e5c76646603468eafc03c60055f74089e7ac",
+  "base_sha": "8e21662d2849d91b31e131954a910be202e25b40",
+  "head_sha": "60a259ca3bae16a99abf13f87850cb2a4993e9dc",
   "mr_title": "Handle Content-Length in ShallowEtagHeaderFilter more robustly",
   "mr_description": "This commit ensures that setting the Content-Length through\nsetHeader(\"Content-Length\", x\") has the same effect as calling\nsetContentLength in the ShallowEtagHeaderFilter. It also filters out\nContent-Type headers similarly to Content-Length.",
   "origin": {

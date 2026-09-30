@@ -8,8 +8,8 @@
   "tier": "core",
   "base_branch": "bench/curated/case-032/base",
   "head_branch": "bench/curated/case-032/head",
-  "base_sha": "f4058e43308da9dd2cb1a294eecfd05f46a98f35",
-  "head_sha": "c9d762d2ebd75387bc1f01e68949bac9f954789e",
+  "base_sha": "f852b1e9ed1c42a41e7b225bc817fb05dc30f04f",
+  "head_sha": "0b540860033d3f902748641effecdc32e267d4d4",
   "mr_title": "Used unnest for bulk inserts on Postgres when possible.",
   "mr_description": "This should make bulk_create significantly faster on Postgres when provided\nonly literal values.\n\nThanks James Sewell for writing about this technique, Tom Forbes for\nvalidating the performance benefits, David Sanders and Mariusz Felisiak\nfor the review.",
   "origin": {

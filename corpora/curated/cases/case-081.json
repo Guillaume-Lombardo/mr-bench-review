@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-081/base",
   "head_branch": "bench/curated/case-081/head",
-  "base_sha": "571e043b0e0ca7d9b40ec456ea0fde1684441acd",
-  "head_sha": "98f25867d39fa92bd8bd827df90ea77ddea3a3e3",
+  "base_sha": "07140e80dbc9381091fdf35bf321c0c6f20dc803",
+  "head_sha": "f7eb7853b014bbb14d692cdb7c62bf10a3abc926",
   "mr_title": "Moved _is_pk_set checks into _prepare_for_bulk_create().",
   "mr_description": "To avoid looping over objs twice.",
   "origin": {

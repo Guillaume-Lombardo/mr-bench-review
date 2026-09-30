@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-020/base",
   "head_branch": "bench/aacr/aacr-020/head",
-  "base_sha": "85dca7d0c4a2879d20e3958d1af0f6f3180a64f6",
-  "head_sha": "4d6ed9515b815cb2740033931b5089669914c6b3",
+  "base_sha": "c4cb211e2661e973bd2d1d63c8731a585f159aee",
+  "head_sha": "0b3da884fe705c5eb4a25d7bb6bd57488870b4ad",
   "mr_title": "add 8BitDo Controller",
   "mr_description": "add SN30 Pro, SF30 Pro, Pro 2.\nSupported versions:\nPro 2 v3.06  above\nSF30 Pro/SN30 Pro v2.05 above",
   "origin": {

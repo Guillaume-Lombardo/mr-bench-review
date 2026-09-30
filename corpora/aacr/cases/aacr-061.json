@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-061/base",
   "head_branch": "bench/aacr/aacr-061/head",
-  "base_sha": "5b6bb6a5a82f66e65801a95eeb72a08b5b6b731b",
-  "head_sha": "60072e8beea695700734954eef0958afa9f73564",
+  "base_sha": "b40442cf2b1964473c8e295f7f1f455fe3ee2de1",
+  "head_sha": "dae8949f689ebf5abd6cdafc9bbd49868cb6571d",
   "mr_title": "test: add tests for REPL custom evals",
   "mr_description": "",
   "origin": {

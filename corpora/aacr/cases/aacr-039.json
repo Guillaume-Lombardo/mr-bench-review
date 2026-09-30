@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-039/base",
   "head_branch": "bench/aacr/aacr-039/head",
-  "base_sha": "362bb040aa758249af67d88a7486edbde82a5eb1",
-  "head_sha": "30aaa0480c9a57bd7a28a8f236154f7229372146",
+  "base_sha": "1a5172bf48497a307fb3dcf9a689e5d761ef1380",
+  "head_sha": "c943cc40595a09b0035ced62823f90049eeeeb43",
   "mr_title": "imgcodecs: png: add log if first chunk is not IHDR",
   "mr_description": "",
   "origin": {

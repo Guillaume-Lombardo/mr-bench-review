@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-029/base",
   "head_branch": "bench/aacr/aacr-029/head",
-  "base_sha": "8ac9a69045260bc9e108fa58fdae0401de67bcb6",
-  "head_sha": "a9f1425ccc59aea449e5ea036dc0698a57fab96f",
+  "base_sha": "a8b3edfb327a8d13e9c3f12bb27fe5050678c93c",
+  "head_sha": "861ba27d6540bc5f60455463be8e6191202eb60e",
   "mr_title": "Feat: Add basic LoRA training support",
   "mr_description": "- Feat: Add basic LoRA training support\n- Fix ruff errors\n- Add remaining patch\n- Refactor import statements in nodes_train.py\n- Remove empty spaces\n- Move allow batch execution logic to different PR\n- Expand supported image file extensions in LoadImageSetNode\n- Weight Adapter Scheme\n- Initial impl\n- Utilize new weight adapter in lora.py\n- lint\n- Sync\n- Merge branch 'comfyanonymous:master' into kbl-new-lora\n- Fix import error\n- Fix typing syntax error\n- Use correct v list\n- Remove unused import\n- Finalize the modularized weight adapter impl\n- Add scheme of TrainBase class\n- Basic train base impl of lora\n- linting\n- Merge branch 'yo-lora-trainer' into weight-adapter-train\n- Utilize weight adapter scheme in basic training node\n- Merge branch 'master' into weight-adapter-train\n- Fix missed import in merging\n- linting\n- Merge branch 'master' into weight-adapter-train\n- weight adapter fixes for training node\n- Updates of training logic\n- Add lora model loader for onfly usage\n- Add gradient checkpointing\n- Use tqdm for training loop\n- check if need to disable pbar\n- Merge branch 'comfyanonymous:master' into weight-adapter-train\n- Update lora.py\n- Update nodes_train.py",
   "origin": {

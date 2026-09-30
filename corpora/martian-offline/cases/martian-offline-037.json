@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/martian-offline/martian-offline-037/base",
   "head_branch": "bench/martian-offline/martian-offline-037/head",
-  "base_sha": "c81a12eb22c287e0a643cb498958bc5b7575ca9f",
-  "head_sha": "d3c93610c39d250107d0010a111dd205ee97e1cb",
+  "base_sha": "6b8bddf5dbbd43cc4366c573df79fc94f8ed8a2d",
+  "head_sha": "89b600a97970134abc7926fda519b07db6cdc5d4",
   "mr_title": "Add HTML sanitizer for translated message resources",
   "mr_description": "",
   "origin": {

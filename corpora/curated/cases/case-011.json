@@ -8,8 +8,8 @@
   "tier": "extended",
   "base_branch": "bench/curated/case-011/base",
   "head_branch": "bench/curated/case-011/head",
-  "base_sha": "16aedf7c3138bf65bbddaba6969c915717f8ff88",
-  "head_sha": "a6192fa6c0416eeaadbfe20c03e25268368ac943",
+  "base_sha": "51159117b3d816b6038189babb1c7059c78149cd",
+  "head_sha": "15a7945f49317eaa7b369facc87fe088cf43728a",
   "mr_title": "Add nesting limit for `JsonReader`",
   "mr_description": "* Add nesting limit for `JsonReader`\n\nFor now don't expose this as additional GsonBuilder method assuming that\nthe default nesting limit is high enough for most users. Otherwise users\ncan first obtain a JsonReader from `Gson.newJsonReader` and then set a\ncustom nesting limit.\n\n* Ignore nesting limit for `JsonTreeReader`\n\nSee comment in JsonTreeReaderTest for the rationale\n\n* Fix formatting\n\n* Add concrete example to nesting limit Javadoc\n\n* Add comment about location being slightly incorrect",
   "origin": {

@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-167/base",
   "head_branch": "bench/aacr/aacr-167/head",
-  "base_sha": "6966955b3f99b17db12b75f3f0aef174d37aa8f0",
-  "head_sha": "08b2ad5126cbb099c2e247329479db30fc55ca60",
+  "base_sha": "889d7334dee1a8ff02ba2906c25e135a71189ac8",
+  "head_sha": "1781471629769115c3a24762679e1cf1ecaa9ab0",
   "mr_title": "player: put ipc initialization where it belongs",
   "mr_description": "- player: put ipc initialization where it belongs\n- player: coalesce option updates and drop redundant ones",
   "origin": {

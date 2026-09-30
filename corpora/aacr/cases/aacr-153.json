@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-153/base",
   "head_branch": "bench/aacr/aacr-153/head",
-  "base_sha": "58f5bc90b1a9a813503ad3fa7d6139de8690e632",
-  "head_sha": "2a4fdefb915356dcf168cbc7c90e30089515939e",
+  "base_sha": "adc015c0dd5ac5148fdefce77127ffa44d7982b7",
+  "head_sha": "17ce1da50ce4a0a6de2e504fa03c77271b950dc4",
   "mr_title": "Add projectsDelta method to ClusterChangedEvent",
   "mr_description": "Similar to nodesDelta, the projectsDelta provides a centrailzed method\nto tell the added and removed projects so that cluster\nlisteners/appliers do not need to compute it individually.\n\nNote the delta currently does not have updated. This needs to wait till\nwe stop eagerly creating ProjectMetadata.Builder in Metadata.Builder.",
   "origin": {

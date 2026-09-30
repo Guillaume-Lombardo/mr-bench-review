@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/martian-offline/martian-offline-025/base",
   "head_branch": "bench/martian-offline/martian-offline-025/head",
-  "base_sha": "292dfb94199881d5a6d8a1a9b867051728c699f1",
-  "head_sha": "a63a82225325104f7ecacea97edc76ac5ef1663c",
+  "base_sha": "93b6707139f40fcf29661becc48d8ea230608e37",
+  "head_sha": "5bbefea38a17374b10a55ddb6ce79c11a0587870",
   "mr_title": "Notification Rule Processing Engine",
   "mr_description": "- wip\n- Add working actions for GMA rules based on Prom-only API\n- Remove Ruler-loader related code for Grafana rules\n- Remove outdated tests\n- add some comments\n- remove commented code\n- remove showLocation property\n- Add missing mocks in tests\n- Add showLocation to GrafanaRuleListItem, improve useAbilities, address PR feedback\n- Merge branch 'main' of github.com:grafana/grafana into alerting/remove-ruler-from-alert-list-view2\n- Enhance GrafanaGroupLoader tests: Add permission checks and More button functionality\n- Update translations",
   "origin": {

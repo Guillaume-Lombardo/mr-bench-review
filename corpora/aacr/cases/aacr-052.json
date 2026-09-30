@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-052/base",
   "head_branch": "bench/aacr/aacr-052/head",
-  "base_sha": "057b9e784938aa0497b0bcbbfb26414de49e384d",
-  "head_sha": "6a01dc5cb0b18b818b83160c6dbb95907e9b0a24",
+  "base_sha": "2ca3998f30f859a104ee7ef391623b5e7c8c3c69",
+  "head_sha": "3b81ebb258e1c0fcad765b2e1a68b09bf00ba386",
   "mr_title": "Fixed to be able to use DeepSeek model in Azure.",
   "mr_description": "- Fixed to be able to use DeepSeek model in Azure.\n- fix\n- fix .changeset",
   "origin": {

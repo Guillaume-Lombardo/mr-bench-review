@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/aacr/aacr-059/base",
   "head_branch": "bench/aacr/aacr-059/head",
-  "base_sha": "c18cb625ecf58ffcfaa8edf617630b3493876968",
-  "head_sha": "86b2fbce0e2e0653973f22d9e983e5dfc8e39295",
+  "base_sha": "58dc54ed9b4341514c226e09f50afd12c19a4723",
+  "head_sha": "1975519a50b8d615bce712ea3fc069f276e5cf4d",
   "mr_title": "refactor: bluetooth in serial chooser when exclusively wireless serial ports are expected",
   "mr_description": "https://chromium-review.googlesource.com/c/chromium/src/+/5737296",
   "origin": {

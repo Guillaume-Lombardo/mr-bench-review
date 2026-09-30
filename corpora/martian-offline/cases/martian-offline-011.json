@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/martian-offline/martian-offline-011/base",
   "head_branch": "bench/martian-offline/martian-offline-011/head",
-  "base_sha": "9813634386475a33970d295df546d41442df6eca",
-  "head_sha": "1b19de1a7ed27891692a0a1f91a477022fdcb180",
+  "base_sha": "ab96a646e62551612b996ae81a77a88045340fd1",
+  "head_sha": "b888ba961d7544e139773f9c8ae0cad971f897e4",
   "mr_title": "FEATURE: automatically downsize large images",
   "mr_description": "",
   "origin": {

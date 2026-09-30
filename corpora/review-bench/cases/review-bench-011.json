@@ -8,8 +8,8 @@
   "tier": null,
   "base_branch": "bench/review-bench/review-bench-011/base",
   "head_branch": "bench/review-bench/review-bench-011/head",
-  "base_sha": "4cf5b04e35dbb817147c01c8f3552c6d73953fb8",
-  "head_sha": "62f6d9a9cadbf3eb5e9df7d17adb4f103de6310e",
+  "base_sha": "d5b9d160a31213ac82ac38a5b14face4dcb6cab7",
+  "head_sha": "7c14c65e163ab35b118619c677386afe926ee71c",
   "mr_title": "Add more tests to improve code coverage",
   "mr_description": "",
   "origin": {
