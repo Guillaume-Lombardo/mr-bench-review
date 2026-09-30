@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-050",
+  "language": "python",
+  "size": "medium",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-050/base",
+  "head_branch": "bench/curated/case-050/head",
+  "base_sha": "310e11a12a5efa249d7e30f12ff92d7cf779050c",
+  "head_sha": "46a3e87438bdc07927896de78f9335b27100806c",
+  "mr_title": "Refreshed model field values assigned expressions on save().",
+  "mr_description": "Removed the can_return_columns_from_insert skip gates on existing\nfield_defaults tests to confirm the expected number of queries are\nperformed and that returning field overrides are respected.",
+  "origin": {
+    "repository": "https://github.com/django/django",
+    "commit": "94680437a45a71c70ca8bd2e68b72aa1e2eff337",
+    "license": "BSD-3-Clause",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "django/db/models/base.py",
+      "line_start": 1153,
+      "line_end": 1153,
+      "category": "correctness",
+      "severity": "high",
+      "title": "pre_save() called with add=False during INSERT",
+      "description": "On INSERT, field.pre_save() is called with add=False, so auto_now_add fields are not populated at that point (and are None for code such as upload_to callables that depend on them).\n\nThis block runs in the insert branch of _save_table(); pre_save(instance, add) must receive add=True there. With add=False, DateField/DateTimeField(auto_now_add=True).pre_save() returns the current attribute (None) instead of setting now(), and because pre_save() is the hook that populates the attribute, later consumers (FileField upload_to callables, other fields' pre_save) observe None.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/94680437a45a71c70ca8bd2e68b72aa1e2eff337. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/77b306ea0fea54ed440a369dc38161331602386c; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

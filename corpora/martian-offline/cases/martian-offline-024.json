@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "martian-offline",
+  "id": "martian-offline-024",
+  "language": "typescript",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/martian-offline/martian-offline-024/base",
+  "head_branch": "bench/martian-offline/martian-offline-024/head",
+  "base_sha": "bf6b00710e4a6b58a447303805cbc68fbb2fcaa8",
+  "head_sha": "1300fe44b00db628795e097a36136ad5716af17b",
+  "mr_title": "Advanced Query Processing Architecture",
+  "mr_description": "- Loki query splitting: interpolate queries before execution\n- Update tests\n- Prettier\n- shardQuerySplitting: remove unnecessary call\n- shardQuerySplitting: fix target filtering\n- Update test",
+  "origin": {
+    "repository": "https://github.com/grafana/grafana",
+    "commit": "1cab4143d443c33079566f6ca36931eb8468159f",
+    "license": "AGPL-3.0",
+    "source_case": "https://github.com/grafana/grafana/pull/107534",
+    "source_url": "https://github.com/withmartian/code-review-benchmark/blob/e616e849755441da38f18bf3adba2c9583b03803/offline/golden_comments/grafana.json"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "tests",
+      "severity": "low",
+      "title": "The applyTemplateVariables method is called with request.filters as the third parameter,…",
+      "description": "The applyTemplateVariables method is called with request.filters as the third parameter, but this parameter is not used in the corresponding test setup.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "test_gap",
+      "source_text": "The applyTemplateVariables method is called with request.filters as the third parameter, but this parameter is not used in the corresponding test setup."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/grafana/grafana/pull/107534). Upstream base d9a8253640464014aa3662c91131278990cfb828 (merge-base with the default branch, before the merge for merged PRs). Golden comments are unlocated. i1: Martian profile Core"
+}

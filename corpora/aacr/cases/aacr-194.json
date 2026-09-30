@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-194",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-194/base",
+  "head_branch": "bench/aacr/aacr-194/head",
+  "base_sha": "0f7f9fa7915296baf21f89ceb7de57ecc3200fad",
+  "head_sha": "d2ad9d692587c50171338d7b51eb274a0542f3eb",
+  "mr_title": "⚡️ Speed up function `update_target_handle` by 27% Sure, here are the optimized versions of the given functions. The key optimizations include avoiding redundant dictionary lookups, removing unnecessary condition checks, and simplifying the logic where possible.",
+  "mr_description": "- ⚡️ Speed up function `update_target_handle` by 27% Sure, here are the optimized versions of the given functions. The key optimizations include avoiding redundant dictionary lookups, removing unnecessary condition checks, and simplifying the logic where possible.\n- lint fix\n- Merge branch 'main' into codeflash/optimize-update_target_handle-2024-12-11T13.51.21",
+  "origin": {
+    "repository": "https://github.com/langflow-ai/langflow",
+    "commit": "b1cbdbad29eb3fe3895de1663b2e77b3943b1aef",
+    "license": "MIT",
+    "source_case": "https://github.com/langflow-ai/langflow/pull/5388",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/backend/base/langflow/graph/graph/utils.py",
+      "line_start": 149,
+      "line_end": 150,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The proxy check introduces an unnecessary intermediate variable; replace the separate ass…",
+      "description": "The proxy check introduces an unnecessary intermediate variable; replace the separate assignment and condition with an assignment expression for conciseness: `if proxy := target_handle.get('proxy'):`",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The proxy check introduces an unnecessary intermediate variable; replace the separate assignment and condition with an assignment expression for conciseness: `if proxy := target_handle.get('proxy'):`"
+    },
+    {
+      "id": "i2",
+      "file": "src/backend/base/langflow/graph/graph/utils.py",
+      "line_start": 185,
+      "line_end": 191,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential runtime error introduced: when `node_data.get(\"flow\")` is truthy, the code unco…",
+      "description": "Potential runtime error introduced: when `node_data.get(\"flow\")` is truthy, the code unconditionally indexes `node_data[\"template\"][field][\"proxy\"]`. If `template`/`field`/`proxy` is missing or `proxy` is None, this raises KeyError/TypeError. Consider guarding with `.get()` (and only adding `new_target_handle[\"proxy\"]` when present) or raising a clearer error to avoid unexpected crashes.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential runtime error introduced: when `node_data.get(\"flow\")` is truthy, the code unconditionally indexes `node_data[\"template\"][field][\"proxy\"]`. If `template`/`field`/`proxy` is missing or `proxy` is None, this raises KeyError/TypeError. Consider guarding with `.get()` (and only adding `new_target_handle[\"proxy\"]` when present) or raising a clearer error to avoid unexpected crashes."
+    },
+    {
+      "id": "i3",
+      "file": "src/backend/base/langflow/graph/graph/utils.py",
+      "line_start": 193,
+      "line_end": 194,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The change replacing the walrus operator with a two-step assignment for `input_types` is…",
+      "description": "The change replacing the walrus operator with a two-step assignment for `input_types` is unnecessary; revert to the concise assignment expression as it provides no performance benefit while reducing readability.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The change replacing the walrus operator with a two-step assignment for `input_types` is unnecessary; revert to the concise assignment expression as it provides no performance benefit while reducing readability."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/langflow-ai/langflow/pull/5388). Upstream base 4b0c42e52076fb7cdca084a1ab06d46f87fecff1 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 22. Severity absent in the source. i1: human comment, Diff Level; i2: AI comment (GPT-5.2), Diff Level; i3: human comment, File Level"
+}

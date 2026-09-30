@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "martian-offline",
+  "id": "martian-offline-029",
+  "language": "go",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/martian-offline/martian-offline-029/base",
+  "head_branch": "bench/martian-offline/martian-offline-029/head",
+  "base_sha": "2ab48fb3cb03c3adfa57503dc5f8b28f0a237217",
+  "head_sha": "ff36d2c4c7b7f7d22ff09373cd22a802bdf1d14c",
+  "mr_title": "Advanced SQL Analytics Framework",
+  "mr_description": "- disable sql expressions\n- Run `make update-workspace`",
+  "origin": {
+    "repository": "https://github.com/grafana/grafana",
+    "commit": "f3317b329b4eb8fd96f99dd86525bc4a22d20248",
+    "license": "AGPL-3.0",
+    "source_case": "https://github.com/grafana/grafana/pull/94942",
+    "source_url": "https://github.com/withmartian/code-review-benchmark/blob/e616e849755441da38f18bf3adba2c9583b03803/offline/golden_comments/grafana.json"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "critical",
+      "title": "The enableSqlExpressions function has flawed logic that always returns false, effectively…",
+      "description": "The enableSqlExpressions function has flawed logic that always returns false, effectively disabling SQL expressions unconditionally:",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "bug",
+      "source_text": "The enableSqlExpressions function has flawed logic that always returns false, effectively disabling SQL expressions unconditionally:"
+    },
+    {
+      "id": "i2",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "high",
+      "title": "The DB methods NewInMemoryDB().RunCommands, DB.QueryFramesInto, and DB.TablesList in pkg/…",
+      "description": "The DB methods NewInMemoryDB().RunCommands, DB.QueryFramesInto, and DB.TablesList in pkg/expr/sql/db.go return hardcoded 'not implemented' errors after removing the go-duck dependency.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "api",
+      "source_text": "The DB methods NewInMemoryDB().RunCommands, DB.QueryFramesInto, and DB.TablesList in pkg/expr/sql/db.go return hardcoded 'not implemented' errors after removing the go-duck dependency."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/grafana/grafana/pull/94942). Upstream base cbe1e7d63f098e306058c0fbcab2f5c30602fa7d (merge-base with the default branch, before the merge for merged PRs). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile Strict"
+}

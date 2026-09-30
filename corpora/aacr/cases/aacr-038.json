@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-038",
+  "language": "cpp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-038/base",
+  "head_branch": "bench/aacr/aacr-038/head",
+  "base_sha": "c0910ef9df838fc23ee4e39690dff7f86935367c",
+  "head_sha": "db8f270c926498bbf020a1df5e090ca07b10ea34",
+  "mr_title": "Replaced sprintf with snprintf in aruco_samples_utility.hpp for safer buffer handling",
+  "mr_description": "Replaced sprintf with snprintf in sample programs for safer buffer handling",
+  "origin": {
+    "repository": "https://github.com/opencv/opencv",
+    "commit": "e3e45c86baa3c51def49961f5d77201ee97e4385",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/opencv/opencv/pull/26815",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "samples/cpp/tutorial_code/ImgTrans/HoughLines_Demo.cpp",
+      "line_start": 75,
+      "line_end": 75,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The fixed string 'Edge Thres: input' does not require snprintf; change edge_thresh_label…",
+      "description": "The fixed string 'Edge Thres: input' does not require snprintf; change edge_thresh_label to a const char* pointer to avoid unnecessary copying.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "The fixed string 'Edge Thres: input' does not require snprintf; change edge_thresh_label to a const char* pointer to avoid unnecessary copying."
+    },
+    {
+      "id": "i2",
+      "file": "samples/cpp/tutorial_code/ImgTrans/HoughLines_Demo.cpp",
+      "line_start": 75,
+      "line_end": 75,
+      "category": "security",
+      "severity": null,
+      "title": "Good improvement switching from `sprintf` to `snprintf` to prevent buffer overflows",
+      "description": "Good improvement switching from `sprintf` to `snprintf` to prevent buffer overflows. Two follow-ups to consider:\n1) Portability: `snprintf` is C99; on older MSVC it may require `_snprintf` or feature macros. Ensure the build toolchain guarantees `snprintf` availability.\n2) If you can touch more code, prefer avoiding raw C buffers entirely (e.g., `std::array<char, 50>` or `std::string`), which is safer and clearer.\nAlso verify the proper header is included (`<cstdio>` / `<stdio.h>`) in this file or via transitive includes.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "Good improvement switching from `sprintf` to `snprintf` to prevent buffer overflows. Two follow-ups to consider:\n1) Portability: `snprintf` is C99; on older MSVC it may require `_snprintf` or feature macros. Ensure the build toolchain guarantees `snprintf` availability.\n2) If you can touch more code, prefer avoiding raw C buffers entirely (e.g., `std::array<char, 50>` or `std::string`), which is safer and clearer.\nAlso verify the proper header is included (`<cstdio>` / `<stdio.h>`) in this file or via transitive includes."
+    },
+    {
+      "id": "i3",
+      "file": "samples/cpp/tutorial_code/objectDetection/aruco_samples_utility.hpp",
+      "line_start": 35,
+      "line_end": 38,
+      "category": "correctness",
+      "severity": null,
+      "title": "Good improvement switching to snprintf for bounds safety",
+      "description": "Good improvement switching to snprintf for bounds safety. Consider checking the return value to detect truncation/encoding errors (snprintf returns <0 on error or >= sizeof(buf) when truncated). If truncation matters for later use/logging, handle it explicitly (e.g., clamp, append \"...\", or ensure buffer is large enough).\n\n```suggestion\n        int n = snprintf(buf, sizeof(buf), \"flags: %s%s%s%s\",\n                         (flags & cv::CALIB_USE_INTRINSIC_GUESS) ? \"+use_intrinsic_guess\" : \"\",\n                         (flags & cv::CALIB_FIX_ASPECT_RATIO) ? \"+fix_aspectRatio\" : \"\",\n                         (flags & cv::CALIB_FIX_PRINCIPAL_POINT) ? \"+fix_principal_point\" : \"\");\n        if (n < 0) {\n            buf[0] = '\\0';\n        } else if (n >= static_cast<int>(sizeof(buf))) {\n            // truncated: optionally handle\n        }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Good improvement switching to snprintf for bounds safety. Consider checking the return value to detect truncation/encoding errors (snprintf returns <0 on error or >= sizeof(buf) when truncated). If truncation matters for later use/logging, handle it explicitly (e.g., clamp, append \"...\", or ensure buffer is large enough).\n\n```suggestion\n        int n = snprintf(buf, sizeof(buf), \"flags: %s%s%s%s\",\n                         (flags & cv::CALIB_USE_INTRINSIC_GUESS) ? \"+use_intrinsic_guess\" : \"\",\n                         (flags & cv::CALIB_FIX_ASPECT_RATIO) ? \"+fix_aspectRatio\" : \"\",\n                         (flags & cv::CALIB_FIX_PRINCIPAL_POINT) ? \"+fix_principal_point\" : \"\");\n        if (n < 0) {\n            buf[0] = '\\0';\n        } else if (n >= static_cast<int>(sizeof(buf))) {\n            // truncated: optionally handle\n        }\n```"
+    },
+    {
+      "id": "i4",
+      "file": "samples/opengl/opengl_interop.cpp",
+      "line_start": 242,
+      "line_end": 242,
+      "category": "correctness",
+      "severity": null,
+      "title": "The existing `snprintf` call in the Linux section uses `sizeof(buf)-1` which is inconsist…",
+      "description": "The existing `snprintf` call in the Linux section uses `sizeof(buf)-1` which is inconsistent with the newly changed Windows code that uses `sizeof(buf)`. According to the C/C++ standard, `snprintf` guarantees null-termination, so `sizeof(buf)` is correct and sufficient. Consider changing this to `sizeof(buf)` for consistency with the Windows code changes.\n\n```suggestion\n        snprintf(buf, sizeof(buf), \"Time, msec: %2.1f, Mode: %s OpenGL %s, Device: %s\", time, m_modeStr[mode].c_str(), use_buffer() ? \"buffer\" : \"texture\", oclDevName.c_str());\n```",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The existing `snprintf` call in the Linux section uses `sizeof(buf)-1` which is inconsistent with the newly changed Windows code that uses `sizeof(buf)`. According to the C/C++ standard, `snprintf` guarantees null-termination, so `sizeof(buf)` is correct and sufficient. Consider changing this to `sizeof(buf)` for consistency with the Windows code changes.\n\n```suggestion\n        snprintf(buf, sizeof(buf), \"Time, msec: %2.1f, Mode: %s OpenGL %s, Device: %s\", time, m_modeStr[mode].c_str(), use_buffer() ? \"buffer\" : \"texture\", oclDevName.c_str());\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "samples/opengl/opengl_interop.cpp",
+      "line_start": 224,
+      "line_end": 224,
+      "description": "Potential portability/build issue: this file previously used `sprintf_s` (MSVC secure CRT). Switching to `snprintf` may break on some Windows/MSVC configurations unless `<cstdio>` is included and/or `_snprintf`/`snprintf` mapping is available (older MSVC). Also, `snprintf` returns the number of chars that would have been written; if the string is truncated you may want to handle it (e.g., clamp length passed to `TextOut` to `sizeof(buf)-1`). Consider keeping `sprintf_s` under MSVC and using `snprintf` elsewhere, or add a small wrapper that normalizes behavior across platforms.\n\n```suggestion\n            #if defined(_MSC_VER)\n                        _snprintf_s(buf, sizeof(buf), _TRUNCATE,\n                                   \"Mode: %s OpenGL %s\", m_modeStr[mode].c_str(),\n                                   use_buffer() ? \"buffer\" : \"texture\");\n            #else\n                        std::snprintf(buf, sizeof(buf), \"Mode: %s OpenGL %s\",\n                                      m_modeStr[mode].c_str(), use_buffer() ? \"buffer\" : \"texture\");\n            #endif\n```"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/opencv/opencv/pull/26815). Upstream base fe9405e8c0341f67da8d804494d642cf296899c8 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 11. Severity absent in the source. i1: human comment, Diff Level; i2: AI comment (GPT-5.2), File Level; i3: AI comment (GPT-5.2), File Level; i4: AI comment (GLM-4.7), File Level"
+}

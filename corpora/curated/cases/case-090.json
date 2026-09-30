@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-090",
+  "language": "typescript",
+  "size": "medium",
+  "kind": "real",
+  "tier": "core",
+  "base_branch": "bench/curated/case-090/base",
+  "head_branch": "bench/curated/case-090/head",
+  "base_sha": "1e4cf2ac549bd6aed87e1cc95a2812721dead20d",
+  "head_sha": "ee1681fb0b9f463e4d99d2da2f1431c516177a0c",
+  "mr_title": "fix(cdk/drag-drop): resolve helper directives with DI for proper hostDirectives support",
+  "mr_description": "Currently `CdkDrag` resolve its helper directives (e.g. handle or preview) using a content query, but that doesn't work when it's applied as a host directive, because no content is being projected.\n\nThese changes switch to having the helper directives inject the closest drag directive and register themselves manually.",
+  "origin": {
+    "repository": "https://github.com/angular/components",
+    "commit": "4af777a189ca0bd80a5158dafa3d9cf4f60b6bf2",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/cdk/drag-drop/directives/drag-preview.ts",
+      "line_start": 37,
+      "line_end": 37,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Required parent injection throws when preview/placeholder is outside cdkDrag",
+      "description": "CdkDragPreview and CdkDragPlaceholder now inject CDK_DRAG_PARENT as required, so templates using *cdkDragPreview/*cdkDragPlaceholder outside a cdkDrag (previously a harmless no-op) now throw NullInjectorError.\n\nSwitching from a content query to DI registration changes the failure mode: before, a stray preview/placeholder template was simply ignored; now the constructor fails and breaks the whole component rendering. Existing apps (e.g. shared templates conditionally placed inside cdkDrag) break on upgrade. The injection should be optional with null-safe calls.",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "src/cdk/drag-drop/directives/drag-placeholder.ts",
+          "line_start": 29,
+          "line_end": 29
+        }
+      ],
+      "source_category": null,
+      "source_text": null
+    },
+    {
+      "id": "i2",
+      "file": "src/cdk/drag-drop/directives/drag.ts",
+      "line_start": 77,
+      "line_end": 77,
+      "category": "tests",
+      "severity": "medium",
+      "title": "Registration refactor has no tests for host directives or detached templates",
+      "description": "The helper directives switch from content queries to DI registration to support hostDirectives, but no test covers CdkDrag used as a host directive, nor preview/placeholder templates outside a cdkDrag (which now throw).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/angular/components/commit/4af777a189ca0bd80a5158dafa3d9cf4f60b6bf2. Primary issue confirmed by the later upstream fix https://github.com/angular/components/commit/31e30883a33d89d277d710a97f81b26b1972c8ba; its regression test reproduces the problem on this head. Curator difficulty: medium. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

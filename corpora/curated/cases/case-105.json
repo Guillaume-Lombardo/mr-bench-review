@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-105",
+  "language": "typescript",
+  "size": "medium",
+  "kind": "real",
+  "tier": "core",
+  "base_branch": "bench/curated/case-105/base",
+  "head_branch": "bench/curated/case-105/head",
+  "base_sha": "6b1740aefcd8cac3aea5966d8755995ebe93e794",
+  "head_sha": "ecba555bac904b9b002464d21deca5a5db1ea279",
+  "mr_title": "fix(cdk/portal): remove ComponentFactoryResolver usages",
+  "mr_description": "We now have all the necessary APIs to allow to remove our usages of the deprecated `ComponentFactoryResolver`.",
+  "origin": {
+    "repository": "https://github.com/angular/components",
+    "commit": "873eb01e018018f19434a4187a6b2a871272d09a",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/cdk/portal/dom-portal-outlet.ts",
+      "line_start": 89,
+      "line_end": 89,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Component portals always use the root environment injector",
+      "description": "createComponent() now always receives the application root as environmentInjector, ignoring child environment injectors (lazy-loaded routes, createEnvironmentInjector) present above the portal's element injector, so providers from those scopes are not found.\n\nWith ComponentFactoryResolver the resolver carried the right module/environment scope. The replacement passes `this._appRef.injector` unconditionally; a component attached through a DomPortalOutlet (overlays, dialogs, snack bars) from a lazy route can no longer inject services provided in that route's environment injector (NullInjectorError or wrong singleton instance). The environment injector must be resolved from the element injector (elementInjector.get(EnvironmentInjector, appRef.injector)).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/angular/components/commit/873eb01e018018f19434a4187a6b2a871272d09a. Primary issue confirmed by the later upstream fix https://github.com/angular/components/commit/3de78febb85ee55beaef451878723093f5feceff; its regression test reproduces the problem on this head. Curator difficulty: hard. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

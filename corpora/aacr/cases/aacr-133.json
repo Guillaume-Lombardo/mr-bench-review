@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-133",
+  "language": "rust",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-133/base",
+  "head_branch": "bench/aacr/aacr-133/head",
+  "base_sha": "0c5aa89fcdedb1461c43e380e460a9b12502ae94",
+  "head_sha": "5d332595123861b11f5babed6500869ea594c963",
+  "mr_title": "feat(connector): [Checkout] Add Google Pay Predecrypt Flow",
+  "mr_description": "- feat(connector): [Checkout] Add Google Pay Predecrypt Flow\n- Merge remote-tracking branch 'origin' into checkout-google-pay\n- fix: add config to avoid connector tokenization for google pay decrypt flow\n- chore: run cargo nightly",
+  "origin": {
+    "repository": "https://github.com/juspay/hyperswitch",
+    "commit": "0231de6ae6795ef7fa85e5ab87b6fe46a4955333",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/juspay/hyperswitch/pull/9130",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "config/config.example.toml",
+      "line_start": 474,
+      "line_end": 474,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Missing whitespace after comma",
+      "description": "Missing whitespace after comma. For consistency with other lines in the configuration, there should be a space after the comma separating configuration fields.\n\n```suggestion\ncheckout = { long_lived_token = false, payment_method = \"wallet\", apple_pay_pre_decrypt_flow = \"network_tokenization\", google_pay_pre_decrypt_flow = \"network_tokenization\" }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Missing whitespace after comma. For consistency with other lines in the configuration, there should be a space after the comma separating configuration fields.\n\n```suggestion\ncheckout = { long_lived_token = false, payment_method = \"wallet\", apple_pay_pre_decrypt_flow = \"network_tokenization\", google_pay_pre_decrypt_flow = \"network_tokenization\" }\n```"
+    },
+    {
+      "id": "i2",
+      "file": "config/development.toml",
+      "line_start": 989,
+      "line_end": 989,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Trailing whitespace detected at the end of the line",
+      "description": "Trailing whitespace detected at the end of the line. Please remove the extra spaces after the closing brace for cleaner code formatting.\n\n```suggestion\ncheckout = { long_lived_token = false, payment_method = \"wallet\", apple_pay_pre_decrypt_flow = \"network_tokenization\", google_pay_pre_decrypt_flow = \"network_tokenization\" }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Trailing whitespace detected at the end of the line. Please remove the extra spaces after the closing brace for cleaner code formatting.\n\n```suggestion\ncheckout = { long_lived_token = false, payment_method = \"wallet\", apple_pay_pre_decrypt_flow = \"network_tokenization\", google_pay_pre_decrypt_flow = \"network_tokenization\" }\n```"
+    },
+    {
+      "id": "i3",
+      "file": "config/development.toml",
+      "line_start": 989,
+      "line_end": 989,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The added `google_pay_pre_decrypt_flow` key looks fine functionally, but please fix the f…",
+      "description": "The added `google_pay_pre_decrypt_flow` key looks fine functionally, but please fix the formatting: there are two spaces before the closing `}`. Also consider keeping key ordering consistent across environments (dev/example/production/etc.) and ensure the router settings schema supports this key; otherwise TOML may parse but be ignored at runtime.\n\n```suggestion\ncheckout = { long_lived_token = false, payment_method = \"wallet\", apple_pay_pre_decrypt_flow = \"network_tokenization\", google_pay_pre_decrypt_flow = \"network_tokenization\" }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The added `google_pay_pre_decrypt_flow` key looks fine functionally, but please fix the formatting: there are two spaces before the closing `}`. Also consider keeping key ordering consistent across environments (dev/example/production/etc.) and ensure the router settings schema supports this key; otherwise TOML may parse but be ignored at runtime.\n\n```suggestion\ncheckout = { long_lived_token = false, payment_method = \"wallet\", apple_pay_pre_decrypt_flow = \"network_tokenization\", google_pay_pre_decrypt_flow = \"network_tokenization\" }\n```"
+    },
+    {
+      "id": "i4",
+      "file": "crates/hyperswitch_connectors/src/connectors/checkout/transformers.rs",
+      "line_start": 219,
+      "line_end": 223,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential API contract issue: `GooglePayPredecrypt.token` is typed as `cards::CardNumber`…",
+      "description": "Potential API contract issue: `GooglePayPredecrypt.token` is typed as `cards::CardNumber`, but it’s assigned from `application_primary_account_number.clone()`. If that field is a plain `String`/`Secret<String>` (common for decrypted PANs), this will either not compile or will serialize in an unexpected format. Consider converting/validating explicitly (e.g., `cards::CardNumber::from_str` / `CardNumber::try_from`) and mapping errors to `InvalidDataFormat` so failures are actionable.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential API contract issue: `GooglePayPredecrypt.token` is typed as `cards::CardNumber`, but it’s assigned from `application_primary_account_number.clone()`. If that field is a plain `String`/`Secret<String>` (common for decrypted PANs), this will either not compile or will serialize in an unexpected format. Consider converting/validating explicitly (e.g., `cards::CardNumber::from_str` / `CardNumber::try_from`) and mapping errors to `InvalidDataFormat` so failures are actionable."
+    },
+    {
+      "id": "i5",
+      "file": "crates/hyperswitch_connectors/src/connectors/checkout/transformers.rs",
+      "line_start": 346,
+      "line_end": 355,
+      "category": "correctness",
+      "severity": null,
+      "title": "Consider validating `expiry_month`/`expiry_year` ranges (1-12, current/valid year) before…",
+      "description": "Consider validating `expiry_month`/`expiry_year` ranges (1-12, current/valid year) before sending to connector. Currently you only map parse failures; out-of-range values could pass through and cause downstream declines that are harder to diagnose.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Consider validating `expiry_month`/`expiry_year` ranges (1-12, current/valid year) before sending to connector. Currently you only map parse failures; out-of-range values could pass through and cause downstream declines that are harder to diagnose."
+    },
+    {
+      "id": "i6",
+      "file": "crates/router/src/core/payments.rs",
+      "line_start": 6913,
+      "line_end": 6916,
+      "category": "correctness",
+      "severity": null,
+      "title": "The function uses a negative condition (`!matches!(NetworkTokenization)`) for Google Pay…",
+      "description": "The function uses a negative condition (`!matches!(NetworkTokenization)`) for Google Pay pre-decrypt flow, which will incorrectly treat future `GooglePayPreDecryptFlow` variants as connector tokenization; change to explicitly match the desired connector tokenization variant.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The function uses a negative condition (`!matches!(NetworkTokenization)`) for Google Pay pre-decrypt flow, which will incorrectly treat future `GooglePayPreDecryptFlow` variants as connector tokenization; change to explicitly match the desired connector tokenization variant."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "config/deployments/sandbox.toml",
+      "line_start": 860,
+      "line_end": 860,
+      "description": "There is a missing space after the comma before `google_pay_pre_decrypt_flow`. For consistency with other configuration files and TOML formatting standards, please add a space after the comma."
+    },
+    {
+      "file": "crates/hyperswitch_connectors/src/connectors/checkout/transformers.rs",
+      "line_start": 221,
+      "line_end": 221,
+      "description": "The field '_type' uses a leading underscore which typically indicates it's intentionally unused. Consider renaming to avoid confusion or add a comment explaining why it's needed for serialization."
+    },
+    {
+      "file": "crates/hyperswitch_connectors/src/connectors/checkout/transformers.rs",
+      "line_start": 227,
+      "line_end": 227,
+      "description": "The cryptogram field in GooglePayPredecrypt is mandatory but may be absent in decrypted tokens, requiring it to be optional."
+    },
+    {
+      "file": "crates/hyperswitch_connectors/src/connectors/checkout/transformers.rs",
+      "line_start": 346,
+      "line_end": 355,
+      "description": "The error field names reference 'payment_method_data.card.card_exp_month' and 'payment_method_data.card.card_exp_year', which is misleading since this is Google Pay data, not direct card data. Consider using more accurate field names like 'google_pay.expiry_month' and 'google_pay.expiry_year' for better error clarity."
+    },
+    {
+      "file": "crates/hyperswitch_connectors/src/connectors/checkout/transformers.rs",
+      "line_start": 356,
+      "line_end": 361,
+      "description": "The error handling for missing cryptogram could be improved by providing more context about why it's required."
+    },
+    {
+      "file": "crates/hyperswitch_connectors/src/connectors/checkout/transformers.rs",
+      "line_start": 369,
+      "line_end": 369,
+      "description": "Hardcoded ECI value '06' used for Google Pay transactions. Please confirm this value complies with Checkout.com's network token transaction requirements."
+    },
+    {
+      "file": "crates/router/src/configs/settings.rs",
+      "line_start": 640,
+      "line_end": 640,
+      "description": "Config wiring seems consistent (new enum + optional field). One suggestion: add `#[serde(default)]` on the field to make defaulting explicit and consistent with other config structs. Also ensure config examples keep consistent formatting (e.g., spaces after commas) so users don’t copy confusing snippets.\n\n```suggestion\n    #[serde(default)]\n        pub google_pay_pre_decrypt_flow: Option<GooglePayPreDecryptFlow>,\n```"
+    },
+    {
+      "file": "crates/router/src/core/payments.rs",
+      "line_start": 6859,
+      "line_end": 6863,
+      "description": "Naming/semantics: this predicate returns `true` for “allowed” and `false` only in a specific forbidden case. Consider renaming to something like `is_google_pay_pre_decrypt_tokenization_allowed` to reduce the chance of misusing it in future boolean compositions."
+    },
+    {
+      "file": "crates/router/src/core/payments.rs",
+      "line_start": 6904,
+      "line_end": 6908,
+      "description": "`PaymentMethodTokenFilter.google_pay_pre_decrypt_flow` is `Option<GooglePayPreDecryptFlow>`, while `GooglePayPreDecryptFlow` itself has a `Default` of `ConnectorTokenization`. Because the field is `Option`, absence in config will be `None` (not the enum default). If the intent is to have an explicit default behavior, consider either:\n- make the field non-optional with `#[serde(default)] pub google_pay_pre_decrypt_flow: GooglePayPreDecryptFlow`, or\n- add `#[serde(default)]` on the Option field and document that `None` means “allow” (current behavior).\nOtherwise readers may assume the enum default applies when config omits the field.\nAlso, currently only `Some(NetworkTokenization)` disables connector tokenization; `None` and `Some(ConnectorTokenization)` both allow, which may be fine but is redundant—consider simplifying by making it non-optional."
+    },
+    {
+      "file": "crates/router/src/core/payments.rs",
+      "line_start": 6917,
+      "line_end": 6917,
+      "description": "The match expression uses a wildcard pattern (`_`) which obscures potential unhandled variants of `payment_method_type` and `payment_method_token`. Replace it with explicit case handling or an `if let` statement to ensure all payment method scenarios are intentionally addressed."
+    },
+    {
+      "file": "loadtest/config/development.toml",
+      "line_start": 683,
+      "line_end": 683,
+      "description": "Formatting inconsistency: In config/config.example.toml, there is no space after the comma separating `apple_pay_pre_decrypt_flow` and `google_pay_pre_decrypt_flow`, while all other config files have proper spacing with a space after the comma. Please add a space after the comma for consistency across all configuration files."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/juspay/hyperswitch/pull/9130). Upstream base 24beaa224a08301b40ee18c617cbf116049eb3d5 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 127. Severity absent in the source. i1: AI comment (GLM-4.7), Diff Level; i2: AI comment (GLM-4.7), Diff Level; i3: AI comment (GPT-5.2), Diff Level; i4: AI comment (GPT-5.2), Repo Level; i5: AI comment (GPT-5.2), Repo Level; i6: human comment, Diff Level"
+}

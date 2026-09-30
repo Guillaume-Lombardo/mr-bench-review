@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "corpus": "martian-offline",
+  "id": "martian-offline-023",
+  "language": "go",
+  "size": "large",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/martian-offline/martian-offline-023/base",
+  "head_branch": "bench/martian-offline/martian-offline-023/head",
+  "base_sha": "08289252e3dc04d33515f6aa69339f1e2b418bfd",
+  "head_sha": "ec2278b71669da00e1e16472de77f0f575e4e2a4",
+  "mr_title": "Plugins: Chore: Renamed instrumentation middleware to metrics middleware",
+  "mr_description": "- Plugins: Chore: Renamed instrumentation middleware to metrics middleware\n- Removed repeated logger attributes in middleware and contextual logger\n- renamed loggerParams to logParams\n- PR review suggestion\n- Add contextual logger middleware\n- Removed unused params from logRequest\n- Removed unwanted changes\n- Safer FromContext method\n- Removed traceID from logParams\n- Merge remote-tracking branch 'origin/main' into giuseppe/rename-instrumentation-middleware",
+  "origin": {
+    "repository": "https://github.com/grafana/grafana",
+    "commit": "303cdc2caf256aa5df660611120c2e3f7392365d",
+    "license": "AGPL-3.0",
+    "source_case": "https://github.com/grafana/grafana/pull/76186",
+    "source_url": "https://github.com/withmartian/code-review-benchmark/blob/e616e849755441da38f18bf3adba2c9583b03803/offline/golden_comments/grafana.json"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "high",
+      "title": "The ContextualLoggerMiddleware methods (QueryData, CallResource, CheckHealth, CollectMetr…",
+      "description": "The ContextualLoggerMiddleware methods (QueryData, CallResource, CheckHealth, CollectMetrics) panic when a nil request is received. This occurs because they directly access req.PluginContext (via the instrumentContext function) without first checking if req is nil. This is a regression, as previous middleware layers gracefully handled nil requests.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "bug",
+      "source_text": "The ContextualLoggerMiddleware methods (QueryData, CallResource, CheckHealth, CollectMetrics) panic when a nil request is received. This occurs because they directly access req.PluginContext (via the instrumentContext function) without first checking if req is nil. This is a regression, as previous middleware layers gracefully handled nil requests."
+    },
+    {
+      "id": "i2",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "low",
+      "title": "The traceID is no longer logged for plugin requests",
+      "description": "The traceID is no longer logged for plugin requests. During a refactoring, the tracing import and the logic to extract and add traceID from the context to log parameters were removed from the LoggerMiddleware. The newly introduced ContextualLoggerMiddleware does not add this information, resulting in missing traceID in plugin request logs and impacting debugging and request tracing capabilities.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "bug",
+      "source_text": "The traceID is no longer logged for plugin requests. During a refactoring, the tracing import and the logic to extract and add traceID from the context to log parameters were removed from the LoggerMiddleware. The newly introduced ContextualLoggerMiddleware does not add this information, resulting in missing traceID in plugin request logs and impacting debugging and request tracing capabilities."
+    },
+    {
+      "id": "i3",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "high",
+      "title": "The `TestLogger.FromContext` method returns a new `TestLogger` instance via `NewTestLogge…",
+      "description": "The `TestLogger.FromContext` method returns a new `TestLogger` instance via `NewTestLogger()` instead of returning the receiver (f). This causes logs to be recorded on an un-referenced instance, leading to broken test assertions that expect logs to be recorded on the original logger.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "bug",
+      "source_text": "The `TestLogger.FromContext` method returns a new `TestLogger` instance via `NewTestLogger()` instead of returning the receiver (f). This causes logs to be recorded on an un-referenced instance, leading to broken test assertions that expect logs to be recorded on the original logger."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/grafana/grafana/pull/76186). Upstream base 58ba11ecbd60863e2bfc6e32f0399ed4feb3927a (merge-base with the default branch, before the merge for merged PRs). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile Strict; i3: Martian profile Strict"
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-046",
+  "language": "typescript",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-046/base",
+  "head_branch": "bench/aacr/aacr-046/head",
+  "base_sha": "90451e2140708d2a73544ccbc10279cc9ffecca7",
+  "head_sha": "27872101b77c4d00d28848c78fe03fc74637395f",
+  "mr_title": "Fix issue where checkpointing blocked UI",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/cline/cline",
+    "commit": "419534ccd4241fc11827741eb0d76ba0c9d21277",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/cline/cline/pull/5177",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/core/task/index.ts",
+      "line_start": 1320,
+      "line_end": 1320,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The checkpoint process comment is overly verbose and difficult to parse; restructure it u…",
+      "description": "The checkpoint process comment is overly verbose and difficult to parse; restructure it using bullet points or shorter comments for clarity.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The checkpoint process comment is overly verbose and difficult to parse; restructure it using bullet points or shorter comments for clarity."
+    },
+    {
+      "id": "i2",
+      "file": "src/core/task/index.ts",
+      "line_start": 1322,
+      "line_end": 1322,
+      "category": "correctness",
+      "severity": null,
+      "title": "Missing error handling for the asynchronous checkpoint commit operation may cause unhandl…",
+      "description": "Missing error handling for the asynchronous checkpoint commit operation may cause unhandled promise rejections and leave checkpoint messages without commit hashes on failure.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Missing error handling for the asynchronous checkpoint commit operation may cause unhandled promise rejections and leave checkpoint messages without commit hashes on failure."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/cline/cline/pull/5177). Upstream base a1bf1f95a30ca95581d9811488636aec42dd2f80 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 33. Severity absent in the source. i1: human comment, Diff Level; i2: human comment, Diff Level"
+}

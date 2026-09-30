@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "name": "review-bench",
+  "title": "review-bench corpus v0.1 (hyperneolabs)",
+  "origin": "imported",
+  "source_url": "https://github.com/hyperneolabs/review-bench",
+  "licence": "CC-BY-4.0 annotations; upstream code per case (MIT, BSD-3-Clause, Apache-2.0)",
+  "default": false,
+  "annotation": "human",
+  "location_precision": "lines",
+  "severity_available": false,
+  "created_at": "2026-09-30"
+}

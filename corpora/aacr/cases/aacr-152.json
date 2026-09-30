@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-152",
+  "language": "java",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-152/base",
+  "head_branch": "bench/aacr/aacr-152/head",
+  "base_sha": "b34da3f5faf9d1f800fc49511beb5e6d606b0f83",
+  "head_sha": "85519a14eed531c3c7a65290b7eb43cf6dd834f1",
+  "mr_title": "restrict agent entitlement checks to only the unnamed module in the system classloader",
+  "mr_description": "- restrict agent entitlement checks to only the unnamed module in the system classloader\n- Update docs/changelog/120546.yaml\n- Merge branch 'main' into scriptmodule",
+  "origin": {
+    "repository": "https://github.com/elastic/elasticsearch",
+    "commit": "761281a81a4002518df11ee62e5b9e34355c8778",
+    "license": "AGPL-3.0-only OR SSPL-1.0 OR Elastic-2.0",
+    "source_case": "https://github.com/elastic/elasticsearch/pull/120546",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "libs/entitlement/src/main/java/org/elasticsearch/entitlement/initialization/EntitlementInitialization.java",
+      "line_start": 61,
+      "line_end": 61,
+      "category": "correctness",
+      "severity": null,
+      "title": "AGENTS_MODULE is derived from ClassLoader.getSystemClassLoader().getUnnamedModule()",
+      "description": "AGENTS_MODULE is derived from ClassLoader.getSystemClassLoader().getUnnamedModule(). If the agent classes are loaded by a different classloader (common for javaagents) or if the agent runs in the bootstrap loader, this may not represent the agent’s actual unnamed module and could lead to module-identity mismatches in PolicyManager checks. Consider passing the agent’s defining module/classloader explicitly (e.g., based on a known agent class) or documenting why the system classloader unnamed module is guaranteed here (and add a defensive fallback if not).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "AGENTS_MODULE is derived from ClassLoader.getSystemClassLoader().getUnnamedModule(). If the agent classes are loaded by a different classloader (common for javaagents) or if the agent runs in the bootstrap loader, this may not represent the agent’s actual unnamed module and could lead to module-identity mismatches in PolicyManager checks. Consider passing the agent’s defining module/classloader explicitly (e.g., based on a known agent class) or documenting why the system classloader unnamed module is guaranteed here (and add a defensive fallback if not)."
+    },
+    {
+      "id": "i2",
+      "file": "libs/entitlement/src/main/java/org/elasticsearch/entitlement/runtime/policy/PolicyManager.java",
+      "line_start": 110,
+      "line_end": 112,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential NPE/behavior masking: `agentsModule` is a required constructor dependency (used…",
+      "description": "Potential NPE/behavior masking: `agentsModule` is a required constructor dependency (used for entitlement decisions) but is not validated. If it is accidentally passed as `null`, the code will silently skip the agent entitlement branch (`requestingModule == agentsModule` will always be false) and fall through to `NONE`, which could be hard to debug. Suggest failing fast via `requireNonNull(agentsModule)` and likely also `requireNonNull(entitlementsModule)`/`pluginResolver` for consistency with other params.\n\n```suggestion\n        this.pluginResolver = requireNonNull(pluginResolver);\n                this.agentsModule = requireNonNull(agentsModule);\n                this.entitlementsModule = requireNonNull(entitlementsModule);\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential NPE/behavior masking: `agentsModule` is a required constructor dependency (used for entitlement decisions) but is not validated. If it is accidentally passed as `null`, the code will silently skip the agent entitlement branch (`requestingModule == agentsModule` will always be false) and fall through to `NONE`, which could be hard to debug. Suggest failing fast via `requireNonNull(agentsModule)` and likely also `requireNonNull(entitlementsModule)`/`pluginResolver` for consistency with other params.\n\n```suggestion\n        this.pluginResolver = requireNonNull(pluginResolver);\n                this.agentsModule = requireNonNull(agentsModule);\n                this.entitlementsModule = requireNonNull(entitlementsModule);\n```"
+    },
+    {
+      "id": "i3",
+      "file": "libs/entitlement/src/main/java/org/elasticsearch/entitlement/runtime/policy/PolicyManager.java",
+      "line_start": 328,
+      "line_end": 331,
+      "category": "correctness",
+      "severity": null,
+      "title": "Logic change risk: previously *any* unnamed module was treated as an agent (comment: \"age…",
+      "description": "Logic change risk: previously *any* unnamed module was treated as an agent (comment: \"agents are the only thing running non-modular\"), now only the exact `agentsModule` instance matches. If other unnamed modules exist in the system classloader (tests, tooling, future refactors), they will no longer receive agent entitlements and will fall through to `NONE`. If the intent is specifically to match the agent unnamed module, consider documenting why identity (`==`) is safe here (same `Module` instance source), or using a more robust predicate aligned with intent (e.g., `!requestingModule.isNamed()` plus additional checks like classloader/module name/layer).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Logic change risk: previously *any* unnamed module was treated as an agent (comment: \"agents are the only thing running non-modular\"), now only the exact `agentsModule` instance matches. If other unnamed modules exist in the system classloader (tests, tooling, future refactors), they will no longer receive agent entitlements and will fall through to `NONE`. If the intent is specifically to match the agent unnamed module, consider documenting why identity (`==`) is safe here (same `Module` instance source), or using a more robust predicate aligned with intent (e.g., `!requestingModule.isNamed()` plus additional checks like classloader/module name/layer)."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/elastic/elasticsearch/pull/120546). Upstream base 1d9acc1a421e83776512b0606c6bd2bb95df750c = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 142. Severity absent in the source. i1: AI comment (GPT-5.2), Diff Level; i2: AI comment (GPT-5.2), File Level; i3: AI comment (GPT-5.2), File Level"
+}

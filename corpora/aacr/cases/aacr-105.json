@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-105",
+  "language": "typescript",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-105/base",
+  "head_branch": "bench/aacr/aacr-105/head",
+  "base_sha": "2985ccb15b12db4dad0b131aed2aa5115bd4f4f3",
+  "head_sha": "764ebcc72fefa7dfa4eb227409c3409f1cb6b3ad",
+  "mr_title": "feat(server): Use the earliest date between file creation and modification timestamps when missing exif tags",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/immich-app/immich",
+    "commit": "7e2009f038cbf3f26403af6582af3cf8ba91672f",
+    "license": "AGPL-3.0",
+    "source_case": "https://github.com/immich-app/immich/pull/14874",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "server/src/services/metadata.service.ts",
+      "line_start": 577,
+      "line_end": 577,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Non-strict equality comparison detected",
+      "description": "Non-strict equality comparison detected. According to the code quality checklist, strict equality operators (=== and !==) must be used instead of == and !=.\n\n```suggestion\n    if (timeZone === null && dateTime?.rawValue?.endsWith('+00:00')) {\n```",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Non-strict equality comparison detected. According to the code quality checklist, strict equality operators (=== and !==) must be used instead of == and !=.\n\n```suggestion\n    if (timeZone === null && dateTime?.rawValue?.endsWith('+00:00')) {\n```"
+    },
+    {
+      "id": "i2",
+      "file": "server/src/services/metadata.service.ts",
+      "line_start": 594,
+      "line_end": 594,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Grammar error in comment: 'he did not modified' should be 'he did not modify'",
+      "description": "Grammar error in comment: 'he did not modified' should be 'he did not modify'. The past tense 'did' should be followed by the base form of the verb.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Grammar error in comment: 'he did not modified' should be 'he did not modify'. The past tense 'did' should be followed by the base form of the verb.\n"
+    },
+    {
+      "id": "i3",
+      "file": "server/src/services/metadata.service.ts",
+      "line_start": 597,
+      "line_end": 597,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Log level for asset date fallback is incorrectly set to warn; change to debug as it's exp…",
+      "description": "Log level for asset date fallback is incorrectly set to warn; change to debug as it's expected behavior for copied assets without modification, not an error condition.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Log level for asset date fallback is incorrectly set to warn; change to debug as it's expected behavior for copied assets without modification, not an error condition."
+    },
+    {
+      "id": "i4",
+      "file": "server/src/services/metadata.service.ts",
+      "line_start": 600,
+      "line_end": 601,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Consider using Math.min() instead of ternary operator for better readability and to align…",
+      "description": "Consider using Math.min() instead of ternary operator for better readability and to align with Unicorn plugin recommendation.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Consider using Math.min() instead of ternary operator for better readability and to align with Unicorn plugin recommendation.\n"
+    },
+    {
+      "id": "i5",
+      "file": "server/src/services/metadata.service.ts",
+      "line_start": 601,
+      "line_end": 603,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential null/undefined handling: this branch assumes both `asset.fileModifiedAt` and `a…",
+      "description": "Potential null/undefined handling: this branch assumes both `asset.fileModifiedAt` and `asset.fileCreatedAt` are non-null `Date`s. If either can be null/undefined (or not a Date), the comparison and subsequent `toISOString()` later can throw. Consider guarding (e.g., prefer available one, else last-resort `asset.createdAt`/`new Date(0)`), and ensure `localDateTime` is always a valid `Date` before logging.\n\n```suggestion\n      const created = asset.fileCreatedAt;\n      const modified = asset.fileModifiedAt;\n      const earliestDate = created && modified ? (modified < created ? modified : created) : (modified ?? created ?? asset.createdAt);\n      if (!earliestDate) {\n        this.logger.warn(`Asset ${asset.id} has no file timestamps; falling back to current time`);\n        dateTimeOriginal = new Date();\n        localDateTime = dateTimeOriginal;\n      } else {\n        dateTimeOriginal = earliestDate;\n        localDateTime = earliestDate;\n      }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential null/undefined handling: this branch assumes both `asset.fileModifiedAt` and `asset.fileCreatedAt` are non-null `Date`s. If either can be null/undefined (or not a Date), the comparison and subsequent `toISOString()` later can throw. Consider guarding (e.g., prefer available one, else last-resort `asset.createdAt`/`new Date(0)`), and ensure `localDateTime` is always a valid `Date` before logging.\n\n```suggestion\n      const created = asset.fileCreatedAt;\n      const modified = asset.fileModifiedAt;\n      const earliestDate = created && modified ? (modified < created ? modified : created) : (modified ?? created ?? asset.createdAt);\n      if (!earliestDate) {\n        this.logger.warn(`Asset ${asset.id} has no file timestamps; falling back to current time`);\n        dateTimeOriginal = new Date();\n        localDateTime = dateTimeOriginal;\n      } else {\n        dateTimeOriginal = earliestDate;\n        localDateTime = earliestDate;\n      }\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "server/src/services/metadata.service.ts",
+      "line_start": 592,
+      "line_end": 592,
+      "description": "The verbose comment explaining fallback date logic is redundant; remove it as the variable `earliestDate` clearly indicates the purpose."
+    },
+    {
+      "file": "server/src/services/metadata.service.ts",
+      "line_start": 597,
+      "line_end": 599,
+      "description": "Minor grammar/readability in the log message: consider \"falling back to the earliest timestamp\" (add \"the\") and keep message consistent with other logs. Also note this warning now changes behavior (uses earliest of create/modify) which may be worth a short mention in release notes/tests to prevent surprises.\n\n```suggestion\n      this.logger.warn(\n        `No valid date found in exif tags for asset ${asset.id}; falling back to the earliest timestamp between file creation and file modification`,\n      );\n```"
+    },
+    {
+      "file": "server/src/services/metadata.service.ts",
+      "line_start": 600,
+      "line_end": 603,
+      "description": "Code duplication detected: This fallback date logic (selecting the earliest date between fileModifiedAt and fileCreatedAt) appears to be duplicated. The exact same logic exists in the `getDates` method. Consider extracting this into a reusable helper method to avoid duplication and ensure consistency."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/immich-app/immich/pull/14874). Upstream base c3be74c450ba7d57ccfc9f6c0463478e579682a0 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 55. Severity absent in the source. i1: AI comment (GLM-4.7), File Level; i2: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i3: human comment, Diff Level; i4: AI comment (Qwen-Coder-480B), Diff Level; i5: AI comment (GPT-5.2), Diff Level"
+}

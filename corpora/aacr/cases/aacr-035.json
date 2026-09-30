@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-035",
+  "language": "javascript",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-035/base",
+  "head_branch": "bench/aacr/aacr-035/head",
+  "base_sha": "1c9a144fdfd5d9c22d3aee7bebfc1d743a6e4a78",
+  "head_sha": "8dacb300ccb22771dde4f4e5379657dd6f934016",
+  "mr_title": "Automatically clean shape data passed to ExtrudeGeometry",
+  "mr_description": "Before triangulating a shape, ExtrudeGeometry now welds any index-adjacent points within a small hardcoded distance threshold of each other. This resolves common triangulation artifacts caused by improperly formatted shape data.",
+  "origin": {
+    "repository": "https://github.com/mrdoob/three.js",
+    "commit": "96ab0720fc65368e32ee3f2389cb192f96d8adff",
+    "license": "MIT",
+    "source_case": "https://github.com/mrdoob/three.js/pull/30750",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/geometries/ExtrudeGeometry.js",
+      "line_start": 165,
+      "line_end": 165,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Rename `cleanPoints` to `mergePoints` to accurately reflect the function's purpose of mer…",
+      "description": "Rename `cleanPoints` to `mergePoints` to accurately reflect the function's purpose of merging duplicate vertices, as the current name misrepresents its behavior.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Rename `cleanPoints` to `mergePoints` to accurately reflect the function's purpose of merging duplicate vertices, as the current name misrepresents its behavior."
+    },
+    {
+      "id": "i2",
+      "file": "src/geometries/ExtrudeGeometry.js",
+      "line_start": 169,
+      "line_end": 169,
+      "category": "correctness",
+      "severity": null,
+      "title": "`cleanPoints()` assumes `points.length >= 2`",
+      "description": "`cleanPoints()` assumes `points.length >= 2`. If `extractPoints()` returns an empty/1-point contour/hole (degenerate shapes, or after earlier processing), `points[0]`/`currentPos.x` will throw. Add a guard like `if ( points.length < 2 ) return;`.\n\n```suggestion\n\t\t\t\tif ( points.length < 2 ) return;\n\t\t\t\tlet prevPos = points[ 0 ];\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`cleanPoints()` assumes `points.length >= 2`. If `extractPoints()` returns an empty/1-point contour/hole (degenerate shapes, or after earlier processing), `points[0]`/`currentPos.x` will throw. Add a guard like `if ( points.length < 2 ) return;`.\n\n```suggestion\n\t\t\t\tif ( points.length < 2 ) return;\n\t\t\t\tlet prevPos = points[ 0 ];\n```"
+    },
+    {
+      "id": "i3",
+      "file": "src/geometries/ExtrudeGeometry.js",
+      "line_start": 406,
+      "line_end": 407,
+      "category": "correctness",
+      "severity": null,
+      "title": "Use strict equality === instead of ==",
+      "description": "Use strict equality === instead of ==. The checklist requires using === and !== for all comparisons.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Use strict equality === instead of ==. The checklist requires using === and !== for all comparisons.\n"
+    },
+    {
+      "id": "i4",
+      "file": "src/geometries/ExtrudeGeometry.js",
+      "line_start": 433,
+      "line_end": 433,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Consider adding a comment explaining why cleaned vertices are used here instead of the or…",
+      "description": "Consider adding a comment explaining why cleaned vertices are used here instead of the original `vertices` and `holes`. This improves understanding of the geometric preprocessing impact.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Consider adding a comment explaining why cleaned vertices are used here instead of the original `vertices` and `holes`. This improves understanding of the geometric preprocessing impact.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/geometries/ExtrudeGeometry.js",
+      "line_start": 167,
+      "line_end": 167,
+      "description": "The hardcoded threshold (0.0002) for vertex proximity in `cleanPoints` is too large and fails for large-scale geometries due to floating point precision limitations; replace it with a scaled threshold (base 1e-10) multiplied by the square of the maximum absolute coordinate value to maintain numerical stability across all scales."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/mrdoob/three.js/pull/30750). Upstream base 17d0b43abd9b20c7038d161bcaae81479a58c7ce = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 61. Severity absent in the source. i1: human comment, File Level; i2: AI comment (GPT-5.2), Diff Level; i3: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i4: AI comment (Qwen-Coder-480B), Diff Level"
+}

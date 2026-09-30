@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-024",
+  "language": "go",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-024/base",
+  "head_branch": "bench/aacr/aacr-024/head",
+  "base_sha": "b281c3053718f799246dcc50836d3efdabf26658",
+  "head_sha": "89b1f6a5e275c5ba34fcaeb968465ba80038f099",
+  "mr_title": "adding metadata in response",
+  "mr_description": "- adding metadata in response\n- Merge branch 'development' into response\n- handling check in switch case itself\n- handling check in switch case itself\n- adding tests and documentation\n- Merge branch 'development' into response\n- correcting formatting in documentation",
+  "origin": {
+    "repository": "https://github.com/gofr-dev/gofr",
+    "commit": "b9cdcbb2b9fc78499d15d51ffbb7c861592b0efe",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/gofr-dev/gofr/pull/1325",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "pkg/gofr/http/responder.go",
+      "line_start": 31,
+      "line_end": 32,
+      "category": "correctness",
+      "severity": null,
+      "title": "The `resTypes.Response` type has a `Headers` field and a `SetCustomHeaders()` method to a…",
+      "description": "The `resTypes.Response` type has a `Headers` field and a `SetCustomHeaders()` method to apply custom HTTP response headers. However, this code doesn't call `v.SetCustomHeaders(r.w)`, which means any custom headers specified in the `Response` object will be ignored. You should add `v.SetCustomHeaders(r.w)` before setting the Content-Type header to ensure custom headers are properly applied.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The `resTypes.Response` type has a `Headers` field and a `SetCustomHeaders()` method to apply custom HTTP response headers. However, this code doesn't call `v.SetCustomHeaders(r.w)`, which means any custom headers specified in the `Response` object will be ignored. You should add `v.SetCustomHeaders(r.w)` before setting the Content-Type header to ensure custom headers are properly applied."
+    },
+    {
+      "id": "i2",
+      "file": "pkg/gofr/http/responder.go",
+      "line_start": 31,
+      "line_end": 32,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential inconsistency in metadata handling",
+      "description": "Potential inconsistency in metadata handling. When v.Metadata is nil, this will result in omitting the metadata field due to json:\"metadata,omitempty\" in the response struct. However, tests expect \"metadata\":null when metadata is not provided. Consider initializing Metadata appropriately to match expected behavior.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential inconsistency in metadata handling. When v.Metadata is nil, this will result in omitting the metadata field due to json:\"metadata,omitempty\" in the response struct. However, tests expect \"metadata\":null when metadata is not provided. Consider initializing Metadata appropriately to match expected behavior.\n"
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/gofr-dev/gofr/pull/1325). Upstream base 567a9ca6e318ed76523533cdfc47c6199f1e5ac6 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 215. Severity absent in the source. i1: AI comment (GLM-4.7), File Level; i2: AI comment (Qwen-Coder-480B), Repo Level"
+}

@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-047",
+  "language": "typescript",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-047/base",
+  "head_branch": "bench/aacr/aacr-047/head",
+  "base_sha": "29842f9e934925104b030ab6374a68750005a663",
+  "head_sha": "26baeeabdfc7977a841efa5a5940b5315c529834",
+  "mr_title": "Add telemetry tracking for terminal hang detection and user interventions",
+  "mr_description": "- Add terminal hang detection with configurable timeouts for buffer stuck, stream timeout, and completion waiting stages\n- Track user interventions when clicking \"Process while Running\" button\n- Add telemetry for terminal output failures with specific failure reasons\n- Implement comprehensive monitoring of terminal process lifecycle events\n- Add metrics for shell integration usage and terminal operation performance",
+  "origin": {
+    "repository": "https://github.com/cline/cline",
+    "commit": "f098af0f52bf1cdb7eb561c380caef5746b58d40",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/cline/cline/pull/5955",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/core/task/index.ts",
+      "line_start": 1495,
+      "line_end": 1496,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The constant `BUFFER_STUCK_TIMEOUT_MS` is declared within method scope; move it to the cl…",
+      "description": "The constant `BUFFER_STUCK_TIMEOUT_MS` is declared within method scope; move it to the class level or configuration file to enable reuse and configurability.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The constant `BUFFER_STUCK_TIMEOUT_MS` is declared within method scope; move it to the class level or configuration file to enable reuse and configurability."
+    },
+    {
+      "id": "i2",
+      "file": "src/core/task/index.ts",
+      "line_start": 1511,
+      "line_end": 1515,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Potential timer leak: If flushBuffer() is called multiple times rapidly, a new bufferStuc…",
+      "description": "Potential timer leak: If flushBuffer() is called multiple times rapidly, a new bufferStuckTimer could be created before the previous one is cleared, leading to multiple timers running simultaneously. Consider clearing any existing timer before creating a new one:\n```typescript\nif (bufferStuckTimer) {\n    clearTimeout(bufferStuckTimer)\n}\nbufferStuckTimer = setTimeout(...)\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "Potential timer leak: If flushBuffer() is called multiple times rapidly, a new bufferStuckTimer could be created before the previous one is cleared, leading to multiple timers running simultaneously. Consider clearing any existing timer before creating a new one:\n```typescript\nif (bufferStuckTimer) {\n    clearTimeout(bufferStuckTimer)\n}\nbufferStuckTimer = setTimeout(...)\n```\n"
+    },
+    {
+      "id": "i3",
+      "file": "src/core/task/index.ts",
+      "line_start": 1575,
+      "line_end": 1575,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The COMPLETION_TIMEOUT_MS constant is unnecessarily scoped within a function; relocate it…",
+      "description": "The COMPLETION_TIMEOUT_MS constant is unnecessarily scoped within a function; relocate it to class level or configuration for maintainability and configurability.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The COMPLETION_TIMEOUT_MS constant is unnecessarily scoped within a function; relocate it to class level or configuration for maintainability and configurability."
+    },
+    {
+      "id": "i4",
+      "file": "src/core/task/index.ts",
+      "line_start": 1608,
+      "line_end": 1612,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Consider using a more robust timer management pattern",
+      "description": "Consider using a more robust timer management pattern. The current approach sets timers in multiple places without centralized cleanup. This could lead to memory leaks if timers aren't properly cleared in all execution paths.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "Consider using a more robust timer management pattern. The current approach sets timers in multiple places without centralized cleanup. This could lead to memory leaks if timers aren't properly cleared in all execution paths.\n"
+    },
+    {
+      "id": "i5",
+      "file": "src/integrations/terminal/TerminalProcess.ts",
+      "line_start": 195,
+      "line_end": 195,
+      "category": "correctness",
+      "severity": null,
+      "title": "`TerminalOutputFailureReason.TIMEOUT` is likely misleading here",
+      "description": "`TerminalOutputFailureReason.TIMEOUT` is likely misleading here. This branch triggers when `fullOutput` is empty after shell integration finished, which could be “no output / stream empty / parsing removed everything”, not necessarily a timeout. Consider introducing/using a more accurate reason (e.g., `EMPTY_OUTPUT` / `SHELL_INTEGRATION_EMPTY_OUTPUT`) to avoid skewing telemetry.\n\n```suggestion\n    telemetryService.captureTerminalOutputFailure(TerminalOutputFailureReason.EMPTY_OUTPUT) // or a more accurate enum value\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`TerminalOutputFailureReason.TIMEOUT` is likely misleading here. This branch triggers when `fullOutput` is empty after shell integration finished, which could be “no output / stream empty / parsing removed everything”, not necessarily a timeout. Consider introducing/using a more accurate reason (e.g., `EMPTY_OUTPUT` / `SHELL_INTEGRATION_EMPTY_OUTPUT`) to avoid skewing telemetry.\n\n```suggestion\n    telemetryService.captureTerminalOutputFailure(TerminalOutputFailureReason.EMPTY_OUTPUT) // or a more accurate enum value\n```"
+    },
+    {
+      "id": "i6",
+      "file": "src/integrations/terminal/TerminalProcess.ts",
+      "line_start": 200,
+      "line_end": 200,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Hardcoded string literals: The method parameter values (\"clipboard\", \"none\", \"shell_integ…",
+      "description": "Hardcoded string literals: The method parameter values (\"clipboard\", \"none\", \"shell_integration\") are hardcoded strings. While the JSDoc in TelemetryService.ts documents these values, there's no type-safe way to enforce them. Consider defining a union type or enum to ensure type safety and consistency.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Hardcoded string literals: The method parameter values (\"clipboard\", \"none\", \"shell_integration\") are hardcoded strings. While the JSDoc in TelemetryService.ts documents these values, there's no type-safe way to enforce them. Consider defining a union type or enum to ensure type safety and consistency."
+    },
+    {
+      "id": "i7",
+      "file": "src/services/telemetry/TelemetryService.ts",
+      "line_start": 959,
+      "line_end": 959,
+      "category": "correctness",
+      "severity": null,
+      "title": "Parameter 'method' in captureTerminalExecution should be constrained to the specific stri…",
+      "description": "Parameter 'method' in captureTerminalExecution should be constrained to the specific string literals `'shell_integration' | 'clipboard' | 'none'` instead of a generic string type for compile-time validation.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Parameter 'method' in captureTerminalExecution should be constrained to the specific string literals `'shell_integration' | 'clipboard' | 'none'` instead of a generic string type for compile-time validation."
+    },
+    {
+      "id": "i8",
+      "file": "src/services/telemetry/index.ts",
+      "line_start": 13,
+      "line_end": 17,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Re-exporting enums from \"./TelemetryService\" couples the public telemetry index to a runt…",
+      "description": "Re-exporting enums from \"./TelemetryService\" couples the public telemetry index to a runtime module. If TelemetryService has side effects (singleton init, provider wiring) or imports back from this index, this can create circular deps and unexpected load-order issues. Consider moving these enums to a dedicated types/enums file (or exporting them from TelemetryProviderFactory if appropriate) and re-export from there. Also ensure these are `export enum`/`export const enum`/`export type` as intended to avoid bundling extra runtime code.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Re-exporting enums from \"./TelemetryService\" couples the public telemetry index to a runtime module. If TelemetryService has side effects (singleton init, provider wiring) or imports back from this index, this can create circular deps and unexpected load-order issues. Consider moving these enums to a dedicated types/enums file (or exporting them from TelemetryProviderFactory if appropriate) and re-export from there. Also ensure these are `export enum`/`export const enum`/`export type` as intended to avoid bundling extra runtime code."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/core/task/index.ts",
+      "line_start": 1511,
+      "line_end": 1515,
+      "description": "Potential false-positive telemetry: `bufferStuckTimer` starts once a chunk is flushed and is cleared only after `this.ask(...)` resolves/rejects. If the user intentionally keeps the prompt open (e.g., thinking, reviewing), the 30s timer will fire and report `BUFFER_STUCK` even though nothing is hung. Consider resetting/starting this timer only when there is evidence of no progress (e.g., no webview response/events), increasing threshold, or using a stage like `WAITING_FOR_USER` distinct from hang."
+    },
+    {
+      "file": "src/core/task/index.ts",
+      "line_start": 1531,
+      "line_end": 1534,
+      "description": "The `catch { ... }` swallows the error, making debugging harder and losing context in telemetry. Prefer `catch (err)` and log/include error details (sanitized) or at least differentiate cancellation vs real failures if applicable. Also, `STREAM_TIMEOUT` is captured for any exception here, which may misclassify non-timeout errors.\n\n```suggestion\n\t\t\t} catch (err) {\n\t\t\t\tLogger.error(\"Error while asking for command output\", err)\n\t\t\t\t// Consider mapping to more specific stages based on error type/cause.\n\t\t\t\ttelemetryService.captureTerminalHang(TerminalHangStage.STREAM_TIMEOUT)\n\t\t\t} finally {\n```"
+    },
+    {
+      "file": "src/core/task/index.ts",
+      "line_start": 1574,
+      "line_end": 1583,
+      "description": "The completion timer might not be cleaned up in all error scenarios. Consider adding cleanup in a catch block or using a finally block to ensure the timer is always cleared."
+    },
+    {
+      "file": "src/core/task/index.ts",
+      "line_start": 1608,
+      "line_end": 1612,
+      "description": "Redundant timer cleanup: The completionTimer is already cleared in the 'completed' event handler above. This second cleanup is unnecessary but harmless."
+    },
+    {
+      "file": "src/integrations/terminal/TerminalProcess.ts",
+      "line_start": 198,
+      "line_end": 198,
+      "description": "The function `getLatestTerminalOutput` is called but not defined, causing a runtime error in the terminal output fallback path."
+    },
+    {
+      "file": "src/integrations/terminal/TerminalProcess.ts",
+      "line_start": 198,
+      "line_end": 203,
+      "description": "Consider extracting this repeated telemetry logging pattern into a single helper function to avoid duplication. Both instances (here and ~line 230) perform equivalent actions based on terminal snapshot availability."
+    },
+    {
+      "file": "src/integrations/terminal/TerminalProcess.ts",
+      "line_start": 229,
+      "line_end": 229,
+      "description": "Call to undefined function `getLatestTerminalOutput` in terminal fallback path will cause a runtime error. The function is referenced but not implemented or imported in the current context."
+    },
+    {
+      "file": "src/services/telemetry/TelemetryService.ts",
+      "line_start": 999,
+      "line_end": 999,
+      "description": "Consider adding optional context properties (e.g., terminal type, duration, command category) or documenting why only `stage` is captured. Otherwise it may be hard to diagnose hangs from telemetry alone. If privacy is a concern, add a note and capture coarse metadata only.\n\n```suggestion\n public captureTerminalHang(stage: TerminalHangStage /*, context?: { terminal?: string; duration_ms?: number } */) {\n```"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/cline/cline/pull/5955). Upstream base 8cdc4a936d64483f3123509ab3688f452fcd6d91 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 165. Severity absent in the source. i1: human comment, Diff Level; i2: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i3: human comment, Diff Level; i4: AI comment (Deepseek-V3.2), File Level; i5: AI comment (GPT-5.2), Diff Level; i6: AI comment (GLM-4.7), Diff Level; i7: human comment, Diff Level; i8: AI comment (GPT-5.2), Diff Level"
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-020",
+  "language": "java",
+  "size": "medium",
+  "kind": "clean",
+  "tier": "core",
+  "base_branch": "bench/curated/case-020/base",
+  "head_branch": "bench/curated/case-020/head",
+  "base_sha": "b52fe03ee48d92da67053519f9d776e535a1910c",
+  "head_sha": "98446a483749cdbfbf5dac1d89c701ec53608fcc",
+  "mr_title": "Guarantee that `JsonElement.toString()` produces JSON",
+  "mr_description": "* Extend `JsonElement` documentation\n\n* Add space to JsonParser code example\n\n* Guarantee that `JsonElement.toString()` produces JSON\n\n* Refer to `JsonElement` documentation from subclasses",
+  "origin": {
+    "repository": "https://github.com/google/gson",
+    "commit": "8bfdbb4e14172b013c3d1f56c3a36812075e2886",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/google/gson/commit/8bfdbb4e14172b013c3d1f56c3a36812075e2886. No known defect: at least 90% of its added lines were still unchanged upstream on 2026-09-30 and no later commit reports it as faulty. This is not proof of absence. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

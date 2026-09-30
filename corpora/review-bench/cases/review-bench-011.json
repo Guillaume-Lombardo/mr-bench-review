@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-011",
+  "language": "go",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-011/base",
+  "head_branch": "bench/review-bench/review-bench-011/head",
+  "base_sha": "4cf5b04e35dbb817147c01c8f3552c6d73953fb8",
+  "head_sha": "62f6d9a9cadbf3eb5e9df7d17adb4f103de6310e",
+  "mr_title": "Add more tests to improve code coverage",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/urfave/cli",
+    "commit": "91ed11d72b02788b1125198e9b2296e0a39bc8df",
+    "license": "MIT",
+    "source_case": "cli-exit-empty-stderr-line",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/cli-exit-empty-stderr-line"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "errors.go",
+      "line_start": 153,
+      "line_end": 156,
+      "category": "correctness",
+      "severity": null,
+      "title": "HandleExitCoder prints the error to ErrWriter unconditionally before calling OsExiter, so…",
+      "description": "HandleExitCoder prints the error to ErrWriter unconditionally before calling OsExiter, so an Exit error with an empty message emits a blank line to stderr.\n\nProvenance: fix PR #2310 body (commit 6ce476e); fixes issue #2263.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": "HandleExitCoder prints the error to ErrWriter unconditionally before calling OsExiter, so an Exit error with an empty message emits a blank line to stderr."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench cli-exit-empty-stderr-line (corpus corpus/v0.1). Introducing PR https://github.com/urfave/cli/pull/2237. Fix https://github.com/urfave/cli/commit/6ce476e539dd29b69d4c57ae83f9af1ddaffc611 (PR #2310). Category defaulted to correctness and severity left null because the source has neither; to be reviewed. Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 153-156, review-head lines 153-156)"
+}

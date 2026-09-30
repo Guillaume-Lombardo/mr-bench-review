@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-079",
+  "language": "php",
+  "size": "large",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-079/base",
+  "head_branch": "bench/aacr/aacr-079/head",
+  "base_sha": "eeb11fa7820aa29c978c892b0d94f8c180068f04",
+  "head_sha": "a5eaffe7cb9a7744769b3268b89df5aa04ed3543",
+  "mr_title": "Update ValidationEmailRuleTest.php",
+  "mr_description": "- Update ValidationEmailRuleTest.php\n- Update ValidationEmailRuleTest.php\n- Styleci\n- styleci\n- Update ValidationEmailRuleTest.php",
+  "origin": {
+    "repository": "https://github.com/laravel/framework",
+    "commit": "180c25ff94ae2dff26d2ca5f8bf779af1e8fc8c2",
+    "license": "MIT",
+    "source_case": "https://github.com/laravel/framework/pull/54226",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "tests/Validation/ValidationEmailRuleTest.php",
+      "line_start": 106,
+      "line_end": 108,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The test method `testRfcCompliantStrict` should be refactored to use a data provider patt…",
+      "description": "The test method `testRfcCompliantStrict` should be refactored to use a data provider pattern for the email validation test cases to eliminate hardcoded examples and improve test maintainability.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The test method `testRfcCompliantStrict` should be refactored to use a data provider pattern for the email validation test cases to eliminate hardcoded examples and improve test maintainability."
+    },
+    {
+      "id": "i2",
+      "file": "tests/Validation/ValidationEmailRuleTest.php",
+      "line_start": 327,
+      "line_end": 339,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Test data organization issue: Large test data arrays like `$emailsThatPassOnRfcCompliantB…",
+      "description": "Test data organization issue: Large test data arrays like `$emailsThatPassOnRfcCompliantButNotRfcCompliantStrict` should be moved to external fixture files instead of being defined inline in test methods.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Test data organization issue: Large test data arrays like `$emailsThatPassOnRfcCompliantButNotRfcCompliantStrict` should be moved to external fixture files instead of being defined inline in test methods."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "tests/Validation/ValidationEmailRuleTest.php",
+      "line_start": 528,
+      "line_end": 528,
+      "description": "**Bug: Duplicate variable name causes first test set to be skipped**\n\nThe variable `$emailsThatPassOnBoth` is defined twice in this method:\n- First definition at lines 467-479\n- Second definition at lines 528-538 (this line)\n\nThe second definition overwrites the first, meaning the test cases in lines 467-479 are never executed. This results in the following emails not being tested:\n- `'plainaddress@example.com'`\n- `'tést@example.com'`\n- `'user@üñîçødé.com'`\n- `'test@xn--bcher-kva.com'`\n\n**Suggested fix:**\nRename the second variable to something more specific like `$emailsThatPassOnBothUnicode` or merge the two arrays into one.\n\n```\nFix tests/Validation/ValidationEmailRuleTest.php:528: Rename the duplicate variable $emailsThatPassOnBoth to $emailsThatPassOnBothUnicode or merge with the first definition at line 467 to ensure all test cases are executed.\n```"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/laravel/framework/pull/54226). Upstream base 1472088e7026f8d87d3c38dfc1bc7e023329a039 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 556. Severity absent in the source. i1: human comment, Repo Level; i2: human comment, File Level"
+}

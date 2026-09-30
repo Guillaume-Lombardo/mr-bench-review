@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-097",
+  "language": "java",
+  "size": "large",
+  "kind": "real",
+  "tier": "core",
+  "base_branch": "bench/curated/case-097/base",
+  "head_branch": "bench/curated/case-097/head",
+  "base_sha": "c8188cc1924c8c65914de095786472a7b9e6e35b",
+  "head_sha": "c02359be671eb53a28b54cb9ba803d42a0174702",
+  "mr_title": "Added UDP multicast (with caveats: getInterface, getNetworkInterface, block or loopback-mode-disabled operations).",
+  "mr_description": "Motivation:\n\nProvide epoll/native multicast to support high load multicast users (we are using it for a high load telecomm app at my day job).\n\nModification:\n\nAdded support for source specific and any source multicast for epoll transport. Some caveats: no support for disabling loop back mode, retrieval of interface and block operation, all of which tend to be less frequently used.\n\nResult:\n\nProvides epoll transport multicast for common use cases.",
+  "origin": {
+    "repository": "https://github.com/netty/netty",
+    "commit": "70731bfa7ef884ee354a5cf96e1545a8d9d090b8",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "transport-native-unix-common/src/main/java/io/netty/channel/unix/Socket.java",
+      "line_start": 120,
+      "line_end": 120,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Explicit IPv6 destinations sent with the socket's IPv4 family",
+      "description": "The native send calls now use the socket's address family (ipv6 flag) even when the caller explicitly passes an Inet6Address, so on an IPv4 socket an IPv6 destination is converted or rejected internally instead of being used as requested.\n\nBefore this change the native layer decided from the destination address. With `ipv6` fixed at socket creation, sendTo/sendToAddress/sendToAddresses on a socket created as IPv4 (e.g. when the system prefers IPv4) treat an explicit Inet6Address as IPv4, sending to the wrong address or failing obscurely. An explicit Inet6Address must force the IPv6 path.",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "transport-native-unix-common/src/main/java/io/netty/channel/unix/Socket.java",
+          "line_start": 144,
+          "line_end": 144
+        },
+        {
+          "file": "transport-native-unix-common/src/main/java/io/netty/channel/unix/Socket.java",
+          "line_start": 167,
+          "line_end": 167
+        }
+      ],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/netty/netty/commit/70731bfa7ef884ee354a5cf96e1545a8d9d090b8. Primary issue confirmed by the later upstream fix https://github.com/netty/netty/commit/330cdebf7c84bface85b11b38471924bc7b57d20; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

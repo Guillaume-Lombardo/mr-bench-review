@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "name": "martian-offline",
+  "title": "Martian code-review-benchmark, offline golden comments",
+  "origin": "imported",
+  "source_url": "https://github.com/withmartian/code-review-benchmark",
+  "licence": "MIT golden comments; upstream code per case, see cases/*.json",
+  "default": false,
+  "annotation": "human",
+  "location_precision": "none",
+  "severity_available": true,
+  "created_at": "2026-09-30"
+}

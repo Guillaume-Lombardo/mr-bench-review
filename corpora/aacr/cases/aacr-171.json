@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-171",
+  "language": "csharp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-171/base",
+  "head_branch": "bench/aacr/aacr-171/head",
+  "base_sha": "aac44757b6719165cf5b305563be78a055b80dd6",
+  "head_sha": "72387e20546653780d88aef29c6843b4e265c903",
+  "mr_title": "Fail on slider tail miss option in Sudden Death",
+  "mr_description": "- Fail on slider tail miss option in Sudden Death\n- Rename to PFC mode",
+  "origin": {
+    "repository": "https://github.com/ppy/osu",
+    "commit": "87697a72e333d1468a35d4a3fec388319cc16e2a",
+    "license": "MIT",
+    "source_case": "https://github.com/ppy/osu/pull/31232",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "osu.Game.Rulesets.Osu/Mods/OsuModSuddenDeath.cs",
+      "line_start": 27,
+      "line_end": 28,
+      "category": "correctness",
+      "severity": null,
+      "title": "The current implementation only fails on HitResult.IgnoreMiss for slider tails",
+      "description": "The current implementation only fails on HitResult.IgnoreMiss for slider tails. Consider aligning with the existing OsuHealthProcessor logic which treats any non-hit (!result.IsHit) on slider tails as significant. This ensures consistency and prevents unexpected behavior where certain types of slider tail misses might not trigger sudden death.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The current implementation only fails on HitResult.IgnoreMiss for slider tails. Consider aligning with the existing OsuHealthProcessor logic which treats any non-hit (!result.IsHit) on slider tails as significant. This ensures consistency and prevents unexpected behavior where certain types of slider tail misses might not trigger sudden death.\n"
+    },
+    {
+      "id": "i2",
+      "file": "osu.Game.Rulesets.Osu/Mods/OsuModSuddenDeath.cs",
+      "line_start": 30,
+      "line_end": 30,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The `FailCondition` override duplicates the base class failure logic instead of calling `…",
+      "description": "The `FailCondition` override duplicates the base class failure logic instead of calling `base.FailCondition`, creating unnecessary code duplication and maintenance risk. Replace the custom implementation `result.Type.AffectsCombo() && !result.IsHit` with `base.FailCondition(healthProcessor, result)`.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The `FailCondition` override duplicates the base class failure logic instead of calling `base.FailCondition`, creating unnecessary code duplication and maintenance risk. Replace the custom implementation `result.Type.AffectsCombo() && !result.IsHit` with `base.FailCondition(healthProcessor, result)`."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "osu.Game.Rulesets.Osu/Mods/OsuModSuddenDeath.cs",
+      "line_start": 22,
+      "line_end": 23,
+      "description": "`SliderTailMiss` is described as a special \"PFC mode\" toggle, but it's initialized with the default `BindableBool()` value (false). If the intended default is ON for Sudden Death (or should follow a global/user config), consider explicitly setting `Default` / `Value` or binding to a config setting so behavior matches the setting description and persists correctly.\n\nAlso consider whether this should be `BindableBool(true)` or have `Default = true` if PFC is expected when the mod is enabled.\n\n```suggestion\n        [SettingSource(\"PFC mode\", \"Fail when missing on a slider tail\")]\n                public BindableBool SliderTailMiss { get; } = new BindableBool\n                {\n                    // Set to true if this mod is expected to default to PFC behavior.\n                    Default = false,\n                    Value = false,\n                };\n```"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/ppy/osu/pull/31232). Upstream base 78e9463f63873c6c2b2324f29f24a934242539de = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 31. Severity absent in the source. i1: AI comment (Qwen-Coder-480B), Repo Level; i2: human comment, File Level"
+}

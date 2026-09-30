@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-036",
+  "language": "python",
+  "size": "medium",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-036/base",
+  "head_branch": "bench/curated/case-036/head",
+  "base_sha": "0338c29676a0b5042ae03af3344f94a5aff7a913",
+  "head_sha": "23f8957be294a374cb84a101c50bd127efd35dec",
+  "mr_title": "Made HttpRequest.get_preferred_type() consider media type parameters.",
+  "mr_description": "HttpRequest.get_preferred_type() did not account for parameters in\nAccept header media types (e.g., \"text/vcard; version=3.0\"). This caused\nincorrect content negotiation when multiple types differed only by\nparameters, reducing specificity as per RFC 7231 section 5.3.2\n(https://datatracker.ietf.org/doc/html/rfc7231.html#section-5.3.2).\n\nThis fix updates get_preferred_type() to treat media types with\nparameters as distinct, allowing more precise and standards-compliant\nmatching.\n\nThanks to magicfelix for the report, and to David Sanders and Sarah\nBoyce for the reviews.",
+  "origin": {
+    "repository": "https://github.com/django/django",
+    "commit": "c075508b4de8edf9db553b409f8a8ed2f26ecead",
+    "license": "BSD-3-Clause",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "django/http/request.py",
+      "line_start": 101,
+      "line_end": 101,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Accepted media types sorted by specificity instead of quality",
+      "description": "accepted_types is now sorted by specificity before quality, so get_preferred_type() prefers a more specific but lower-quality media type over a higher-quality one.\n\nSpecificity should only decide which Accept entry applies to a given candidate type; the preference order between candidates must follow the q-values. With `Accept: text/html;q=0.8, application/json` (or `text/*;q=1, text/plain;q=0.1`), sorting by (specificity, quality) makes get_preferred_type() return the lower-quality type, breaking content negotiation per RFC 9110. Two orderings are needed: by quality for preference, by specificity for matching.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/c075508b4de8edf9db553b409f8a8ed2f26ecead. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/4de4edf2c05cc80c514c989db480f2fe23ad5ee2; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

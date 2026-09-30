@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-020",
+  "language": "c",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-020/base",
+  "head_branch": "bench/aacr/aacr-020/head",
+  "base_sha": "85dca7d0c4a2879d20e3958d1af0f6f3180a64f6",
+  "head_sha": "4d6ed9515b815cb2740033931b5089669914c6b3",
+  "mr_title": "add 8BitDo Controller",
+  "mr_description": "add SN30 Pro, SF30 Pro, Pro 2.\nSupported versions:\nPro 2 v3.06  above\nSF30 Pro/SN30 Pro v2.05 above",
+  "origin": {
+    "repository": "https://github.com/libsdl-org/SDL",
+    "commit": "15267271865f73c996719238425f1604fc2fa205",
+    "license": "Zlib",
+    "source_case": "https://github.com/libsdl-org/SDL/pull/12964",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/joystick/SDL_joystick.c",
+      "line_start": 3180,
+      "line_end": 3182,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The current implementation uses a verbose OR chain with inconsistent product ID constant…",
+      "description": "The current implementation uses a verbose OR chain with inconsistent product ID constant casing (e.g., `SN30_Pro` vs conventional `SN30_PRO`); replace with a switch statement for maintainability and correctness.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The current implementation uses a verbose OR chain with inconsistent product ID constant casing (e.g., `SN30_Pro` vs conventional `SN30_PRO`); replace with a switch statement for maintainability and correctness."
+    },
+    {
+      "id": "i2",
+      "file": "src/joystick/hidapi/SDL_hidapi_8bitdo.c",
+      "line_start": 115,
+      "line_end": 120,
+      "category": "security",
+      "severity": null,
+      "title": "`ReadFeatureReport()` writes `report[0]` unconditionally",
+      "description": "`ReadFeatureReport()` writes `report[0]` unconditionally. If `length` is ever 0 (or `report` is NULL), this becomes an out-of-bounds write. Current call site uses a stack buffer so it’s OK today, but adding a defensive check makes the helper safer and easier to reuse.\n\nAlso consider logging the underlying HID error (e.g. `SDL_hid_error(dev)`) when `SDL_hid_get_feature_report` fails, to make device-specific failures actionable.\n\n```suggestion\nstatic int ReadFeatureReport(SDL_hid_device *dev, Uint8 report_id, Uint8 *report, size_t length)\n{\n    if (!report || length == 0) {\n        return -1;\n    }\n    SDL_memset(report, 0, length);\n    report[0] = report_id;\n    return SDL_hid_get_feature_report(dev, report, length);\n}\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "`ReadFeatureReport()` writes `report[0]` unconditionally. If `length` is ever 0 (or `report` is NULL), this becomes an out-of-bounds write. Current call site uses a stack buffer so it’s OK today, but adding a defensive check makes the helper safer and easier to reuse.\n\nAlso consider logging the underlying HID error (e.g. `SDL_hid_error(dev)`) when `SDL_hid_get_feature_report` fails, to make device-specific failures actionable.\n\n```suggestion\nstatic int ReadFeatureReport(SDL_hid_device *dev, Uint8 report_id, Uint8 *report, size_t length)\n{\n    if (!report || length == 0) {\n        return -1;\n    }\n    SDL_memset(report, 0, length);\n    report[0] = report_id;\n    return SDL_hid_get_feature_report(dev, report, length);\n}\n```"
+    },
+    {
+      "id": "i3",
+      "file": "src/joystick/hidapi/SDL_hidapi_8bitdo.c",
+      "line_start": 145,
+      "line_end": 147,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The new condition uses product ID constants with inconsistent casing (e.g., `USB_PRODUCT_…",
+      "description": "The new condition uses product ID constants with inconsistent casing (e.g., `USB_PRODUCT_8BITDO_SN30_Pro`); update all instances to standard all-uppercase naming (e.g., `USB_PRODUCT_8BITDO_SN30_PRO`) to match existing conventions and prevent compilation errors.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The new condition uses product ID constants with inconsistent casing (e.g., `USB_PRODUCT_8BITDO_SN30_Pro`); update all instances to standard all-uppercase naming (e.g., `USB_PRODUCT_8BITDO_SN30_PRO`) to match existing conventions and prevent compilation errors."
+    },
+    {
+      "id": "i4",
+      "file": "src/joystick/hidapi/SDL_hidapi_8bitdo.c",
+      "line_start": 149,
+      "line_end": 149,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The hard-coded report ID value `0x06` in the `ReadFeatureReport` call should be replaced…",
+      "description": "The hard-coded report ID value `0x06` in the `ReadFeatureReport` call should be replaced with a named constant for maintainability.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The hard-coded report ID value `0x06` in the `ReadFeatureReport` call should be replaced with a named constant for maintainability."
+    },
+    {
+      "id": "i5",
+      "file": "src/joystick/hidapi/SDL_hidapi_8bitdo.c",
+      "line_start": 259,
+      "line_end": 259,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The state packet handler uses hardcoded report ID checks (0x01, 0x03, 0x04); replace with…",
+      "description": "The state packet handler uses hardcoded report ID checks (0x01, 0x03, 0x04); replace with context-stored expected value validation to support controller-specific report IDs dynamically.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The state packet handler uses hardcoded report ID checks (0x01, 0x03, 0x04); replace with context-stored expected value validation to support controller-specific report IDs dynamically."
+    },
+    {
+      "id": "i6",
+      "file": "src/joystick/usb_ids.h",
+      "line_start": 63,
+      "line_end": 67,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The added USB product definitions use inconsistent naming conventions (e.g., `SN30_Pro` i…",
+      "description": "The added USB product definitions use inconsistent naming conventions (e.g., `SN30_Pro` instead of `SN30_PRO`) and lack proper comment formatting (missing space after `//`). Update all new `#define` statements to use ALL_CAPS for product names and standardize comment spacing.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The added USB product definitions use inconsistent naming conventions (e.g., `SN30_Pro` instead of `SN30_PRO`) and lack proper comment formatting (missing space after `//`). Update all new `#define` statements to use ALL_CAPS for product names and standardize comment spacing."
+    },
+    {
+      "id": "i7",
+      "file": "src/joystick/usb_ids.h",
+      "line_start": 66,
+      "line_end": 66,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Trailing whitespace in comments",
+      "description": "Trailing whitespace in comments. Lines 66-67 have trailing spaces after the comments that should be removed.\n\n```suggestion\n#define USB_PRODUCT_8BITDO_Pro_2                          0x6003    //mode switch to D\n#define USB_PRODUCT_8BITDO_Pro_2_BT                       0x6006    //mode switch to D\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Trailing whitespace in comments. Lines 66-67 have trailing spaces after the comments that should be removed.\n\n```suggestion\n#define USB_PRODUCT_8BITDO_Pro_2                          0x6003    //mode switch to D\n#define USB_PRODUCT_8BITDO_Pro_2_BT                       0x6006    //mode switch to D\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/joystick/hidapi/SDL_hidapi_8bitdo.c",
+      "line_start": null,
+      "line_end": null,
+      "description": "Inconsistent indentation. This line has an extra leading space compared to the line above. It should align with the other continuation lines.\n\n```suggestion\n               device->product_id == USB_PRODUCT_8BITDO_SF30_Pro  || device->product_id == USB_PRODUCT_8BITDO_Pro_2 ||\n               device->product_id == USB_PRODUCT_8BITDO_Pro_2_BT) {\n```"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/libsdl-org/SDL/pull/12964). Upstream base 71303b41bf89c4bb68dbe1bed12fd2ee1dc0dd41 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 48. Severity absent in the source. i1: human comment, Repo Level; i2: AI comment (GPT-5.2), File Level; i3: human comment, Repo Level; i4: human comment, Diff Level; i5: human comment, Diff Level; i6: human comment, Diff Level; i7: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level"
+}

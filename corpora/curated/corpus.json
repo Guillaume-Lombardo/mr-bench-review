@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "name": "curated",
+  "title": "Curated MRs selected for bdf-review",
+  "origin": "internal selection",
+  "source_url": null,
+  "licence": "per case, see cases/*.json",
+  "default": true,
+  "annotation": "human",
+  "location_precision": "lines",
+  "severity_available": true,
+  "created_at": "2026-09-30"
+}

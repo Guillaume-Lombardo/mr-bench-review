@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-106",
+  "language": "java",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-106/base",
+  "head_branch": "bench/curated/case-106/head",
+  "base_sha": "663e1b35236cf0a0f01c7615781db1239953fc04",
+  "head_sha": "adc8fa023409885de3a705864c9262ae3cac4b66",
+  "mr_title": "script in svg should be parsed as ScriptData",
+  "mr_description": "And added support for custom tags as data when in foreign context namespace.",
+  "origin": {
+    "repository": "https://github.com/jhy/jsoup",
+    "commit": "9c437b4b961c6ed8a52ccb0a1be58de51f2e1e57",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "line_start": 1817,
+      "line_end": 1821,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Text state can return to itself at EOF for nested foreign data elements",
+      "description": "Foreign-content script/data elements now switch the tree builder into the Text insertion mode with markInsertionMode(); when such elements are nested (script inside svg inside a Text-mode element) the saved original state can itself be Text, so at EOF the builder transitions back to Text forever and parsing overflows the stack.\n\nThe Text state handles EOF by popping and transitioning to tb.originalState(), then reprocessing the token. markInsertionMode() is now also called while already in a data/text context in foreign content, so originalState() may be Text: the EOF token is reprocessed in Text endlessly (StackOverflowError on crafted or malformed input, e.g. `<svg><script><svg><script>` without closing tags). Untrusted HTML can crash the parser; the Text state must force a way out when the original state is Text.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/jhy/jsoup/commit/9c437b4b961c6ed8a52ccb0a1be58de51f2e1e57. Primary issue confirmed by the later upstream fix https://github.com/jhy/jsoup/commit/e3e22ad52b910abf673e5c2929d4565633c728c0; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

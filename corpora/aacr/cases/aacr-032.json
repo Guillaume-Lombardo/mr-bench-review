@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-032",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-032/base",
+  "head_branch": "bench/aacr/aacr-032/head",
+  "base_sha": "9623208504d2a4f264a63bfbf1ea8b18425985e4",
+  "head_sha": "a068cc51f0ba0ee1dc98ddecf712c9fa4bb0bce8",
+  "mr_title": "Fix for running via DirectML",
+  "mr_description": "- Fix for running via DirectML\n- fix formating\n- Merge branch 'master' into directMLChanges",
+  "origin": {
+    "repository": "https://github.com/comfyanonymous/ComfyUI",
+    "commit": "b55c2247654476fbc744e572ba7a834fd9378745",
+    "license": "GPL-3.0",
+    "source_case": "https://github.com/comfyanonymous/ComfyUI/pull/6542",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "comfy/clip_model.py",
+      "line_start": 109,
+      "line_end": 109,
+      "category": "correctness",
+      "severity": null,
+      "title": "The DirectML branch for causal mask initialization fails to set uninitialized tensor valu…",
+      "description": "The DirectML branch for causal mask initialization fails to set uninitialized tensor values to negative infinity, causing blank image generation. Replace `torch.empty().triu_(1)` with `torch.full(..., -torch.finfo(x.dtype).max).triu_(1)` to properly initialize the mask.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The DirectML branch for causal mask initialization fails to set uninitialized tensor values to negative infinity, causing blank image generation. Replace `torch.empty().triu_(1)` with `torch.full(..., -torch.finfo(x.dtype).max).triu_(1)` to properly initialize the mask."
+    },
+    {
+      "id": "i2",
+      "file": "comfy/model_management.py",
+      "line_start": 993,
+      "line_end": 998,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The logic in this function is unnecessarily verbose",
+      "description": "The logic in this function is unnecessarily verbose. Since `directml_enabled` is already a boolean variable, you can simply return it directly without using an if statement. Additionally, the `global` declaration is redundant here because you're only reading the variable, not modifying it.\n\n```suggestion\ndef is_directml_enabled():\n    return directml_enabled\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The logic in this function is unnecessarily verbose. Since `directml_enabled` is already a boolean variable, you can simply return it directly without using an if statement. Additionally, the `global` declaration is redundant here because you're only reading the variable, not modifying it.\n\n```suggestion\ndef is_directml_enabled():\n    return directml_enabled\n```"
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/comfyanonymous/ComfyUI/pull/6542). Upstream base fca304debf5a4e6c71f8def10ac41cf69519fde3 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 15. Severity absent in the source. i1: human comment, File Level; i2: AI comment (GLM-4.7), Diff Level"
+}

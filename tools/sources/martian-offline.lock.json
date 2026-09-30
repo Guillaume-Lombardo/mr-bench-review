@@ -1,0 +1,122 @@
+{
+  "https://github.com/ai-code-review-evaluation/discourse-graphite/pull/1": {
+    "base": "3f71fa15c93bb0b751bb92abae1b5dc9a21bd4ca",
+    "head": "ffbaf8c54269df2ce510de91245760fddce09896"
+  },
+  "https://github.com/ai-code-review-evaluation/discourse-graphite/pull/10": {
+    "base": "913c3d6f636d02b3dd6c2c022ca1af2bec95d752",
+    "head": "d1c69189f3c90ecf56013a8da904da9bff9a8e19"
+  },
+  "https://github.com/ai-code-review-evaluation/discourse-graphite/pull/2": {
+    "base": "56abd247e1829cb6de82dfcc8ce04deb5f0d1e91",
+    "head": "6669a2d94d76eea3b99b8c476d12b1eb66726b07"
+  },
+  "https://github.com/ai-code-review-evaluation/discourse-graphite/pull/3": {
+    "base": "e25638dab0d4b98f99c8fe8976ccaae8f4fb9db3",
+    "head": "5f8a130277dbddc95d133cd2832be639baf89213"
+  },
+  "https://github.com/ai-code-review-evaluation/discourse-graphite/pull/4": {
+    "base": "62db063e1e1abe691313ab42682a68f796d63769",
+    "head": "4f8aed295a29954023b2849c060ef4fb299d1b5d"
+  },
+  "https://github.com/ai-code-review-evaluation/discourse-graphite/pull/5": {
+    "base": "98fa098e6fade3097a11fe7f99a98a4e6ffb4728",
+    "head": "5b229316ee4c661836ed1161139692a3e8527444"
+  },
+  "https://github.com/ai-code-review-evaluation/discourse-graphite/pull/6": {
+    "base": "7a5fbae060bd0d3e29f3a4b5c6f2bfd8b2914dc7",
+    "head": "267d8be1f556ed59639ced396c885bb44586da19"
+  },
+  "https://github.com/ai-code-review-evaluation/discourse-graphite/pull/7": {
+    "base": "7554b5e3c458dc79b591d5e874e79ab10cf30c2f",
+    "head": "d38c4d5f7443223c81529c22470293771baf9f38"
+  },
+  "https://github.com/ai-code-review-evaluation/discourse-graphite/pull/8": {
+    "base": "4975fc28903a84418f546b2809370f19abf10e08",
+    "head": "060cda77729cb1c4a827560e09e89a7b22078ba9"
+  },
+  "https://github.com/ai-code-review-evaluation/discourse-graphite/pull/9": {
+    "base": "728845d008f06828630a632e5c7d67e11bf15deb",
+    "head": "ecfa17b5a79dfdc91e7a4d50b42ae78a35d0a293"
+  },
+  "https://github.com/ai-code-review-evaluation/keycloak-greptile/pull/1": {
+    "base": "30f804af450dec523909a52f2a4b97302d27f5cc",
+    "head": "3214b188de808fdb0fff335556b686f1b0a63218"
+  },
+  "https://github.com/grafana/grafana/pull/103633": {
+    "base": "5634ca44f799a82161f0401dadc286452f3bdbf8",
+    "head": "7562f37880367411a62304bcdcdc178bced23906"
+  },
+  "https://github.com/grafana/grafana/pull/106778": {
+    "base": "15e1aa88551d925a80796a966e52f2b7a178203b",
+    "head": "8df850371034b73dc4dd9908cc30fa09f12a1f97"
+  },
+  "https://github.com/grafana/grafana/pull/107534": {
+    "base": "d9a8253640464014aa3662c91131278990cfb828",
+    "head": "1cab4143d443c33079566f6ca36931eb8468159f"
+  },
+  "https://github.com/grafana/grafana/pull/76186": {
+    "base": "58ba11ecbd60863e2bfc6e32f0399ed4feb3927a",
+    "head": "303cdc2caf256aa5df660611120c2e3f7392365d"
+  },
+  "https://github.com/grafana/grafana/pull/79265": {
+    "base": "7ddcd0c9611882858701f4f876fb8e449fe73980",
+    "head": "bbd8c507cdf56f6b884373809e0b24abd4a2353d"
+  },
+  "https://github.com/grafana/grafana/pull/80329": {
+    "base": "a886bd3c79a417a70b51509384d1f1ec3e87e96b",
+    "head": "04cfa3bfd469c035ff8b35f9a66867c4e8d5dcf4"
+  },
+  "https://github.com/grafana/grafana/pull/90045": {
+    "base": "66c4dff17e9147b11fb9b14c6ed63089a599da65",
+    "head": "e369f24665ec70e1e3700f457d25ef83301d931a"
+  },
+  "https://github.com/grafana/grafana/pull/90939": {
+    "base": "cca9dee702ac4338ddc38aa56257273b8143e32e",
+    "head": "b1613e320acff00623e6efc59f00ee68c7684a97"
+  },
+  "https://github.com/grafana/grafana/pull/94942": {
+    "base": "cbe1e7d63f098e306058c0fbcab2f5c30602fa7d",
+    "head": "f3317b329b4eb8fd96f99dd86525bc4a22d20248"
+  },
+  "https://github.com/grafana/grafana/pull/97529": {
+    "base": "871af07203177ce59a24e742107119409274f48a",
+    "head": "26fed312840cd76b766cbd2158e17a7e6c0ec548"
+  },
+  "https://github.com/keycloak/keycloak/pull/32918": {
+    "base": "272cfc68dcc88615396ae62ed1571918e9c58ad3",
+    "head": "e944e2acf1e64421860a8e827f93ad06c169621b"
+  },
+  "https://github.com/keycloak/keycloak/pull/33832": {
+    "base": "10aca5552314d6e5c9226f3c6d0107861c38c693",
+    "head": "79d11c4890cc4792e3dc3535af59e4e5f7a2739d"
+  },
+  "https://github.com/keycloak/keycloak/pull/36880": {
+    "base": "b7b84d75d16e91d3f56ec527a260c53c5dd4396c",
+    "head": "1950a511026d520a7329c7b6b9ee60a4af8f8b55"
+  },
+  "https://github.com/keycloak/keycloak/pull/36882": {
+    "base": "1b28ac610dc16e0de14199f9ca5d2acdf7f3cc16",
+    "head": "62bf98939eda58f0d0a1a41a58aa6d4ecdc24dba"
+  },
+  "https://github.com/keycloak/keycloak/pull/37038": {
+    "base": "7ea067aae9be56cb2622bce6563864817c3dfeaf",
+    "head": "7355f05e6aafe2a7acc6434fb40c686665416606"
+  },
+  "https://github.com/keycloak/keycloak/pull/37429": {
+    "base": "f3c8e8f3487112f2c99aa78400430cce2d30be39",
+    "head": "02f48f776f43734d1ac8914d3ad6a7115acdcb33"
+  },
+  "https://github.com/keycloak/keycloak/pull/37634": {
+    "base": "c22f76867f595f0f7c327376a66a08dca01949e8",
+    "head": "daffb05b5ad091d3ec09933c3c99c2b54f448696"
+  },
+  "https://github.com/keycloak/keycloak/pull/38446": {
+    "base": "85737f52b59aa2e3403c9b8e48acf71ccc5bfae3",
+    "head": "ce2dcc537b4b1f98a335e88cfe8e0b804483252a"
+  },
+  "https://github.com/keycloak/keycloak/pull/40940": {
+    "base": "7fd37690c44c7068cb19ecee3aa6ff99c46a821d",
+    "head": "4def149a50c4b9b2c24fbb753ac60fe4f4df0cac"
+  }
+}

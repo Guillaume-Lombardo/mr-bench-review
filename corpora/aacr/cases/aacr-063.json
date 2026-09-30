@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-063",
+  "language": "javascript",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-063/base",
+  "head_branch": "bench/aacr/aacr-063/head",
+  "base_sha": "c371d2c867b15eb3687440b9be9546fe78a97c24",
+  "head_sha": "01fdaf6f9ea8bb1dec68018f30438e91f9a70f0a",
+  "mr_title": "fix: use fine grained for template if the component is not explicitly in legacy mode",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/sveltejs/svelte",
+    "commit": "44bec4c8b172a47ff300f754463555bbb694bb05",
+    "license": "MIT",
+    "source_case": "https://github.com/sveltejs/svelte/pull/16232",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "packages/svelte/src/compiler/phases/2-analyze/index.js",
+      "line_start": 437,
+      "line_end": 437,
+      "category": "correctness",
+      "severity": null,
+      "title": "The `maybe_runes` condition fails to exclude components with `$:` reactive statements, ri…",
+      "description": "The `maybe_runes` condition fails to exclude components with `$:` reactive statements, risking misclassification of traditional Svelte components as runes-compatible when they lack `export let` and reserved references. This omission could trigger incorrect runic behavior fallbacks in standard components.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The `maybe_runes` condition fails to exclude components with `$:` reactive statements, risking misclassification of traditional Svelte components as runes-compatible when they lack `export let` and reserved references. This omission could trigger incorrect runic behavior fallbacks in standard components."
+    },
+    {
+      "id": "i2",
+      "file": "packages/svelte/src/compiler/phases/3-transform/client/visitors/shared/utils.js",
+      "line_start": 373,
+      "line_end": 373,
+      "category": "correctness",
+      "severity": null,
+      "title": "The condition in `build_expression` fails to account for `maybe_runes` state, causing bre…",
+      "description": "The condition in `build_expression` fails to account for `maybe_runes` state, causing breaks in existing components that operate in an intermediate mode (not explicitly legacy or runes). Update the check to include both `runes` and `maybe_runes` for backward compatibility.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The condition in `build_expression` fails to account for `maybe_runes` state, causing breaks in existing components that operate in an intermediate mode (not explicitly legacy or runes). Update the check to include both `runes` and `maybe_runes` for backward compatibility."
+    },
+    {
+      "id": "i3",
+      "file": "packages/svelte/src/compiler/phases/3-transform/client/visitors/shared/utils.js",
+      "line_start": 389,
+      "line_end": 389,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Checklist: `var` is forbidden; use `let` (since it’s reassigned) to avoid function-scoped…",
+      "description": "Checklist: `var` is forbidden; use `let` (since it’s reassigned) to avoid function-scoped hoisting surprises.\n\n```suggestion\n\t\tlet getter = build_getter({ ...binding.node }, state);\n```",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Checklist: `var` is forbidden; use `let` (since it’s reassigned) to avoid function-scoped hoisting surprises.\n\n```suggestion\n\t\tlet getter = build_getter({ ...binding.node }, state);\n```"
+    },
+    {
+      "id": "i4",
+      "file": "packages/svelte/src/compiler/phases/types.d.ts",
+      "line_start": 53,
+      "line_end": 54,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The new `maybe_runes` property lacks a JSDoc comment explaining its purpose",
+      "description": "The new `maybe_runes` property lacks a JSDoc comment explaining its purpose. For consistency with other boolean properties like `runes` and `tracing`, consider adding documentation. Based on the analyze phase implementation, this property indicates whether the component might be in runes mode when using runes from an external module without explicit `export let` or reserved references (`$$props`, `$$restProps`).\n\n```suggestion\n\trunes: boolean;\n\t/** Whether the component might be in runes mode when using external runes without explicit indicators */\n\tmaybe_runes: boolean;\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The new `maybe_runes` property lacks a JSDoc comment explaining its purpose. For consistency with other boolean properties like `runes` and `tracing`, consider adding documentation. Based on the analyze phase implementation, this property indicates whether the component might be in runes mode when using runes from an external module without explicit `export let` or reserved references (`$$props`, `$$restProps`).\n\n```suggestion\n\trunes: boolean;\n\t/** Whether the component might be in runes mode when using external runes without explicit indicators */\n\tmaybe_runes: boolean;\n```"
+    },
+    {
+      "id": "i5",
+      "file": "packages/svelte/src/compiler/phases/types.d.ts",
+      "line_start": 54,
+      "line_end": 54,
+      "category": "correctness",
+      "severity": null,
+      "title": "Adding `maybe_runes: boolean` to `ComponentAnalysis` makes this a new *required* property…",
+      "description": "Adding `maybe_runes: boolean` to `ComponentAnalysis` makes this a new *required* property for all code paths that create/return `ComponentAnalysis`. If any producer doesn’t set it, TS will start failing (or consumers relying on structural typing may break). Consider making it optional (`maybe_runes?: boolean`) or defaulting it in all construction sites, and ensure naming/semantics are consistent with `runes` (e.g., tri-state could be modeled as `runes: boolean | 'maybe'` or a single enum).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Adding `maybe_runes: boolean` to `ComponentAnalysis` makes this a new *required* property for all code paths that create/return `ComponentAnalysis`. If any producer doesn’t set it, TS will start failing (or consumers relying on structural typing may break). Consider making it optional (`maybe_runes?: boolean`) or defaulting it in all construction sites, and ensure naming/semantics are consistent with `runes` (e.g., tri-state could be modeled as `runes: boolean | 'maybe'` or a single enum).\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "packages/svelte/src/compiler/phases/2-analyze/index.js",
+      "line_start": 437,
+      "line_end": 453,
+      "description": "This complex boolean expression would benefit from explanatory comments or refactoring. Consider:\n1. Adding inline comments explaining each condition's purpose\n2. Extracting the export let check into a separate helper function\n3. The nested condition checking for 'VariableDeclaration' and 'let' kind is particularly hard to follow"
+    },
+    {
+      "file": "packages/svelte/src/compiler/phases/2-analyze/index.js",
+      "line_start": 441,
+      "line_end": 441,
+      "description": "**Bug: Checking wrong scope for $$props and $$restProps**\n\nThe code currently checks `module.scope.references` for `$$props` and `$$restProps`, but these legacy props are typically used in the instance script context, not the module context.\n\nThis means that a component like:\n```svelte\n<script>\n  import { get, set } from './test.svelte.js';\n  console.log($$props);\n</script>\n```\n\nWould incorrectly have `maybe_runes = true` because the check only looks at `module.scope.references`, missing the `$$props` usage in the instance script.\n\n**Suggested fix:**\n```\nFix packages/svelte/src/compiler/phases/2-analyze/index.js:441: Change module.scope.references to instance.scope.references (or check both scopes) to correctly detect $$props and $$restProps usage in the instance script context where they are actually used.\n```"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/sveltejs/svelte/pull/16232). Upstream base 2af7ba21563f1b7f011ffa9f0c08e4acb473eef3 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 326. Severity absent in the source. i1: human comment, Diff Level; i2: human comment, Diff Level; i3: AI comment (GPT-5.2), Diff Level; i4: AI comment (GLM-4.7), File Level; i5: AI comment (GPT-5.2), Diff Level"
+}

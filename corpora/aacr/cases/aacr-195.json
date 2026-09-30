@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-195",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-195/base",
+  "head_branch": "bench/aacr/aacr-195/head",
+  "base_sha": "0779d0cb0b64b8a4d4463e9064d436f6477d6b50",
+  "head_sha": "6df10de8dd7524ca551547ccc682c36a0ca3392b",
+  "mr_title": "refactor: Update _log_transaction_async to be asynchronous and improve task management",
+  "mr_description": "- Changed _log_transaction_async method from synchronous to asynchronous to allow proper handling of transaction logging.\n- Added error handling for task cancellation and ensured that pending tasks are managed correctly.\n- Updated calls to _log_transaction_async in the ComponentVertex class to await the asynchronous method, ensuring proper flow execution and error handling.",
+  "origin": {
+    "repository": "https://github.com/langflow-ai/langflow",
+    "commit": "9513d152197e5336fbc00eb6b891f1ffb25ad62d",
+    "license": "MIT",
+    "source_case": "https://github.com/langflow-ai/langflow/pull/5896",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/backend/base/langflow/graph/vertex/base.py",
+      "line_start": 636,
+      "line_end": 638,
+      "category": "correctness",
+      "severity": null,
+      "title": "Deadlock risk: This method is called by `_get_result`, which is invoked by `get_result` i…",
+      "description": "Deadlock risk: This method is called by `_get_result`, which is invoked by `get_result` inside an `async with self._lock:` block. Attempting to acquire `self._lock` again here will cause a deadlock because `asyncio.Lock` is not reentrant. \n\nAdditionally, awaiting `asyncio.gather(*tasks)` inside the lock serializes logging and blocks the vertex execution until previous logs are processed, which may significantly impact performance.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Deadlock risk: This method is called by `_get_result`, which is invoked by `get_result` inside an `async with self._lock:` block. Attempting to acquire `self._lock` again here will cause a deadlock because `asyncio.Lock` is not reentrant. \n\nAdditionally, awaiting `asyncio.gather(*tasks)` inside the lock serializes logging and blocks the vertex execution until previous logs are processed, which may significantly impact performance.\n"
+    },
+    {
+      "id": "i2",
+      "file": "src/backend/base/langflow/graph/vertex/base.py",
+      "line_start": 654,
+      "line_end": 660,
+      "category": "correctness",
+      "severity": null,
+      "title": "There is a logical error in the outer `asyncio.CancelledError` exception handler",
+      "description": "There is a logical error in the outer `asyncio.CancelledError` exception handler. The inner code clears `self.log_transaction_tasks` before calling `asyncio.gather(*tasks)`, so when a `CancelledError` is caught in the outer handler, `self.log_transaction_tasks` is already empty. The outer handler iterates over `self.log_transaction_tasks` instead of the local `tasks` variable, meaning no pending tasks will be cancelled when an error occurs from the outer context.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "There is a logical error in the outer `asyncio.CancelledError` exception handler. The inner code clears `self.log_transaction_tasks` before calling `asyncio.gather(*tasks)`, so when a `CancelledError` is caught in the outer handler, `self.log_transaction_tasks` is already empty. The outer handler iterates over `self.log_transaction_tasks` instead of the local `tasks` variable, meaning no pending tasks will be cancelled when an error occurs from the outer context."
+    },
+    {
+      "id": "i3",
+      "file": "src/backend/base/langflow/graph/vertex/base.py",
+      "line_start": 658,
+      "line_end": 659,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The `with suppress(asyncio.CancelledError)` context manager around `pending_task.cancel()…",
+      "description": "The `with suppress(asyncio.CancelledError)` context manager around `pending_task.cancel()` is redundant since `Task.cancel()` does not raise `CancelledError` (it only schedules cancellation); remove the unnecessary suppression.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The `with suppress(asyncio.CancelledError)` context manager around `pending_task.cancel()` is redundant since `Task.cancel()` does not raise `CancelledError` (it only schedules cancellation); remove the unnecessary suppression."
+    },
+    {
+      "id": "i4",
+      "file": "src/backend/base/langflow/graph/vertex/vertex_types.py",
+      "line_start": 109,
+      "line_end": 110,
+      "category": "correctness",
+      "severity": null,
+      "title": "`await`ing the transaction logger changes behavior vs the previous fire-and-forget call:…",
+      "description": "`await`ing the transaction logger changes behavior vs the previous fire-and-forget call: it can add latency to `_get_result` and, more importantly, any exception in `_log_transaction_async` will now propagate and can mask the original error (e.g., the \"not built\" `ValueError`) or break the success path. If logging is best-effort, consider wrapping with `try/except` (or `contextlib.suppress`) and/or scheduling it via `asyncio.create_task(...)` so result/error handling isn’t affected.\n\n```suggestion\n            if flow_id:\n                            try:\n                                # best-effort logging; don’t block or fail the main path\n                                asyncio.create_task(\n                                    self._log_transaction_async(\n                                        source=self, target=requester, flow_id=str(flow_id), status=\"error\"\n                                    )\n                                )\n                            except Exception:\n                                pass\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`await`ing the transaction logger changes behavior vs the previous fire-and-forget call: it can add latency to `_get_result` and, more importantly, any exception in `_log_transaction_async` will now propagate and can mask the original error (e.g., the \"not built\" `ValueError`) or break the success path. If logging is best-effort, consider wrapping with `try/except` (or `contextlib.suppress`) and/or scheduling it via `asyncio.create_task(...)` so result/error handling isn’t affected.\n\n```suggestion\n            if flow_id:\n                            try:\n                                # best-effort logging; don’t block or fail the main path\n                                asyncio.create_task(\n                                    self._log_transaction_async(\n                                        source=self, target=requester, flow_id=str(flow_id), status=\"error\"\n                                    )\n                                )\n                            except Exception:\n                                pass\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/backend/base/langflow/graph/vertex/base.py",
+      "line_start": 644,
+      "line_end": 644,
+      "description": "The try-except block for `asyncio.CancelledError` around `asyncio.gather` is redundant because cancellation is automatically propagated to all pending tasks by `asyncio.gather` per Python's documentation. Remove the unnecessary exception handling."
+    },
+    {
+      "file": "src/backend/base/langflow/graph/vertex/base.py",
+      "line_start": 654,
+      "line_end": 654,
+      "description": "The added `CancelledError` handling in `_log_transaction_async` is unnecessary because the exception would only occur if the current task is cancelled (not due to task completion), making manual task cancellation redundant; the actual unhandled `CancelledError` originates from `task.result()` calls in `chat.py`."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/langflow-ai/langflow/pull/5896). Upstream base 22e24fa718a511e657c7c120721fa129f3c3b677 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 37. Severity absent in the source. i1: AI comment (Gemini-3-Pro), Repo Level; i2: AI comment (GLM-4.7), Repo Level; i3: human comment, File Level; i4: AI comment (GPT-5.2), File Level"
+}

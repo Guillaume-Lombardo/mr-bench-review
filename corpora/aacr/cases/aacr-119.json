@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-119",
+  "language": "php",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-119/base",
+  "head_branch": "bench/aacr/aacr-119/head",
+  "base_sha": "543bbb1fe7f4a9fa38fbdb25493079342660dd41",
+  "head_sha": "6bf4dcf8cbe8b068a9e586aed9800931d0261435",
+  "mr_title": "fix forced lower case search",
+  "mr_description": "- fix forced lower case search\n- add ignore for phpstan",
+  "origin": {
+    "repository": "https://github.com/filamentphp/filament",
+    "commit": "d47632c0583bac481d4ce7cc9b6b1711d0f8e0fc",
+    "license": "MIT",
+    "source_case": "https://github.com/filamentphp/filament/pull/15267",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "packages/support/src/helpers.php",
+      "line_start": 184,
+      "line_end": 184,
+      "category": "correctness",
+      "severity": null,
+      "title": "The new condition for '->' JSON syntax must skip columns starting with `json_extract()` t…",
+      "description": "The new condition for '->' JSON syntax must skip columns starting with `json_extract()` to prevent double-wrapping, as the two syntax forms are mutually exclusive and the translatable plugin already handles these columns.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The new condition for '->' JSON syntax must skip columns starting with `json_extract()` to prevent double-wrapping, as the two syntax forms are mutually exclusive and the translatable plugin already handles these columns."
+    },
+    {
+      "id": "i2",
+      "file": "packages/support/src/helpers.php",
+      "line_start": 184,
+      "line_end": 188,
+      "category": "security",
+      "severity": null,
+      "title": "Potential SQL correctness/safety issue: building `$column = \"json_extract({$field}{$path}…",
+      "description": "Potential SQL correctness/safety issue: building `$column = \"json_extract({$field}{$path})\"` assumes `$path` already includes the comma and is correctly quoted/escaped, and that JSON extraction syntax matches the current connection settings (e.g., MySQL vs MariaDB variants, json type/collation). Since this string is later interpolated into `lower({$column})`, any mismatch can break queries or bypass proper identifier wrapping.\n\nSuggestion: prefer using the grammar’s JSON selector wrapping (or query builder expressions) end-to-end rather than concatenating raw SQL. If you must transform here, ensure the generated SQL includes the required `,` between field and path and that both parts are wrapped/escaped by the grammar (e.g., `json_extract({$field}, {$path})`), and consider handling nested selectors/edge cases consistently with other drivers.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "Potential SQL correctness/safety issue: building `$column = \"json_extract({$field}{$path})\"` assumes `$path` already includes the comma and is correctly quoted/escaped, and that JSON extraction syntax matches the current connection settings (e.g., MySQL vs MariaDB variants, json type/collation). Since this string is later interpolated into `lower({$column})`, any mismatch can break queries or bypass proper identifier wrapping.\n\nSuggestion: prefer using the grammar’s JSON selector wrapping (or query builder expressions) end-to-end rather than concatenating raw SQL. If you must transform here, ensure the generated SQL includes the required `,` between field and path and that both parts are wrapped/escaped by the grammar (e.g., `json_extract({$field}, {$path})`), and consider handling nested selectors/edge cases consistently with other drivers."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/filamentphp/filament/pull/15267). Upstream base ce4d9d08df41142ff219bb3dc44968084eaae0dc = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 6. Severity absent in the source. i1: human comment, Diff Level; i2: AI comment (GPT-5.2), File Level"
+}

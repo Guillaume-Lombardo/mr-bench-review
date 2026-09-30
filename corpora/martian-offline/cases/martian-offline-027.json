@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "martian-offline",
+  "id": "martian-offline-027",
+  "language": "go",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/martian-offline/martian-offline-027/base",
+  "head_branch": "bench/martian-offline/martian-offline-027/head",
+  "base_sha": "65a33a33398637a88be6a5c2ff20b20f1bb6cb48",
+  "head_sha": "f4014e76ab5bdcfa533b3142ebbc1555c616fcc9",
+  "mr_title": "Database Performance Optimizations",
+  "mr_description": "- Split subquery when cleaning annotations\n- update comment\n- Raise batch size, now that we pay attention to it\n- Iterate in batches\n- Separate cancellable batch implementation to allow for multi-statement callbacks, add overload for single-statement use\n- Use split-out utility in outer batching loop so it respects context cancellation\n- guard against empty queries\n- Use SQL parameters\n- Use same approach for tags\n- drop unused function\n- Work around parameter limit on sqlite for large batches\n- Bulk insert test data in DB\n- Refactor test to customise test data creation\n- Add test for catching SQLITE_MAX_VARIABLE_NUMBER limit\n- Turn annotation cleanup test to integration tests\n- lint",
+  "origin": {
+    "repository": "https://github.com/grafana/grafana",
+    "commit": "04cfa3bfd469c035ff8b35f9a66867c4e8d5dcf4",
+    "license": "AGPL-3.0",
+    "source_case": "https://github.com/grafana/grafana/pull/80329",
+    "source_url": "https://github.com/withmartian/code-review-benchmark/blob/e616e849755441da38f18bf3adba2c9583b03803/offline/golden_comments/grafana.json"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "maintainability",
+      "severity": "low",
+      "title": "The code uses Error log level for what appears to be debugging information",
+      "description": "The code uses Error log level for what appears to be debugging information. This will pollute error logs in production. Consider using Debug or Info level instead.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "perf",
+      "source_text": "The code uses Error log level for what appears to be debugging information. This will pollute error logs in production. Consider using Debug or Info level instead."
+    },
+    {
+      "id": "i2",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "maintainability",
+      "severity": "low",
+      "title": "The cleanup job ticker was changed from 10 minutes to 1 minute, which can lead to increas…",
+      "description": "The cleanup job ticker was changed from 10 minutes to 1 minute, which can lead to increased database load and contention due to more frequent execution of cleanup tasks. This change should be reviewed to ensure it aligns with performance expectations.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "perf",
+      "source_text": "The cleanup job ticker was changed from 10 minutes to 1 minute, which can lead to increased database load and contention due to more frequent execution of cleanup tasks. This change should be reviewed to ensure it aligns with performance expectations."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/grafana/grafana/pull/80329). Upstream base a886bd3c79a417a70b51509384d1f1ec3e87e96b (merge-base with the default branch, before the merge for merged PRs). Golden comments are unlocated. i1: Martian profile Core; i2: Martian profile Core"
+}

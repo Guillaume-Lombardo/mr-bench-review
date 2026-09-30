@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-124",
+  "language": "csharp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-124/base",
+  "head_branch": "bench/aacr/aacr-124/head",
+  "base_sha": "a20f6adf2eead41931e7ce2fc19da4ad6325bbb9",
+  "head_sha": "b6b5bb7e5edd4677706021b4897a290e87a842a9",
+  "mr_title": "Fix password validation in PasswordHasher`1: add check for upper bound for salt size before allocation an array",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/dotnet/aspnetcore",
+    "commit": "742f022e92563bd6fb87d1c752f25fd14e1b2a43",
+    "license": "MIT",
+    "source_case": "https://github.com/dotnet/aspnetcore/pull/62734",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/Identity/Extensions.Core/src/PasswordHasher.cs",
+      "line_start": 252,
+      "line_end": 255,
+      "category": "security",
+      "severity": null,
+      "title": "Adding an upper bound to saltLength is a good DoS hardening",
+      "description": "Adding an upper bound to saltLength is a good DoS hardening. Two follow-ups to consider:\n1) Compatibility: if any existing stored hashes (or other implementations) might legitimately have salts > 8KiB, this change will start rejecting them. If this is a library, consider documenting the limit or basing it on an existing spec/versioned header.\n2) Placement/consistency: there are other length reads in this format (e.g., subkey length). Consider applying similar upper bounds there too, so an attacker can’t shift the allocation pressure to a different field.\n\nIf possible, reuse a shared constant (e.g., a private const at class scope) to keep limits consistent across methods/versions.\n\n```suggestion\n        // Consider promoting to a class-level constant (and adding similar bounds for other length fields)\n        private const int MaxSaltSize = 8 * 1024; // 8 KiB\n        \n        // ...\n        // in method:\n        // (remove the local const)\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "Adding an upper bound to saltLength is a good DoS hardening. Two follow-ups to consider:\n1) Compatibility: if any existing stored hashes (or other implementations) might legitimately have salts > 8KiB, this change will start rejecting them. If this is a library, consider documenting the limit or basing it on an existing spec/versioned header.\n2) Placement/consistency: there are other length reads in this format (e.g., subkey length). Consider applying similar upper bounds there too, so an attacker can’t shift the allocation pressure to a different field.\n\nIf possible, reuse a shared constant (e.g., a private const at class scope) to keep limits consistent across methods/versions.\n\n```suggestion\n        // Consider promoting to a class-level constant (and adding similar bounds for other length fields)\n        private const int MaxSaltSize = 8 * 1024; // 8 KiB\n        \n        // ...\n        // in method:\n        // (remove the local const)\n```"
+    },
+    {
+      "id": "i2",
+      "file": "src/Identity/Extensions.Core/src/PasswordHasher.cs",
+      "line_start": 260,
+      "line_end": 260,
+      "category": "correctness",
+      "severity": null,
+      "title": "The manual bounds check for salt extraction should be replaced with span-based slicing (`…",
+      "description": "The manual bounds check for salt extraction should be replaced with span-based slicing (`AsSpan(13, saltLength)`) to leverage runtime bounds validation and eliminate error-prone manual length checks.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The manual bounds check for salt extraction should be replaced with span-based slicing (`AsSpan(13, saltLength)`) to leverage runtime bounds validation and eliminate error-prone manual length checks."
+    },
+    {
+      "id": "i3",
+      "file": "src/Identity/Extensions.Core/src/PasswordHasher.cs",
+      "line_start": 264,
+      "line_end": 270,
+      "category": "security",
+      "severity": null,
+      "title": "The salt length upper bound validation is a good security improvement to prevent DoS atta…",
+      "description": "The salt length upper bound validation is a good security improvement to prevent DoS attacks. However, consider adding a validation to ensure the hashedPassword array has sufficient bytes to contain the declared saltLength before allocating the salt array. This would prevent unnecessary memory allocation and potential exception handling overhead for malformed payloads. Suggestion: Add a check `if (hashedPassword.Length < 13 + saltLength) { return false; }` before the salt allocation.\n\n```suggestion\n            // Read the salt: must be >= 128 bits\n            if (saltLength < 128 / 8 || saltLength > MaxSaltSize)\n            {\n                return false;\n            }\n            // Verify the payload has enough bytes for the declared salt length\n            if (hashedPassword.Length < 13 + saltLength)\n            {\n                return false;\n            }\n            byte[] salt = new byte[saltLength];\n            Buffer.BlockCopy(hashedPassword, 13, salt, 0, salt.Length);\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "The salt length upper bound validation is a good security improvement to prevent DoS attacks. However, consider adding a validation to ensure the hashedPassword array has sufficient bytes to contain the declared saltLength before allocating the salt array. This would prevent unnecessary memory allocation and potential exception handling overhead for malformed payloads. Suggestion: Add a check `if (hashedPassword.Length < 13 + saltLength) { return false; }` before the salt allocation.\n\n```suggestion\n            // Read the salt: must be >= 128 bits\n            if (saltLength < 128 / 8 || saltLength > MaxSaltSize)\n            {\n                return false;\n            }\n            // Verify the payload has enough bytes for the declared salt length\n            if (hashedPassword.Length < 13 + saltLength)\n            {\n                return false;\n            }\n            byte[] salt = new byte[saltLength];\n            Buffer.BlockCopy(hashedPassword, 13, salt, 0, salt.Length);\n```"
+    },
+    {
+      "id": "i4",
+      "file": "src/Identity/Extensions.Core/src/PasswordHasher.cs",
+      "line_start": 265,
+      "line_end": 265,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Replace the magic number `128 / 8` for minimum salt size validation with a named constant…",
+      "description": "Replace the magic number `128 / 8` for minimum salt size validation with a named constant (e.g., `MinSaltSize`) to improve code clarity and maintainability.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Replace the magic number `128 / 8` for minimum salt size validation with a named constant (e.g., `MinSaltSize`) to improve code clarity and maintainability."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/Identity/Extensions.Core/src/PasswordHasher.cs",
+      "line_start": 252,
+      "line_end": 252,
+      "description": "Good security fix! The addition of `MaxSaltSize` constant prevents potential DoS attacks through excessive memory allocation. \n\nA few considerations:\n\n1. **Constant value rationale**: The 8 KiB limit seems reasonable, but consider documenting why this specific value was chosen. What's the expected maximum legitimate salt size in practice?\n\n2. **Consider making it configurable**: If there are legitimate scenarios requiring larger salts, consider exposing this as a configuration option (though the current approach is secure-by-default, which is good).\n\n3. **Error messaging**: When this validation fails, users might not understand why. Consider if there's a way to provide better diagnostics (though this might be constrained by the security context)."
+    },
+    {
+      "file": "src/Identity/Extensions.Core/src/PasswordHasher.cs",
+      "line_start": 265,
+      "line_end": 265,
+      "description": "The upper bound check correctly complements the existing lower bound check. This prevents allocation of arbitrarily large arrays when the password hash is corrupted or maliciously crafted.\n\n**Suggestion**: Consider adding a comment explaining why this check exists, for example:\n```csharp\n// Prevent excessive memory allocation from corrupted or malicious hash data\nif (saltLength < 128 / 8 || saltLength > MaxSaltSize)\n```\n\nThis would help future maintainers understand the security rationale."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/dotnet/aspnetcore/pull/62734). Upstream base 1b5d54eb39283b0d028841bd4a73fe8ebaa4abd7 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 6. Severity absent in the source. i1: AI comment (GPT-5.2), Diff Level; i2: human comment, File Level; i3: AI comment (GLM-4.7), File Level; i4: human comment, Diff Level"
+}

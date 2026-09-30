@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "name": "aacr",
+  "title": "AACR-Bench (Alibaba)",
+  "origin": "imported",
+  "source_url": "https://github.com/alibaba/aacr-bench",
+  "licence": "Apache-2.0 annotations; upstream code per case, see cases/*.json",
+  "default": false,
+  "annotation": "mixed",
+  "location_precision": "lines",
+  "severity_available": false,
+  "created_at": "2026-09-30"
+}

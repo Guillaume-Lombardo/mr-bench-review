@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-006",
+  "language": "typescript",
+  "size": "medium",
+  "kind": "clean",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-006/base",
+  "head_branch": "bench/review-bench/review-bench-006/head",
+  "base_sha": "07ebda492db03a9709eab73fc9ade6ac06cf3bd0",
+  "head_sha": "6e14b7be2d1f690c11fa89494918fcc82c30a55f",
+  "mr_title": "feat(types): Allow the Params property to be typed, instead of `any`",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/axios/axios",
+    "commit": "3077e62097726d22ba30f1cb847d7a07050e339a",
+    "license": "MIT",
+    "source_case": "axios-typed-params-property",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/axios-typed-params-property"
+  },
+  "expected_issues": [],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench axios-typed-params-property (corpus corpus/v0.1). Introducing PR https://github.com/axios/axios/pull/11081."
+}

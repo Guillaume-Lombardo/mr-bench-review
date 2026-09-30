@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-019",
+  "language": "csharp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-019/base",
+  "head_branch": "bench/aacr/aacr-019/head",
+  "base_sha": "6de9d74e09c4b5d81e1c9cfd6f7c3454a7b68720",
+  "head_sha": "f87379e88b86d9705b0b7afa5221f24ab7786773",
+  "mr_title": "Fix up SSHConnectionInfo ssh PATH checks",
+  "mr_description": "Fix the logic for finding the ssh executable in the PATH when running in\na context without an active Runspace. For example running it in an SDK\nhosted PowerShell instance will not have an active Runspace when\ncreating the ssh process so cannot use the PowerShell command lookup\nclass.",
+  "origin": {
+    "repository": "https://github.com/PowerShell/PowerShell",
+    "commit": "ea07b93a40f64274505e3a070c1fd91684ff2959",
+    "license": "MIT",
+    "source_case": "https://github.com/PowerShell/PowerShell/pull/25780",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/System.Management.Automation/engine/remoting/common/RunspaceConnectionInfo.cs",
+      "line_start": 2222,
+      "line_end": 2226,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The comment explaining the manual command lookup requires clarification to accurately ref…",
+      "description": "The comment explaining the manual command lookup requires clarification to accurately reflect two key implementation details: LookupCommandInfo intentionally searches PATH only (avoiding the current working directory search performed by ProcessStartInfo), and the resolved full path is necessary to set the WorkingDirectory to the executable's parent directory for security considerations.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The comment explaining the manual command lookup requires clarification to accurately reflect two key implementation details: LookupCommandInfo intentionally searches PATH only (avoiding the current working directory search performed by ProcessStartInfo), and the resolved full path is necessary to set the WorkingDirectory to the executable's parent directory for security considerations."
+    },
+    {
+      "id": "i2",
+      "file": "src/System.Management.Automation/engine/remoting/common/RunspaceConnectionInfo.cs",
+      "line_start": 2230,
+      "line_end": 2237,
+      "category": "correctness",
+      "severity": null,
+      "title": "The manual PATH lookup filters out entries that are not fully qualified paths using `Path…",
+      "description": "The manual PATH lookup filters out entries that are not fully qualified paths using `Path.IsPathFullyQualified(path)`. However, the PATH environment variable can legitimately contain relative paths (e.g., \".\" or \"..\\bin\" on Windows, or \"/usr/local/bin:./scripts\" on Unix). Filtering these out will cause the SSH command lookup to fail even when the executable exists in those locations.\n\nConsider removing this filter, or at minimum checking if the combined path resolves to an existing file before skipping.\n\n```suggestion\n                foreach (var path in entries)\n                {\n                    var sshCommandPath = Path.Combine(path, sshCommand);\n                    if (File.Exists(sshCommandPath))\n                    {\n                        filePath = sshCommandPath;\n                        break;\n                    }\n                }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The manual PATH lookup filters out entries that are not fully qualified paths using `Path.IsPathFullyQualified(path)`. However, the PATH environment variable can legitimately contain relative paths (e.g., \".\" or \"..\\bin\" on Windows, or \"/usr/local/bin:./scripts\" on Unix). Filtering these out will cause the SSH command lookup to fail even when the executable exists in those locations.\n\nConsider removing this filter, or at minimum checking if the combined path resolves to an existing file before skipping.\n\n```suggestion\n                foreach (var path in entries)\n                {\n                    var sshCommandPath = Path.Combine(path, sshCommand);\n                    if (File.Exists(sshCommandPath))\n                    {\n                        filePath = sshCommandPath;\n                        break;\n                    }\n                }\n```"
+    },
+    {
+      "id": "i3",
+      "file": "src/System.Management.Automation/engine/remoting/common/RunspaceConnectionInfo.cs",
+      "line_start": 2230,
+      "line_end": 2243,
+      "category": "correctness",
+      "severity": null,
+      "title": "The manual PATH lookup should handle potential exceptions from Path.Combine() or File.Exi…",
+      "description": "The manual PATH lookup should handle potential exceptions from Path.Combine() or File.Exists(). If the PATH environment variable contains entries with invalid characters or malformed paths, these methods could throw exceptions (e.g., ArgumentException, NotSupportedException). Consider wrapping the path operations in a try-catch block to skip invalid PATH entries gracefully.\n\nSuggested approach:\n```csharp\nforeach (var path in entries)\n{\n    if (!Path.IsPathFullyQualified(path))\n    {\n        continue;\n    }\n\n    try\n    {\n        var sshCommandPath = Path.Combine(path, sshCommand);\n        if (File.Exists(sshCommandPath))\n        {\n            filePath = sshCommandPath;\n            break;\n        }\n    }\n    catch (ArgumentException)\n    {\n        // Skip invalid path entries\n        continue;\n    }\n}\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The manual PATH lookup should handle potential exceptions from Path.Combine() or File.Exists(). If the PATH environment variable contains entries with invalid characters or malformed paths, these methods could throw exceptions (e.g., ArgumentException, NotSupportedException). Consider wrapping the path operations in a try-catch block to skip invalid PATH entries gracefully.\n\nSuggested approach:\n```csharp\nforeach (var path in entries)\n{\n    if (!Path.IsPathFullyQualified(path))\n    {\n        continue;\n    }\n\n    try\n    {\n        var sshCommandPath = Path.Combine(path, sshCommand);\n        if (File.Exists(sshCommandPath))\n        {\n            filePath = sshCommandPath;\n            break;\n        }\n    }\n    catch (ArgumentException)\n    {\n        // Skip invalid path entries\n        continue;\n    }\n}\n```\n"
+    },
+    {
+      "id": "i4",
+      "file": "src/System.Management.Automation/engine/remoting/common/RunspaceConnectionInfo.cs",
+      "line_start": 2238,
+      "line_end": 2242,
+      "category": "security",
+      "severity": null,
+      "title": "Consider validating that 'filePath' does not point to an unexpected location due to symbo…",
+      "description": "Consider validating that 'filePath' does not point to an unexpected location due to symbolic links or junction points, especially since this involves executing external processes.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "Consider validating that 'filePath' does not point to an unexpected location due to symbolic links or junction points, especially since this involves executing external processes.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/System.Management.Automation/engine/remoting/common/RunspaceConnectionInfo.cs",
+      "line_start": 2214,
+      "line_end": 2215,
+      "description": "Inconsistent formatting of multi-line method call; closing parenthesis and type cast should remain on the same line as the 'context' parameter rather than being placed on a new line."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/PowerShell/PowerShell/pull/25780). Upstream base ce76ae1def6d5b00fff0d855ec01575121268ef3 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 44. Severity absent in the source. i1: human comment, File Level; i2: AI comment (GLM-4.7), Diff Level; i3: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i4: AI comment (Qwen-Coder-480B), File Level"
+}

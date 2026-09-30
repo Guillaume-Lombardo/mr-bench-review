@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-193",
+  "language": "python",
+  "size": "large",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-193/base",
+  "head_branch": "bench/aacr/aacr-193/head",
+  "base_sha": "df552714c552df53deb64e4ed15e379e8b907c4c",
+  "head_sha": "9abce1f712419c50bf71ddf11967b8d0a9effa44",
+  "mr_title": "feat: Implement serialization functions for various data types and add a unified serialize method",
+  "mr_description": "- feat: Implement serialization functions for various data types and add a unified serialize method\n- feat: Enhance serialization by adding support for primitive types, enums, and generic types\n- fix: Update Pinecone integration to use VectorStore and handle import errors gracefully\n- test: Add hypothesis-based tests for serialization functions across various data types\n- refactor: Replace custom serialization logic with unified serialize function for consistency and maintainability\n- refactor: Replace recursive serialization function with unified serialize method for improved clarity and maintainability\n- refactor: Replace custom serialization logic with unified serialize function for improved consistency and clarity\n- refactor: Enhance serialization logic by adding instance handling and streamlining type checks\n- refactor: Remove custom dictionary serialization from ResultDataResponse for streamlined handling\n- refactor: Enhance serialization in ResultDataResponse by adding max_items_length for improved handling of outputs, logs, messages, and artifacts\n- refactor: Move MAX_ITEMS_LENGTH and MAX_TEXT_LENGTH constants to serialization module for better organization\n- refactor: Simplify message serialization in Log model by utilizing unified serialize function\n- refactor: Remove unnecessary pytest marker from TestSerializationHypothesis class\n- optimize _serialize_bytes\n- feat: Add support for numpy integer type serialization\n- feat: Enhance serialization with support for pandas and numpy types\n- test: Add comprehensive serialization tests for numpy and pandas types\n- fix: Update _serialize_dispatcher to return string representation for unsupported types\n- fix: Update _serialize_dispatcher to return the object directly instead of its string representation",
+  "origin": {
+    "repository": "https://github.com/langflow-ai/langflow",
+    "commit": "bcfe6f9ded091cd360b3212b6e9f5a58cbcdac5e",
+    "license": "MIT",
+    "source_case": "https://github.com/langflow-ai/langflow/pull/6044",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/backend/base/langflow/components/vectorstores/pinecone.py",
+      "line_start": 47,
+      "line_end": 51,
+      "category": "correctness",
+      "severity": null,
+      "title": "Exception semantics: catching `ImportError` and re-raising `ValueError` can break callers…",
+      "description": "Exception semantics: catching `ImportError` and re-raising `ValueError` can break callers/tests that expect missing optional dependencies to raise `ImportError`/`ModuleNotFoundError`. Prefer re-raising `ImportError` with the helpful install message, or use a project-specific exception type consistently used elsewhere for missing extras.\n\n```suggestion\n        try:\n            from langchain_pinecone import PineconeVectorStore\n        except ImportError as e:\n            msg = (\n                \"langchain-pinecone is not installed. Please install it with `pip install langchain-pinecone`.\"\n            )\n            raise ImportError(msg) from e\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Exception semantics: catching `ImportError` and re-raising `ValueError` can break callers/tests that expect missing optional dependencies to raise `ImportError`/`ModuleNotFoundError`. Prefer re-raising `ImportError` with the helpful install message, or use a project-specific exception type consistently used elsewhere for missing extras.\n\n```suggestion\n        try:\n            from langchain_pinecone import PineconeVectorStore\n        except ImportError as e:\n            msg = (\n                \"langchain-pinecone is not installed. Please install it with `pip install langchain-pinecone`.\"\n            )\n            raise ImportError(msg) from e\n```"
+    },
+    {
+      "id": "i2",
+      "file": "src/backend/base/langflow/components/vectorstores/pinecone.py",
+      "line_start": 64,
+      "line_end": 67,
+      "category": "correctness",
+      "severity": null,
+      "title": "API compatibility risk: switching from `Pinecone` to `PineconeVectorStore` is correct onl…",
+      "description": "API compatibility risk: switching from `Pinecone` to `PineconeVectorStore` is correct only for certain `langchain-pinecone` versions. Please double-check the target dependency version in this repo (requirements/lock) and confirm `PineconeVectorStore(...)` supports `index_name/embedding/text_key/namespace/distance_strategy` params as used here; otherwise this will fail at runtime.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "API compatibility risk: switching from `Pinecone` to `PineconeVectorStore` is correct only for certain `langchain-pinecone` versions. Please double-check the target dependency version in this repo (requirements/lock) and confirm `PineconeVectorStore(...)` supports `index_name/embedding/text_key/namespace/distance_strategy` params as used here; otherwise this will fail at runtime."
+    },
+    {
+      "id": "i3",
+      "file": "src/backend/base/langflow/graph/utils.py",
+      "line_start": 163,
+      "line_end": 165,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential behavior change: serialize() applies default truncation (MAX_TEXT_LENGTH=20000,…",
+      "description": "Potential behavior change: serialize() applies default truncation (MAX_TEXT_LENGTH=20000, MAX_ITEMS_LENGTH=1000). Previously serialize_field() did not truncate. This may silently cut off vertex build `data`/`artifacts` persisted in DB/logs. If full fidelity is required for debugging/auditing, consider passing `max_length=None, max_items=None` here or using a dedicated `serialize_or_str`/configurable limits.\n\n```suggestion\n            data=serialize(data, max_length=None, max_items=None),\n            # Serialize artifacts using our custom serializer\n            artifacts=serialize(artifacts, max_length=None, max_items=None) if artifacts else None,\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential behavior change: serialize() applies default truncation (MAX_TEXT_LENGTH=20000, MAX_ITEMS_LENGTH=1000). Previously serialize_field() did not truncate. This may silently cut off vertex build `data`/`artifacts` persisted in DB/logs. If full fidelity is required for debugging/auditing, consider passing `max_length=None, max_items=None` here or using a dedicated `serialize_or_str`/configurable limits.\n\n```suggestion\n            data=serialize(data, max_length=None, max_items=None),\n            # Serialize artifacts using our custom serializer\n            artifacts=serialize(artifacts, max_length=None, max_items=None) if artifacts else None,\n```"
+    },
+    {
+      "id": "i4",
+      "file": "src/backend/base/langflow/graph/vertex/vertex_types.py",
+      "line_start": 481,
+      "line_end": 484,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential runtime error: dict_to_codeblock() now uses serialization.serialize(), whose fa…",
+      "description": "Potential runtime error: dict_to_codeblock() now uses serialization.serialize(), whose fallback may return the original object (non-JSON-serializable). Then json.dumps(serialized) can raise `TypeError: Object of type ... is not JSON serializable`.\n\nSuggestion: ensure dict_to_codeblock always produces JSON-safe values, e.g. call `serialize(val, to_str=True)` (or `serialize_or_str`) or pass `default=str` to `json.dumps` as a last-resort fallback.\n\n```suggestion\ndef dict_to_codeblock(d: dict) -> str:\n    serialized = {key: serialize(val, to_str=True) for key, val in d.items()}\n    json_str = json.dumps(serialized, indent=4)\n    return f\"```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential runtime error: dict_to_codeblock() now uses serialization.serialize(), whose fallback may return the original object (non-JSON-serializable). Then json.dumps(serialized) can raise `TypeError: Object of type ... is not JSON serializable`.\n\nSuggestion: ensure dict_to_codeblock always produces JSON-safe values, e.g. call `serialize(val, to_str=True)` (or `serialize_or_str`) or pass `default=str` to `json.dumps` as a last-resort fallback.\n\n```suggestion\ndef dict_to_codeblock(d: dict) -> str:\n    serialized = {key: serialize(val, to_str=True) for key, val in d.items()}\n    json_str = json.dumps(serialized, indent=4)\n    return f\"```"
+    },
+    {
+      "id": "i5",
+      "file": "src/backend/base/langflow/schema/schema.py",
+      "line_start": 113,
+      "line_end": 113,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential behavioral change: The previous recursive_serialize_or_str function likely incl…",
+      "description": "Potential behavioral change: The previous recursive_serialize_or_str function likely included automatic fallback to string representation for unserializable objects. The new serialize function requires explicit to_str=True parameter for this behavior. Consider using serialize(item, to_str=True) to maintain backward compatibility.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential behavioral change: The previous recursive_serialize_or_str function likely included automatic fallback to string representation for unserializable objects. The new serialize function requires explicit to_str=True parameter for this behavior. Consider using serialize(item, to_str=True) to maintain backward compatibility.\n"
+    },
+    {
+      "id": "i6",
+      "file": "src/backend/base/langflow/serialization/serialization.py",
+      "line_start": 19,
+      "line_end": 20,
+      "category": "correctness",
+      "severity": null,
+      "title": "The `_serialize_str` function fails to handle string truncation when `max_length` is prov…",
+      "description": "The `_serialize_str` function fails to handle string truncation when `max_length` is provided, returning `None` instead of a truncated string for inputs exceeding the length limit, violating its `str` return type annotation.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The `_serialize_str` function fails to handle string truncation when `max_length` is provided, returning `None` instead of a truncated string for inputs exceeding the length limit, violating its `str` return type annotation."
+    },
+    {
+      "id": "i7",
+      "file": "src/backend/base/langflow/serialization/serialization.py",
+      "line_start": 87,
+      "line_end": 91,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential logic bug: `_serialize_primitive` returns `None` both for the valid primitive v…",
+      "description": "Potential logic bug: `_serialize_primitive` returns `None` both for the valid primitive value `None` and for “not a primitive”. Then `_serialize_dispatcher` does `if obj is None: return obj` but for other cases, `primitive = _serialize_primitive(...)` and `if primitive is not None: return primitive`. This means the special-case comment (“None is a valid primitive”) is misleading and the function can’t distinguish non-primitive from a primitive-None result. Suggest making `_serialize_primitive` return a sentinel for “not handled”, or remove the redundant `obj is None`/comment to avoid confusion and future regressions.\n\n```suggestion\n_NOT_PRIMITIVE = object()\n\n\ndef _serialize_primitive(obj: Any, *_) -> Any:\n    if obj is None or isinstance(obj, (int, float, bool, complex, str)):\n        return obj\n    return _NOT_PRIMITIVE\n\n# ...\nprimitive = _serialize_primitive(obj, max_length, max_items)\nif primitive is not _NOT_PRIMITIVE:\n    return primitive\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential logic bug: `_serialize_primitive` returns `None` both for the valid primitive value `None` and for “not a primitive”. Then `_serialize_dispatcher` does `if obj is None: return obj` but for other cases, `primitive = _serialize_primitive(...)` and `if primitive is not None: return primitive`. This means the special-case comment (“None is a valid primitive”) is misleading and the function can’t distinguish non-primitive from a primitive-None result. Suggest making `_serialize_primitive` return a sentinel for “not handled”, or remove the redundant `obj is None`/comment to avoid confusion and future regressions.\n\n```suggestion\n_NOT_PRIMITIVE = object()\n\n\ndef _serialize_primitive(obj: Any, *_) -> Any:\n    if obj is None or isinstance(obj, (int, float, bool, complex, str)):\n        return obj\n    return _NOT_PRIMITIVE\n\n# ...\nprimitive = _serialize_primitive(obj, max_length, max_items)\nif primitive is not _NOT_PRIMITIVE:\n    return primitive\n```"
+    },
+    {
+      "id": "i8",
+      "file": "src/backend/base/langflow/serialization/serialization.py",
+      "line_start": 158,
+      "line_end": 167,
+      "category": "correctness",
+      "severity": null,
+      "title": "Critical Logic Issue: The specific object type cases (lines 161-165) for Enum, TypeVar, a…",
+      "description": "Critical Logic Issue: The specific object type cases (lines 161-165) for Enum, TypeVar, and Type alias/generic types are unreachable because they come after the generic `case object() if not isinstance(obj, type):` on line 159. In Python's match statement, cases are evaluated in order and the first matching case is executed. Since line 159 matches any instance that's not a class, it will match Enums, TypeVars, and Type aliases before they can reach their specific handlers.\n\nSuggestion: Move the specific object type cases (Enum, TypeVar, Type alias) before the generic object() instance case.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Critical Logic Issue: The specific object type cases (lines 161-165) for Enum, TypeVar, and Type alias/generic types are unreachable because they come after the generic `case object() if not isinstance(obj, type):` on line 159. In Python's match statement, cases are evaluated in order and the first matching case is executed. Since line 159 matches any instance that's not a class, it will match Enums, TypeVars, and Type aliases before they can reach their specific handlers.\n\nSuggestion: Move the specific object type cases (Enum, TypeVar, Type alias) before the generic object() instance case.\n"
+    },
+    {
+      "id": "i9",
+      "file": "src/backend/base/langflow/serialization/serialization.py",
+      "line_start": 182,
+      "line_end": 182,
+      "category": "correctness",
+      "severity": null,
+      "title": "Missing max_length and max_items parameters in recursive serialize call",
+      "description": "Missing max_length and max_items parameters in recursive serialize call. This could cause numpy object arrays to not respect truncation limits.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Missing max_length and max_items parameters in recursive serialize call. This could cause numpy object arrays to not respect truncation limits.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/backend/base/langflow/api/v1/schemas.py",
+      "line_start": 273,
+      "line_end": 273,
+      "description": "Potential behavior regression: previously truncation added an explicit marker like `... [truncated]` (and list truncation added `... [truncated N items]`). The new `serialize()` truncates strings by appending just `...` (and `_truncate_value` truncates without any marker). If clients/tests rely on the old markers, responses may silently change. Consider preserving the previous marker format (or making it configurable) to avoid breaking API expectations."
+    },
+    {
+      "file": "src/backend/base/langflow/serialization/serialization.py",
+      "line_start": 101,
+      "line_end": 102,
+      "description": "The `_truncate_value` function incorrectly orders conditional checks, potentially causing TypeError when comparing string length with None. Move `max_length is not None` check before type-specific length comparisons to prevent runtime errors through proper short-circuit evaluation."
+    },
+    {
+      "file": "src/backend/base/langflow/serialization/serialization.py",
+      "line_start": 212,
+      "line_end": 216,
+      "description": "The type handling code block (lines 184-189) is unreachable for plain class types. When a plain class type (e.g., a regular class like 'MyClass') is passed to `serialize()`, the `_serialize_dispatcher` function matches it in the `case _:` branch and returns the object directly. This causes `serialize()` to return early at line 183 (`if result is not None: return result`), never reaching the type handling logic below. Consider either: 1) Returning None from the dispatcher for unhandled types, or 2) Moving the type handling logic into the dispatcher's match statement."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/langflow-ai/langflow/pull/6044). Upstream base e15fddd3aaac4b1773ea09f60d63b81591894f7a = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 882. Severity absent in the source. i1: AI comment (GPT-5.2), Diff Level; i2: AI comment (GPT-5.2), Repo Level; i3: AI comment (GPT-5.2), Repo Level; i4: AI comment (GPT-5.2), Repo Level; i5: AI comment (Qwen-Coder-480B), Repo Level; i6: human comment, File Level; i7: AI comment (GPT-5.2), Diff Level; i8: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i9: AI comment (Deepseek-V3.2), File Level"
+}

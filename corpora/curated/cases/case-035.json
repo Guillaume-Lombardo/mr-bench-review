@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-035",
+  "language": "java",
+  "size": "small",
+  "kind": "real",
+  "tier": "core",
+  "base_branch": "bench/curated/case-035/base",
+  "head_branch": "bench/curated/case-035/head",
+  "base_sha": "cc0997c3cf590e236dace10c8d84eb91e508a601",
+  "head_sha": "90940e298a9cf43a48a5484ae54d687462823a81",
+  "mr_title": "Check scoped proxy target for isDefaultCandidate",
+  "mr_description": "Update `OnBeanCondition` to check the scoped proxy target for\n`isDefaultCandidate`. This fixes an issue introduced by\nhttps://github.com/spring-projects/spring-framework/pull/35627.",
+  "origin": {
+    "repository": "https://github.com/spring-projects/spring-boot",
+    "commit": "c14b57a3eba14c10251afbfdbea221891b43259b",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "spring-boot-project/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/condition/OnBeanCondition.java",
+      "line_start": 273,
+      "line_end": 273,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Beans without a definition are no longer candidates (inverted null case)",
+      "description": "The rewrite inverts the null-definition case: beans without a BeanDefinition (e.g. registered singletons) were candidates before and are now rejected, changing @ConditionalOnBean/@ConditionalOnMissingBean outcomes.\n\nThe original expression was `!ignored && (definition == null || (autowireCandidate && defaultCandidate))`, i.e. a missing definition means 'candidate'. The new early return treats `definition == null` as not a candidate, so manually registered singleton beans are no longer seen by bean conditions and auto-configurations back off (or not) incorrectly. The null case must return true.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    },
+    {
+      "id": "i2",
+      "file": "spring-boot-project/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/condition/OnBeanCondition.java",
+      "line_start": 279,
+      "line_end": 279,
+      "category": "tests",
+      "severity": "medium",
+      "title": "Candidate logic rewritten without tests for scoped proxies or missing definitions",
+      "description": "isCandidate() is rewritten to handle scoped-proxy targets and the default-candidate flag, but no test covers a scoped-proxy bean, a non-default candidate or a bean without a definition, which would have exposed the inverted null case.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/spring-projects/spring-boot/commit/c14b57a3eba14c10251afbfdbea221891b43259b. Primary issue confirmed by the later upstream fix https://github.com/spring-projects/spring-boot/commit/682ad665f51ede9d33bcb934e355f52b5e1ce218; its regression test reproduces the problem on this head. Curator difficulty: easy. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

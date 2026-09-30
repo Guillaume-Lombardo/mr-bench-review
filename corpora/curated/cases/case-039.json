@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-039",
+  "language": "typescript",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-039/base",
+  "head_branch": "bench/curated/case-039/head",
+  "base_sha": "b5c1e76f16339d59853ab64b485aca4108a82913",
+  "head_sha": "5d483fe30332b603e5a22b579d522ec7b75ee0a1",
+  "mr_title": "feat(google-maps): Add support for some mouse events",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/angular/components",
+    "commit": "1bd976c6a7b4493e9dc741f6fe25fde455adfbcf",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/google-maps/map-advanced-marker/map-advanced-marker.ts",
+      "line_start": 131,
+      "line_end": 144,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "New outputs listen to events AdvancedMarkerElement never emits",
+      "description": "The new outputs subscribe to 'dblclick', 'mouseout', 'mouseover', 'mouseup' and 'rightclick' through the Maps event API, but AdvancedMarkerElement does not emit these Maps events, so the outputs never fire.\n\nUnlike the legacy google.maps.Marker, AdvancedMarkerElement only supports 'click' and drag events via addListener; other mouse interactions must be listened to as native DOM events on the element (and deliver MouseEvent, not MapMouseEvent). The added @Output()s therefore compile, appear in the public API, and silently do nothing.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/angular/components/commit/1bd976c6a7b4493e9dc741f6fe25fde455adfbcf. Primary issue confirmed by the later upstream fix https://github.com/angular/components/commit/17cc7606a1efad644254505d116092f0cee20bfe; its regression test reproduces the problem on this head. Curator difficulty: medium. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

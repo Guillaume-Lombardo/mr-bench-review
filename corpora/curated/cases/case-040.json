@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-040",
+  "language": "typescript",
+  "size": "small",
+  "kind": "real",
+  "tier": "pilot",
+  "base_branch": "bench/curated/case-040/base",
+  "head_branch": "bench/curated/case-040/head",
+  "base_sha": "09513350f165dcd2a36081b194e4b998f34eb192",
+  "head_sha": "eff4071e29d32d33e234d19b3b5c9e5291793f2b",
+  "mr_title": "feat(@angular-devkit/build-angular): providing a karma config is now optional",
+  "mr_description": "Karma will now use a builtin config when the `karmaConfig` is not specified.",
+  "origin": {
+    "repository": "https://github.com/angular/angular-cli",
+    "commit": "2b602924538bf987e92f806c25c2a3d008a3f0a9",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "packages/angular_devkit/build_angular/src/builders/karma/index.ts",
+      "line_start": 11,
+      "line_end": 11,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Optional karma dependency imported at module load",
+      "description": "karma is an optional peer dependency, but the builder module now imports runtime values (config, constants) from it at top level, so loading @angular-devkit/build-angular without karma installed fails even for unrelated builders.\n\nPreviously only types were imported from 'karma' and the module was loaded lazily inside execute(). A value import is emitted as a require() at module load; since the builders are re-exported from the package index, any project that does not install karma (e.g. using Jest or no tests) now crashes on `ng build`. Use `import type` and the lazily loaded karma instance.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    },
+    {
+      "id": "i2",
+      "file": "packages/angular_devkit/build_angular/src/builders/karma/index.ts",
+      "line_start": 206,
+      "line_end": 206,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Built-in config requires every Karma plugin and fails without a clear message",
+      "description": "When karmaConfig is omitted, the built-in configuration require()s karma-jasmine, karma-chrome-launcher, karma-jasmine-html-reporter and karma-coverage from the workspace. A project missing any of them (for example without coverage) fails with a raw MODULE_NOT_FOUND error instead of a message explaining which plugin is needed or how to provide a karma.conf.js.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    },
+    {
+      "id": "i3",
+      "file": "packages/angular_devkit/build_angular/src/builders/karma/index.ts",
+      "line_start": 186,
+      "line_end": 186,
+      "category": "tests",
+      "severity": "medium",
+      "title": "No test for the built-in Karma configuration path",
+      "description": "Making karmaConfig optional adds a new default code path (getBuiltInKarmaConfig, coverage folder naming, plugin resolution) and changes the builder schema, but no builder test runs without karmaConfig.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/angular/angular-cli/commit/2b602924538bf987e92f806c25c2a3d008a3f0a9. Primary issue confirmed by the later upstream fix https://github.com/angular/angular-cli/commit/5954d240fa8033b7a4e8fac4395517ea2c82762d; its regression test reproduces the problem on this head. Curator difficulty: medium. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

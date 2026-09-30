@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-005",
+  "language": "java",
+  "size": "medium",
+  "kind": "real",
+  "tier": "core",
+  "base_branch": "bench/curated/case-005/base",
+  "head_branch": "bench/curated/case-005/head",
+  "base_sha": "47cb03946e06947c01b6793a1db1d1521b5007c6",
+  "head_sha": "5e36e5c76646603468eafc03c60055f74089e7ac",
+  "mr_title": "Handle Content-Length in ShallowEtagHeaderFilter more robustly",
+  "mr_description": "This commit ensures that setting the Content-Length through\nsetHeader(\"Content-Length\", x\") has the same effect as calling\nsetContentLength in the ShallowEtagHeaderFilter. It also filters out\nContent-Type headers similarly to Content-Length.",
+  "origin": {
+    "repository": "https://github.com/spring-projects/spring-framework",
+    "commit": "375e0e6827216ceb38e9bcf0b97b46bb79d79de6",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "spring-web/src/main/java/org/springframework/web/util/ContentCachingResponseWrapper.java",
+      "line_start": 150,
+      "line_end": 158,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Content-Type captured by the wrapper is never forwarded to the response",
+      "description": "The wrapper now swallows Content-Type (setContentType/setHeader/addHeader store it locally) and never forwards it to the wrapped response, and getContentType() ignores a type already set on the underlying response.\n\nUnlike Content-Length, the Content-Type must reach the real response even when the body is not cached or copyBodyToResponse() is never called (e.g. ShallowEtagHeaderFilter with caching disabled for a request, streaming, or code that inspects the underlying response). With this change the type is only held in a field: responses may be sent without Content-Type, and getContentType() returns null when the type was set on the wrapped response before wrapping. Content-Type should not be intercepted (or must be delegated to super).",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "spring-web/src/main/java/org/springframework/web/util/ContentCachingResponseWrapper.java",
+          "line_start": 165,
+          "line_end": 166
+        }
+      ],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/spring-projects/spring-framework/commit/375e0e6827216ceb38e9bcf0b97b46bb79d79de6. Primary issue confirmed by the later upstream fix https://github.com/spring-projects/spring-framework/commit/464fa7ea0e1e46323a407819c16e5e656bfea997; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

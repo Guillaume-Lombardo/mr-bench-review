@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-185",
+  "language": "rust",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-185/base",
+  "head_branch": "bench/aacr/aacr-185/head",
+  "base_sha": "a66aa8e1f58e2d9499db005cd92b9cf6971b41f1",
+  "head_sha": "e08c3bbdc59ed1f4c00b2d4aff07a47b6026547c",
+  "mr_title": "refactor: Make the communicate_with_quorum grace period configurable",
+  "mr_description": "- Renamed `GRACE_PERIOD` to `DEFAULT_GRACE_PERIOD` and altered its value,\n- added grace period argument in communicate with quorum,\n- Refactored the `end_time` setting logic in the `communicate_with_quorum` function to improve the handling of unreachable quorum on any key,",
+  "origin": {
+    "repository": "https://github.com/linera-io/linera-protocol",
+    "commit": "024925dfbeff5daaecdd2cd733cda2825eff1bb7",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/linera-io/linera-protocol/pull/3075",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "linera-core/src/node.rs",
+      "line_start": 205,
+      "line_end": 205,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The typo 'Reponse' was correctly fixed to 'Response', but there is another typo 'ceritifc…",
+      "description": "The typo 'Reponse' was correctly fixed to 'Response', but there is another typo 'ceritifcates' that should also be corrected to 'certificates'.\n\n```suggestion\n    #[error(\"Response doesn't contain requested certificates: {0:?}\")]\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The typo 'Reponse' was correctly fixed to 'Response', but there is another typo 'ceritifcates' that should also be corrected to 'certificates'.\n\n```suggestion\n    #[error(\"Response doesn't contain requested certificates: {0:?}\")]\n```"
+    },
+    {
+      "id": "i2",
+      "file": "linera-core/src/updater.rs",
+      "line_start": 109,
+      "line_end": 109,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The `grace_period` parameter should use `Option<f64>` instead of `impl Into<Option<f64>>`…",
+      "description": "The `grace_period` parameter should use `Option<f64>` instead of `impl Into<Option<f64>>` to maintain strong type checking and code normalization standards.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The `grace_period` parameter should use `Option<f64>` instead of `impl Into<Option<f64>>` to maintain strong type checking and code normalization standards."
+    },
+    {
+      "id": "i3",
+      "file": "linera-core/src/updater.rs",
+      "line_start": 139,
+      "line_end": 139,
+      "category": "correctness",
+      "severity": null,
+      "title": "Robustness: `grace_period` comes from callers and is used in `mul_f64`",
+      "description": "Robustness: `grace_period` comes from callers and is used in `mul_f64`. If it’s negative/NaN/inf, `Duration::mul_f64` can panic or behave unexpectedly. Recommend validating/clamping before use (e.g., ensure finite and >= 0.0; optionally cap to a max like 1.0).\n\n```suggestion\n    let grace_period = grace_period.into().unwrap_or(DEFAULT_GRACE_PERIOD);\n    let grace_period = if grace_period.is_finite() && grace_period >= 0.0 {\n        grace_period\n    } else {\n        0.0\n    };\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Robustness: `grace_period` comes from callers and is used in `mul_f64`. If it’s negative/NaN/inf, `Duration::mul_f64` can panic or behave unexpectedly. Recommend validating/clamping before use (e.g., ensure finite and >= 0.0; optionally cap to a max like 1.0).\n\n```suggestion\n    let grace_period = grace_period.into().unwrap_or(DEFAULT_GRACE_PERIOD);\n    let grace_period = if grace_period.is_finite() && grace_period >= 0.0 {\n        grace_period\n    } else {\n        0.0\n    };\n```"
+    },
+    {
+      "id": "i4",
+      "file": "linera-core/src/updater.rs",
+      "line_start": 141,
+      "line_end": 141,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The loop label 'vote_wait is added but doesn't appear to be referenced by any break or co…",
+      "description": "The loop label 'vote_wait is added but doesn't appear to be referenced by any break or continue statements. Consider removing the label if it's not actually used for control flow.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The loop label 'vote_wait is added but doesn't appear to be referenced by any break or continue statements. Consider removing the label if it's not actually used for control flow.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "linera-core/src/client/mod.rs",
+      "line_start": 1098,
+      "line_end": 1115,
+      "description": "The newly added `None` is passed into `communicate_with_quorum`’s `grace_period` parameter (fraction of time-to-quorum, defaulting to `DEFAULT_GRACE_PERIOD`). This changes semantics vs. previous versions that had no explicit parameter. Please confirm the default grace period is desirable for these client operations (broadcasting chain info / sending chain update / receiving certs). If some of these paths are latency-sensitive, consider passing `Some(0.0)` to stop as soon as quorum is reached; if they benefit from collecting more responses (e.g., better error sampling / more votes), consider an explicit non-default value for clarity.\n\n```suggestion\n        communicate_with_quorum(\n            &nodes,\n            committee,\n            |_: &()| (),\n            |remote_node| {\n                let mut updater = ValidatorUpdater {\n                    chain_worker_count,\n                    remote_node,\n                    local_node: local_node.clone(),\n                };\n                Box::pin(async move {\n                    updater\n                        .send_chain_information(chain_id, height, delivery)\n                        .await\n                })\n            },\n            Some(0.0),\n        )\n```"
+    },
+    {
+      "file": "linera-core/src/updater.rs",
+      "line_start": 35,
+      "line_end": 35,
+      "description": "The grace period value was changed from 0.2 to 0.1, but the PR description has a strikethrough on \"and altered its value\", suggesting this change was not intended to be included in the final version.\n\nPlease clarify: Should `DEFAULT_GRACE_PERIOD` remain at 0.1, or should it be reverted to 0.2?\n\nCurrent change:\n```rust\n-const GRACE_PERIOD: f64 = 0.2;\n+const DEFAULT_GRACE_PERIOD: f64 = 0.1;\n```\n\nIf the value change was intentional, please update the PR description to remove the strikethrough. If it was not intentional, please revert the value:\n```rust\nconst DEFAULT_GRACE_PERIOD: f64 = 0.2;\n```"
+    },
+    {
+      "file": "linera-core/src/updater.rs",
+      "line_start": 173,
+      "line_end": 176,
+      "description": "Breaking immediately when quorum is impossible may prevent collecting valuable error information from remaining validators. The old behavior waited for a grace period even when quorum was impossible, which helped gather more diagnostic information about why the quorum failed. Consider whether this immediate break could make debugging distributed consensus issues more difficult, especially in scenarios where understanding the failure pattern across validators is important."
+    },
+    {
+      "file": "linera-core/src/worker.rs",
+      "line_start": 355,
+      "line_end": 355,
+      "description": "For consistency with other methods like `with_long_lived_services`, place the `#[instrument]` attribute after the doc comment."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/linera-io/linera-protocol/pull/3075). Upstream base 73816f6f8c07708c474394c610f4f32f88be0e7b = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 72. Severity absent in the source. i1: AI comment (GLM-4.7), Diff Level; i2: human comment, Diff Level; i3: AI comment (GPT-5.2), Repo Level; i4: AI comment (Deepseek-V3.2), File Level"
+}

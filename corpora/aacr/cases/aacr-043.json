@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-043",
+  "language": "c",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-043/base",
+  "head_branch": "bench/aacr/aacr-043/head",
+  "base_sha": "fb84e364365fbd9bf398a2d68abb57086e3a5876",
+  "head_sha": "d96d3289d1e85c5b4f4479960c7b2bc960bbdd22",
+  "mr_title": "perf(label): reduce the time of calling lv_text_get_size when drawing",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/lvgl/lvgl",
+    "commit": "4a57db33476f1caf3e85726a6b1e189c68c1f36b",
+    "license": "MIT",
+    "source_case": "https://github.com/lvgl/lvgl/pull/8129",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/draw/lv_draw_label.c",
+      "line_start": 220,
+      "line_end": 221,
+      "category": "correctness",
+      "severity": null,
+      "title": "The change replaces dynamic text width calculation with a cached value (`dsc->text_size.x…",
+      "description": "The change replaces dynamic text width calculation with a cached value (`dsc->text_size.x`), risking incorrect rendering if text updates occur without refreshing the cache. Ensure the cached dimensions remain consistent with the current text state.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The change replaces dynamic text width calculation with a cached value (`dsc->text_size.x`), risking incorrect rendering if text updates occur without refreshing the cache. Ensure the cached dimensions remain consistent with the current text state."
+    },
+    {
+      "id": "i2",
+      "file": "src/widgets/label/lv_label.c",
+      "line_start": 856,
+      "line_end": 856,
+      "category": "correctness",
+      "severity": null,
+      "title": "`label->text_size` is reused later for scroll alignment/scroll-circular logic, but it’s o…",
+      "description": "`label->text_size` is reused later for scroll alignment/scroll-circular logic, but it’s only updated in `lv_label_refr_text()`. If font/letter_space/line_space/flags/max_w or `label->text` change and `lv_label_refr_text()` is not called before `draw_main()`, `text_size` can become stale and cause wrong alignment/scroll behavior. Consider either recomputing size in the specific draw paths when needed, or ensure all setters that impact text metrics update `label->text_size` (or invalidate and trigger `lv_label_refr_text()`) before draw.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`label->text_size` is reused later for scroll alignment/scroll-circular logic, but it’s only updated in `lv_label_refr_text()`. If font/letter_space/line_space/flags/max_w or `label->text` change and `lv_label_refr_text()` is not called before `draw_main()`, `text_size` can become stale and cause wrong alignment/scroll behavior. Consider either recomputing size in the specific draw paths when needed, or ensure all setters that impact text metrics update `label->text_size` (or invalidate and trigger `lv_label_refr_text()`) before draw."
+    },
+    {
+      "id": "i3",
+      "file": "src/widgets/label/lv_label.c",
+      "line_start": 968,
+      "line_end": 968,
+      "category": "correctness",
+      "severity": null,
+      "title": "`label->text_size` is updated here based on current `max_w` and flags",
+      "description": "`label->text_size` is updated here based on current `max_w` and flags. If other code paths compute size with a different `max_w` (e.g., `LV_COORD_MAX` used in scroll checks previously), reusing this cached value can change behavior. Verify that `label->text_size` is intended to represent the unbounded width (`LV_COORD_MAX`) size for scrolling decisions; otherwise consider caching both constrained and unconstrained sizes or keep the local `lv_text_get_size(... LV_COORD_MAX ...)` for scroll logic.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`label->text_size` is updated here based on current `max_w` and flags. If other code paths compute size with a different `max_w` (e.g., `LV_COORD_MAX` used in scroll checks previously), reusing this cached value can change behavior. Verify that `label->text_size` is intended to represent the unbounded width (`LV_COORD_MAX`) size for scrolling decisions; otherwise consider caching both constrained and unconstrained sizes or keep the local `lv_text_get_size(... LV_COORD_MAX ...)` for scroll logic."
+    },
+    {
+      "id": "i4",
+      "file": "src/widgets/label/lv_label_private.h",
+      "line_start": 54,
+      "line_end": 56,
+      "category": "correctness",
+      "severity": null,
+      "title": "The newly added `text_size` struct member is uninitialized, risking undefined behavior if…",
+      "description": "The newly added `text_size` struct member is uninitialized, risking undefined behavior if accessed before `lv_label_refr_text` sets it; initialize to `{0, 0}` during label creation.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The newly added `text_size` struct member is uninitialized, risking undefined behavior if accessed before `lv_label_refr_text` sets it; initialize to `{0, 0}` during label creation."
+    },
+    {
+      "id": "i5",
+      "file": "src/widgets/label/lv_label_private.h",
+      "line_start": 54,
+      "line_end": 54,
+      "category": "correctness",
+      "severity": null,
+      "title": "The new text_size field is not consistently updated when the cache is invalidated",
+      "description": "The new text_size field is not consistently updated when the cache is invalidated. In LV_EVENT_GET_SELF_SIZE handler, when invalid_size_cache is true, only size_cache gets updated but text_size remains stale. This creates inconsistency between the two cached size fields.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The new text_size field is not consistently updated when the cache is invalidated. In LV_EVENT_GET_SELF_SIZE handler, when invalid_size_cache is true, only size_cache gets updated but text_size remains stale. This creates inconsistency between the two cached size fields.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/widgets/label/lv_label.c",
+      "line_start": 968,
+      "line_end": 968,
+      "description": "The assignment to `label->text_size` must be triggered for every label text modification; verify all text-changing code paths invoke `lv_label_refr_text` to prevent stale size values during rendering."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/lvgl/lvgl/pull/8129). Upstream base e150297232acb283717f5d22e49e39c80ebb5667 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 29. Severity absent in the source. i1: human comment, File Level; i2: AI comment (GPT-5.2), File Level; i3: AI comment (GPT-5.2), Repo Level; i4: human comment, File Level; i5: AI comment (Deepseek-V3.2), Repo Level"
+}

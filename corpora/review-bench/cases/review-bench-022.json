@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-022",
+  "language": "rust",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-022/base",
+  "head_branch": "bench/review-bench/review-bench-022/head",
+  "base_sha": "5d8997b27de68e1c791bf1fbe33531c50104f65d",
+  "head_sha": "de1fc33ab3c1197ab2cb6c66e6ab1e4bf2f79320",
+  "mr_title": "Vectorize string parsing",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/serde-rs/json",
+    "commit": "859ead8e6d60f4eaed97f7ac2b18f879bec5afe5",
+    "license": "Apache-2.0",
+    "source_case": "json-be-skip-to-escape",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/json-be-skip-to-escape"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/read.rs",
+      "line_start": 456,
+      "line_end": 456,
+      "category": "correctness",
+      "severity": null,
+      "title": "The SWAR control-character scan in SliceRead::skip_to_escape loads chunks with from_ne_by…",
+      "description": "The SWAR control-character scan in SliceRead::skip_to_escape loads chunks with from_ne_bytes and computes the first matching byte offset with an endianness-conditional leading/trailing_zeros branch, yielding the wrong byte offset on big-endian architectures.\n\nProvenance: fix PR #1173 (merge 8b314a7, commit 8eba786 'Fix skip_to_escape on BE architectures').",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "src/read.rs",
+          "line_start": 464,
+          "line_end": 468
+        },
+        {
+          "file": "src/read.rs",
+          "line_start": 471,
+          "line_end": 471
+        }
+      ],
+      "source_category": null,
+      "source_text": "The SWAR control-character scan in SliceRead::skip_to_escape loads chunks with from_ne_bytes and computes the first matching byte offset with an endianness-conditional leading/trailing_zeros branch, yielding the wrong byte offset on big-endian architectures."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench json-be-skip-to-escape (corpus corpus/v0.1). Introducing PR https://github.com/serde-rs/json/pull/1161. Fix https://github.com/serde-rs/json/commit/8b314a77bf57ad8d6089536fea1b3c3b303cba92 (PR #1173). Category defaulted to correctness and severity left null because the source has neither; to be reviewed. Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 456-456, review-head lines 456-456) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 464-468, review-head lines 464-468) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 471-471, review-head lines 471-471)"
+}

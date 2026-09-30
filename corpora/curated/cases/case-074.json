@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-074",
+  "language": "typescript",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-074/base",
+  "head_branch": "bench/curated/case-074/head",
+  "base_sha": "7c2beb2d7a474a7903187f9a91a2994b5fcc9825",
+  "head_sha": "c3b0d98926b0d733f2a147232ec0cacc52b6aee9",
+  "mr_title": "feat(core): add equality function to rxjs-interop `toSignal`",
+  "mr_description": "`toSignal` predates the decision to allow a more flexible equality check in\nsignals, and thus doesn't support a custom equality function. This commit\nadds the ability to pass a custom value equality function. As a side effect,\nit now adds the default equality check where it wasn't used before.",
+  "origin": {
+    "repository": "https://github.com/angular/angular",
+    "commit": "5df3e78c9907f522f2f96c087b10ca12d57f7028",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "packages/core/rxjs-interop/src/to_signal.ts",
+      "line_start": 80,
+      "line_end": 80,
+      "category": "maintainability",
+      "severity": "medium",
+      "title": "New option named 'equals' while signal APIs use 'equal'",
+      "description": "The new public option is named `equals`, while the equivalent option of signal()/computed() is `equal`; shipping it would freeze an inconsistent public API.\n\nAngular's signal APIs use `equal` (CreateSignalOptions.equal, CreateComputedOptions.equal). Adding `equals` to ToSignalOptions creates an inconsistency that users will get wrong (a misspelled `equal` would be silently ignored in JS or rejected in TS), and renaming later requires a breaking change. The option should be named `equal`.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/angular/angular/commit/5df3e78c9907f522f2f96c087b10ca12d57f7028. Primary issue confirmed by the later upstream fix https://github.com/angular/angular/commit/4d87b9e899381894a1de90f251da58613a96eed0; its regression test reproduces the problem on this head. Curator difficulty: easy. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

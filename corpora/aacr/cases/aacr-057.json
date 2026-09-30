@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-057",
+  "language": "cpp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-057/base",
+  "head_branch": "bench/aacr/aacr-057/head",
+  "base_sha": "0aaf4e0c54b501db6f38cbd84cba1061c707f56b",
+  "head_sha": "74e2953ea6c2d41e50bc8f3001264bd0113e8b1f",
+  "mr_title": "fix: rework lifetime mgmt of ClearDataTask/ClearDataOperation",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/electron/electron",
+    "commit": "6084595c5608226e961d251bfb5ec138de8022ca",
+    "license": "MIT",
+    "source_case": "https://github.com/electron/electron/pull/47361",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "shell/browser/api/electron_api_session.cc",
+      "line_start": 202,
+      "line_end": 203,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The documentation for ClearDataTask incorrectly omits the self-deletion mechanism after t…",
+      "description": "The documentation for ClearDataTask incorrectly omits the self-deletion mechanism after task completion, only mentioning the gin_helper::CleanedUpAtExit shutdown behavior. The comment should accurately reflect both lifetime management aspects: automatic deletion after operations complete and proper shutdown before node environment termination.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The documentation for ClearDataTask incorrectly omits the self-deletion mechanism after task completion, only mentioning the gin_helper::CleanedUpAtExit shutdown behavior. The comment should accurately reflect both lifetime management aspects: automatic deletion after operations complete and proper shutdown before node environment termination."
+    },
+    {
+      "id": "i2",
+      "file": "shell/browser/api/electron_api_session.cc",
+      "line_start": 215,
+      "line_end": 215,
+      "category": "correctness",
+      "severity": null,
+      "title": "Using raw pointer for task allocation without immediate smart pointer ownership may lead…",
+      "description": "Using raw pointer for task allocation without immediate smart pointer ownership may lead to memory leaks if exceptions occur before the object is properly managed. Consider using std::unique_ptr for automatic cleanup even in error scenarios.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Using raw pointer for task allocation without immediate smart pointer ownership may lead to memory leaks if exceptions occur before the object is properly managed. Consider using std::unique_ptr for automatic cleanup even in error scenarios.\n"
+    },
+    {
+      "id": "i3",
+      "file": "shell/browser/api/electron_api_session.cc",
+      "line_start": 259,
+      "line_end": 259,
+      "category": "maintainability",
+      "severity": null,
+      "title": "`OnOperationFinished(nullptr, std::nullopt)` is used as a bookkeeping fallback",
+      "description": "`OnOperationFinished(nullptr, std::nullopt)` is used as a bookkeeping fallback. Consider making this explicit via a dedicated method (e.g., `FinishBootstrapOperation()`), or at least avoid `nullptr` by overloading/using `std::optional<ClearDataOperation*>` to prevent accidental misuse and make intent clearer.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "`OnOperationFinished(nullptr, std::nullopt)` is used as a bookkeeping fallback. Consider making this explicit via a dedicated method (e.g., `FinishBootstrapOperation()`), or at least avoid `nullptr` by overloading/using `std::optional<ClearDataOperation*>` to prevent accidental misuse and make intent clearer."
+    },
+    {
+      "id": "i4",
+      "file": "shell/browser/api/electron_api_session.cc",
+      "line_start": 321,
+      "line_end": 321,
+      "category": "security",
+      "severity": null,
+      "title": "**Critical: Use-after-free bug**",
+      "description": "**Critical: Use-after-free bug**\n\nThe `operation` raw pointer is used to find and erase the corresponding `unique_ptr` from the `operations_` vector (lines 321-328). However, once the operation is found and erased, the `unique_ptr` is destroyed, which deletes the `ClearDataOperation` object. At this point, the `operation` raw pointer becomes a dangling pointer.\n\nThe issue is that this code executes while we're still inside the `OnBrowsingDataRemoverDone` callback of that very `ClearDataOperation` object. After the erase completes and we return from `OnOperationFinished`, execution continues in `OnBrowsingDataRemoverDone` (line 283), attempting to return from a deleted object.\n\n**Fix**: The operation should be erased AFTER the callback completes, not during. One approach is to defer the cleanup:\n\n```cpp\nvoid OnOperationFinished(\n    ClearDataOperation* operation,\n    std::optional<BrowsingDataRemover::DataType> failed_data_types) {\n  DCHECK_GT(operations_running_, 0);\n  operations_running_ -= 1;\n\n  if (failed_data_types.has_value()) {\n    failed_data_types_ |= failed_data_types.value();\n  }\n\n  // Defer operation cleanup to avoid use-after-free\n  if (operation) {\n    base::SequencedTaskRunner::GetCurrentDefault()->PostTask(\n        FROM_HERE,\n        base::BindOnce(&ClearDataTask::RemoveOperation,\n                       base::Unretained(this), operation));\n  }\n\n  // If this is the last operation, then the task is finished\n  if (operations_running_ == 0) {\n    OnTaskFinished();\n  }\n}\n\nvoid RemoveOperation(ClearDataOperation* operation) {\n  operations_.erase(\n      std::remove_if(\n          operations_.begin(), operations_.end(),\n          [operation](const std::unique_ptr<ClearDataOperation>& op) {\n            return op.get() == operation;\n          }),\n      operations_.end());\n}\n```\n\nOr simpler: use a weak callback pattern where the operation doesn't delete itself immediately but marks itself for deletion.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "**Critical: Use-after-free bug**\n\nThe `operation` raw pointer is used to find and erase the corresponding `unique_ptr` from the `operations_` vector (lines 321-328). However, once the operation is found and erased, the `unique_ptr` is destroyed, which deletes the `ClearDataOperation` object. At this point, the `operation` raw pointer becomes a dangling pointer.\n\nThe issue is that this code executes while we're still inside the `OnBrowsingDataRemoverDone` callback of that very `ClearDataOperation` object. After the erase completes and we return from `OnOperationFinished`, execution continues in `OnBrowsingDataRemoverDone` (line 283), attempting to return from a deleted object.\n\n**Fix**: The operation should be erased AFTER the callback completes, not during. One approach is to defer the cleanup:\n\n```cpp\nvoid OnOperationFinished(\n    ClearDataOperation* operation,\n    std::optional<BrowsingDataRemover::DataType> failed_data_types) {\n  DCHECK_GT(operations_running_, 0);\n  operations_running_ -= 1;\n\n  if (failed_data_types.has_value()) {\n    failed_data_types_ |= failed_data_types.value();\n  }\n\n  // Defer operation cleanup to avoid use-after-free\n  if (operation) {\n    base::SequencedTaskRunner::GetCurrentDefault()->PostTask(\n        FROM_HERE,\n        base::BindOnce(&ClearDataTask::RemoveOperation,\n                       base::Unretained(this), operation));\n  }\n\n  // If this is the last operation, then the task is finished\n  if (operations_running_ == 0) {\n    OnTaskFinished();\n  }\n}\n\nvoid RemoveOperation(ClearDataOperation* operation) {\n  operations_.erase(\n      std::remove_if(\n          operations_.begin(), operations_.end(),\n          [operation](const std::unique_ptr<ClearDataOperation>& op) {\n            return op.get() == operation;\n          }),\n      operations_.end());\n}\n```\n\nOr simpler: use a weak callback pattern where the operation doesn't delete itself immediately but marks itself for deletion."
+    },
+    {
+      "id": "i5",
+      "file": "shell/browser/api/electron_api_session.cc",
+      "line_start": 322,
+      "line_end": 328,
+      "category": "maintainability",
+      "severity": null,
+      "title": "`OnOperationFinished` does an O(n) erase with `remove_if` for each completion",
+      "description": "`OnOperationFinished` does an O(n) erase with `remove_if` for each completion. If many data types are cleared, this becomes O(n^2). Consider storing operations in a container with O(1) erase by pointer (e.g., `std::vector<std::unique_ptr<...>>` + swap-erase with index tracking, or `base::flat_set<std::unique_ptr<...>, ...>` / `std::unordered_set` with custom hash on raw pointer).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "`OnOperationFinished` does an O(n) erase with `remove_if` for each completion. If many data types are cleared, this becomes O(n^2). Consider storing operations in a container with O(1) erase by pointer (e.g., `std::vector<std::unique_ptr<...>>` + swap-erase with index tracking, or `base::flat_set<std::unique_ptr<...>, ...>` / `std::unordered_set` with custom hash on raw pointer)."
+    },
+    {
+      "id": "i6",
+      "file": "shell/browser/api/electron_api_session.cc",
+      "line_start": 359,
+      "line_end": 359,
+      "category": "correctness",
+      "severity": null,
+      "title": "Direct deletion of 'this' bypasses normal destruction semantics and can complicate debugg…",
+      "description": "Direct deletion of 'this' bypasses normal destruction semantics and can complicate debugging. Since ClearDataTask inherits from CleanedUpAtExit, consider leveraging that mechanism for proper cleanup instead of manual deletion.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Direct deletion of 'this' bypasses normal destruction semantics and can complicate debugging. Since ClearDataTask inherits from CleanedUpAtExit, consider leveraging that mechanism for proper cleanup instead of manual deletion.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "shell/browser/api/electron_api_session.cc",
+      "line_start": 259,
+      "line_end": 259,
+      "description": "**Bug: Inconsistent state when StartOperation is called with nullptr**\n\nWhen `OnOperationFinished(nullptr, std::nullopt)` is called at the end of the `Start` static method (line 259), this creates an inconsistency:\n\n1. `operations_running_` is decremented (line 313)\n2. But no operation is added to the `operations_` vector since this is called before any actual operations are started\n\nThis means:\n- If no actual operations are started (e.g., all data type masks are 0), `operations_running_` will become -1, violating the DCHECK at line 312\n- The accounting of operations becomes incorrect\n\n**Fix**: The initial `operations_running_ += 1` should be removed, or this call to `OnOperationFinished` should be removed. The static method doesn't represent an actual operation that needs tracking.\n\nSuggested fix:\n```cpp\n// Remove this line from the Start method (around line 218):\n// task->operations_running_ += 1;\n\n// And remove this line at the end (line 259):\n// task->OnOperationFinished(nullptr, std::nullopt);\n```\n\nThe individual `StartOperation` calls already increment `operations_running_`, so there's no need for the additional tracking of the `Start` method itself."
+    },
+    {
+      "file": "shell/browser/api/electron_api_session.cc",
+      "line_start": 296,
+      "line_end": 296,
+      "description": "Explicit clearing of operations_ container in ClearDataTask destructor is unnecessary as container members are automatically destroyed when ClearDataTask is destroyed."
+    },
+    {
+      "file": "shell/browser/api/electron_api_session.cc",
+      "line_start": 296,
+      "line_end": 296,
+      "description": "In `~ClearDataTask()` you `operations_.clear()` which destroys operations and thus unregisters observations, but there is no explicit guarantee that `BrowsingDataRemover` won't call `OnBrowsingDataRemoverDone` concurrently/in-flight. If callbacks can race, clearing may not be sufficient. Verify remover's threading/lifecycle guarantees; if not strict, add explicit cancellation/sequence checks (e.g., ensure all calls occur on the same sequence and use `SEQUENCE_CHECKER`, or reset observations before destruction and ensure remover respects it)."
+    },
+    {
+      "file": "shell/browser/api/electron_api_session.cc",
+      "line_start": 306,
+      "line_end": 308,
+      "description": "There is a potential risk here: if `operation->Start` triggers the callback synchronously (e.g., in tests or specific conditions), `OnOperationFinished` will be called before the operation is added to `task->operations_`. This would fail to remove the operation (since it's not there yet) and could lead to `task` being deleted (if `operations_running_` hits 0) before `push_back` is called, causing a use-after-free.\n\nSuggestion: Add the operation to the vector before calling `Start`."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/electron/electron/pull/47361). Upstream base 2a51a997ebd60d9e093ecb58dfb791361e87c161 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 64. Severity absent in the source. i1: human comment, Diff Level; i2: AI comment (Qwen-Coder-480B), Diff Level; i3: AI comment (GPT-5.2), Diff Level; i4: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i5: AI comment (GPT-5.2), Diff Level; i6: AI comment (Qwen-Coder-480B), Repo Level"
+}

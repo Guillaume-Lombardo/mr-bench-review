@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-077",
+  "language": "java",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-077/base",
+  "head_branch": "bench/curated/case-077/head",
+  "base_sha": "c7bb0930f034ca595710db1f08c6e7f32df621d3",
+  "head_sha": "2bdeac2fd9547b2a2337a9a52ca821029059252e",
+  "mr_title": "consumeSubQuery should not drop leading combinators",
+  "mr_description": "Refactored so that it eats until a combinator is seen after non-combinator content, and returns it all.\n\nAnd corrected unit tests that were incorrectly relying on that behavior.\n\nNote that a leading combinator will combine against the root element, which is either the Document, or the context element.",
+  "origin": {
+    "repository": "https://github.com/jhy/jsoup",
+    "commit": "d126488db626790a69ce99bb96bf3cfe9c591534",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/main/java/org/jsoup/select/QueryParser.java",
+      "line_start": 148,
+      "line_end": 148,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Sub-query does not stop at a combinator after an attribute or group clause",
+      "description": "seenNonCombinator is only set for plain characters, so a sub-query that starts with a (...) or [...] clause never stops at the next combinator.\n\nconsumeSubQuery() sets seenNonCombinator only in the final else branch. When the sub-query starts with an attribute selector or a parenthesised clause, the flag stays false and the following combinator is appended instead of ending the sub-query, so selectors such as `:has([href] > p)` or `[attr] p` inside a sub-query are parsed with the wrong structure. Upstream fix: set the flag for every non-combinator clause.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/jhy/jsoup/commit/d126488db626790a69ce99bb96bf3cfe9c591534. Primary issue confirmed by the later upstream fix https://github.com/jhy/jsoup/commit/7e9160110f3cac233e748f4f31c2ec22f0286f6b; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

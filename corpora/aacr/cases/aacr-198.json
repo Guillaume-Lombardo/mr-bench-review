@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-198",
+  "language": "javascript",
+  "size": "large",
+  "kind": "clean",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-198/base",
+  "head_branch": "bench/aacr/aacr-198/head",
+  "base_sha": "6a5da96e3725e2a233a529eb1ce3f66885bdd9c8",
+  "head_sha": "3edb143f0007a573bca3e5953aa1d0ea41091443",
+  "mr_title": "test: move crypto related common utilities in common/crypto",
+  "mr_description": "Since `common/crypto` already exists, it makes sense to keep\ncrypto-related utilities there. The only exception being\ncommon.hasCrypto which is needed up front to determine\nif tests should be skipped.\n\nEliminate the redundant check in hasFipsCrypto and just\nuse crypto.getFips() directly where needed.",
+  "origin": {
+    "repository": "https://github.com/nodejs/node",
+    "commit": "209cdfe685db71714ec093480084bab8cf58d8eb",
+    "license": "MIT",
+    "source_case": "https://github.com/nodejs/node/pull/56714",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [],
+  "known_false_positives": [
+    {
+      "file": "test/common/crypto.js",
+      "line_start": 153,
+      "line_end": 153,
+      "description": "The reference to `exports.isWindows` is incorrect. The `isWindows` property is not defined in this module - it's defined in `test/common/index.js`. This will cause a runtime error when `opensslCli` is accessed on Windows systems.\n\n**Suggested fix:**\n```javascript\nif (common.isWindows) opensslCli += '.exe';\n```\n\nSince `common` is already imported at the top of this file, you should use `common.isWindows` instead of `exports.isWindows`."
+    },
+    {
+      "file": "test/parallel/test-https-client-renegotiation-limit.js",
+      "line_start": 30,
+      "line_end": 32,
+      "description": "The direct import of `opensslCli` is redundant; revert to using `common.opensslCli` directly as the new import provides no additional value over the existing module property."
+    },
+    {
+      "file": "test/parallel/test-tls-alert-handling.js",
+      "line_start": 14,
+      "line_end": 16,
+      "description": "The destructured variables `hasOpenSSL` and `hasOpenSSL3` are imported but never used in the current scope. Remove these unused imports to clean up the dependency."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/nodejs/node/pull/56714). Upstream base 9ec7bed7b9343fbdc7f7270d8c08c9fb0dca453f = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 793. Severity absent in the source."
+}

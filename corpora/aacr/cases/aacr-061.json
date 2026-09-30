@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-061",
+  "language": "javascript",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-061/base",
+  "head_branch": "bench/aacr/aacr-061/head",
+  "base_sha": "5b6bb6a5a82f66e65801a95eeb72a08b5b6b731b",
+  "head_sha": "60072e8beea695700734954eef0958afa9f73564",
+  "mr_title": "test: add tests for REPL custom evals",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/nodejs/node",
+    "commit": "e8b6c183d46c41b2992c4f5cafceb7f9c6f8710d",
+    "license": "MIT",
+    "source_case": "https://github.com/nodejs/node/pull/57691",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "test/parallel/test-repl-custom-eval.js",
+      "line_start": 10,
+      "line_end": 10,
+      "category": "correctness",
+      "severity": null,
+      "title": "The test suite defaults to sequential execution but should run in parallel; fix shared gl…",
+      "description": "The test suite defaults to sequential execution but should run in parallel; fix shared global state to enable safe parallelization.  \n*   Set `concurrency: true` in the describe block to enable parallel test execution.  \n*   Refactor tests to avoid shared global state (e.g., reused `foo` variable) preventing race conditions.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The test suite defaults to sequential execution but should run in parallel; fix shared global state to enable safe parallelization.  \n*   Set `concurrency: true` in the describe block to enable parallel test execution.  \n*   Refactor tests to avoid shared global state (e.g., reused `foo` variable) preventing race conditions."
+    },
+    {
+      "id": "i2",
+      "file": "test/parallel/test-repl-custom-eval.js",
+      "line_start": 112,
+      "line_end": 112,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The helper function `getReplOutput` is defined after its usage in test cases; move it abo…",
+      "description": "The helper function `getReplOutput` is defined after its usage in test cases; move it above the tests for improved readability.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The helper function `getReplOutput` is defined after its usage in test cases; move it above the tests for improved readability."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "test/parallel/test-repl-custom-eval.js",
+      "line_start": 104,
+      "line_end": 104,
+      "description": "The REPL preview test uses manual escaping for '+' without a TODO to adopt `RegExp.escape` when available.  \nAdd a TODO comment to migrate to `RegExp.escape` for escaping '+' in the preview test."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/nodejs/node/pull/57691). Upstream base e57841f87e4cc3f4393a1c14cd8ca71dde11b99e = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 169. Severity absent in the source. i1: human comment, File Level; i2: human comment, File Level"
+}

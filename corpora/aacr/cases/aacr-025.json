@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-025",
+  "language": "go",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-025/base",
+  "head_branch": "bench/aacr/aacr-025/head",
+  "base_sha": "008798573811d2d0c20393812101307b6113b88b",
+  "head_sha": "9d7d6710963e88f994269854486dd5a8bd1f2a25",
+  "mr_title": "replacing uri in logs with host for mongo",
+  "mr_description": "- replacing uri in logs with host for mongo\n- adding check to extract host from uri\n- Merge branch 'development' into issue\n- minor fix\n- fixing linters\n- review suggestions\n- Merge branch 'development' into issue\n- Merge branch 'development' into issue\n- review suggestions\n- fixing tests\n- implementing review suggestions\n- Merge branch 'development' into issue",
+  "origin": {
+    "repository": "https://github.com/gofr-dev/gofr",
+    "commit": "dc0b3e630423b72cb9b2f273fdc18a5c11d12984",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/gofr-dev/gofr/pull/1355",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "pkg/gofr/datasource/mongo/mongo.go",
+      "line_start": 46,
+      "line_end": 46,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The `errIncorrectURI` error message should use \"MongoDB\" instead of \"mongo\" for consisten…",
+      "description": "The `errIncorrectURI` error message should use \"MongoDB\" instead of \"mongo\" for consistency with the official product name.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The `errIncorrectURI` error message should use \"MongoDB\" instead of \"mongo\" for consistency with the official product name."
+    },
+    {
+      "id": "i2",
+      "file": "pkg/gofr/datasource/mongo/mongo.go",
+      "line_start": 94,
+      "line_end": 94,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The error log message for MongoDB URI generation uses the abbreviated term \"mongo\" instea…",
+      "description": "The error log message for MongoDB URI generation uses the abbreviated term \"mongo\" instead of the official product name \"MongoDB\". Update the string to \"error generating MongoDB URI: %v\" for naming consistency.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The error log message for MongoDB URI generation uses the abbreviated term \"mongo\" instead of the official product name \"MongoDB\". Update the string to \"error generating MongoDB URI: %v\" for naming consistency."
+    },
+    {
+      "id": "i3",
+      "file": "pkg/gofr/datasource/mongo/mongo.go",
+      "line_start": 98,
+      "line_end": 98,
+      "category": "correctness",
+      "severity": null,
+      "title": "When config.URI is provided (not empty), c.config.Host will be empty since it wasn't set",
+      "description": "When config.URI is provided (not empty), c.config.Host will be empty since it wasn't set. The debug log message will print an empty string instead of the actual host. Use the `host` variable returned from generateMongoURI() instead.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "When config.URI is provided (not empty), c.config.Host will be empty since it wasn't set. The debug log message will print an empty string instead of the actual host. Use the `host` variable returned from generateMongoURI() instead.\n"
+    },
+    {
+      "id": "i4",
+      "file": "pkg/gofr/datasource/mongo/mongo.go",
+      "line_start": 116,
+      "line_end": 116,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The error log message uses inconsistent capitalization \"mongoDB\" instead of the standard…",
+      "description": "The error log message uses inconsistent capitalization \"mongoDB\" instead of the standard \"MongoDB\" product name.  \nUpdate the log string to use correct \"MongoDB\" capitalization for consistency and professionalism.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The error log message uses inconsistent capitalization \"mongoDB\" instead of the standard \"MongoDB\" product name.  \nUpdate the log string to use correct \"MongoDB\" capitalization for consistency and professionalism."
+    },
+    {
+      "id": "i5",
+      "file": "pkg/gofr/datasource/mongo/mongo.go",
+      "line_start": 155,
+      "line_end": 157,
+      "category": "correctness",
+      "severity": null,
+      "title": "Double encoding issue: `url.UserPassword()` already handles URL encoding internally",
+      "description": "Double encoding issue: `url.UserPassword()` already handles URL encoding internally. Using `url.QueryEscape()` before passing credentials will cause double encoding. For example, if password contains '@', it becomes '%40', then url.UserPassword encodes '%' to '%25', resulting in '%2540'. Remove the QueryEscape calls.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Double encoding issue: `url.UserPassword()` already handles URL encoding internally. Using `url.QueryEscape()` before passing credentials will cause double encoding. For example, if password contains '@', it becomes '%40', then url.UserPassword encodes '%' to '%25', resulting in '%2540'. Remove the QueryEscape calls.\n"
+    },
+    {
+      "id": "i6",
+      "file": "pkg/gofr/datasource/mongo/mongo.go",
+      "line_start": 172,
+      "line_end": 180,
+      "category": "correctness",
+      "severity": null,
+      "title": "getDBHost(): this rejects valid MongoDB connection strings like `mongodb+srv://...` and a…",
+      "description": "getDBHost(): this rejects valid MongoDB connection strings like `mongodb+srv://...` and also doesn’t handle multiple hosts in `Host` (replica sets) beyond returning the first hostname. Consider accepting both `mongodb` and `mongodb+srv` schemes and/or parsing host list explicitly (e.g., split parsedURL.Host on \",\" and take the first, or keep the full host list for logging).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "getDBHost(): this rejects valid MongoDB connection strings like `mongodb+srv://...` and also doesn’t handle multiple hosts in `Host` (replica sets) beyond returning the first hostname. Consider accepting both `mongodb` and `mongodb+srv` schemes and/or parsing host list explicitly (e.g., split parsedURL.Host on \",\" and take the first, or keep the full host list for logging)."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "pkg/gofr/datasource/mongo/mongo.go",
+      "line_start": 125,
+      "line_end": 125,
+      "description": "**Bug: Logging pointer instead of database name**\n\nThis log statement will print the pointer representation of `c.Database` (which is of type `*mongo.Database`) instead of the database name string. This makes the log message unhelpful.\n\nExample output:\n```\nconnected to MongoDB at localhost to database &{0xc0001234...}\n```\n\n**Fix:**\n\n```suggestion\nc.logger.Logf(\"connected to MongoDB at %v to database %v\", host, c.config.Database)\n```"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/gofr-dev/gofr/pull/1355). Upstream base 30116f05e9b88763fabc862af0a0f3a8a83a0c5b = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 309. Severity absent in the source. i1: human comment, Diff Level; i2: human comment, Diff Level; i3: AI comment (GLM-4.7), Repo Level; i4: human comment, File Level; i5: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i6: AI comment (GPT-5.2), Diff Level"
+}

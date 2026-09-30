@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-131",
+  "language": "rust",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-131/base",
+  "head_branch": "bench/aacr/aacr-131/head",
+  "base_sha": "a7b11851edecee6e4d2c884748796d4f3e06f6e5",
+  "head_sha": "a30fe2707d292a4cb754ef3547cfa6d44f7fef75",
+  "mr_title": "chore: fix typos in the repo",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/juspay/hyperswitch",
+    "commit": "5e0fa17a5e9e977daa4b896e1dfc2de61f526113",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/juspay/hyperswitch/pull/8063",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "crates/common_utils/src/macros.rs",
+      "line_start": 555,
+      "line_end": 557,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Renaming the macro parameter from `tag_delimeter` to `tag_delimiter` changes the public i…",
+      "description": "Renaming the macro parameter from `tag_delimeter` to `tag_delimiter` changes the public invocation syntax of `impl_enum_str!` and will break existing downstream call sites. If this is intentional, consider providing a backward-compatible alias (accept both spellings) or running a repo-wide search/update of all invocations and updating any external docs/changelog accordingly.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Renaming the macro parameter from `tag_delimeter` to `tag_delimiter` changes the public invocation syntax of `impl_enum_str!` and will break existing downstream call sites. If this is intentional, consider providing a backward-compatible alias (accept both spellings) or running a repo-wide search/update of all invocations and updating any external docs/changelog accordingly."
+    },
+    {
+      "id": "i2",
+      "file": "crates/hyperswitch_connectors/src/connectors/fiuu/transformers.rs",
+      "line_start": 1924,
+      "line_end": 1924,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The `FiuuWebhookSignature` struct is unused and redundant; remove it entirely as it serve…",
+      "description": "The `FiuuWebhookSignature` struct is unused and redundant; remove it entirely as it serves no functional purpose in the codebase.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The `FiuuWebhookSignature` struct is unused and redundant; remove it entirely as it serves no functional purpose in the codebase."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "api-reference-v2/openapi_spec.json",
+      "line_start": 8933,
+      "line_end": 8933,
+      "description": "Fixed spelling error in JSON key: 'encypted_payload' corrected to 'encrypted_payload'. This ensures the API specification uses the correct field name."
+    },
+    {
+      "file": "config/dashboard.toml",
+      "line_start": null,
+      "line_end": null,
+      "description": "The misspelled configuration variable `maintainence_alert` (correct spelling: `maintenance_alert`) requires consistent correction across Control Center, SDK, and the current codebase to prevent runtime configuration errors."
+    },
+    {
+      "file": "crates/api_models/src/payments.rs",
+      "line_start": 1182,
+      "line_end": 1182,
+      "description": "Renaming `encypted_payload` to `encrypted_payload` in the public `CtpServiceDetails` struct introduces a breaking change to the API contract."
+    },
+    {
+      "file": "crates/hyperswitch_connectors/src/connectors/worldpay/response.rs",
+      "line_start": 202,
+      "line_end": 202,
+      "description": "The `partially_refund_payment` field appears unused in the codebase, indicating potential dead code. Verify its necessity and remove if not required by the connector implementation."
+    },
+    {
+      "file": "crates/hyperswitch_domain_models/src/router_request_types/unified_authentication_service.rs",
+      "line_start": 24,
+      "line_end": 24,
+      "description": "`AuthenticationInfo` derives `serde::Serialize`, so renaming this field changes the serialized key from `encypted_payload` to `encrypted_payload`, which can be a breaking change for any consumer expecting the old key. If backward compatibility is needed, add a serde attribute (e.g., `#[serde(rename = \"encypted_payload\")]` while keeping the Rust field name `encrypted_payload`, or use `alias` if you also deserialize elsewhere). Also ensure all in-crate call sites were updated to the new field name to avoid compile errors."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/juspay/hyperswitch/pull/8063). Upstream base 34dd99d8050a84f0478cdb4fa0f0cc83608e52d9 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 112. Severity absent in the source. i1: AI comment (GPT-5.2), Repo Level; i2: human comment, Repo Level"
+}

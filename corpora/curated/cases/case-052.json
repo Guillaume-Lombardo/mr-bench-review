@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-052",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-052/base",
+  "head_branch": "bench/curated/case-052/head",
+  "base_sha": "c8be94bac60d8947034cf3c158abbad51d27e22f",
+  "head_sha": "a9669064dc119a126ca47a57bf52e5f5a08b3869",
+  "mr_title": "Perform attr order checks after field transformer.",
+  "mr_description": "* Perform attr order checks after field transformer.\n\n* [pre-commit.ci] auto fixes from pre-commit.com hooks\n\nfor more information, see https://pre-commit.ci\n\n* Fix assert style in test_hooks\n\n---------",
+  "origin": {
+    "repository": "https://github.com/python-attrs/attrs",
+    "commit": "e048efcb395443608d184a149c0adbca166cb833",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/attr/_make.py",
+      "line_start": 453,
+      "line_end": 453,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Generator returned by field_transformer is consumed twice",
+      "description": "The result of field_transformer is now iterated by the order check and then reused, so a transformer implemented as a generator is exhausted and the class ends up with missing attributes.\n\nfield_transformer may return any iterable (generators worked before). Moving the call before the mandatory/default order check means the check consumes the generator, and the later alias resolution and class building see an empty sequence. Materialise the result (tuple(...)) before iterating it more than once.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/python-attrs/attrs/commit/e048efcb395443608d184a149c0adbca166cb833. Primary issue confirmed by the later upstream fix https://github.com/python-attrs/attrs/commit/3b0378dd66d33ebddb52be85b8c4aac6a914b1a2; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-002",
+  "language": "javascript",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-002/base",
+  "head_branch": "bench/review-bench/review-bench-002/head",
+  "base_sha": "7094688cf1161aade4bc8b1d1d83573db8ed9974",
+  "head_sha": "7c532380db8736f532c265db14c650200e376cb9",
+  "mr_title": "fix: unrestricted cloud metadata exfiltration via header injection chain",
+  "mr_description": "* fix: unrestricted cloud metadata exfiltration via header injection chain\n\n* fix: address pattern issue highlighted by cubic\n\n* fix: code ql feedback\n\n* fix: code ql feedback",
+  "origin": {
+    "repository": "https://github.com/axios/axios",
+    "commit": "363185461b90b1b78845dc8a99a1f103d9b122a1",
+    "license": "MIT",
+    "source_case": "axios-nonstring-error-stack",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/axios-nonstring-error-stack"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "lib/core/Axios.js",
+      "line_start": 49,
+      "line_end": 52,
+      "category": "correctness",
+      "severity": null,
+      "title": "The stack-decoration block in Axios.prototype.request's catch handler guards dummy.stack…",
+      "description": "The stack-decoration block in Axios.prototype.request's catch handler guards dummy.stack only for truthiness; a non-string stack (e.g. from a patched global Error captureStackTrace) crashes the decoration with a type error.\n\nProvenance: fix PR #11109 body (commit a75bf44); fixes issue #11108.",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "lib/core/Axios.js",
+          "line_start": 54,
+          "line_end": 54
+        },
+        {
+          "file": "lib/core/Axios.js",
+          "line_start": 56,
+          "line_end": 57
+        }
+      ],
+      "source_category": null,
+      "source_text": "The stack-decoration block in Axios.prototype.request's catch handler guards dummy.stack only for truthiness; a non-string stack (e.g. from a patched global Error captureStackTrace) crashes the decoration with a type error."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench axios-nonstring-error-stack (corpus corpus/v0.1). Introducing PR https://github.com/axios/axios/pull/10660. Fix https://github.com/axios/axios/commit/a75bf44647e5132e39b778730394b0a2b983265c (PR #11109). Category defaulted to correctness and severity left null because the source has neither; to be reviewed. Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 49-52, review-head lines 49-52) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 54-54, review-head lines 54-54) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 56-57, review-head lines 56-57)"
+}

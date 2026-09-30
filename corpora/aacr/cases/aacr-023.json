@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-023",
+  "language": "go",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-023/base",
+  "head_branch": "bench/aacr/aacr-023/head",
+  "base_sha": "953b017a38d0b22ccf3d45c966818c09d8136109",
+  "head_sha": "b0f69f451274db7094eb55ea29027e38e848400e",
+  "mr_title": "Removed async nats connection creation",
+  "mr_description": "- Removed async nats connection creation\n- Merge remote-tracking branch 'origin/development' into FIX/nats-connection\n- Removed retry logic for nats connection manager, added nil client checks\n- Added retry for NATS client, nil checks for NATS operations\n- Extracted out client nil check to a new fucntion\n- Added tests for newly added retry and nil checks\n- Updated publish client check step\n- Merge branch 'gofr-dev:development' into FIX/nats-connection\n- Updated NATS retry tests and fixed linter issues",
+  "origin": {
+    "repository": "https://github.com/gofr-dev/gofr",
+    "commit": "49ab39432cf4892ee84569099b8065dfe45fae92",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/gofr-dev/gofr/pull/1617",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "pkg/gofr/datasource/pubsub/nats/client.go",
+      "line_start": 75,
+      "line_end": 75,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Code duplication between Connect and retryConnect methods; retryConnect duplicates server…",
+      "description": "Code duplication between Connect and retryConnect methods; retryConnect duplicates server logging and connection manager initialization logic from Connect.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Code duplication between Connect and retryConnect methods; retryConnect duplicates server logging and connection manager initialization logic from Connect."
+    },
+    {
+      "id": "i2",
+      "file": "pkg/gofr/datasource/pubsub/nats/client.go",
+      "line_start": 83,
+      "line_end": 91,
+      "category": "correctness",
+      "severity": null,
+      "title": "Serious logic issue: When `jetStream()` fails, `c.connManager` is already set to the new…",
+      "description": "Serious logic issue: When `jetStream()` fails, `c.connManager` is already set to the new connection manager, but the code sleeps and continues the loop without resetting it. This causes `checkClient()` to return nil error (since `c.connManager` is not nil and `isConnected()` returns true), even though the connection is not fully functional. The client state becomes inconsistent - it has a connection manager without a valid JetStream context. You should either set `c.connManager` only after all initialization succeeds, or reset it to nil/previous state when JetStream creation fails.\n\n```suggestion\n\t\tjs, err := connManager.jetStream()\n\t\tif err != nil {\n\t\t\ttime.Sleep(defaultRetryTimeout)\n\t\t\tc.logger.Debugf(\"Failed to create jStream context: %v\", err)\n\n\t\t\tcontinue\n\t\t}\n\n\t\tc.connManager = connManager\n\t\tc.streamManager = newStreamManager(js, c.logger)\n\t\tc.subManager = newSubscriptionManager(batchSize)\n\t\tc.logSuccessfulConnection()\n\n\t\tbreak\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Serious logic issue: When `jetStream()` fails, `c.connManager` is already set to the new connection manager, but the code sleeps and continues the loop without resetting it. This causes `checkClient()` to return nil error (since `c.connManager` is not nil and `isConnected()` returns true), even though the connection is not fully functional. The client state becomes inconsistent - it has a connection manager without a valid JetStream context. You should either set `c.connManager` only after all initialization succeeds, or reset it to nil/previous state when JetStream creation fails.\n\n```suggestion\n\t\tjs, err := connManager.jetStream()\n\t\tif err != nil {\n\t\t\ttime.Sleep(defaultRetryTimeout)\n\t\t\tc.logger.Debugf(\"Failed to create jStream context: %v\", err)\n\n\t\t\tcontinue\n\t\t}\n\n\t\tc.connManager = connManager\n\t\tc.streamManager = newStreamManager(js, c.logger)\n\t\tc.subManager = newSubscriptionManager(batchSize)\n\t\tc.logSuccessfulConnection()\n\n\t\tbreak\n```"
+    },
+    {
+      "id": "i3",
+      "file": "pkg/gofr/datasource/pubsub/nats/client.go",
+      "line_start": 83,
+      "line_end": 94,
+      "category": "correctness",
+      "severity": null,
+      "title": "Critical concurrency issue: The retryConnect() method runs in a goroutine and modifies sh…",
+      "description": "Critical concurrency issue: The retryConnect() method runs in a goroutine and modifies shared fields (c.connManager, c.streamManager, c.subManager) without any synchronization mechanism. Meanwhile, other methods (Publish, Subscribe, CreateTopic, etc.) are reading these same fields concurrently. This creates race conditions that could lead to data races, nil pointer dereferences, or inconsistent state. Consider using the existing sync.Mutex to protect access to these shared fields, or use atomic operations to safely update and read the connection manager.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Critical concurrency issue: The retryConnect() method runs in a goroutine and modifies shared fields (c.connManager, c.streamManager, c.subManager) without any synchronization mechanism. Meanwhile, other methods (Publish, Subscribe, CreateTopic, etc.) are reading these same fields concurrently. This creates race conditions that could lead to data races, nil pointer dereferences, or inconsistent state. Consider using the existing sync.Mutex to protect access to these shared fields, or use atomic operations to safely update and read the connection manager.\n"
+    },
+    {
+      "id": "i4",
+      "file": "pkg/gofr/datasource/pubsub/nats/client.go",
+      "line_start": 150,
+      "line_end": 154,
+      "category": "correctness",
+      "severity": null,
+      "title": "Serious logical issue: The Subscribe method calls checkClient() but ignores its actual er…",
+      "description": "Serious logical issue: The Subscribe method calls checkClient() but ignores its actual error and always returns errClientNotConnected. This prevents proper error handling and debugging. Also, it sleeps and returns error without actually retrying the subscription.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Serious logical issue: The Subscribe method calls checkClient() but ignores its actual error and always returns errClientNotConnected. This prevents proper error handling and debugging. Also, it sleeps and returns error without actually retrying the subscription.\n"
+    },
+    {
+      "id": "i5",
+      "file": "pkg/gofr/datasource/pubsub/nats/client.go",
+      "line_start": 358,
+      "line_end": 358,
+      "category": "correctness",
+      "severity": null,
+      "title": "**Race Condition: Unsynchronized read from c.connManager**",
+      "description": "**Race Condition: Unsynchronized read from c.connManager**\n\nThe `checkClient()` function reads from `c.connManager` without synchronization, while `retryConnect()` writes to it in a separate goroutine.\n\nThis needs to be protected with the same mutex that guards writes in `retryConnect()`.\n\nSee comment on line 68 for the complete fix.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "**Race Condition: Unsynchronized read from c.connManager**\n\nThe `checkClient()` function reads from `c.connManager` without synchronization, while `retryConnect()` writes to it in a separate goroutine.\n\nThis needs to be protected with the same mutex that guards writes in `retryConnect()`.\n\nSee comment on line 68 for the complete fix."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "pkg/gofr/datasource/pubsub/nats/client.go",
+      "line_start": 19,
+      "line_end": 19,
+      "description": "Importing the entire nats.go package appears unnecessary when only requiring the DefaultTimeout constant."
+    },
+    {
+      "file": "pkg/gofr/datasource/pubsub/nats/client.go",
+      "line_start": 71,
+      "line_end": 73,
+      "description": "The retryConnect() method runs an infinite loop without any exit condition or context handling. Consider adding a context parameter and exit condition to prevent indefinite retries."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/gofr-dev/gofr/pull/1617). Upstream base 4d679f47e1525868cfeee249f981b18f054a1824 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 554. Severity absent in the source. i1: human comment, File Level; i2: AI comment (GLM-4.7), Repo Level; i3: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i4: AI comment (Deepseek-V3.2), File Level; i5: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level"
+}

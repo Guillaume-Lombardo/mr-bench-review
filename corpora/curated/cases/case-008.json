@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-008",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": "core",
+  "base_branch": "bench/curated/case-008/base",
+  "head_branch": "bench/curated/case-008/head",
+  "base_sha": "6d05b2021e68cc65e5d2c3766adadc43c314e4aa",
+  "head_sha": "47ac4cadabbb1cc73f763701298aeb4692456a98",
+  "mr_title": "Updated request.auser() in contrib.auth.alogin() and contrib.auth.alogout().",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/django/django",
+    "commit": "31a43c571f4d036827d4fd7a5f615591637dc1be",
+    "license": "BSD-3-Clause",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "django/contrib/auth/__init__.py",
+      "line_start": 237,
+      "line_end": 242,
+      "category": "security",
+      "severity": "high",
+      "title": "alogin()/alogout() no longer update request.user",
+      "description": "alogin()/alogout() now update only request.auser and stop updating request.user, so after an async logout request.user still refers to the previously authenticated user.\n\nBefore the change, alogin() and alogout() set request.user; now they only replace request.auser. Code in the same request that reads request.user (sync middleware, templates, permission checks) sees a stale value: the old user remains authenticated for the rest of the request after alogout(), and remains anonymous after alogin(). Both attributes must be updated.",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "django/contrib/auth/__init__.py",
+          "line_start": 242,
+          "line_end": 242
+        }
+      ],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/31a43c571f4d036827d4fd7a5f615591637dc1be. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/a32c7075cf634aee1f4f3deecd27f194097ec0c2; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

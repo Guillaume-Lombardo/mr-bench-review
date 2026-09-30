@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-007",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-007/base",
+  "head_branch": "bench/curated/case-007/head",
+  "base_sha": "ce5c5cbd2cacb2e10da7e1f7c93d35e15b4ae10f",
+  "head_sha": "a468eb86041958671207710464e0218d176c6283",
+  "mr_title": "Deprecated double-dot variable lookups.",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/django/django",
+    "commit": "5d911f2d2fecc703be91b2b9b28acc59d34b35f3",
+    "license": "BSD-3-Clause",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "django/template/base.py",
+      "line_start": 558,
+      "line_end": 558,
+      "category": "correctness",
+      "severity": "low",
+      "title": "Deprecation warning raised for string literals containing '..'",
+      "description": "The deprecation check inspects str(filter_expression.var), which for constants is the literal value, so string literals containing '..' wrongly trigger RemovedInDjango70Warning.\n\nFilterExpression.var is either a Variable (a lookup) or the resolved constant. For `{{ \"a..b\" }}` or `{{ 'a..b'|upper }}` str(var) is the literal text and contains '..', so a deprecation warning about double-dot variable lookups is emitted for templates that do not use any lookup. The check must be restricted to variable lookups (filter_expression.is_var and var.var).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/5d911f2d2fecc703be91b2b9b28acc59d34b35f3. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/b5388a3a80cafcce2e34196d8e81cf5b48eb33bb; its regression test reproduces the problem on this head. Curator difficulty: easy. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

@@ -1,0 +1,13 @@
+# One Python regular expression per line, searched in curated MR titles, descriptions,
+# changed file names and added lines. A match fails validation.
+(#|//|/\*|<!--)\s*BUG\b
+(?i)(//|/\*|<!--)\s*bug\b[:!]
+(?i)\bTODO\b[:\s-]*(fix|bug)
+(?i)\bFIXME\b
+(?i)\bXXX\b
+(?i)\bplanted\b
+(?i)\binjected\s+(bug|issue|defect|flaw)
+(?i)\bunsafe_[a-z]\w*
+(?i)\bintentional(ly)?\s+(bug|broken|wrong|insecure)
+(?i)\bdeliberate(ly)?\s+(bug|broken|wrong|insecure)
+(?i)\bexpected[_\s]issue

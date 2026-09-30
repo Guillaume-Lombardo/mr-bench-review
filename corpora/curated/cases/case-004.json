@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-004",
+  "language": "java",
+  "size": "medium",
+  "kind": "clean",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-004/base",
+  "head_branch": "bench/curated/case-004/head",
+  "base_sha": "77ebd16934b66228e39b2d523f4343557cf1c5b1",
+  "head_sha": "5bb50fd7ba843e56addf74803737d7af1f1c2f69",
+  "mr_title": "Improve RequestAttributesThreadLocalAccessor",
+  "mr_description": "Ensure access to request attributes after initial REQUEST dispatch\nis done, and the RequestAttributes markedCompleted.",
+  "origin": {
+    "repository": "https://github.com/spring-projects/spring-framework",
+    "commit": "2c9ed4608f74f76d8bbc59f3445e7ed6416507b6",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/spring-projects/spring-framework/commit/2c9ed4608f74f76d8bbc59f3445e7ed6416507b6. No known defect: at least 90% of its added lines were still unchanged upstream on 2026-09-30 and no later commit reports it as faulty. This is not proof of absence. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

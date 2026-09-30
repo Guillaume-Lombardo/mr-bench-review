@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-108",
+  "language": "python",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-108/base",
+  "head_branch": "bench/aacr/aacr-108/head",
+  "base_sha": "0a2e28bb11e99a13f62a685e3303c3ee9851ac2c",
+  "head_sha": "49456f87ecbdf2f1e14e4163ad0c029a2092def8",
+  "mr_title": "Add _untouch() to reverse touch() if not enough blocks",
+  "mr_description": "- Add _untouch() to reverse touch() if not enough blocks\n- Combine allocate_slots and append_slots\n- Delete append_slots\n- Modify test case in prefix caching\n- Address static checkers",
+  "origin": {
+    "repository": "https://github.com/vllm-project/vllm",
+    "commit": "075f1b5b8015e343f25b45d36ccff571cb39739b",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/vllm-project/vllm/pull/12608",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "vllm/v1/core/kv_cache_manager.py",
+      "line_start": 116,
+      "line_end": 116,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The `new_computed_blocks` parameter should be made optional with a default value of `None…",
+      "description": "The `new_computed_blocks` parameter should be made optional with a default value of `None`, then initialized to an empty list internally to eliminate the need for callers to explicitly pass empty lists.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The `new_computed_blocks` parameter should be made optional with a default value of `None`, then initialized to an empty list internally to eliminate the need for callers to explicitly pass empty lists."
+    },
+    {
+      "id": "i2",
+      "file": "vllm/v1/core/kv_cache_manager.py",
+      "line_start": 154,
+      "line_end": 155,
+      "category": "maintainability",
+      "severity": null,
+      "title": "There is a spelling error in the comment: 'cacheing' should be 'caching'",
+      "description": "There is a spelling error in the comment: 'cacheing' should be 'caching'.\n\n```suggestion\n        # The number of computed tokens is the number of computed tokens plus\n        # the new prefix caching hits\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "There is a spelling error in the comment: 'cacheing' should be 'caching'.\n\n```suggestion\n        # The number of computed tokens is the number of computed tokens plus\n        # the new prefix caching hits\n```"
+    },
+    {
+      "id": "i3",
+      "file": "vllm/v1/core/kv_cache_manager.py",
+      "line_start": 425,
+      "line_end": 438,
+      "category": "correctness",
+      "severity": null,
+      "title": "The `_untouch` method violates LRU cache policy by appending freed blocks to the end of `…",
+      "description": "The `_untouch` method violates LRU cache policy by appending freed blocks to the end of `free_block_queue`, making them least likely to be reused immediately. During memory pressure (when allocation fails), these blocks should be prioritized for reuse as they represent the least recently used candidates and must be added to the front of the queue.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The `_untouch` method violates LRU cache policy by appending freed blocks to the end of `free_block_queue`, making them least likely to be reused immediately. During memory pressure (when allocation fails), these blocks should be prioritized for reuse as they represent the least recently used candidates and must be added to the front of the queue."
+    },
+    {
+      "id": "i4",
+      "file": "vllm/v1/core/kv_cache_manager.py",
+      "line_start": 426,
+      "line_end": 432,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Documentation Error: The verb form should be \"Untouching\" to match the sentence structure",
+      "description": "Documentation Error: The verb form should be \"Untouching\" to match the sentence structure. Also, the parameter description incorrectly states \"blocks to touch\" when it should be \"blocks to untouch\".",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Documentation Error: The verb form should be \"Untouching\" to match the sentence structure. Also, the parameter description incorrectly states \"blocks to touch\" when it should be \"blocks to untouch\".\n"
+    },
+    {
+      "id": "i5",
+      "file": "vllm/v1/core/kv_cache_manager.py",
+      "line_start": 426,
+      "line_end": 426,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Minor wording improvement: 'Untouch a block decreases' should be 'Untouch blocks decrease…",
+      "description": "Minor wording improvement: 'Untouch a block decreases' should be 'Untouch blocks decrease' since the method handles multiple blocks",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Minor wording improvement: 'Untouch a block decreases' should be 'Untouch blocks decrease' since the method handles multiple blocks\n"
+    },
+    {
+      "id": "i6",
+      "file": "vllm/v1/core/scheduler.py",
+      "line_start": 141,
+      "line_end": 142,
+      "category": "correctness",
+      "severity": null,
+      "title": "Serious logical issue: allocate_slots is called with an empty list for new_computed_block…",
+      "description": "Serious logical issue: allocate_slots is called with an empty list for new_computed_blocks parameter, but the method expects blocks that have hit prefix caching. For RUNNING requests, computed blocks should be retrieved first using get_computed_blocks() and passed instead of an empty list.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Serious logical issue: allocate_slots is called with an empty list for new_computed_blocks parameter, but the method expects blocks that have hit prefix caching. For RUNNING requests, computed blocks should be retrieved first using get_computed_blocks() and passed instead of an empty list.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "vllm/v1/core/kv_cache_manager.py",
+      "line_start": 143,
+      "line_end": 144,
+      "description": "The error message for zero `num_tokens` should be simplified to state only the requirement without including the specific value detail."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/vllm-project/vllm/pull/12608). Upstream base dd66fd2b01e1195b7ccc8ffcd4b5d49ff1946a56 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 194. Severity absent in the source. i1: human comment, Repo Level; i2: AI comment (GLM-4.7), Diff Level; i3: human comment, Repo Level; i4: AI comment (Qwen-Coder-480B), Diff Level; i5: AI comment (Deepseek-V3.2), Diff Level; i6: AI comment (Deepseek-V3.2), Repo Level"
+}

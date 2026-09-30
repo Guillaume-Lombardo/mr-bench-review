@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-038",
+  "language": "java",
+  "size": "medium",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-038/base",
+  "head_branch": "bench/curated/case-038/head",
+  "base_sha": "f7bc3cf36b7078f149681c53125b76f40b359db2",
+  "head_sha": "5b54b16f9780a1b12026379bd9d9fc3ae6e1debb",
+  "mr_title": "Complete refactoring to move empty-String-defaulting out of (Std)ValueInstantiator",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/FasterXML/jackson-databind",
+    "commit": "fb72f93f4f4503caf22b693c8df1441c70341662",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/main/java/com/fasterxml/jackson/databind/deser/std/CollectionDeserializer.java",
+      "line_start": 250,
+      "line_end": 250,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Non-empty string no longer reaches handleNonArray (single value as array breaks)",
+      "description": "Every String token is now routed to _deserializeFromString, so a non-empty scalar string no longer reaches handleNonArray and ACCEPT_SINGLE_VALUE_AS_ARRAY stops working for collections.\n\nPreviously only the empty String was special-cased and any other string fell through to handleNonArray(), which wraps a single value into a collection when ACCEPT_SINGLE_VALUE_AS_ARRAY is enabled. After the refactoring, `\"abc\"` for a List<String> goes to _deserializeFromString(), which cannot build a Collection from a String and fails. Only the empty-string coercion path should be delegated; other strings must continue to handleNonArray().",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/FasterXML/jackson-databind/commit/fb72f93f4f4503caf22b693c8df1441c70341662. Primary issue confirmed by the later upstream fix https://github.com/FasterXML/jackson-databind/commit/2e06068ff88c23e00add364c37025437c7a57c23; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

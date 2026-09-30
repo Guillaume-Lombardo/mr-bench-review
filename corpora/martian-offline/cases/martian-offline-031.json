@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "martian-offline",
+  "id": "martian-offline-031",
+  "language": "java",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/martian-offline/martian-offline-031/base",
+  "head_branch": "bench/martian-offline/martian-offline-031/head",
+  "base_sha": "91852929959758a318171855935875c9ce90d26d",
+  "head_sha": "c2aa6594a0af4d23ad01004d85b4fca0fe6894d2",
+  "mr_title": "Fixing Re-authentication with passkeys",
+  "mr_description": "- Fixing Re-authentication with passkeys closes closes\n- Add user parameter requirement to isConditionalPasskeysEnabled method",
+  "origin": {
+    "repository": "https://github.com/ai-code-review-evaluation/keycloak-greptile",
+    "commit": "3214b188de808fdb0fff335556b686f1b0a63218",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/ai-code-review-evaluation/keycloak-greptile/pull/1",
+    "source_url": "https://github.com/withmartian/code-review-benchmark/blob/e616e849755441da38f18bf3adba2c9583b03803/offline/golden_comments/keycloak.json"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "In UsernameForm.authenticate(), isConditionalPasskeysEnabled() is called without passing…",
+      "description": "In UsernameForm.authenticate(), isConditionalPasskeysEnabled() is called without passing the required UserModel parameter.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "api",
+      "source_text": "In UsernameForm.authenticate(), isConditionalPasskeysEnabled() is called without passing the required UserModel parameter."
+    },
+    {
+      "id": "i2",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "maintainability",
+      "severity": "medium",
+      "title": "With isConditionalPasskeysEnabled(UserModel user) requiring user != null, authenticate(..…",
+      "description": "With isConditionalPasskeysEnabled(UserModel user) requiring user != null, authenticate(...) will not call webauthnAuth.fillContextForm(context) on the initial login page where context.getUser() is still null, so conditional passkey UI will not be set up for first-time passkey login. Consider whether this should also be enabled when no user has been selected yet so ID-less passkey authentication on the initial login form continues to work.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "speculative",
+      "source_text": "With isConditionalPasskeysEnabled(UserModel user) requiring user != null, authenticate(...) will not call webauthnAuth.fillContextForm(context) on the initial login page where context.getUser() is still null, so conditional passkey UI will not be set up for first-time passkey login. Consider whether this should also be enabled when no user has been selected yet so ID-less passkey authentication on the initial login form continues to work."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/ai-code-review-evaluation/keycloak-greptile/pull/1). Upstream base 30f804af450dec523909a52f2a4b97302d27f5cc (merge-base with the default branch, before the merge for merged PRs). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile All"
+}

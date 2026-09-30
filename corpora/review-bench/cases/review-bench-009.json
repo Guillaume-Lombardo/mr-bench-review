@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-009",
+  "language": "go",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-009/base",
+  "head_branch": "bench/review-bench/review-bench-009/head",
+  "base_sha": "15df01b73e06e4b011eced2879a7d29c5cd237ab",
+  "head_sha": "3e287f09276c5242fbe6cc733217aace475563fd",
+  "mr_title": "middleware.RouteHeaders: new middleware to allow header based routing flows",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/go-chi/chi",
+    "commit": "23b8ec2ca33dd73349ab54f7717d58e9d82c6abc",
+    "license": "MIT",
+    "source_case": "chi-routeheaders-missing-return",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/chi-routeheaders-missing-return"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "middleware/route_headers.go",
+      "line_start": 86,
+      "line_end": 86,
+      "category": "correctness",
+      "severity": null,
+      "title": "HeaderRouter.Handler's empty-routes branch calls next.ServeHTTP(w, r) without returning,…",
+      "description": "HeaderRouter.Handler's empty-routes branch calls next.ServeHTTP(w, r) without returning, so when no header routes are configured the middleware falls through and invokes the handler chain a second time at the end of Handler — the request is served twice.\n\nProvenance: fix PR #1045 body (commit 05f1ef7): 'next handler to be called twice - once in the empty check and again at the end of the function'.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": "HeaderRouter.Handler's empty-routes branch calls next.ServeHTTP(w, r) without returning, so when no header routes are configured the middleware falls through and invokes the handler chain a second time at the end of Handler — the request is served twice."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench chi-routeheaders-missing-return (corpus corpus/v0.1). Introducing PR https://github.com/go-chi/chi/pull/503. Fix https://github.com/go-chi/chi/commit/05f1ef7bb50b8a8cb33a9dd3ba1c5b94bff0f723 (PR #1045). Category defaulted to correctness and severity left null because the source has neither; to be reviewed. Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 81-81, review-head lines 86-86)"
+}

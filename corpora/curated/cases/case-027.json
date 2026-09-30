@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-027",
+  "language": "java",
+  "size": "small",
+  "kind": "real",
+  "tier": "pilot",
+  "base_branch": "bench/curated/case-027/base",
+  "head_branch": "bench/curated/case-027/head",
+  "base_sha": "74a93cc5691910430ebb363901e4cf7df82bdfcf",
+  "head_sha": "f399ab8f3d4d6f68ecb08b6b682189eb38176730",
+  "mr_title": "Minor optimization",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/apache/tomcat",
+    "commit": "6353e78658ea09c5056943901877f0b6ed31faae",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "java/org/apache/catalina/mapper/Mapper.java",
+      "line_start": 1349,
+      "line_end": 1351,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Length tie-break uses the clamped length, so different names compare equal",
+      "description": "After the 'optimization', the length tie-break compares `len` (already clamped to the shorter of the two lengths) instead of compareTo.length(), so names that share a prefix but differ in length compare as equal and the mapper can select the wrong host/context/wrapper.\n\n`len` is set to min(compareTo.length(), end - start) at the top of compare()/compareIgnoreCase(). Replacing compareTo.length() by len in the final tie-break means `len > (end - start)` can never be true and `len < (end - start)` only when compareTo is shorter. E.g. comparing '/ab' against '/abc' now returns 0, which breaks the binary search used to map request URIs to contexts. The original length must be kept in a separate variable.",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "java/org/apache/catalina/mapper/Mapper.java",
+          "line_start": 1380,
+          "line_end": 1382
+        }
+      ],
+      "source_category": null,
+      "source_text": null
+    },
+    {
+      "id": "i2",
+      "file": "java/org/apache/catalina/mapper/Mapper.java",
+      "line_start": 1349,
+      "line_end": 1349,
+      "category": "tests",
+      "severity": "medium",
+      "title": "Mapper comparison change has no test for names that differ only in length",
+      "description": "compare()/compareIgnoreCase() drive the binary search that maps hosts, contexts and wrappers. The change alters the length tie-break and ships without a unit test; a test comparing a name with a longer or shorter name sharing the same prefix (e.g. '/ab' vs '/abc') would have caught the regression.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/apache/tomcat/commit/6353e78658ea09c5056943901877f0b6ed31faae. Primary issue confirmed by the later upstream fix https://github.com/apache/tomcat/commit/5623b08fac963514c6793fda0aca743a876924a3; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

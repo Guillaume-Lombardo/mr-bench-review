@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-029",
+  "language": "typescript",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-029/base",
+  "head_branch": "bench/curated/case-029/head",
+  "base_sha": "7d8248953e54d5eb2371ab40830cb16b8dc16899",
+  "head_sha": "f91df764a2c7e37416b954ab3cc362a6940dddc3",
+  "mr_title": "fix(material-experimental/mdc-slider): thumb incorrectly positioned when inside an overlay",
+  "mr_description": "Fixes an issue where the thumb of an MDC slider wasn't positioned correctly when it has an initial value inside an overlay that is being animated.\n\nThere are multiple ways to resolve this, but I ended up doing it by removing our logic that skips the first `ResizeObserver` emission since we can get around the performance issues with the `layout` call by reusing the dimensions provided in the callback.",
+  "origin": {
+    "repository": "https://github.com/angular/components",
+    "commit": "43bfbac51514dcb64fc227512adfdadf84567f31",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/material-experimental/mdc-slider/slider.ts",
+      "line_start": 962,
+      "line_end": 969,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Slider re-layouts on resize even while a thumb is being dragged",
+      "description": "Removing the skip of the first ResizeObserver emission makes the slider re-run _layout() (with a cached rect) on every resize, including while the user is dragging a thumb, which makes the thumb jump.\n\nThe resize callback now triggers a debounced layout for any size change and caches entries[0].contentRect as the host rect. Size changes that occur during a drag (ripples, value indicators, scrollbars appearing) re-layout the slider mid-gesture and recompute thumb positions from a possibly stale rect, so the thumb jumps away from the pointer. Layout should be skipped while a thumb is active.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/angular/components/commit/43bfbac51514dcb64fc227512adfdadf84567f31. Primary issue confirmed by the later upstream fix https://github.com/angular/components/commit/394b93f18032e8d05e48c07bd36dbe44a83b87f5; its regression test reproduces the problem on this head. Curator difficulty: hard. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

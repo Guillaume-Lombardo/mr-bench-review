@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-064",
+  "language": "java",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-064/base",
+  "head_branch": "bench/aacr/aacr-064/head",
+  "base_sha": "63febfa09359514eefdfcaa0625f5e6ec463ba06",
+  "head_sha": "3a6c876fccb765b5589f6f86c13d1c24aaf5a77e",
+  "mr_title": "refactor(spring-ai-alibaba-starter-tool-calling-alitranslate): refactor alitranslate tool-calls module",
+  "mr_description": "- refactor(spring-ai-alibaba-starter-tool-calling-alitranslate): refactor alitranslate tool-calls module\n- Merge branch 'main' into feature/optimization-tool-calls-for-allen\n- fix: SQLiteChatMemory.java:[32,17] no suitable constructor found for JdbcChatMemory(java.lang.String,java.lang.String,java.lang.String,java.lang.String)\n- Merge remote-tracking branch 'origin/main' into feature/optimization-tool-calls-for-allen",
+  "origin": {
+    "repository": "https://github.com/alibaba/spring-ai-alibaba",
+    "commit": "3555a95e7b888335d9f72e432eb4f9fb9640e8cd",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/alibaba/spring-ai-alibaba/pull/869",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "community/tool-calls/spring-ai-alibaba-starter-tool-calling-alitranslate/src/main/java/com/alibaba/cloud/ai/toolcalling/alitranslate/AliTranslateAutoConfiguration.java",
+      "line_start": 38,
+      "line_end": 38,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Method name `aliTranslateFunction` should remove 'Function' suffix as it returns a servic…",
+      "description": "Method name `aliTranslateFunction` should remove 'Function' suffix as it returns a service instance (AliTranslateService), not a functional component.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Method name `aliTranslateFunction` should remove 'Function' suffix as it returns a service instance (AliTranslateService), not a functional component."
+    },
+    {
+      "id": "i2",
+      "file": "community/tool-calls/spring-ai-alibaba-starter-tool-calling-alitranslate/src/main/java/com/alibaba/cloud/ai/toolcalling/alitranslate/AliTranslateProperties.java",
+      "line_start": 34,
+      "line_end": 34,
+      "category": "security",
+      "severity": null,
+      "title": "- Environment variables \"ACCESS_KEY_ID\" and \"ACCESS_KEY_SECRET\" lack service-specific pre…",
+      "description": "- Environment variables \"ACCESS_KEY_ID\" and \"ACCESS_KEY_SECRET\" lack service-specific prefixing and risk naming conflicts; must be prefixed with \"ALITRANSLATE_\".  \n- Replace `setPropertiesFromEnv` helper method calls with direct `System.getenv` assignments for access key fields.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "- Environment variables \"ACCESS_KEY_ID\" and \"ACCESS_KEY_SECRET\" lack service-specific prefixing and risk naming conflicts; must be prefixed with \"ALITRANSLATE_\".  \n- Replace `setPropertiesFromEnv` helper method calls with direct `System.getenv` assignments for access key fields."
+    },
+    {
+      "id": "i3",
+      "file": "community/tool-calls/spring-ai-alibaba-starter-tool-calling-alitranslate/src/main/java/com/alibaba/cloud/ai/toolcalling/alitranslate/AliTranslateProperties.java",
+      "line_start": 38,
+      "line_end": 38,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The review discussion centered on standardizing credential property handling in the share…",
+      "description": "The review discussion centered on standardizing credential property handling in the shared configuration superclass:  \n- Access key must be managed via `CommonToolCallProperties.getApiKey()` instead of local fields to eliminate duplication.  \n- Secret key should use the `secretKey` property name in `CommonToolCallProperties` rather than `accessKeySecret` for consistent naming.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The review discussion centered on standardizing credential property handling in the shared configuration superclass:  \n- Access key must be managed via `CommonToolCallProperties.getApiKey()` instead of local fields to eliminate duplication.  \n- Secret key should use the `secretKey` property name in `CommonToolCallProperties` rather than `accessKeySecret` for consistent naming."
+    },
+    {
+      "id": "i4",
+      "file": "community/tool-calls/spring-ai-alibaba-starter-tool-calling-alitranslate/src/main/java/com/alibaba/cloud/ai/toolcalling/alitranslate/AliTranslateService.java",
+      "line_start": 84,
+      "line_end": 92,
+      "category": "correctness",
+      "severity": null,
+      "title": "The validation logic strictly requires `sourceLanguage` and `targetLanguage` to be presen…",
+      "description": "The validation logic strictly requires `sourceLanguage` and `targetLanguage` to be present, contradicting the `@JsonProperty(required = false)` annotation in the `Request` record. If these optional fields are omitted in the tool call (resulting in null values), the method will return `null` silently. \n\nConsider applying default values when these fields are missing, consistent with the property descriptions.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The validation logic strictly requires `sourceLanguage` and `targetLanguage` to be present, contradicting the `@JsonProperty(required = false)` annotation in the `Request` record. If these optional fields are omitted in the tool call (resulting in null values), the method will return `null` silently. \n\nConsider applying default values when these fields are missing, consistent with the property descriptions.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "community/tool-calls/spring-ai-alibaba-starter-tool-calling-alitranslate/src/main/java/com/alibaba/cloud/ai/toolcalling/alitranslate/AliTranslateService.java",
+      "line_start": 84,
+      "line_end": 87,
+      "description": "Consider adding validation to ensure sourceLanguage and targetLanguage are valid language codes supported by the service."
+    },
+    {
+      "file": "community/tool-calls/spring-ai-alibaba-starter-tool-calling-alitranslate/src/main/java/com/alibaba/cloud/ai/toolcalling/alitranslate/AliTranslateService.java",
+      "line_start": 105,
+      "line_end": 106,
+      "description": "Consider throwing a custom exception instead of returning null to better handle translation failures."
+    },
+    {
+      "file": "community/tool-calls/spring-ai-alibaba-starter-tool-calling-alitranslate/src/main/java/com/alibaba/cloud/ai/toolcalling/alitranslate/AliTranslateService.java",
+      "line_start": 121,
+      "line_end": 123,
+      "description": "Typo in error message: 'caused body is null' should be 'because body is null' for better readability and consistency with other error messages.\n\n```suggestion\n\t\tif (null == body) {\n\t\t\tthrow new IllegalStateException(\"Failed to invoke alitranslate, because body is null.\");\n\t\t}\n```"
+    },
+    {
+      "file": "community/tool-calls/spring-ai-alibaba-starter-tool-calling-alitranslate/src/main/java/com/alibaba/cloud/ai/toolcalling/alitranslate/AliTranslateService.java",
+      "line_start": 141,
+      "line_end": 149,
+      "description": "The compact constructor only handles the single-parameter case (text only). However, the canonical constructor generated by the record requires all parameters. When Jackson or other frameworks deserialize this record using reflection, they may fail because they expect all parameters to be present. Consider using a default value in the parameter declaration instead, e.g., `@JsonProperty(required = false, value = \"sourceLanguage\") String sourceLanguage = LANGUAGE_CODE_ZH`"
+    },
+    {
+      "file": "community/tool-calls/spring-ai-alibaba-starter-tool-calling-alitranslate/src/main/java/com/alibaba/cloud/ai/toolcalling/alitranslate/AliTranslateService.java",
+      "line_start": 148,
+      "line_end": 148,
+      "description": "Non-English comments present in the codebase; replace all with English equivalents to maintain consistent documentation standards."
+    },
+    {
+      "file": "community/tool-calls/spring-ai-alibaba-starter-tool-calling-alitranslate/src/main/java/com/alibaba/cloud/ai/toolcalling/alitranslate/AliTranslateService.java",
+      "line_start": 148,
+      "line_end": 148,
+      "description": "The constructor comment says '默认目标语言为英语' (default target language is English) but the parameters set both sourceLanguage to Chinese (zh) and targetLanguage to English (en). This could be confusing for users. Consider updating the comment to accurately reflect both defaults."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/alibaba/spring-ai-alibaba/pull/869). Upstream base 67d55b967da90edfc8ccfdab7f914454bb908e57 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 140. Severity absent in the source. i1: human comment, File Level; i2: human comment, Repo Level; i3: human comment, Repo Level; i4: AI comment (Gemini-3-Pro), Repo Level"
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-068",
+  "language": "python",
+  "size": "medium",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-068/base",
+  "head_branch": "bench/curated/case-068/head",
+  "base_sha": "e4e6c351eb28bcfcf9efa18d6425b163a2af59a5",
+  "head_sha": "df0e707be2957b91c10ba550b4ec9919dffe318a",
+  "mr_title": "Renamed permissions upon model renaming in migrations.",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/django/django",
+    "commit": "f02b49d2f3bf84f5225de920ca510149f1f9f1da",
+    "license": "BSD-3-Clause",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "django/contrib/auth/management/__init__.py",
+      "line_start": 129,
+      "line_end": 134,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "RenamePermission queries the default database instead of the migrated one",
+      "description": "RenamePermission computes `db = schema_editor.connection.alias` but queries ContentType and Permission on the default database, so renames run against the wrong database in multi-database migrations.\n\nMigrations are applied per database alias. The operation reads the alias into `db` yet uses ContentType.objects.filter(...) and Permission.objects.filter(...) without .using(db), so when migrating a non-default database the permissions of the default database are renamed (or none are found), leaving the migrated database inconsistent. The router/alias must be honoured for every query in the operation.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/f02b49d2f3bf84f5225de920ca510149f1f9f1da. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/6e89271a8507fe272d11814975500a1b40303a04; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-005",
+  "language": "cpp",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-005/base",
+  "head_branch": "bench/aacr/aacr-005/head",
+  "base_sha": "9c20772d4303bb173f7b6727e6e1c14905e663fa",
+  "head_sha": "be63cb5462f7b14f6acf4143fa9d511b887484d0",
+  "mr_title": "Fixes spelling of \"Allow to\" to \"Allow one to\"",
+  "mr_description": "- Fixes spelling of \"Allow to\" to \"Allow one to\"\n- Fix \"Let's -> Lets\"\n- Fix spelling of segments.\n- [pre-commit.ci] auto fixes from pre-commit.com hooks\n- Update src/3rdParty/salomesmesh/inc/MED_Wrapper.hxx\n- Update src/Base/PyObjectBase.cpp Update src/App/ExtensionContainer.h Update src/App/PropertyContainer.h\n- Use gerund in user-facing texts.",
+  "origin": {
+    "repository": "https://github.com/FreeCAD/FreeCAD",
+    "commit": "a440ff7e4138c20ed2ac66977a199ebbf295e493",
+    "license": "LGPL-2.0-or-later",
+    "source_case": "https://github.com/FreeCAD/FreeCAD/pull/18688",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/Gui/DlgOnlineHelpImp.h",
+      "line_start": 35,
+      "line_end": 35,
+      "category": "maintainability",
+      "severity": null,
+      "title": "There appears to be a spelling error in this comment",
+      "description": "There appears to be a spelling error in this comment. The phrase \"an an external browser\" likely should be \"in an external browser\".",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "There appears to be a spelling error in this comment. The phrase \"an an external browser\" likely should be \"in an external browser\".\n"
+    },
+    {
+      "id": "i2",
+      "file": "src/Gui/DlgOnlineHelpImp.h",
+      "line_start": 35,
+      "line_end": 35,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Typo: \"an an\" should likely be \"and an\"",
+      "description": "Typo: \"an an\" should likely be \"and an\".",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Typo: \"an an\" should likely be \"and an\".\n"
+    },
+    {
+      "id": "i3",
+      "file": "src/Mod/PartDesign/App/FeaturePad.cpp",
+      "line_start": 66,
+      "line_end": 66,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Wording is grammatically unclear: “allow one to accept negative values” sounds like a per…",
+      "description": "Wording is grammatically unclear: “allow one to accept negative values” sounds like a person accepts values. Rephrase to specify what accepts negative values (the property/Length2).\n\n```suggestion\n    // Remove the constraints but keep the type so Length2 can accept negative values\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Wording is grammatically unclear: “allow one to accept negative values” sounds like a person accepts values. Rephrase to specify what accepts negative values (the property/Length2).\n\n```suggestion\n    // Remove the constraints but keep the type so Length2 can accept negative values\n```"
+    },
+    {
+      "id": "i4",
+      "file": "src/Mod/PartDesign/App/FeaturePocket.cpp",
+      "line_start": 67,
+      "line_end": 67,
+      "category": "maintainability",
+      "severity": null,
+      "title": "This comment change introduces awkward/incorrect phrasing: “allow one to accept negative…",
+      "description": "This comment change introduces awkward/incorrect phrasing: “allow one to accept negative values”. It reads like the constraints are allowing a person to accept values. Consider rewording to “allow accepting negative values” or “allow it to accept negative values” for clarity.\n\n```suggestion\n    // Remove the constraints and keep the type to allow accepting negative values\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "This comment change introduces awkward/incorrect phrasing: “allow one to accept negative values”. It reads like the constraints are allowing a person to accept values. Consider rewording to “allow accepting negative values” or “allow it to accept negative values” for clarity.\n\n```suggestion\n    // Remove the constraints and keep the type to allow accepting negative values\n```"
+    },
+    {
+      "id": "i5",
+      "file": "src/Mod/TechDraw/App/DrawTile.cpp",
+      "line_start": 46,
+      "line_end": 46,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The comment still contains grammatical error",
+      "description": "The comment still contains grammatical error. 'don't' should be 'doesn't' for proper subject-verb agreement with 'this'.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The comment still contains grammatical error. 'don't' should be 'doesn't' for proper subject-verb agreement with 'this'.\n"
+    },
+    {
+      "id": "i6",
+      "file": "src/Mod/TechDraw/Gui/ViewProviderProjGroupItem.cpp",
+      "line_start": 157,
+      "line_end": 157,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Consider rephrasing for better clarity and conciseness",
+      "description": "Consider rephrasing for better clarity and conciseness. The phrase 'don't allow one to delete' is slightly awkward. A simpler alternative like 'deletion not allowed' or reverting to 'don't allow to delete' might improve readability.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Consider rephrasing for better clarity and conciseness. The phrase 'don't allow one to delete' is slightly awkward. A simpler alternative like 'deletion not allowed' or reverting to 'don't allow to delete' might improve readability.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/App/ExtensionContainer.h",
+      "line_start": 42,
+      "line_end": 42,
+      "description": "Corrected 'allow' to 'allows' for subject-verb agreement."
+    },
+    {
+      "file": "src/Base/ConsoleObserver.h",
+      "line_start": 98,
+      "line_end": 98,
+      "description": "The phrase 'one to temporary block then automatically restore' is awkward. Consider rephrasing for better clarity, e.g., 'allows one to temporarily block and then automatically restore'."
+    },
+    {
+      "file": "src/Base/ConsoleObserver.h",
+      "line_start": 98,
+      "line_end": 98,
+      "description": "Clear grammar/typo in updated docstring: \"allows one to temporary block\" should be \"allows one to temporarily block\". This is likely an unintended change and reads incorrect.\n\n```suggestion\n *  This class allows one to temporarily block then automatically restore arbitrary message types\n```"
+    },
+    {
+      "file": "src/Gui/ManualAlignment.cpp",
+      "line_start": 961,
+      "line_end": 961,
+      "description": "This is a comment-only change, but the new wording (“do not allow one to pick…”) reads a bit awkward/less idiomatic in technical code. Consider a clearer phrasing such as “do not allow picking further points” or “disable picking further points” to improve readability.\n\n```suggestion\n        // disable picking further points\n```"
+    },
+    {
+      "file": "src/Gui/NotificationArea.cpp",
+      "line_start": 554,
+      "line_end": 556,
+      "description": "This change is purely in a Doxygen comment. Consider whether the wording change is necessary/consistent with surrounding documentation style. If you want to avoid passive/wordy phrasing, the original \"allows to accelerate\" could be rewritten more naturally as \"helps accelerate\" or \"allows accelerating\" (both read better than \"allows one to accelerate\")."
+    },
+    {
+      "file": "src/Mod/BIM/Resources/ui/preferences-ifc-export.ui",
+      "line_start": 174,
+      "line_end": 174,
+      "description": "The tooltip string for checkBox_10 should replace \"allows one to import\" with \"enables importing\" for improved clarity and conciseness."
+    },
+    {
+      "file": "src/Mod/Draft/Resources/ui/preferences-draft.ui",
+      "line_start": 172,
+      "line_end": 172,
+      "description": "The grammar has been improved, but there's still a parallel structure issue. After 'allows indicating', the verb 'type' should also be in gerund form for consistency. Consider: 'This allows indicating a direction and then typing a distance.' Alternatively, you could use: 'This allows you to indicate a direction and then type a distance.'"
+    },
+    {
+      "file": "src/Mod/Draft/draftguitools/gui_layers.py",
+      "line_start": 145,
+      "line_end": 145,
+      "description": "The updated inline comment has a grammar issue: “allow one to select many”. Consider reverting to the original phrasing or rewriting for clarity (e.g., “allow selecting multiple items”).\n\n```suggestion\n        self.dialog.tree.setSelectionMode(QtWidgets.QTreeView.ExtendedSelection) # allow selecting multiple items\n```"
+    },
+    {
+      "file": "src/Mod/Fem/App/FemMeshShapeNetgenObject.cpp",
+      "line_start": 65,
+      "line_end": 65,
+      "description": "Change the MeshParams property description string from \"allows one to define\" to \"allows defining\" for grammatical correctness."
+    },
+    {
+      "file": "src/Mod/Fem/App/FemMeshShapeNetgenObject.cpp",
+      "line_start": 65,
+      "line_end": 77,
+      "description": "These are user-facing property descriptions. Consider keeping wording/style consistent across the file/module: either \"allows to define\" or \"allows one to define\" everywhere, and consider adding a leading space consistently (some strings here start with a space, others don’t). If translations or documentation tooling rely on exact strings, even minor wording changes may break matching; verify this is intended."
+    },
+    {
+      "file": "src/Mod/Mesh/App/Core/TopoAlgorithm.cpp",
+      "line_start": 612,
+      "line_end": 612,
+      "description": "The original phrasing 'do not allow to create' is more idiomatic and concise for technical comments. 'do not allow one to create' is more verbose and less natural. Consider keeping the original or using 'prevent' instead.\n\n```suggestion\n    // do not allow to create degenerated triangles\n```"
+    },
+    {
+      "file": "src/Mod/Part/Gui/SectionCutting.ui",
+      "line_start": 371,
+      "line_end": 371,
+      "description": "Tooltip string grammar: Replace \"Allows one to cut\" with \"Allows cutting\" for correct gerund usage after \"allows\" and improved conciseness."
+    },
+    {
+      "file": "src/Mod/PartDesign/Gui/TaskExtrudeParameters.cpp",
+      "line_start": 928,
+      "line_end": 928,
+      "description": "The updated comment reads awkwardly/unclearly: \"only allow one to show its direction\". If the intent is to say the UI only *displays* the direction (not editable) when not using custom direction, consider rephrasing for clarity (e.g., \"only allow displaying the direction\" or \"only allow viewing the direction\").\n\n```suggestion\n    // if we don't use custom direction, only allow viewing (displaying) the direction\n```"
+    },
+    {
+      "file": "src/Mod/Sketcher/App/planegcs/GCS.cpp",
+      "line_start": 5407,
+      "line_end": 5408,
+      "description": "The comment for the transposition boolean parameter in `identifyDependentParametersSparseQR` is grammatically incorrect and ambiguous, failing to clearly convey the parameter's purpose despite recent edits."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/FreeCAD/FreeCAD/pull/18688). Upstream base 3b502359353e2a74dee8a8bcfed5750b69f32cdc = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 297. Severity absent in the source. i1: AI comment (Qwen-Coder-480B), Diff Level; i2: AI comment (Gemini-3-Pro), Diff Level; i3: AI comment (GPT-5.2), Diff Level; i4: AI comment (GPT-5.2), Diff Level; i5: AI comment (Deepseek-V3.2), Diff Level; i6: AI comment (Qwen-Coder-480B), Diff Level"
+}

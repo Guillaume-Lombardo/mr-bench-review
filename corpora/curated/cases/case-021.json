@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-021",
+  "language": "typescript",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-021/base",
+  "head_branch": "bench/curated/case-021/head",
+  "base_sha": "a1243eec4c7ad207f8c507e877884aeb20b85ade",
+  "head_sha": "205ae79ba0777c56e7730963b60389f048723ec6",
+  "mr_title": "fix(@angular-devkit/build-angular): correctly handle data URIs with escaped quotes in stylesheets",
+  "mr_description": "Previously, the RegExp didn't correctly handle cases where data URIs had escaped quotes like the below\n\n```css\nurl(\"data:image/svg+xml;charset=utf-8,<svg width=/\"16/\" height=/\"15/\"></svg>\")\n```",
+  "origin": {
+    "repository": "https://github.com/angular/angular-cli",
+    "commit": "70bc35456aa5b58ce1a0e2440ebb6533c7f5e48b",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "packages/angular_devkit/build_angular/src/webpack/plugins/postcss-cli-resources.ts",
+      "line_start": 158,
+      "line_end": 158,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "URL regex stops at the first ')' inside quoted values",
+      "description": "The new lazy regex ends the URL at the first ')' even inside a quoted value, so quoted data URIs containing parentheses (e.g. SVG `mask='url(#clip)'`) are truncated and the emitted CSS is corrupted.\n\nThe previous pattern matched quoted values as a whole (`\"([^\"]+)\"|'([^']+)'`). The replacement `url(\\(\\s*['\"]?)(.*?)(['\"]?\\s*\\))` does not tie the closing quote to the opening one, so `url(\"data:image/svg+xml,<svg><g mask='url(%23clip)'/></svg>\")` stops at the inner ')'. The closing delimiter must be matched with a back-reference to the opening quote.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/angular/angular-cli/commit/70bc35456aa5b58ce1a0e2440ebb6533c7f5e48b. Primary issue confirmed by the later upstream fix https://github.com/angular/angular-cli/commit/147f8c3ebbad883826da1a94f09054938ed9b534; its regression test reproduces the problem on this head. Curator difficulty: easy. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

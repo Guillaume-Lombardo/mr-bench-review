@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-022",
+  "language": "go",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-022/base",
+  "head_branch": "bench/aacr/aacr-022/head",
+  "base_sha": "13221dfbc9ff1f9c97f234bea1af75493abb166b",
+  "head_sha": "fd10489bb182eef430a7504f4d0f99ff0ae22fca",
+  "mr_title": "fix: disable logs for healthcheck endpoints",
+  "mr_description": "- fix: disable logs for healthcheck endpoints\n- Merge branch 'development' into development\n- Merge branch 'gofr-dev:development' into development\n- fix: add env variable to control logs probe\n- fix: change the middleware config\n- fix: middleware logging\n- fix: logging without probes test\n- fix: test logger\n- fix: middleware config\n- Merge branch 'development' into development\n- Merge branch 'development' into development",
+  "origin": {
+    "repository": "https://github.com/gofr-dev/gofr",
+    "commit": "c1a26ade6db7da96622c9bdca7674ef7094c122f",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/gofr-dev/gofr/pull/1681",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "pkg/gofr/http/middleware/config.go",
+      "line_start": 14,
+      "line_end": 14,
+      "category": "correctness",
+      "severity": null,
+      "title": "The `LogDisableProbes` field in `MiddlewareConfig` should be a boolean instead of a strin…",
+      "description": "The `LogDisableProbes` field in `MiddlewareConfig` should be a boolean instead of a string to enforce valid true/false values and eliminate unnecessary string comparisons.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The `LogDisableProbes` field in `MiddlewareConfig` should be a boolean instead of a string to enforce valid true/false values and eliminate unnecessary string comparisons."
+    },
+    {
+      "id": "i2",
+      "file": "pkg/gofr/http/middleware/config.go",
+      "line_start": 36,
+      "line_end": 36,
+      "category": "maintainability",
+      "severity": null,
+      "title": "There is a potential naming logic issue here",
+      "description": "There is a potential naming logic issue here. The config key `LOG_DISABLE_PROBES` defaults to `false`, and when set to `true`, it applies `LoggingWithoutProbes` middleware which skips logging for health check endpoints. The naming `LOG_DISABLE_PROBES` is confusing because it implies disabling the probe endpoints themselves, not just skipping logging for them. Consider renaming to `LOG_SKIP_PROBES` or `EXCLUDE_PROBES_FROM_LOGS` for clarity.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "There is a potential naming logic issue here. The config key `LOG_DISABLE_PROBES` defaults to `false`, and when set to `true`, it applies `LoggingWithoutProbes` middleware which skips logging for health check endpoints. The naming `LOG_DISABLE_PROBES` is confusing because it implies disabling the probe endpoints themselves, not just skipping logging for them. Consider renaming to `LOG_SKIP_PROBES` or `EXCLUDE_PROBES_FROM_LOGS` for clarity."
+    },
+    {
+      "id": "i3",
+      "file": "pkg/gofr/http/middleware/config.go",
+      "line_start": 36,
+      "line_end": 36,
+      "category": "correctness",
+      "severity": null,
+      "title": "Consistent with the suggestion to change `LogDisableProbes` to `bool`, you should parse t…",
+      "description": "Consistent with the suggestion to change `LogDisableProbes` to `bool`, you should parse the configuration value here. For example:\n```go\nval := c.GetOrDefault(\"LOG_DISABLE_PROBES\", \"false\")\nmiddlewareConfigs.LogDisableProbes, _ = strconv.ParseBool(val)\n```\nNote: You will need to import \"strconv\".",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Consistent with the suggestion to change `LogDisableProbes` to `bool`, you should parse the configuration value here. For example:\n```go\nval := c.GetOrDefault(\"LOG_DISABLE_PROBES\", \"false\")\nmiddlewareConfigs.LogDisableProbes, _ = strconv.ParseBool(val)\n```\nNote: You will need to import \"strconv\".\n"
+    },
+    {
+      "id": "i4",
+      "file": "pkg/gofr/http_server.go",
+      "line_start": 42,
+      "line_end": 46,
+      "category": "correctness",
+      "severity": null,
+      "title": "The middleware order has been changed such that `Logging` is now applied after `CORS` and…",
+      "description": "The middleware order has been changed such that `Logging` is now applied after `CORS` and `Metrics`. This means that if the `CORS` middleware handles a request (e.g., OPTIONS preflight) or rejects it (e.g., invalid origin), the `Logging` middleware will not be executed, and these events will not be logged. \n\nIt is recommended to register the `Logging` middleware before `CORS` and `Metrics` to ensure all requests are logged, including those terminated by subsequent middleware.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The middleware order has been changed such that `Logging` is now applied after `CORS` and `Metrics`. This means that if the `CORS` middleware handles a request (e.g., OPTIONS preflight) or rejects it (e.g., invalid origin), the `Logging` middleware will not be executed, and these events will not be logged. \n\nIt is recommended to register the `Logging` middleware before `CORS` and `Metrics` to ensure all requests are logged, including those terminated by subsequent middleware.\n"
+    },
+    {
+      "id": "i5",
+      "file": "pkg/gofr/http_server.go",
+      "line_start": 42,
+      "line_end": 46,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential logic/config issue: `LogDisableProbes` is compared to the literal string \"true\"",
+      "description": "Potential logic/config issue: `LogDisableProbes` is compared to the literal string \"true\". If this config is ever represented as a boolean, or uses other truthy values (\"1\", \"TRUE\"), the condition will silently fail and probes will be logged unexpectedly. Consider making `LogDisableProbes` a bool in `MiddlewareConfig` (or normalizing/parsing the string via strconv.ParseBool) to avoid inverted/fragile behavior.\n\n```suggestion\n // Prefer: LogDisableProbes as bool in MiddlewareConfig\n if middlewareConfigs.LogDisableProbes {\n \tr.Use(middleware.LoggingWithoutProbes(c.Logger))\n } else {\n \tr.Use(middleware.Logging(c.Logger))\n }\n \n // If it must remain string:\n // disable, _ := strconv.ParseBool(middlewareConfigs.LogDisableProbes)\n // if disable { ... }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential logic/config issue: `LogDisableProbes` is compared to the literal string \"true\". If this config is ever represented as a boolean, or uses other truthy values (\"1\", \"TRUE\"), the condition will silently fail and probes will be logged unexpectedly. Consider making `LogDisableProbes` a bool in `MiddlewareConfig` (or normalizing/parsing the string via strconv.ParseBool) to avoid inverted/fragile behavior.\n\n```suggestion\n // Prefer: LogDisableProbes as bool in MiddlewareConfig\n if middlewareConfigs.LogDisableProbes {\n \tr.Use(middleware.LoggingWithoutProbes(c.Logger))\n } else {\n \tr.Use(middleware.Logging(c.Logger))\n }\n \n // If it must remain string:\n // disable, _ := strconv.ParseBool(middlewareConfigs.LogDisableProbes)\n // if disable { ... }\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "pkg/gofr/http/middleware/logger.go",
+      "line_start": 100,
+      "line_end": 105,
+      "description": "The probe-skip logic relies on exact path matches (\"/.well-known/health\" and \"/.well-known/alive\"). If these endpoints can be hit with a trailing slash, different casing, or be mounted under a prefix (e.g., \"/api/.well-known/health\"), this will unexpectedly log probes. Consider normalizing the path (e.g., strings.TrimSuffix(path, \"/\")) and/or using a set/prefix match per your routing conventions. Query strings are not part of URL.Path, which is fine, but trailing slashes are common.\n\n```suggestion\nfunc LoggingWithoutProbes(logger logger) func(inner http.Handler) http.Handler {\n\treturn loggingMiddleware(logger, func(r *http.Request) bool {\n\t\tpath := strings.TrimSuffix(r.URL.Path, \"/\")\n\t\treturn path != \"/.well-known/health\" && path != \"/.well-known/alive\"\n\t})\n}\n```"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/gofr-dev/gofr/pull/1681). Upstream base 717443dc91dbf04169789d41bd4998a6ac858a14 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 217. Severity absent in the source. i1: human comment, File Level; i2: AI comment (GLM-4.7), File Level; i3: AI comment (Gemini-3-Pro), File Level; i4: AI comment (Gemini-3-Pro), Repo Level; i5: AI comment (GPT-5.2), File Level"
+}

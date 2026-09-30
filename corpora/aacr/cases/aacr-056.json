@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-056",
+  "language": "cpp",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-056/base",
+  "head_branch": "bench/aacr/aacr-056/head",
+  "base_sha": "d7d267c74d36142968e30b771e378329fa84194c",
+  "head_sha": "3050a4ba85f04072e0f2901ca34c076f3abf802b",
+  "mr_title": "refactor: use ValueOrDefault() in electron_api_web_contents.cc",
+  "mr_description": "- refactor: use ValueOrDefault() in electron_api_web_contents.cc\n- refactor: use ValueOrDefault() in electron_api_url_loader.cc\n- refactor: use ValueOrDefault() in electron_download_manager_delegate.cc\n- refactor: use ValueOrDefault() in electron_touch_bar.mm\n- refactor: use ValueOrDefault() in electron_url_loader_factory.cc\n- refactor: use ValueOrDefault() in electron_browser_context.cc\n- refactor: use ValueOrDefault() in electron_touch_bar.mm\n- refactor: use ValueOrDefault() in blink_converter.cc\n- feat: add ValueOrDefault() to PersistentDictionary\n- empty commit",
+  "origin": {
+    "repository": "https://github.com/electron/electron",
+    "commit": "c4864570586f4c2f019797d3b0a9c4c76e93396b",
+    "license": "MIT",
+    "source_case": "https://github.com/electron/electron/pull/46982",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "shell/browser/api/electron_api_web_contents.cc",
+      "line_start": 3025,
+      "line_end": 3035,
+      "category": "correctness",
+      "severity": null,
+      "title": "Input validation: `scaleFactor`, `pagesPerSheet`, `copies` and custom margins are user-pr…",
+      "description": "Input validation: `scaleFactor`, `pagesPerSheet`, `copies` and custom margins are user-provided values that likely have valid ranges (e.g., scaleFactor>0, copies>=1, margins>=0). `ValueOrDefault` will accept negative/zero values and pass them through to Chromium printing settings, which may lead to errors or unexpected output. Consider clamping to documented ranges or rejecting invalid values with an exception back to JS.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Input validation: `scaleFactor`, `pagesPerSheet`, `copies` and custom margins are user-provided values that likely have valid ranges (e.g., scaleFactor>0, copies>=1, margins>=0). `ValueOrDefault` will accept negative/zero values and pass them through to Chromium printing settings, which may lead to errors or unexpected output. Consider clamping to documented ranges or rejecting invalid values with an exception back to JS."
+    },
+    {
+      "id": "i2",
+      "file": "shell/browser/api/electron_api_web_contents.cc",
+      "line_start": 3056,
+      "line_end": 3056,
+      "category": "maintainability",
+      "severity": null,
+      "title": "`auto` usage: for simple/obvious types like `std::u16string`, `std::string`, and enum typ…",
+      "description": "`auto` usage: for simple/obvious types like `std::u16string`, `std::string`, and enum types, `auto` can slightly reduce readability in this API boundary where types matter (JS<->C++). Consider keeping explicit types here (e.g., `std::u16string device_name = ...;`, `printing::mojom::DuplexMode duplex_mode = ...;`) to make the expected option type clear and prevent unintended type changes if `ValueOrDefault` overload resolution changes.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "`auto` usage: for simple/obvious types like `std::u16string`, `std::string`, and enum types, `auto` can slightly reduce readability in this API boundary where types matter (JS<->C++). Consider keeping explicit types here (e.g., `std::u16string device_name = ...;`, `printing::mojom::DuplexMode duplex_mode = ...;`) to make the expected option type clear and prevent unintended type changes if `ValueOrDefault` overload resolution changes."
+    },
+    {
+      "id": "i3",
+      "file": "shell/common/api/electron_api_url_loader.cc",
+      "line_start": 612,
+      "line_end": 613,
+      "category": "maintainability",
+      "severity": null,
+      "title": "`auto` here deduces a simple enum type (`blink::mojom::FetchCacheMode`)",
+      "description": "`auto` here deduces a simple enum type (`blink::mojom::FetchCacheMode`). Per the checklist, prefer explicit type for simple/important semantic values to keep readability and aid grep/IDE navigation. Consider keeping the explicit type and still using `ValueOrDefault`.\n\nAlso double-check `ValueOrDefault`'s behavior when the key exists but has a wrong type (does it silently fall back or throw?). If it silently falls back, this can mask user input errors compared to `opts.Get()` returning false; consider validating and surfacing errors if appropriate.\n\n```suggestion\n  const blink::mojom::FetchCacheMode cache_mode =\n      opts.ValueOrDefault(\"cache\", blink::mojom::FetchCacheMode::kDefault);\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "`auto` here deduces a simple enum type (`blink::mojom::FetchCacheMode`). Per the checklist, prefer explicit type for simple/important semantic values to keep readability and aid grep/IDE navigation. Consider keeping the explicit type and still using `ValueOrDefault`.\n\nAlso double-check `ValueOrDefault`'s behavior when the key exists but has a wrong type (does it silently fall back or throw?). If it silently falls back, this can mask user input errors compared to `opts.Get()` returning false; consider validating and surfacing errors if appropriate.\n\n```suggestion\n  const blink::mojom::FetchCacheMode cache_mode =\n      opts.ValueOrDefault(\"cache\", blink::mojom::FetchCacheMode::kDefault);\n```"
+    },
+    {
+      "id": "i4",
+      "file": "shell/common/gin_converters/blink_converter.cc",
+      "line_start": 406,
+      "line_end": 407,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The condition for 'canScroll' should inline the `dict.ValueOrDefault` call instead of usi…",
+      "description": "The condition for 'canScroll' should inline the `dict.ValueOrDefault` call instead of using an intermediate variable for conciseness and consistency.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The condition for 'canScroll' should inline the `dict.ValueOrDefault` call instead of using an intermediate variable for conciseness and consistency."
+    },
+    {
+      "id": "i5",
+      "file": "shell/common/gin_helper/persistent_dictionary.h",
+      "line_start": 46,
+      "line_end": 51,
+      "category": "maintainability",
+      "severity": null,
+      "title": "`ValueOrDefault` can be surprising for some `T`:",
+      "description": "`ValueOrDefault` can be surprising for some `T`:\n- Requires `T` to be default-constructible (`T{}`) even if the key is missing.\n- `default_value` is taken by value, so it always copies/moves even when the key exists.\n- `Get()` expects an output pointer; if callers use pointer types as `T` (e.g. `int*`), `T{}` yields `nullptr` and you end up passing `int**` to `Get`, likely not what’s intended.\nConsider constraining `T` (or documenting expectations) and changing the signature to avoid unnecessary copies, e.g. `const T& default_value` / perfect-forwarding, and use `std::optional<T>` internally or `T value; if (Get(...)) return value;` when `T` is default-constructible.\n\n```suggestion\n  template <typename T>\n    T ValueOrDefault(std::string_view key, const T& default_value) const {\n      static_assert(std::is_default_constructible_v<T>, \"T must be default-constructible\");\n      T value{};\n      if (Get(key, &value))\n        return value;\n      return default_value;\n    }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "`ValueOrDefault` can be surprising for some `T`:\n- Requires `T` to be default-constructible (`T{}`) even if the key is missing.\n- `default_value` is taken by value, so it always copies/moves even when the key exists.\n- `Get()` expects an output pointer; if callers use pointer types as `T` (e.g. `int*`), `T{}` yields `nullptr` and you end up passing `int**` to `Get`, likely not what’s intended.\nConsider constraining `T` (or documenting expectations) and changing the signature to avoid unnecessary copies, e.g. `const T& default_value` / perfect-forwarding, and use `std::optional<T>` internally or `T value; if (Get(...)) return value;` when `T` is default-constructible.\n\n```suggestion\n  template <typename T>\n    T ValueOrDefault(std::string_view key, const T& default_value) const {\n      static_assert(std::is_default_constructible_v<T>, \"T must be default-constructible\");\n      T value{};\n      if (Get(key, &value))\n        return value;\n      return default_value;\n    }\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "shell/browser/api/electron_api_web_contents.cc",
+      "line_start": 2334,
+      "line_end": 2336,
+      "description": "Potential behavioral change: `ValueOrDefault(\"reloadIgnoringCache\", false)` will return the default when the option exists but has a non-bool type, whereas the previous `Get` would return false but also let you distinguish type-mismatch (Get==false). If callers might pass a string/number, consider validating type explicitly and/or warning to avoid silently ignoring user input.\nAlso, if you rely on presence vs value distinction, keep `Get` and check its return value."
+    },
+    {
+      "file": "shell/browser/electron_browser_context.cc",
+      "line_start": 761,
+      "line_end": 763,
+      "description": "Consider marking both variables as constexpr or inline documentation explaining why disabling requires negation might aid future maintainability."
+    },
+    {
+      "file": "shell/browser/net/electron_url_loader_factory.cc",
+      "line_start": 127,
+      "line_end": 128,
+      "description": "Using `ValueOrDefault` changes semantics vs `dict.Get`: if `statusCode` exists but is not an int (e.g., double/string), `Get` would fail to overwrite `status_code` and keep default, while `ValueOrDefault` may perform a conversion depending on implementation (or may return default). Please confirm desired behavior and consider explicitly validating type/range for HTTP status (e.g., 100-599) to avoid generating invalid status lines from untrusted input."
+    },
+    {
+      "file": "shell/browser/ui/cocoa/electron_touch_bar.mm",
+      "line_start": 503,
+      "line_end": 505,
+      "description": "`ValueOrDefault` is templated on the default literal type. Using `0/100/50` makes `T=int`, so any JS number that is not an integer may get truncated during `ConvertFromV8`. Since these Cocoa properties are `double` (`minValue/maxValue/doubleValue`), prefer double defaults to preserve precision and avoid unintended narrowing.\n\n```suggestion\n  item.slider.minValue = settings.ValueOrDefault(\"minValue\", 0.0);\n  item.slider.maxValue = settings.ValueOrDefault(\"maxValue\", 100.0);\n  item.slider.doubleValue = settings.ValueOrDefault(\"value\", 50.0);\n```"
+    },
+    {
+      "file": "shell/browser/ui/cocoa/electron_touch_bar.mm",
+      "line_start": 678,
+      "line_end": 678,
+      "description": "Similar template-type pitfall: `0` makes `T=int`. If the JS side passes a non-integer (or larger-than-int) it may be truncated/overflowed. Consider using `NSInteger` for better alignment with Cocoa APIs and to avoid signed/unsigned warnings in comparisons with `segmentCount`.\n\n```suggestion\n  const NSInteger selectedIndex = settings.ValueOrDefault(\"selectedIndex\", static_cast<NSInteger>(0));\n```"
+    },
+    {
+      "file": "shell/common/gin_helper/persistent_dictionary.h",
+      "line_start": 46,
+      "line_end": 47,
+      "description": "The code uses `std::string_view`, but the `<string_view>` header is not included in this file. Please add `#include <string_view>` to ensure the file is self-contained and compiles correctly."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/electron/electron/pull/46982). Upstream base 924a8da940ec0acefeb6d43e74f5669a8704d159 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 190. Severity absent in the source. i1: AI comment (GPT-5.2), Diff Level; i2: AI comment (GPT-5.2), Diff Level; i3: AI comment (GPT-5.2), Diff Level; i4: human comment, File Level; i5: AI comment (GPT-5.2), Diff Level"
+}

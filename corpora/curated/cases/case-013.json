@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-013",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-013/base",
+  "head_branch": "bench/curated/case-013/head",
+  "base_sha": "ae936e8d694848901ace6a9324e80914f1eabe24",
+  "head_sha": "416207b5bff025d2898bdd81e7e039f111e63f5d",
+  "mr_title": "Change __getstate__ and __setstate__ to use a dict",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/python-attrs/attrs",
+    "commit": "89a890a3262273514619d1881c6a8b0fe26c66ac",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/attr/_make.py",
+      "line_start": 934,
+      "line_end": 936,
+      "category": "correctness",
+      "severity": "high",
+      "title": "__setstate__ no longer accepts tuple state from older pickles",
+      "description": "__setstate__ now only accepts a dict, so instances pickled by earlier attrs versions (whose state is a tuple) unpickle with none of their attributes set.\n\nSlotted attrs classes previously pickled their state as a tuple of values. The new __setstate__ checks `name in state` for each attribute; for an old tuple state this membership test is against values, so nothing is restored and later attribute access raises AttributeError. Persisted pickles (caches, queues) break on upgrade; __setstate__ must keep accepting the tuple format.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/python-attrs/attrs/commit/89a890a3262273514619d1881c6a8b0fe26c66ac. Primary issue confirmed by the later upstream fix https://github.com/python-attrs/attrs/commit/c9150d278ced32056d73c239ff64034e5056bcb6; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

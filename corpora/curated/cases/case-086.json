@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-086",
+  "language": "typescript",
+  "size": "medium",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-086/base",
+  "head_branch": "bench/curated/case-086/head",
+  "base_sha": "b5011bf025a368b585ec09dce78d36bf4741655d",
+  "head_sha": "6de21d5181ba357d0018ace919b04b94aaa909ad",
+  "mr_title": "perf(memory): install derived internals on a per-constructor prototype",
+  "mr_description": "Moves lazily-derived `_zod` internals (`values`, `pattern`, `optin`, `optout`, `propValues`) onto a per-constructor prototype instead of installing an accessor on every instance.\n\nWrapper schemas shrink the most: `.nullable()`/`.readonly()` 2.4 KB to 665 B, `.optional()` 1.9 KB to 694 B. Construction of `.optional()` is ~1.96x faster; parse is unchanged. Costs +77 B classic and +13 B mini gzipped.",
+  "origin": {
+    "repository": "https://github.com/colinhacks/zod",
+    "commit": "b1077f05f85450cf53108714973bf7c8d9e3c35d",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "packages/zod/src/v4/core/util.ts",
+      "line_start": 1072,
+      "line_end": 1072,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Derived constructors cannot override lazily installed internals",
+      "description": "defineLazyInternal() skips installation when the key already exists on the shared _zod prototype, so a derived schema constructor can no longer override a lazily-derived internal installed by its base constructor (e.g. exactOptional keeps the base 'optional' values).\n\nPreviously each constructor's init installed its own per-instance lazy accessor, and later (more derived) initialisers overwrote earlier ones. Now all traits of an instance share the prototype of the outermost constructor; base inits run first and install `values`/`optin`/... there, and the derived init's install is ignored by `key in proto`. Derived semantics are lost (z.exactOptional(...) reports `undefined` among its values). The accessor also memoizes `undefined` results produced while breaking recursion cycles.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/colinhacks/zod/commit/b1077f05f85450cf53108714973bf7c8d9e3c35d. Primary issue confirmed by the later upstream fix https://github.com/colinhacks/zod/commit/9f0a3d81221e3ab7c09ca4911ef35b54817869a4; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

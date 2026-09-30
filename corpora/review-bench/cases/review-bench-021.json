@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-021",
+  "language": "python",
+  "size": "small",
+  "kind": "clean",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-021/base",
+  "head_branch": "bench/review-bench/review-bench-021/head",
+  "base_sha": "d06f74cb83fef8bbb4a8d9fd67659d125e258e40",
+  "head_sha": "7489bc8e0d51b938d10c3df4807aa59bad253b54",
+  "mr_title": "Add support for Python 3.13",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/encode/httpx",
+    "commit": "c7c13f18a5af4c64c649881b2fe8dbd72a519c32",
+    "license": "BSD-3-Clause",
+    "source_case": "httpx-python313-support",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/httpx-python313-support"
+  },
+  "expected_issues": [],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench httpx-python313-support (corpus corpus/v0.1). Introducing PR https://github.com/encode/httpx/pull/3460."
+}

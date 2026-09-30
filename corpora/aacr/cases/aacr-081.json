@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-081",
+  "language": "c",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-081/base",
+  "head_branch": "bench/aacr/aacr-081/head",
+  "base_sha": "7aab2481141b759f7db2d2a391e2b993de55b126",
+  "head_sha": "ad088fc3c77d02e6f89192be74139b53420ceb56",
+  "mr_title": "Redact protocol error log when hide-user-data-from-log enabled",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/valkey-io/valkey",
+    "commit": "36f37c0bafa72c091a9a3725b9a026a056130892",
+    "license": "BSD-3-Clause",
+    "source_case": "https://github.com/valkey-io/valkey/pull/1889",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/networking.c",
+      "line_start": 2773,
+      "line_end": 2773,
+      "category": "security",
+      "severity": null,
+      "title": "The current implementation processes the query buffer before checking `server.hide_user_d…",
+      "description": "The current implementation processes the query buffer before checking `server.hide_user_data_from_log` in `setProtocolError`, risking exposure of sensitive user data in logs. Move the redaction check to the beginning of buffer handling logic to immediately skip data processing when enabled.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "The current implementation processes the query buffer before checking `server.hide_user_data_from_log` in `setProtocolError`, risking exposure of sensitive user data in logs. Move the redaction check to the beginning of buffer handling logic to immediately skip data processing when enabled."
+    },
+    {
+      "id": "i2",
+      "file": "src/networking.c",
+      "line_start": 2776,
+      "line_end": 2776,
+      "category": "correctness",
+      "severity": null,
+      "title": "The snprintf ternary expression for redacting long query buffers has mismatched types and…",
+      "description": "The snprintf ternary expression for redacting long query buffers has mismatched types and incorrect argument structure, failing to suppress user data exposure when `server.hide_user_data_from_log` is enabled and causing potential crashes.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The snprintf ternary expression for redacting long query buffers has mismatched types and incorrect argument structure, failing to suppress user data exposure when `server.hide_user_data_from_log` is enabled and causing potential crashes."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/networking.c",
+      "line_start": 2768,
+      "line_end": 2769,
+      "description": "The protocol error log uses a non-standard redaction string; replace `[hide_user_data_from_log]Redacted` with the conventional `*redacted*` string for consistency."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/valkey-io/valkey/pull/1889). Upstream base 06990c2e6360c90e5e0b1b5aa4e7708b13955851 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 52. Severity absent in the source. i1: human comment, Diff Level; i2: human comment, Diff Level"
+}

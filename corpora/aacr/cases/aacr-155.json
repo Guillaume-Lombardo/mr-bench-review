@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-155",
+  "language": "java",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-155/base",
+  "head_branch": "bench/aacr/aacr-155/head",
+  "base_sha": "4c973a5c9292650834a90c92ba35a8fb35f7e252",
+  "head_sha": "ab498380c3a0afd76d6c8a4fb42f2d36a37c7b64",
+  "mr_title": "check for filesystem mismatch",
+  "mr_description": "- check for filesystem mismatch\n- spotless\n- lower logging level, check for write too",
+  "origin": {
+    "repository": "https://github.com/elastic/elasticsearch",
+    "commit": "4d9b96f4ac1af0cb871f1d3b77169f9f1e83d194",
+    "license": "AGPL-3.0-only OR SSPL-1.0 OR Elastic-2.0",
+    "source_case": "https://github.com/elastic/elasticsearch/pull/123744",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "libs/entitlement/src/main/java/org/elasticsearch/entitlement/runtime/policy/FileAccessTree.java",
+      "line_start": 206,
+      "line_end": 206,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The debug log statement in `checkPath` is too verbose for production use as it may execut…",
+      "description": "The debug log statement in `checkPath` is too verbose for production use as it may execute frequently; change to trace level to prevent excessive logging output.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "The debug log statement in `checkPath` is too verbose for production use as it may execute frequently; change to trace level to prevent excessive logging output."
+    },
+    {
+      "id": "i2",
+      "file": "libs/entitlement/src/main/java/org/elasticsearch/entitlement/runtime/policy/FileAccessTree.java",
+      "line_start": 206,
+      "line_end": 209,
+      "category": "correctness",
+      "severity": null,
+      "title": "The debug log calls `String.join(\",\", paths)` before checking `paths.length == 0`",
+      "description": "The debug log calls `String.join(\",\", paths)` before checking `paths.length == 0`. If `paths` were null, this would throw NPE before the safety check. Consider moving the log after the length check for defensive programming.\n\n```suggestion\n        if (paths == null || paths.length == 0) {\n            return false;\n        }\n        logger.debug(() -> Strings.format(\"checking [%s] against [%s]\", path, String.join(\",\", paths)));\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The debug log calls `String.join(\",\", paths)` before checking `paths.length == 0`. If `paths` were null, this would throw NPE before the safety check. Consider moving the log after the length check for defensive programming.\n\n```suggestion\n        if (paths == null || paths.length == 0) {\n            return false;\n        }\n        logger.debug(() -> Strings.format(\"checking [%s] against [%s]\", path, String.join(\",\", paths)));\n```"
+    },
+    {
+      "id": "i3",
+      "file": "libs/entitlement/src/main/java/org/elasticsearch/entitlement/runtime/policy/FileAccessTree.java",
+      "line_start": 224,
+      "line_end": 224,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Debug logging added to `isParent` may cause excessive log volume due to high-frequency me…",
+      "description": "Debug logging added to `isParent` may cause excessive log volume due to high-frequency method invocations in typical usage scenarios.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "Debug logging added to `isParent` may cause excessive log volume due to high-frequency method invocations in typical usage scenarios."
+    },
+    {
+      "id": "i4",
+      "file": "libs/entitlement/src/main/java/org/elasticsearch/entitlement/runtime/policy/PolicyManager.java",
+      "line_start": 311,
+      "line_end": 313,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The method calls `path.getFileSystem().getClass()` twice in the same condition",
+      "description": "The method calls `path.getFileSystem().getClass()` twice in the same condition. The local variable `pathFileSystemClass` is already assigned but not used in the condition. Consider using `pathFileSystemClass != DEFAULT_FILESYSTEM_CLASS` instead for better efficiency and code clarity.\n\n```suggestion\n    private static boolean isPathOnDefaultFilesystem(Path path) {\n        var pathFileSystemClass = path.getFileSystem().getClass();\n        if (pathFileSystemClass != DEFAULT_FILESYSTEM_CLASS) {\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "The method calls `path.getFileSystem().getClass()` twice in the same condition. The local variable `pathFileSystemClass` is already assigned but not used in the condition. Consider using `pathFileSystemClass != DEFAULT_FILESYSTEM_CLASS` instead for better efficiency and code clarity.\n\n```suggestion\n    private static boolean isPathOnDefaultFilesystem(Path path) {\n        var pathFileSystemClass = path.getFileSystem().getClass();\n        if (pathFileSystemClass != DEFAULT_FILESYSTEM_CLASS) {\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "libs/entitlement/src/main/java/org/elasticsearch/entitlement/runtime/policy/FileAccessTree.java",
+      "line_start": 223,
+      "line_end": 226,
+      "description": "Compilation/design issue: `isParent` is declared `static` but uses `logger`. Unless `logger` is also static (not shown in this snippet), this will not compile. If `logger` is an instance field, either make `isParent` non-static or introduce a `private static final Logger logger = ...` and use that consistently."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/elastic/elasticsearch/pull/123744). Upstream base 6b27e420fed187de0add194eb32bb940688af26f = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 29. Severity absent in the source. i1: human comment, File Level; i2: AI comment (GLM-4.7), File Level; i3: human comment, File Level; i4: AI comment (GLM-4.7), Diff Level"
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-067",
+  "language": "python",
+  "size": "medium",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-067/base",
+  "head_branch": "bench/curated/case-067/head",
+  "base_sha": "046ff7dd7d372266b0f535e339b2df69793c7ade",
+  "head_sha": "c5416e89c27dc67682d2345e0963f5d01eb5673a",
+  "mr_title": "Index resources in the UrlDispatcher to avoid linear search for most cases",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/aio-libs/aiohttp",
+    "commit": "2a3eaa11dc2f8e6150eede9337182f273e14c20a",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "aiohttp/web_urldispatcher.py",
+      "line_start": 1092,
+      "line_end": 1092,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Route index key keeps text before a variable in the same path segment",
+      "description": "The index key keeps the fixed text that precedes a variable in the same path segment (e.g. '/core/locations' for '/core/locations{tail:.*}'), but lookups walk the request path by whole '/' segments, so such routes are never found and return 404.\n\nresolve() looks up candidate resources by progressively shorter prefixes of the request path cut at '/'. For a route like `/core/locations{tail:.*}` and a request `/core/locations-list`, the tried keys are `/core/locations-list`, `/core`, `/`, never `/core/locations`. The key must be truncated to the last '/' before the first '{' (here `/core`).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/aio-libs/aiohttp/commit/2a3eaa11dc2f8e6150eede9337182f273e14c20a. Primary issue confirmed by the later upstream fix https://github.com/aio-libs/aiohttp/commit/01ed18945cf331cff6c2221116d7678855a31167; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

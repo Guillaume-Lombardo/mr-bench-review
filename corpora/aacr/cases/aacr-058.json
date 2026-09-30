@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-058",
+  "language": "cpp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-058/base",
+  "head_branch": "bench/aacr/aacr-058/head",
+  "base_sha": "3be29fca5b086602a8291590d75871eea9c66781",
+  "head_sha": "d944fcaf50edf0ca59fd9b02879eb383c17c9517",
+  "mr_title": "fix: fix file dialog filters not working correctly",
+  "mr_description": "If someone sets an `All filter` with `*` at the start of the filters all upcoming filters will be shifted and thus labels won't fit to the extensions they actually filter.",
+  "origin": {
+    "repository": "https://github.com/electron/electron",
+    "commit": "100ad244b742d221ad129e96bef934e8128403a9",
+    "license": "MIT",
+    "source_case": "https://github.com/electron/electron/pull/46660",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "shell/browser/ui/file_dialog_linux.cc",
+      "line_start": 47,
+      "line_end": 56,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Indentation/brace alignment looks off: `if (has_all_files_wildcard)` is indented as if ne…",
+      "description": "Indentation/brace alignment looks off: `if (has_all_files_wildcard)` is indented as if nested under the `any_of` call, which can be misleading and may hide logic errors during future edits. Please align it with the surrounding `const bool` statement for readability.\n\nAlso note the behavioral change: `extension_description_overrides` is now only appended for non-\"*\" filters. If `include_all_files` is true, the description override for that filter is dropped. Confirm this matches SelectFileDialog expectations (e.g., UI label for \"All files\" / custom name). If you still want the label while also including all files, consider pushing the description override before the `if` (or handling the all-files case explicitly).\n\n```suggestion\n    const bool has_all_files_wildcard = std::ranges::any_of(\n        extension_group, [](const auto& ext) { return ext == \"*\"; });\n    \n    if (has_all_files_wildcard) {\n      // If needed, still set a description override for the all-files filter here.\n      file_type_info.include_all_files = true;\n    } else {\n      file_type_info.extension_description_overrides.push_back(\n          base::UTF8ToUTF16(name));\n      file_type_info.extensions.emplace_back(extension_group);\n    }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Indentation/brace alignment looks off: `if (has_all_files_wildcard)` is indented as if nested under the `any_of` call, which can be misleading and may hide logic errors during future edits. Please align it with the surrounding `const bool` statement for readability.\n\nAlso note the behavioral change: `extension_description_overrides` is now only appended for non-\"*\" filters. If `include_all_files` is true, the description override for that filter is dropped. Confirm this matches SelectFileDialog expectations (e.g., UI label for \"All files\" / custom name). If you still want the label while also including all files, consider pushing the description override before the `if` (or handling the all-files case explicitly).\n\n```suggestion\n    const bool has_all_files_wildcard = std::ranges::any_of(\n        extension_group, [](const auto& ext) { return ext == \"*\"; });\n    \n    if (has_all_files_wildcard) {\n      // If needed, still set a description override for the all-files filter here.\n      file_type_info.include_all_files = true;\n    } else {\n      file_type_info.extension_description_overrides.push_back(\n          base::UTF8ToUTF16(name));\n      file_type_info.extensions.emplace_back(extension_group);\n    }\n```"
+    },
+    {
+      "id": "i2",
+      "file": "shell/browser/ui/file_dialog_linux.cc",
+      "line_start": 50,
+      "line_end": 50,
+      "category": "maintainability",
+      "severity": null,
+      "title": "* The `if (has_all_files_wildcard)` statement is over-indented by one level relative to t…",
+      "description": "* The `if (has_all_files_wildcard)` statement is over-indented by one level relative to the surrounding code block.  \n* An unnecessary blank line was introduced after the lambda expression in the `std::ranges::any_of` call.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "* The `if (has_all_files_wildcard)` statement is over-indented by one level relative to the surrounding code block.  \n* An unnecessary blank line was introduced after the lambda expression in the `std::ranges::any_of` call."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/electron/electron/pull/46660). Upstream base 32fea719b393c2757c4737386564c910d49b529e = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 6. Severity absent in the source. i1: AI comment (GPT-5.2), Diff Level; i2: human comment, Diff Level"
+}

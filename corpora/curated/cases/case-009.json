@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-009",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": "core",
+  "base_branch": "bench/curated/case-009/base",
+  "head_branch": "bench/curated/case-009/head",
+  "base_sha": "9f7888b27d2625178b2dcc17452d1d24cab4726d",
+  "head_sha": "622f6c5389d0feb7776ae857f9a53133c53c318c",
+  "mr_title": "Handle different sep across os",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/pallets/flask",
+    "commit": "e6178fe489b7828acc2bb8fd4b56a70b11ab6c6a",
+    "license": "BSD-3-Clause",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/flask/helpers.py",
+      "line_start": 1004,
+      "line_end": 1004,
+      "category": "correctness",
+      "severity": "high",
+      "title": "static_folder given as pathlib.Path raises AttributeError",
+      "description": "static_folder may be a pathlib.Path; calling value.rstrip() raises AttributeError, so Flask(static_folder=Path(...)) fails at startup.\n\nstatic_folder accepts any path-like value and pathlib.Path was supported before this change. The setter now calls str methods directly on the value. It must convert with os.fspath() before stripping the trailing separators.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    },
+    {
+      "id": "i2",
+      "file": "src/flask/helpers.py",
+      "line_start": 1004,
+      "line_end": 1004,
+      "category": "tests",
+      "severity": "low",
+      "title": "Separator normalisation added without a test",
+      "description": "The setter now strips trailing separators on every platform, but no test covers a static_folder with a trailing slash or backslash, nor non-string values such as pathlib.Path.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/pallets/flask/commit/e6178fe489b7828acc2bb8fd4b56a70b11ab6c6a. Primary issue confirmed by the later upstream fix https://github.com/pallets/flask/commit/7ba35c4d4fe99418cee9c87900bd0d3b38cf5bd0; its regression test reproduces the problem on this head. Curator difficulty: easy. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-154",
+  "language": "java",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-154/base",
+  "head_branch": "bench/aacr/aacr-154/head",
+  "base_sha": "07516521a35e14b3eca60a2e921dc45a11610b0a",
+  "head_sha": "d4ee98f284762d1636af1ea5583838d6605d964d",
+  "mr_title": "Use $$ for static check methods",
+  "mr_description": "- Use $$ for static check methods\n- Always use class name from checker method name\n- Spotless\n- Varargs assertParseCheckerMethodSignatureThrows\n- Merge branch 'main' into mandatory-class-name",
+  "origin": {
+    "repository": "https://github.com/elastic/elasticsearch",
+    "commit": "a9973f67256e21340a8b00039531e69b724d0856",
+    "license": "AGPL-3.0-only OR SSPL-1.0 OR Elastic-2.0",
+    "source_case": "https://github.com/elastic/elasticsearch/pull/118626",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "libs/entitlement/asm-provider/src/main/java/org/elasticsearch/entitlement/instrumentation/impl/InstrumentationServiceImpl.java",
+      "line_start": 73,
+      "line_end": 73,
+      "category": "correctness",
+      "severity": null,
+      "title": "The current implementation uses `lastIndexOf(\"$$\")` to determine the class name boundary,…",
+      "description": "The current implementation uses `lastIndexOf(\"$$\")` to determine the class name boundary, but it should instead use `lastIndexOf(\"$\")` followed by checking the preceding character to accurately determine static method status and avoid potential edge cases with dollar sign sequences.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The current implementation uses `lastIndexOf(\"$$\")` to determine the class name boundary, but it should instead use `lastIndexOf(\"$\")` followed by checking the preceding character to accurately determine static method status and avoid potential edge cases with dollar sign sequences."
+    },
+    {
+      "id": "i2",
+      "file": "libs/entitlement/asm-provider/src/main/java/org/elasticsearch/entitlement/instrumentation/impl/InstrumentationServiceImpl.java",
+      "line_start": 84,
+      "line_end": 86,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential logical issue: When the input string contains no '$' character at all, both `in…",
+      "description": "Potential logical issue: When the input string contains no '$' character at all, both `indexOf('$')` and `lastIndexOf('$')` return -1. In this case, the condition `classNameStartIndex >= classNameEndIndex` evaluates to true (-1 >= -1), so the exception is NOT thrown. The code then proceeds to call `substring(0, -1)`, which will throw a `StringIndexOutOfBoundsException`. Consider adding an explicit check for `classNameStartIndex == -1` separately to catch this edge case.\n\n```suggestion\n        var classNameStartIndex = checkerMethodName.indexOf('$');\n        if (classNameStartIndex == -1) {\n            throw new IllegalArgumentException(\n                String.format(\n                    Locale.ROOT,\n                    \"Checker method %s has incorrect name format. \"\n                        + \"It should be either check$$methodName (instance), check$package_ClassName$methodName (static) or \"\n                        + \"check$package_ClassName$ (ctor)\",\n                    checkerMethodName\n                )\n            );\n        }\n        if (classNameStartIndex >= classNameEndIndex) {\n            throw new IllegalArgumentException(\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential logical issue: When the input string contains no '$' character at all, both `indexOf('$')` and `lastIndexOf('$')` return -1. In this case, the condition `classNameStartIndex >= classNameEndIndex` evaluates to true (-1 >= -1), so the exception is NOT thrown. The code then proceeds to call `substring(0, -1)`, which will throw a `StringIndexOutOfBoundsException`. Consider adding an explicit check for `classNameStartIndex == -1` separately to catch this edge case.\n\n```suggestion\n        var classNameStartIndex = checkerMethodName.indexOf('$');\n        if (classNameStartIndex == -1) {\n            throw new IllegalArgumentException(\n                String.format(\n                    Locale.ROOT,\n                    \"Checker method %s has incorrect name format. \"\n                        + \"It should be either check$$methodName (instance), check$package_ClassName$methodName (static) or \"\n                        + \"check$package_ClassName$ (ctor)\",\n                    checkerMethodName\n                )\n            );\n        }\n        if (classNameStartIndex >= classNameEndIndex) {\n            throw new IllegalArgumentException(\n```"
+    },
+    {
+      "id": "i3",
+      "file": "libs/entitlement/asm-provider/src/main/java/org/elasticsearch/entitlement/instrumentation/impl/InstrumentationServiceImpl.java",
+      "line_start": 86,
+      "line_end": 86,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The error message is outdated",
+      "description": "The error message is outdated. According to the PR description, class names are now mandatory in all checker methods. The message currently says the format can be \"check$$methodName\" (without a class name), but this is no longer valid.\n\nThe error message should be updated to:\n\n```suggestion\n                    \"Checker method %s has incorrect name format: must be check$className$methodName or check$className$$methodName\",\n```",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The error message is outdated. According to the PR description, class names are now mandatory in all checker methods. The message currently says the format can be \"check$$methodName\" (without a class name), but this is no longer valid.\n\nThe error message should be updated to:\n\n```suggestion\n                    \"Checker method %s has incorrect name format: must be check$className$methodName or check$className$$methodName\",\n```"
+    },
+    {
+      "id": "i4",
+      "file": "libs/entitlement/asm-provider/src/main/java/org/elasticsearch/entitlement/instrumentation/impl/InstrumentationServiceImpl.java",
+      "line_start": 98,
+      "line_end": 99,
+      "category": "correctness",
+      "severity": null,
+      "title": "Missing validation for empty method name",
+      "description": "Missing validation for empty method name. When a checker method name ends with '$$' (e.g., 'check$ClassName$$'), the code extracts an empty method name, which is invalid. Consider adding validation after method name extraction:\n```java\nif (!targetMethodIsCtor && targetMethodName.isEmpty()) {\n    throw new IllegalArgumentException(\n        String.format(Locale.ROOT, \"Checker method %s has no method name\", checkerMethodName)\n    );\n}\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Missing validation for empty method name. When a checker method name ends with '$$' (e.g., 'check$ClassName$$'), the code extracts an empty method name, which is invalid. Consider adding validation after method name extraction:\n```java\nif (!targetMethodIsCtor && targetMethodName.isEmpty()) {\n    throw new IllegalArgumentException(\n        String.format(Locale.ROOT, \"Checker method %s has no method name\", checkerMethodName)\n    );\n}\n```\n"
+    },
+    {
+      "id": "i5",
+      "file": "libs/entitlement/asm-provider/src/main/java/org/elasticsearch/entitlement/instrumentation/impl/InstrumenterImpl.java",
+      "line_start": 172,
+      "line_end": 177,
+      "category": "correctness",
+      "severity": null,
+      "title": "Using `Type::getInternalName` on primitive types (e.g., `int`, `boolean`) will throw an `…",
+      "description": "Using `Type::getInternalName` on primitive types (e.g., `int`, `boolean`) will throw an `UnsupportedOperationException`. Since `Type.getArgumentTypes(descriptor)` can return primitive types for methods like `wait(long)`, this code will cause the instrumentation to crash on standard classes. \n\nIf the intention is to only instrument methods with object arguments, you should filter out methods with primitive arguments or handle them gracefully (e.g., by using descriptors or skipping key creation).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Using `Type::getInternalName` on primitive types (e.g., `int`, `boolean`) will throw an `UnsupportedOperationException`. Since `Type.getArgumentTypes(descriptor)` can return primitive types for methods like `wait(long)`, this code will cause the instrumentation to crash on standard classes. \n\nIf the intention is to only instrument methods with object arguments, you should filter out methods with primitive arguments or handle them gracefully (e.g., by using descriptors or skipping key creation).\n"
+    },
+    {
+      "id": "i6",
+      "file": "libs/entitlement/src/main/java/org/elasticsearch/entitlement/instrumentation/MethodKey.java",
+      "line_start": 20,
+      "line_end": 21,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Grammar issue: missing verb \"is\"",
+      "description": "Grammar issue: missing verb \"is\". It should read \"... in which case the receiver ({@code this}) **is** passed as an argument ...\".",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Grammar issue: missing verb \"is\". It should read \"... in which case the receiver ({@code this}) **is** passed as an argument ...\".\n"
+    },
+    {
+      "id": "i7",
+      "file": "libs/entitlement/src/main/java/org/elasticsearch/entitlement/instrumentation/MethodKey.java",
+      "line_start": 23,
+      "line_end": 23,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The `hasReceiver` field in `MethodKey` requires clarification and validation:",
+      "description": "The `hasReceiver` field in `MethodKey` requires clarification and validation:  \n- Rename `hasReceiver` to `isInstance` to accurately reflect its role in identifying nonstatic (instance) methods.  \n- Remove the unused `hasReceiver` field as it constitutes dead code with no current references.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The `hasReceiver` field in `MethodKey` requires clarification and validation:  \n- Rename `hasReceiver` to `isInstance` to accurately reflect its role in identifying nonstatic (instance) methods.  \n- Remove the unused `hasReceiver` field as it constitutes dead code with no current references."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "libs/entitlement/asm-provider/src/main/java/org/elasticsearch/entitlement/instrumentation/impl/InstrumentationServiceImpl.java",
+      "line_start": 101,
+      "line_end": 104,
+      "description": "Behavior change risk: for instance methods, you no longer derive `targetClassName` from the typed receiver argument (previously `checkerMethodArgumentTypes[1]`). Now `targetClassName` always comes from the checker method name. If existing checkers rely on omitting/blanking the class segment for instance methods (e.g., `check$$methodName`-style), this will now throw `has no class name`. Confirm the naming contract: if class can be inferred from the receiver, keep the old branch logic (derive from argument) or allow empty class name only for non-static/non-ctor methods."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/elastic/elasticsearch/pull/118626). Upstream base 0cc08a9196f75b3bcd630a55331578b1fc335b74 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 229. Severity absent in the source. i1: human comment, Repo Level; i2: AI comment (GLM-4.7), File Level; i3: AI comment (Claude-Code/Claude-4.5-Sonnet), Repo Level; i4: AI comment (Claude-Code/Claude-4.5-Sonnet), Repo Level; i5: AI comment (Gemini-3-Pro), Repo Level; i6: AI comment (Gemini-3-Pro), File Level; i7: human comment, Repo Level"
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-033",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-033/base",
+  "head_branch": "bench/curated/case-033/head",
+  "base_sha": "fca4cc55e2e13113c5c510116c27edd6e099deaf",
+  "head_sha": "dfc0d5725a69b606d094e4b367cbd0ce60ab8cae",
+  "mr_title": "Fix: Ensure fish completion handles multiline help strings correctly",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/pallets/click",
+    "commit": "19fd4d6e18bc9fce451f92f422696b11169faa57",
+    "license": "BSD-3-Clause",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/click/shell_completion.py",
+      "line_start": 436,
+      "line_end": 436,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Fish completion items split over several lines break completion",
+      "description": "Each fish completion item is now emitted as three newline-separated lines, but fish command substitution splits $response on newlines, so type, value and help arrive as separate items and completion breaks entirely.\n\nThe fish script iterates `for completion in $response`, where $response comes from a command substitution that already splits output on newlines. Using `\\n` as the intra-item separator (and splitting again with `string split \\n`) means each item is spread over three loop iterations: metadata[1] is never 'plain'/'dir' with the matching value, so no completion is offered. The item must stay on one line (e.g. `type,value<TAB>help` with newlines/tabs escaped in help).",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "src/click/shell_completion.py",
+          "line_start": 183,
+          "line_end": 183
+        }
+      ],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/pallets/click/commit/19fd4d6e18bc9fce451f92f422696b11169faa57. Primary issue confirmed by the later upstream fix https://github.com/pallets/click/commit/c3535905c77a29afc84861b29d3ad366ce5451bd; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

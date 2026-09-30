@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-116",
+  "language": "java",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-116/base",
+  "head_branch": "bench/aacr/aacr-116/head",
+  "base_sha": "0ef928883c6b718ada2b3055212fb3ef6f67fae5",
+  "head_sha": "c9894e7d56ac52336f0028b35394c1dfa3c6f42f",
+  "mr_title": "add hana table partitions",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/dbeaver/dbeaver",
+    "commit": "dc67ca7cf486ceaf45559318cdcbca193847188d",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/dbeaver/dbeaver/pull/36789",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "plugins/org.jkiss.dbeaver.ext.hana/OSGI-INF/l10n/bundle.properties",
+      "line_start": 45,
+      "line_end": 48,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The capitalization for \"Last delta merge\" and \"Last log replay\" is inconsistent with the…",
+      "description": "The capitalization for \"Last delta merge\" and \"Last log replay\" is inconsistent with the other properties in this block (which use Title Case, e.g., \"Total Size\", \"Create Time\"). It is recommended to use \"Last Delta Merge\" and \"Last Log Replay\" for consistency.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The capitalization for \"Last delta merge\" and \"Last log replay\" is inconsistent with the other properties in this block (which use Title Case, e.g., \"Total Size\", \"Create Time\"). It is recommended to use \"Last Delta Merge\" and \"Last Log Replay\" for consistency.\n"
+    },
+    {
+      "id": "i2",
+      "file": "plugins/org.jkiss.dbeaver.ext.hana/plugin.xml",
+      "line_start": 42,
+      "line_end": 45,
+      "category": "correctness",
+      "severity": null,
+      "title": "The new navigator node defines a folder of type `HANAPartition` but its children are boun…",
+      "description": "The new navigator node defines a folder of type `HANAPartition` but its children are bound to the `partitions` property (`HANATable#getPartitions`). In DBeaver object tree configs, the folder `type` usually corresponds to the parent object type that *owns* the `property` collection, while the `items` represent elements of that collection.\n\nPotential issue: with `folder type=\"...HANAPartition\"`, the folder may be treated as if it is shown for partition objects (or may not appear for tables), so the `property=\"partitions\"` may never be resolved (since `HANAPartition` doesn’t expose `getPartitions`). If the intent is “Tables -> Partitions -> Partition”, consider setting the folder type to `org.jkiss.dbeaver.ext.hana.model.HANATable` (or the table interface used in the tree) and keep `items property=\"partitions\"` to produce `HANAPartition` children.\n\nAlso double-check `path=\"partition\"` is consistent with any existing object tree path conventions for HANA nodes; if not used elsewhere, `path` can be omitted to avoid mismatches.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The new navigator node defines a folder of type `HANAPartition` but its children are bound to the `partitions` property (`HANATable#getPartitions`). In DBeaver object tree configs, the folder `type` usually corresponds to the parent object type that *owns* the `property` collection, while the `items` represent elements of that collection.\n\nPotential issue: with `folder type=\"...HANAPartition\"`, the folder may be treated as if it is shown for partition objects (or may not appear for tables), so the `property=\"partitions\"` may never be resolved (since `HANAPartition` doesn’t expose `getPartitions`). If the intent is “Tables -> Partitions -> Partition”, consider setting the folder type to `org.jkiss.dbeaver.ext.hana.model.HANATable` (or the table interface used in the tree) and keep `items property=\"partitions\"` to produce `HANAPartition` children.\n\nAlso double-check `path=\"partition\"` is consistent with any existing object tree path conventions for HANA nodes; if not used elsewhere, `path` can be omitted to avoid mismatches."
+    },
+    {
+      "id": "i3",
+      "file": "plugins/org.jkiss.dbeaver.ext.hana/plugin.xml",
+      "line_start": 43,
+      "line_end": 44,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The empty `<items>` element for HANA partitions should use self-closing tag syntax (`/>`)…",
+      "description": "The empty `<items>` element for HANA partitions should use self-closing tag syntax (`/>`) instead of separate opening and closing tags for cleaner XML representation.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The empty `<items>` element for HANA partitions should use self-closing tag syntax (`/>`) instead of separate opening and closing tags for cleaner XML representation."
+    },
+    {
+      "id": "i4",
+      "file": "plugins/org.jkiss.dbeaver.ext.hana/src/org/jkiss/dbeaver/ext/hana/model/HANANotPartitionedTable.java",
+      "line_start": 21,
+      "line_end": 27,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Naming/intent mismatch: `HANANotPartitionedTable` returns `false` when `object instanceof…",
+      "description": "Naming/intent mismatch: `HANANotPartitionedTable` returns `false` when `object instanceof HANAPartition`. This effectively means “visible only for non-partition *objects*”, not “not partitioned *table*”. Since `HANAPartition` extends `HANATable`, this works for the current use in `@Property(... visibleIf = HANANotPartitionedTable.class)` to hide base table properties for partition rows, but the class name is misleading and easy to misuse later.\n\nSuggestion: rename to something like `HANAIsNotPartition` / `HANANotPartitionObject` / `HANAHideForPartitions` (and update references), or adjust logic+name pair so they align (e.g., check `table.isPartitioned()` if such concept exists).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Naming/intent mismatch: `HANANotPartitionedTable` returns `false` when `object instanceof HANAPartition`. This effectively means “visible only for non-partition *objects*”, not “not partitioned *table*”. Since `HANAPartition` extends `HANATable`, this works for the current use in `@Property(... visibleIf = HANANotPartitionedTable.class)` to hide base table properties for partition rows, but the class name is misleading and easy to misuse later.\n\nSuggestion: rename to something like `HANAIsNotPartition` / `HANANotPartitionObject` / `HANAHideForPartitions` (and update references), or adjust logic+name pair so they align (e.g., check `table.isPartitioned()` if such concept exists)."
+    },
+    {
+      "id": "i5",
+      "file": "plugins/org.jkiss.dbeaver.ext.hana/src/org/jkiss/dbeaver/ext/hana/model/HANAPartition.java",
+      "line_start": 26,
+      "line_end": 37,
+      "category": "maintainability",
+      "severity": null,
+      "title": "There are multiple unused imports in this file, including `JDBCObjectCache`, `IPropertyVa…",
+      "description": "There are multiple unused imports in this file, including `JDBCObjectCache`, `IPropertyValueListProvider`, `DBRProgressMonitor`, `DBSObject`, `GenericSchema`, `GenericStructContainer`, `GenericTable`, `DBPEvaluationContext`, `DBUtils`, `JDBCPreparedStatement`, `JDBCSession`, and `JDBCStatement`. It is recommended to remove them to keep the code clean.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "There are multiple unused imports in this file, including `JDBCObjectCache`, `IPropertyValueListProvider`, `DBRProgressMonitor`, `DBSObject`, `GenericSchema`, `GenericStructContainer`, `GenericTable`, `DBPEvaluationContext`, `DBUtils`, `JDBCPreparedStatement`, `JDBCSession`, and `JDBCStatement`. It is recommended to remove them to keep the code clean.\n"
+    },
+    {
+      "id": "i6",
+      "file": "plugins/org.jkiss.dbeaver.ext.hana/src/org/jkiss/dbeaver/ext/hana/model/HANAPartition.java",
+      "line_start": 60,
+      "line_end": 64,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The @NotNull annotation on the 'partId' parameter is redundant because 'int' is a primiti…",
+      "description": "The @NotNull annotation on the 'partId' parameter is redundant because 'int' is a primitive type that cannot be null. This annotation should only be used on object references (like String, Integer, etc.) to indicate nullability constraints. Using @NotNull on primitive types is misleading and provides no actual value.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The @NotNull annotation on the 'partId' parameter is redundant because 'int' is a primitive type that cannot be null. This annotation should only be used on object references (like String, Integer, etc.) to indicate nullability constraints. Using @NotNull on primitive types is misleading and provides no actual value.\n"
+    },
+    {
+      "id": "i7",
+      "file": "plugins/org.jkiss.dbeaver.ext.hana/src/org/jkiss/dbeaver/ext/hana/model/HANAPartition.java",
+      "line_start": 72,
+      "line_end": 79,
+      "category": "correctness",
+      "severity": null,
+      "title": "This cascade of conditions may lead to unexpected behavior",
+      "description": "This cascade of conditions may lead to unexpected behavior. If LEVEL_1_RANGE_MIN_VALUE is empty but LEVEL_2_RANGE_MIN_VALUE contains data, then later if LEVEL_3_RANGE_MIN_VALUE also has data, it would overwrite the previously assigned value from LEVEL_2_RANGE_MIN_VALUE. Consider using else-if statements or breaking after first assignment.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "This cascade of conditions may lead to unexpected behavior. If LEVEL_1_RANGE_MIN_VALUE is empty but LEVEL_2_RANGE_MIN_VALUE contains data, then later if LEVEL_3_RANGE_MIN_VALUE also has data, it would overwrite the previously assigned value from LEVEL_2_RANGE_MIN_VALUE. Consider using else-if statements or breaking after first assignment.\n"
+    },
+    {
+      "id": "i8",
+      "file": "plugins/org.jkiss.dbeaver.ext.hana/src/org/jkiss/dbeaver/ext/hana/model/HANAPartition.java",
+      "line_start": 72,
+      "line_end": 79,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential logic issue: The cascading logic only checks if `rangeStart` is empty before fa…",
+      "description": "Potential logic issue: The cascading logic only checks if `rangeStart` is empty before falling back to the next level, but doesn't verify `rangeEnd`. If LEVEL_1_RANGE_MIN_VALUE has a value but LEVEL_1_RANGE_MAX_VALUE is empty/null, you could end up with a rangeStart without a corresponding rangeEnd. Consider checking both values or using a logical OR condition: `if (CommonUtils.isEmpty(this.rangeStart) || CommonUtils.isEmpty(this.rangeEnd))`",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential logic issue: The cascading logic only checks if `rangeStart` is empty before falling back to the next level, but doesn't verify `rangeEnd`. If LEVEL_1_RANGE_MIN_VALUE has a value but LEVEL_1_RANGE_MAX_VALUE is empty/null, you could end up with a rangeStart without a corresponding rangeEnd. Consider checking both values or using a logical OR condition: `if (CommonUtils.isEmpty(this.rangeStart) || CommonUtils.isEmpty(this.rangeEnd))`\n"
+    },
+    {
+      "id": "i9",
+      "file": "plugins/org.jkiss.dbeaver.ext.hana/src/org/jkiss/dbeaver/ext/hana/model/HANAPartition.java",
+      "line_start": 151,
+      "line_end": 154,
+      "category": "correctness",
+      "severity": null,
+      "title": "Consider implementing proper logic to determine if this partition actually has statistics…",
+      "description": "Consider implementing proper logic to determine if this partition actually has statistics available, rather than always returning false. If partitions never have statistics, consider adding a comment explaining why.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Consider implementing proper logic to determine if this partition actually has statistics available, rather than always returning false. If partitions never have statistics, consider adding a comment explaining why.\n"
+    },
+    {
+      "id": "i10",
+      "file": "plugins/org.jkiss.dbeaver.ext.hana/src/org/jkiss/dbeaver/ext/hana/model/HANATable.java",
+      "line_start": 142,
+      "line_end": 142,
+      "category": "maintainability",
+      "severity": null,
+      "title": "PartitionCache nested class should use private visibility instead of package-private to p…",
+      "description": "PartitionCache nested class should use private visibility instead of package-private to properly encapsulate implementation details.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "PartitionCache nested class should use private visibility instead of package-private to properly encapsulate implementation details."
+    },
+    {
+      "id": "i11",
+      "file": "plugins/org.jkiss.dbeaver.ext.hana/src/org/jkiss/dbeaver/ext/hana/model/HANATable.java",
+      "line_start": 156,
+      "line_end": 166,
+      "category": "correctness",
+      "severity": null,
+      "title": "Logic error: The null check for dbResult is placed after it has already been used in JDBC…",
+      "description": "Logic error: The null check for dbResult is placed after it has already been used in JDBCUtils.safeGetInt(). If dbResult is null, the safeGetInt call will throw a NullPointerException before reaching the null check. The null check should be moved before any usage of dbResult, or removed entirely if dbResult is guaranteed to be non-null by the framework.\n\n```suggestion\n        protected HANAPartition fetchObject(\n            @NotNull JDBCSession session,\n            @NotNull HANATable table,\n            @NotNull JDBCResultSet dbResult\n        ) throws SQLException, DBException {\n            int partition_id = JDBCUtils.safeGetInt(dbResult, \"PART_ID\");\n            return new HANAPartition(table, partition_id, dbResult);\n        }\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Logic error: The null check for dbResult is placed after it has already been used in JDBCUtils.safeGetInt(). If dbResult is null, the safeGetInt call will throw a NullPointerException before reaching the null check. The null check should be moved before any usage of dbResult, or removed entirely if dbResult is guaranteed to be non-null by the framework.\n\n```suggestion\n        protected HANAPartition fetchObject(\n            @NotNull JDBCSession session,\n            @NotNull HANATable table,\n            @NotNull JDBCResultSet dbResult\n        ) throws SQLException, DBException {\n            int partition_id = JDBCUtils.safeGetInt(dbResult, \"PART_ID\");\n            return new HANAPartition(table, partition_id, dbResult);\n        }\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "plugins/org.jkiss.dbeaver.ext.hana/src/org/jkiss/dbeaver/ext/hana/model/HANAPartition.java",
+      "line_start": 51,
+      "line_end": 53,
+      "description": "`totalSize/mainSize/deltaSize` are `BigDecimal` and may be `null` if the underlying columns are NULL. Mark getters/fields as `@Nullable` (or return 0) to avoid surprises in property rendering/formatters. Some formatters assume non-null values and may throw at runtime.\n\n```suggestion\n    private @Nullable BigDecimal totalSize;\n    private @Nullable BigDecimal mainSize;\n    private @Nullable BigDecimal deltaSize;\n```"
+    },
+    {
+      "file": "plugins/org.jkiss.dbeaver.ext.hana/src/org/jkiss/dbeaver/ext/hana/model/HANAPartition.java",
+      "line_start": 171,
+      "line_end": 179,
+      "description": "`DBSTablePartition#getPartitionParent()` typically should return the parent partition when `isSubPartition()` is true. Returning `null` unconditionally is fine only if this object can never represent a sub-partition. Consider either (1) making this explicit by documenting/encoding that HANA partitions are never sub-partitions, or (2) wiring real hierarchy support if HANA exposes sub-partitions. Otherwise, consumers may NPE or show incorrect tree structures when they expect a non-null parent for sub-partitions.\n\n```suggestion\n    @Override\n    public boolean isSubPartition() {\n        return false;\n    }\n\n    @Override\n    public @Nullable DBSTablePartition getPartitionParent() {\n        return null;\n    }\n```"
+    },
+    {
+      "file": "plugins/org.jkiss.dbeaver.ext.hana/src/org/jkiss/dbeaver/ext/hana/model/HANAPartition.java",
+      "line_start": 172,
+      "line_end": 177,
+      "description": "The `getPartitionParent()` method is declared but lacks an implementation body, resulting in invalid Java syntax that will fail to compile. This method should return null since `isSubPartition()` consistently indicates top-level partitions."
+    },
+    {
+      "file": "plugins/org.jkiss.dbeaver.ext.hana/src/org/jkiss/dbeaver/ext/hana/model/HANATable.java",
+      "line_start": 73,
+      "line_end": 74,
+      "description": "The getName method incorrectly includes unnecessary annotations (@NotNull, @Override, and @Property) that conflict with standard override practices and property framework requirements."
+    },
+    {
+      "file": "plugins/org.jkiss.dbeaver.ext.hana/src/org/jkiss/dbeaver/ext/hana/model/HANATable.java",
+      "line_start": 137,
+      "line_end": 140,
+      "description": "The new `partitions` property is added on `HANATable` (via `getPartitions`). However, the navigator tree in plugin.xml uses `<folder type=\"...HANAPartition\" ... property=\"partitions\">`, which means it will try to show a partitions-folder under *partition objects*, not under tables. This likely prevents partitions from appearing under normal tables.\n\nConsider changing the folder `type` to `org.jkiss.dbeaver.ext.hana.model.HANATable` (or the actual table class used in the navigator) so that the `partitions` collection is resolved from the table object.\n\n(If this is intentional, please double-check the expected object graph; currently `HANANotPartitionedTable` also suggests partitions are a table child.)"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/dbeaver/dbeaver/pull/36789). Upstream base 8627b84646d4ffa6a36c54e9cd5edec11035d945 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 294. Severity absent in the source. i1: AI comment (Gemini-3-Pro), File Level; i2: AI comment (GPT-5.2), Diff Level; i3: human comment, File Level; i4: AI comment (GPT-5.2), File Level; i5: AI comment (Gemini-3-Pro), File Level; i6: AI comment (GLM-4.7), Diff Level; i7: AI comment (Qwen-Coder-480B), Diff Level; i8: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i9: AI comment (Qwen-Coder-480B), Diff Level; i10: human comment, Diff Level; i11: AI comment (GLM-4.7), Diff Level"
+}

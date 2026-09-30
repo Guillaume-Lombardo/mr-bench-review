@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-043",
+  "language": "typescript",
+  "size": "medium",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-043/base",
+  "head_branch": "bench/curated/case-043/head",
+  "base_sha": "3b31d12ad2853dc056dc1c99fc254697f1d3ae3f",
+  "head_sha": "f7af842f689c0669bf10eaecc76586fff727d0d9",
+  "mr_title": "fix: incorrect table alias in insert orUpdate with Postgres driver",
+  "mr_description": "* fix: resolve issues in insert query orUpdate method with postgres driver\n\nThis fix make use of table name alias in WHERE clause of onUpdate method with postgres driver to avoid throwing error\n\n* test: update insert on conflict test\n\n---------",
+  "origin": {
+    "repository": "https://github.com/typeorm/typeorm",
+    "commit": "72c6991680b39a39799c005914e16b127c8ab805",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/query-builder/InsertQueryBuilder.ts",
+      "line_start": 593,
+      "line_end": 593,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Upsert condition qualifies columns with an alias the statement does not declare",
+      "description": "The ON CONFLICT ... WHERE clause now always qualifies columns with the escaped alias; when no alias is set the alias equals the (schema-qualified) table name and `\"schema.table\".\"col\"` is not a valid reference, so upsert/orUpdate fails on PostgreSQL for entities with a schema.\n\nINSERT statements only introduce an alias when one differs from the main table name. For entities declared with a schema and the default alias, the generated `\"schema.table\".\"column\" IS DISTINCT FROM EXCLUDED.\"column\"` refers to a relation that does not exist in the statement (PostgreSQL: missing FROM-clause entry). The qualifier must be the alias only when it differs from the table name, otherwise the escaped table name.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/typeorm/typeorm/commit/72c6991680b39a39799c005914e16b127c8ab805. Primary issue confirmed by the later upstream fix https://github.com/typeorm/typeorm/commit/2bfa300996110d2ed34b8d190e39c0eeeff24fe7; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

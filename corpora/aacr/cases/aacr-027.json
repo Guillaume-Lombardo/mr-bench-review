@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-027",
+  "language": "go",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-027/base",
+  "head_branch": "bench/aacr/aacr-027/head",
+  "base_sha": "c837515e22290c4b179e4a41ac2e9ccfdf5d99eb",
+  "head_sha": "4340ed8cd29532820f4a3f46b2d4175025f6c29e",
+  "mr_title": "wrap the logger with contextLogger to populate traceID from context",
+  "mr_description": "- wrap the logger with contextLogger to populate traceID from context\n- fix incorrect traceID's coming in custom logs\n- resolve multiple traceID from error logs\n- fix issue with system logs having traceID's\n- fix issue with system logs having traceID's\n- refactor code\n- change the color of traceID's to grey\n- Merge branch 'development' of github.com:gofr-dev/gofr into fix/user_logs\n- add tests for context logger\n- Merge branch 'development' into fix/user_logs\n- rename files\n- Merge branch 'fix/user_logs' of github.com:gofr-dev/gofr into fix/user_logs",
+  "origin": {
+    "repository": "https://github.com/gofr-dev/gofr",
+    "commit": "5e284aec0447be34c96a252e959067c8bcd9cd4c",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/gofr-dev/gofr/pull/1696",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "pkg/gofr/handler.go",
+      "line_start": 66,
+      "line_end": 73,
+      "category": "correctness",
+      "severity": null,
+      "title": "Concurrent modification of the shared container logger without synchronization risks trac…",
+      "description": "Concurrent modification of the shared container logger without synchronization risks trace ID leakage across requests due to unsynchronized overwrites during request handling.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Concurrent modification of the shared container logger without synchronization risks trace ID leakage across requests due to unsynchronized overwrites during request handling."
+    },
+    {
+      "id": "i2",
+      "file": "pkg/gofr/handler.go",
+      "line_start": 86,
+      "line_end": 91,
+      "category": "correctness",
+      "severity": null,
+      "title": "Due to the race condition mentioned above, accessing `h.container.Logger` here is unsafe…",
+      "description": "Due to the race condition mentioned above, accessing `h.container.Logger` here is unsafe and incorrect. It should use the local `ctxLogger` instance created for this request.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Due to the race condition mentioned above, accessing `h.container.Logger` here is unsafe and incorrect. It should use the local `ctxLogger` instance created for this request.\n"
+    },
+    {
+      "id": "i3",
+      "file": "pkg/gofr/logging/ctx_logger.go",
+      "line_start": 37,
+      "line_end": 37,
+      "category": "correctness",
+      "severity": null,
+      "title": "**Incorrect Trace Info Injection for Formatted Logging Functions**",
+      "description": "**Incorrect Trace Info Injection for Formatted Logging Functions**\n\nThe formatted logging methods (Debugf, Logf, Infof, Noticef, Warnf, Errorf, Fatalf) are incorrectly calling `withTraceInfo(args...)` which appends a trace ID map to the variadic arguments. \n\n**Problem:** Format strings expect a specific number of arguments. Adding an extra map argument will cause format string mismatches and incorrect output.\n\nFor example:\n```go\nlogger.Infof(\"User %s logged in\", \"john\")\n// becomes: fmt.Sprintf(\"User %s logged in\", \"john\", map[string]any{\"__trace_id__\": \"...\"})\n// This produces: \"User john logged in%!(EXTRA map[string]interface {}={...})\"\n```\n\n**Suggested Fix:**\n\nThe trace ID should be injected differently for formatted vs non-formatted logging. Either:\n1. Modify the base logger's formatted functions to handle trace metadata separately, OR\n2. Don't inject trace info for formatted logging functions (only for non-formatted ones)\n\n```\nFix pkg/gofr/logging/ctx_logger.go:37-52: Remove trace info injection from formatted logging functions (lines 37, 39, 41, 43-45, 48, 50, 52). The withTraceInfo method appends a map to args, which breaks format string expectations. Only non-formatted logging functions (Debug, Log, Info, Notice, Warn, Error, Fatal) should call withTraceInfo.\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "**Incorrect Trace Info Injection for Formatted Logging Functions**\n\nThe formatted logging methods (Debugf, Logf, Infof, Noticef, Warnf, Errorf, Fatalf) are incorrectly calling `withTraceInfo(args...)` which appends a trace ID map to the variadic arguments. \n\n**Problem:** Format strings expect a specific number of arguments. Adding an extra map argument will cause format string mismatches and incorrect output.\n\nFor example:\n```go\nlogger.Infof(\"User %s logged in\", \"john\")\n// becomes: fmt.Sprintf(\"User %s logged in\", \"john\", map[string]any{\"__trace_id__\": \"...\"})\n// This produces: \"User john logged in%!(EXTRA map[string]interface {}={...})\"\n```\n\n**Suggested Fix:**\n\nThe trace ID should be injected differently for formatted vs non-formatted logging. Either:\n1. Modify the base logger's formatted functions to handle trace metadata separately, OR\n2. Don't inject trace info for formatted logging functions (only for non-formatted ones)\n\n```\nFix pkg/gofr/logging/ctx_logger.go:37-52: Remove trace info injection from formatted logging functions (lines 37, 39, 41, 43-45, 48, 50, 52). The withTraceInfo method appends a map to args, which breaks format string expectations. Only non-formatted logging functions (Debug, Log, Info, Notice, Warn, Error, Fatal) should call withTraceInfo.\n```"
+    },
+    {
+      "id": "i4",
+      "file": "pkg/gofr/logging/logger.go",
+      "line_start": 254,
+      "line_end": 264,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential logic issue: this extracts trace IDs only when the arg is exactly of type `map[…",
+      "description": "Potential logic issue: this extracts trace IDs only when the arg is exactly of type `map[string]any`. If callers pass `map[string]string`, `map[string]interface{}` (pre-1.18 aliasing), or a typed map, the type assertion will fail and trace_id will never be set. Consider supporting more map types or a small struct/key-value wrapper, or using reflection to read the `__trace_id__` key safely.\nAlso note: if multiple args include `__trace_id__`, later ones are kept in output (since only the first is filtered). If the intent is to remove all trace metadata, filter all such maps after first extraction.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential logic issue: this extracts trace IDs only when the arg is exactly of type `map[string]any`. If callers pass `map[string]string`, `map[string]interface{}` (pre-1.18 aliasing), or a typed map, the type assertion will fail and trace_id will never be set. Consider supporting more map types or a small struct/key-value wrapper, or using reflection to read the `__trace_id__` key safely.\nAlso note: if multiple args include `__trace_id__`, later ones are kept in output (since only the first is filtered). If the intent is to remove all trace metadata, filter all such maps after first extraction."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/gofr-dev/gofr/pull/1696). Upstream base 92564a7accc4dc1e7570c3dc044b6250510e1177 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 356. Severity absent in the source. i1: human comment, Repo Level; i2: AI comment (Gemini-3-Pro), File Level; i3: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i4: AI comment (GPT-5.2), File Level"
+}

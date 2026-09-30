@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-015",
+  "language": "javascript",
+  "size": "small",
+  "kind": "clean",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-015/base",
+  "head_branch": "bench/review-bench/review-bench-015/head",
+  "base_sha": "599031c7ce6a5b095b950a68a34a6e4544d738f3",
+  "head_sha": "4c306c6512c925580bcd3d31ba6962fe055029e9",
+  "mr_title": "feat: allow conditional revalidation for QUERY requests",
+  "mr_description": "* feat: allow conditional revalidation for QUERY requests\n\nreq.fresh only validated freshness for GET and HEAD, so QUERY responses never returned 304 despite a matching If-None-Match. QUERY is a safe, idempotent, cacheable method that supports conditional requests, so include it in the freshness check.\n\n* docs: include history\n\n---------",
+  "origin": {
+    "repository": "https://github.com/expressjs/express",
+    "commit": "ae6dd37680e3a00618d6c8a3e522f0ee4eeba1a4",
+    "license": "MIT",
+    "source_case": "express-conditional-revalidation-query",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/express-conditional-revalidation-query"
+  },
+  "expected_issues": [],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench express-conditional-revalidation-query (corpus corpus/v0.1). Introducing PR https://github.com/expressjs/express/pull/7366."
+}

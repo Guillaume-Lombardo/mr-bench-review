@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-025",
+  "language": "go",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-025/base",
+  "head_branch": "bench/review-bench/review-bench-025/head",
+  "base_sha": "d20c4fa3704e6ccdadb11e8c7feaee785fb2686a",
+  "head_sha": "47f6b7588d8bfff5daebcb919d865aa9eef7966f",
+  "mr_title": "fix for comparing kinds",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/stretchr/testify",
+    "commit": "1ecda4918e78da66a7b6f877b913eb402b3a47c5",
+    "license": "MIT",
+    "source_case": "testify-isnil-unsafepointer",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/testify-isnil-unsafepointer"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "assert/assertions.go",
+      "line_start": 445,
+      "line_end": 445,
+      "category": "correctness",
+      "severity": null,
+      "title": "isNil's list of nilable reflect.Kinds omits reflect.UnsafePointer, so a nil unsafe.Pointe…",
+      "description": "isNil's list of nilable reflect.Kinds omits reflect.UnsafePointer, so a nil unsafe.Pointer value is not classified as nil and Nil/NotNil assertions misjudge it.\n\nProvenance: fix PR #1319 (commit 9acc222).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": "isNil's list of nilable reflect.Kinds omits reflect.UnsafePointer, so a nil unsafe.Pointer value is not classified as nil and Nil/NotNil assertions misjudge it."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench testify-isnil-unsafepointer (corpus corpus/v0.1). Introducing PR https://github.com/stretchr/testify/pull/707. Fix https://github.com/stretchr/testify/commit/9acc22213e5fbec050904b9886c6df042188cad5 (PR #1319). Category defaulted to correctness and severity left null because the source has neither; to be reviewed. Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 533-533, review-head lines 445-445)"
+}

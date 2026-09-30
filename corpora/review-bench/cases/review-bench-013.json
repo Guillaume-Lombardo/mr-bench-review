@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-013",
+  "language": "go",
+  "size": "small",
+  "kind": "clean",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-013/base",
+  "head_branch": "bench/review-bench/review-bench-013/head",
+  "base_sha": "65005bf802eb36f565f6ced1f12610cf2a4c5414",
+  "head_sha": "8c821e32b2e3e7e10bc86214e0463b3192683105",
+  "mr_title": "feat: make InitDefaultCompletionCmd public",
+  "mr_description": "* feat: make InitDefaultCompletionCmd public\n\n* PR comments\n\n* Update man_docs_test.go\n\n* Update README.md",
+  "origin": {
+    "repository": "https://github.com/spf13/cobra",
+    "commit": "860791844ed3a2e544a9b9bbbcb14144a948ad20",
+    "license": "Apache-2.0",
+    "source_case": "cobra-initdefaultcompletioncmd-public",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/cobra-initdefaultcompletioncmd-public"
+  },
+  "expected_issues": [],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench cobra-initdefaultcompletioncmd-public (corpus corpus/v0.1). Introducing PR https://github.com/spf13/cobra/pull/1467."
+}

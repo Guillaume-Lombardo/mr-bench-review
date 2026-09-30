@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-018",
+  "language": "csharp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-018/base",
+  "head_branch": "bench/aacr/aacr-018/head",
+  "base_sha": "45e6f9aa209d54f5e699ce752014e283281e3c9e",
+  "head_sha": "30c944e1eaa0351befeb7e73b771a8afdb4c20f2",
+  "mr_title": "Filter out nested modules from tab completion results for `Get-Module`",
+  "mr_description": "- Filter out nested modules from tab completion results for `Get-Module`\n- Remove unneeded using directive",
+  "origin": {
+    "repository": "https://github.com/PowerShell/PowerShell",
+    "commit": "ec952ce3b70c87885ed756ffca2bec128f07c51b",
+    "license": "MIT",
+    "source_case": "https://github.com/PowerShell/PowerShell/pull/24910",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/System.Management.Automation/engine/CommandCompletion/CompletionCompleters.cs",
+      "line_start": 474,
+      "line_end": 474,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The comment for nested module filtering incorrectly implies PSReadLine-specific behavior;…",
+      "description": "The comment for nested module filtering incorrectly implies PSReadLine-specific behavior; update to explicitly state the logic applies to any module triggering completion.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The comment for nested module filtering incorrectly implies PSReadLine-specific behavior; update to explicitly state the logic applies to any module triggering completion."
+    },
+    {
+      "id": "i2",
+      "file": "src/System.Management.Automation/engine/CommandCompletion/CompletionCompleters.cs",
+      "line_start": 474,
+      "line_end": 479,
+      "category": "correctness",
+      "severity": null,
+      "title": "The HashSet is initialized with PSModuleInfo objects from `curModule.NestedModules`, but…",
+      "description": "The HashSet is initialized with PSModuleInfo objects from `curModule.NestedModules`, but since PSModuleInfo doesn't override Equals/GetHashCode, the HashSet uses reference equality for the Contains check. The `Get-Module` command results may contain different PSModuleInfo instances (different object references) for the same logical module, causing the Contains check to fail even when the module should be filtered out.\n\nConsider using the existing `PSModuleInfoComparer` class or comparing by module name/path to ensure proper filtering:\n\n```csharp\nnestedModulesToFilterOut = new HashSet<PSModuleInfo>(curModule.NestedModules, PSModuleInfoComparer.Instance);\n```\n\nOr if `PSModuleInfoComparer` doesn't have a singleton instance, create a new instance:\n```csharp\nnestedModulesToFilterOut = new HashSet<PSModuleInfo>(curModule.NestedModules, new PSModuleInfoComparer());\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The HashSet is initialized with PSModuleInfo objects from `curModule.NestedModules`, but since PSModuleInfo doesn't override Equals/GetHashCode, the HashSet uses reference equality for the Contains check. The `Get-Module` command results may contain different PSModuleInfo instances (different object references) for the same logical module, causing the Contains check to fail even when the module should be filtered out.\n\nConsider using the existing `PSModuleInfoComparer` class or comparing by module name/path to ensure proper filtering:\n\n```csharp\nnestedModulesToFilterOut = new HashSet<PSModuleInfo>(curModule.NestedModules, PSModuleInfoComparer.Instance);\n```\n\nOr if `PSModuleInfoComparer` doesn't have a singleton instance, create a new instance:\n```csharp\nnestedModulesToFilterOut = new HashSet<PSModuleInfo>(curModule.NestedModules, new PSModuleInfoComparer());\n```"
+    },
+    {
+      "id": "i3",
+      "file": "src/System.Management.Automation/engine/CommandCompletion/CompletionCompleters.cs",
+      "line_start": 475,
+      "line_end": 479,
+      "category": "correctness",
+      "severity": null,
+      "title": "`curModule` is derived from `context.ExecutionContext.EngineSessionState.Module`, but the…",
+      "description": "`curModule` is derived from `context.ExecutionContext.EngineSessionState.Module`, but the comment says PSReadLine’s SessionState is often the engine session state. If this assumption is wrong for some invocation paths (e.g., different host / runspace), this could filter out unrelated nested modules. Consider tightening the condition (e.g., only apply when `curModule.Name` equals `PSReadLine` or when the module search provider indicates the originating session state) or add a targeted test to cover both PSReadLine-triggered completion and global `TabExpansion2` completion.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`curModule` is derived from `context.ExecutionContext.EngineSessionState.Module`, but the comment says PSReadLine’s SessionState is often the engine session state. If this assumption is wrong for some invocation paths (e.g., different host / runspace), this could filter out unrelated nested modules. Consider tightening the condition (e.g., only apply when `curModule.Name` equals `PSReadLine` or when the module search provider indicates the originating session state) or add a targeted test to cover both PSReadLine-triggered completion and global `TabExpansion2` completion."
+    },
+    {
+      "id": "i4",
+      "file": "src/System.Management.Automation/engine/CommandCompletion/CompletionCompleters.cs",
+      "line_start": 478,
+      "line_end": 478,
+      "category": "correctness",
+      "severity": null,
+      "title": "**Issue: Potential null reference exception**",
+      "description": "**Issue: Potential null reference exception**\n\nThe code accesses `curModule.NestedModules.Count` without checking if `NestedModules` itself is null. While the null-conditional operator `?.` protects against `curModule` being null, if `curModule` is not null but `NestedModules` is null, this will throw a NullReferenceException.\n\n**Recommendation:** Add a null check for `NestedModules`:\n```csharp\nif (loadedModulesOnly && curModule?.NestedModules is { Count: > 0 })\n{\n    nestedModulesToFilterOut = new(curModule.NestedModules);\n}\n```\n\nThis uses pattern matching to check both that `NestedModules` is not null and has a count greater than 0.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "**Issue: Potential null reference exception**\n\nThe code accesses `curModule.NestedModules.Count` without checking if `NestedModules` itself is null. While the null-conditional operator `?.` protects against `curModule` being null, if `curModule` is not null but `NestedModules` is null, this will throw a NullReferenceException.\n\n**Recommendation:** Add a null check for `NestedModules`:\n```csharp\nif (loadedModulesOnly && curModule?.NestedModules is { Count: > 0 })\n{\n    nestedModulesToFilterOut = new(curModule.NestedModules);\n}\n```\n\nThis uses pattern matching to check both that `NestedModules` is not null and has a count greater than 0."
+    },
+    {
+      "id": "i5",
+      "file": "src/System.Management.Automation/engine/CommandCompletion/CompletionCompleters.cs",
+      "line_start": 489,
+      "line_end": 489,
+      "category": "maintainability",
+      "severity": null,
+      "title": "**Code structure issue: Unnecessary nested continue statement**",
+      "description": "**Code structure issue: Unnecessary nested continue statement**\n\nThe restructured code creates an unnecessary nesting level. The original code had a single condition with a `continue` statement. Now there's an outer `if` with a `continue`, followed by an inner `if` with another `continue`. This makes the code harder to follow.\n\n**Recommendation:** Combine both conditions using the logical AND operator to maintain a flat structure:\n```csharp\nif ((completionText.Contains('.')\n    && !shortNamePattern.IsMatch(completionText.Substring(completionText.LastIndexOf('.') + 1))\n    && !shortNamePattern.IsMatch(completionText))\n    || (nestedModulesToFilterOut is not null && nestedModulesToFilterOut.Contains(moduleInfo)))\n{\n    continue;\n}\n```\n\nOr keep them as separate if statements at the same level without the extra braces.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "**Code structure issue: Unnecessary nested continue statement**\n\nThe restructured code creates an unnecessary nesting level. The original code had a single condition with a `continue` statement. Now there's an outer `if` with a `continue`, followed by an inner `if` with another `continue`. This makes the code harder to follow.\n\n**Recommendation:** Combine both conditions using the logical AND operator to maintain a flat structure:\n```csharp\nif ((completionText.Contains('.')\n    && !shortNamePattern.IsMatch(completionText.Substring(completionText.LastIndexOf('.') + 1))\n    && !shortNamePattern.IsMatch(completionText))\n    || (nestedModulesToFilterOut is not null && nestedModulesToFilterOut.Contains(moduleInfo)))\n{\n    continue;\n}\n```\n\nOr keep them as separate if statements at the same level without the extra braces."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/System.Management.Automation/engine/CommandCompletion/CompletionCompleters.cs",
+      "line_start": 496,
+      "line_end": 500,
+      "description": "`nestedModulesToFilterOut.Contains(moduleInfo)` relies on `PSModuleInfo` reference equality. If the module objects coming from `psObjects` are not the same instances as those in `curModule.NestedModules`, the filter won’t work (or may behave inconsistently). Consider filtering by a stable identity (e.g., `moduleInfo.Path`, `moduleInfo.Name` + `Guid`, or `moduleInfo.ModuleBase`), or build the `HashSet` with an explicit comparer that matches how `PSModuleInfo` should be identified here."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/PowerShell/PowerShell/pull/24910). Upstream base 311674b9a5e52091635d0e9d4bcfaec7aaa6e8f1 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 23. Severity absent in the source. i1: human comment, File Level; i2: AI comment (GLM-4.7), Repo Level; i3: AI comment (GPT-5.2), Diff Level; i4: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i5: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level"
+}

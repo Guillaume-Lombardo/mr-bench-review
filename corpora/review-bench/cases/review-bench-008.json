@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-008",
+  "language": "go",
+  "size": "small",
+  "kind": "clean",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-008/base",
+  "head_branch": "bench/review-bench/review-bench-008/head",
+  "base_sha": "a75c824eba3d84d5b8783c3143bcdb76f4b3971a",
+  "head_sha": "7dcc04c9774310be80f36c547d44657e761b4fa6",
+  "mr_title": "Use strings.ReplaceAll where applicable",
+  "mr_description": "We already use it in the codebase, it's been around since 1.12, and is\nconsidered best practice since it avoids hardcoding a magic number.",
+  "origin": {
+    "repository": "https://github.com/go-chi/chi",
+    "commit": "142fada90f83e2f41f29552110d342de09f96781",
+    "license": "MIT",
+    "source_case": "chi-replaceall-refactor",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/chi-replaceall-refactor"
+  },
+  "expected_issues": [],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench chi-replaceall-refactor (corpus corpus/v0.1). Introducing PR https://github.com/go-chi/chi/pull/1046."
+}

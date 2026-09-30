@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-006",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-006/base",
+  "head_branch": "bench/curated/case-006/head",
+  "base_sha": "ff61f05e6281a2985ca09724c67e9e1e713ec9b7",
+  "head_sha": "45c06401ffc0bb39638fce0d4e226ac77359af4f",
+  "mr_title": "Made max_query_params respect SQLITE_LIMIT_VARIABLE_NUMBER.",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/django/django",
+    "commit": "358fd21c47cdf7bda520ce73c5cfd82bba57827b",
+    "license": "BSD-3-Clause",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "django/db/backends/sqlite3/features.py",
+      "line_start": 151,
+      "line_end": 151,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "max_query_params dereferences a connection that may not be open",
+      "description": "max_query_params dereferences self.connection.connection, which is None until a connection has been opened, so accessing the feature before the first query raises AttributeError.\n\nmax_query_params used to be a class constant and is read by code paths (bulk operations, batching, checks) that may run before any query was executed. `self.connection.connection` is the raw DB-API connection and is None when not yet connected. The property must call self.connection.ensure_connection() first.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/358fd21c47cdf7bda520ce73c5cfd82bba57827b. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/847b2badccbd87fc3e657725eb316b092265912d; its regression test reproduces the problem on this head. Curator difficulty: easy. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-085",
+  "language": "java",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-085/base",
+  "head_branch": "bench/curated/case-085/head",
+  "base_sha": "5a818dca4650b3b71899d131ec93966ce58f49d5",
+  "head_sha": "ac14bb2e44291ec23451736ec3aa3ed699f90b2d",
+  "mr_title": "Start building against Spring LDAP 4.1.0-M1 snapshots",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/spring-projects/spring-boot",
+    "commit": "d26b6895efe7e0c2bc69d1b4cd69746a6a26f3f1",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "module/spring-boot-ldap/src/main/java/org/springframework/boot/ldap/health/LdapHealthIndicator.java",
+      "line_start": 53,
+      "line_end": 55,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Health is not UP when the LDAP version is unavailable",
+      "description": "builder.up() is now only called when the LDAP protocol version can be read, so a reachable LDAP server that does not expose the version is reported with status UNKNOWN instead of UP.\n\nThe null-check added for the new nullability contract wraps the whole `builder.up().withDetail(...)` call. The health check succeeded (the read-only operation did not throw), so the status must be UP regardless; only the 'version' detail should be conditional.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/spring-projects/spring-boot/commit/d26b6895efe7e0c2bc69d1b4cd69746a6a26f3f1. Primary issue confirmed by the later upstream fix https://github.com/spring-projects/spring-boot/commit/d5ace369bdff311f764be572ff1c2f92a5a62484; its regression test reproduces the problem on this head. Curator difficulty: easy. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

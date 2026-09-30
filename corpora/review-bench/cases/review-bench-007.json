@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-007",
+  "language": "go",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-007/base",
+  "head_branch": "bench/review-bench/review-bench-007/head",
+  "base_sha": "2219bd35481ee3bd5e390ae3466084af51e75ab1",
+  "head_sha": "80cf52bf66ccfd7a81224ab02a83bf869559a684",
+  "mr_title": "middleware.Recoverer, now with pretty stack traces",
+  "mr_description": "middleware.Recoverer, now with pretty stack traces",
+  "origin": {
+    "repository": "https://github.com/go-chi/chi",
+    "commit": "98de1d836ac74406c388378b7ff29f03d185f56d",
+    "license": "MIT",
+    "source_case": "chi-recoverer-negative-index",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/chi-recoverer-negative-index"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "middleware/recoverer.go",
+      "line_start": 131,
+      "line_end": 135,
+      "category": "correctness",
+      "severity": null,
+      "title": "prettyStack.decorateFuncCallLine slices pkg/method with strings.Index results and no -1 g…",
+      "description": "prettyStack.decorateFuncCallLine slices pkg/method with strings.Index results and no -1 guard; a stack line without a '.' separator (Go 1.17+ frames can be bare, e.g. 'panic') makes the code slice with a negative index and panic inside the panic-recovery middleware.\n\nProvenance: fix PR #633 body (commit 188a167): 'lines of the debug stack aren't guaranteed to contain a period ... don't attempt to slice with a negative index'.",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "middleware/recoverer.go",
+          "line_start": 139,
+          "line_end": 141
+        }
+      ],
+      "source_category": null,
+      "source_text": "prettyStack.decorateFuncCallLine slices pkg/method with strings.Index results and no -1 guard; a stack line without a '.' separator (Go 1.17+ frames can be bare, e.g. 'panic') makes the code slice with a negative index and panic inside the panic-recovery middleware."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench chi-recoverer-negative-index (corpus corpus/v0.1). Introducing PR https://github.com/go-chi/chi/pull/496. Fix https://github.com/go-chi/chi/commit/188a1675b7071f85360770e66daab3a51a977eeb (PR #633). Category defaulted to correctness and severity left null because the source has neither; to be reviewed. Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 127-131, review-head lines 131-135) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 135-137, review-head lines 139-141)"
+}

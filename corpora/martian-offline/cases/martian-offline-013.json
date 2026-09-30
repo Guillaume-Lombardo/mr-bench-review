@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "corpus": "martian-offline",
+  "id": "martian-offline-013",
+  "language": "ruby",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/martian-offline/martian-offline-013/base",
+  "head_branch": "bench/martian-offline/martian-offline-013/head",
+  "base_sha": "5068fba94524f51d454dd2397237e51dd3641cc6",
+  "head_sha": "27adea5bff123b0fc8698461a476de7273f9a842",
+  "mr_title": "Add comprehensive email validation for blocked users",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/ai-code-review-evaluation/discourse-graphite",
+    "commit": "5f8a130277dbddc95d133cd2832be639baf89213",
+    "license": "GPL-2.0-or-later",
+    "source_case": "https://github.com/ai-code-review-evaluation/discourse-graphite/pull/3",
+    "source_url": "https://github.com/withmartian/code-review-benchmark/blob/e616e849755441da38f18bf3adba2c9583b03803/offline/golden_comments/discourse.json"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "BlockedEmail.should_block_email?",
+      "description": "BlockedEmail.should_block_email? method has side effects during a read operation - it updates statistics even when just checking if an email should be blocked. This could cause race conditions in concurrent environments and makes the method name misleading.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "concurrency",
+      "source_text": "BlockedEmail.should_block_email? method has side effects during a read operation - it updates statistics even when just checking if an email should be blocked. This could cause race conditions in concurrent environments and makes the method name misleading."
+    },
+    {
+      "id": "i2",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "The regex pattern @(#{domains}) in email_in_restriction_setting?",
+      "description": "The regex pattern @(#{domains}) in email_in_restriction_setting? method only matches domain suffixes, not full domains with proper boundary anchoring. An attacker can register evil.example.com to bypass a whitelist entry for example.com.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "bug",
+      "source_text": "The regex pattern @(#{domains}) in email_in_restriction_setting? method only matches domain suffixes, not full domains with proper boundary anchoring. An attacker can register evil.example.com to bypass a whitelist entry for example.com."
+    },
+    {
+      "id": "i3",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "security",
+      "severity": "critical",
+      "title": "The case-sensitive email lookup in `BlockedEmail.should_block?` creates a bypass risk, al…",
+      "description": "The case-sensitive email lookup in `BlockedEmail.should_block?` creates a bypass risk, allowing 'User@Example.com' to bypass a block on 'user@example.com'. This can lead to unauthorized access to blocked users.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "security",
+      "source_text": "The case-sensitive email lookup in `BlockedEmail.should_block?` creates a bypass risk, allowing 'User@Example.com' to bypass a block on 'user@example.com'. This can lead to unauthorized access to blocked users."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/ai-code-review-evaluation/discourse-graphite/pull/3). Upstream base e25638dab0d4b98f99c8fe8976ccaae8f4fb9db3 (merge-base with the default branch, before the merge for merged PRs). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile Strict; i3: Martian profile Strict"
+}

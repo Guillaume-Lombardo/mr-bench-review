@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-070",
+  "language": "python",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-070/base",
+  "head_branch": "bench/curated/case-070/head",
+  "base_sha": "f4e10b804348e267d7a4bf9dbc3df7e5e2406154",
+  "head_sha": "fb31cf0a9070279f525a0a9800e27ca21b520610",
+  "mr_title": "Handle --version eagerly to avoid loading the entire infrastructure",
+  "mr_description": "Currently, handling `--version` in `pytest_cmdline_main` requires loading the entire infrastructure, which can be slow depending on the installed plugins.\n\nThis change introduces a marginal behavioral difference, though it should not cause any issues in practice.",
+  "origin": {
+    "repository": "https://github.com/pytest-dev/pytest",
+    "commit": "661682c25a9ff844a66ebd9b95d9925b8c4b65c8",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/_pytest/config/__init__.py",
+      "line_start": 154,
+      "line_end": 154,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Early version handling ignores the -V short option",
+      "description": "The early exit only recognises the long '--version' flag; the documented short alias '-V' now falls through to code paths that no longer print the version.\n\nVersion handling moved from helpconfig to an early check in main(), and the later fallbacks were rewritten around `--version`. `pytest -V` is an alias of `--version` but is not counted by `new_args.count(\"--version\")`, so `pytest -V` no longer shows the version information. Both spellings must be handled (e.g. count('--version') + count('-V') == 1).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/pytest-dev/pytest/commit/661682c25a9ff844a66ebd9b95d9925b8c4b65c8. Primary issue confirmed by the later upstream fix https://github.com/pytest-dev/pytest/commit/68a341f49596fa43c89e052d437723860b98a443; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

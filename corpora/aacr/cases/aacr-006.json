@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-006",
+  "language": "cpp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-006/base",
+  "head_branch": "bench/aacr/aacr-006/head",
+  "base_sha": "bea022c1baca7797cd166913cff1a2907b1926fe",
+  "head_sha": "3bb17e8c1b54f44acc6b10c2ba1aa0dbaa11651f",
+  "mr_title": "ReverseEngineering: Update UI strings for consistency",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/FreeCAD/FreeCAD",
+    "commit": "f8cd64328c49510285490dfd9872253ce7a53040",
+    "license": "LGPL-2.0-or-later",
+    "source_case": "https://github.com/FreeCAD/FreeCAD/pull/22235",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/Mod/ReverseEngineering/App/AppReverseEngineering.cpp",
+      "line_start": 1002,
+      "line_end": 1002,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Consider using standard ASCII characters for consistency and compatibility",
+      "description": "Consider using standard ASCII characters for consistency and compatibility. While the Unicode ellipsis is visually appealing, some systems or tools may not render it correctly.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Consider using standard ASCII characters for consistency and compatibility. While the Unicode ellipsis is visually appealing, some systems or tools may not render it correctly.\n"
+    },
+    {
+      "id": "i2",
+      "file": "src/Mod/ReverseEngineering/App/RegionGrowing.cpp",
+      "line_start": 58,
+      "line_end": 58,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Consider using std::make_shared instead of raw 'new' for improved safety and adherence to…",
+      "description": "Consider using std::make_shared instead of raw 'new' for improved safety and adherence to modern C++ practices.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Consider using std::make_shared instead of raw 'new' for improved safety and adherence to modern C++ practices.\n"
+    },
+    {
+      "id": "i3",
+      "file": "src/Mod/ReverseEngineering/Gui/AppReverseEngineeringGui.cpp",
+      "line_start": 85,
+      "line_end": 85,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Consider using standard ASCII triple-dot notation (...) instead of Unicode ellipsis (…) f…",
+      "description": "Consider using standard ASCII triple-dot notation (...) instead of Unicode ellipsis (…) for improved compatibility across various terminals and encodings.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Consider using standard ASCII triple-dot notation (...) instead of Unicode ellipsis (…) for improved compatibility across various terminals and encodings.\n"
+    },
+    {
+      "id": "i4",
+      "file": "src/Mod/ReverseEngineering/Gui/Command.cpp",
+      "line_start": 425,
+      "line_end": 425,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Tooltip text lacks specificity on segmentation criteria; update to state it creates separ…",
+      "description": "Tooltip text lacks specificity on segmentation criteria; update to state it creates separate mesh segments based on surface types per documentation.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Tooltip text lacks specificity on segmentation criteria; update to state it creates separate mesh segments based on surface types per documentation."
+    },
+    {
+      "id": "i5",
+      "file": "src/Mod/ReverseEngineering/Gui/Command.cpp",
+      "line_start": 602,
+      "line_end": 602,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Tooltip text should be updated to \"Performs Poisson surface reconstruction\" for clearer u…",
+      "description": "Tooltip text should be updated to \"Performs Poisson surface reconstruction\" for clearer user guidance.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Tooltip text should be updated to \"Performs Poisson surface reconstruction\" for clearer user guidance."
+    },
+    {
+      "id": "i6",
+      "file": "src/Mod/ReverseEngineering/Gui/Command.cpp",
+      "line_start": 636,
+      "line_end": 636,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Tooltip text uses a noun phrase instead of the expected action-oriented verb form; update…",
+      "description": "Tooltip text uses a noun phrase instead of the expected action-oriented verb form; update from \"Triangulation of structured point clouds\" to \"Triangulates structured point clouds\" for consistency with UI conventions.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Tooltip text uses a noun phrase instead of the expected action-oriented verb form; update from \"Triangulation of structured point clouds\" to \"Triangulates structured point clouds\" for consistency with UI conventions."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/Mod/ReverseEngineering/App/AppReverseEngineering.cpp",
+      "line_start": 1002,
+      "line_end": 1002,
+      "description": "Log message incorrectly uses \"ReverseEngineering\" without a space; should be \"Reverse Engineering\" to match the actual workbench name."
+    },
+    {
+      "file": "src/Mod/ReverseEngineering/App/RegionGrowing.cpp",
+      "line_start": 108,
+      "line_end": 108,
+      "description": "The change from \"doesn't\" to \"does not\" improves formality and readability of the error message."
+    },
+    {
+      "file": "src/Mod/ReverseEngineering/App/RegionGrowing.cpp",
+      "line_start": 108,
+      "line_end": 108,
+      "description": "Minor wording: consider simplifying the exception message for readability (e.g., remove repeated 'number of'). Current change fixes the contraction, which is good; optional improvement would be: \"Number of points does not match number of normals\" or \"Point count does not match normal count\".\n\n```suggestion\n        throw Base::RuntimeError(\"Number of points does not match number of normals\");\n```"
+    },
+    {
+      "file": "src/Mod/ReverseEngineering/Gui/Command.cpp",
+      "line_start": 82,
+      "line_end": 84,
+      "description": "Selection warning strings: replacing \"Please select ...\" with imperative \"Select ...\" is fine, but keep wording consistent across commands and translation contexts. Here the translate context key is \"Reen_ApproxSurface\" even inside CmdApproxCurve; confirm this is intentional (shared catalog) to avoid translators seeing misleading context."
+    },
+    {
+      "file": "src/Mod/ReverseEngineering/Gui/Command.cpp",
+      "line_start": 424,
+      "line_end": 425,
+      "description": "Potential i18n/style issue: Menu text is now Title Case (\"Mesh Segmentation…\", \"Manual Segmentation…\", \"From Components\", \"Wire From Mesh Boundary…\"). Confirm these match other workbenches’ conventions; otherwise prefer sentence case for menus to avoid mixed UI."
+    },
+    {
+      "file": "src/Mod/ReverseEngineering/Gui/FitBSplineSurface.cpp",
+      "line_start": 206,
+      "line_end": 206,
+      "description": "Missing definite article 'the' in user-facing message string; should be \"to get the local orientation\" instead of \"to get local orientation\"."
+    },
+    {
+      "file": "src/Mod/ReverseEngineering/Gui/FitBSplineSurface.ui",
+      "line_start": 13,
+      "line_end": 15,
+      "description": "UI string capitalization changes can break existing translations if your i18n workflow relies on exact source strings as keys (common with Qt Linguist .ts). Please confirm the corresponding translation files are updated, or consider keeping only truly necessary wording changes. Also ensure capitalization style is consistent across the ReverseEngineering workbench (e.g., Title Case vs sentence case)."
+    },
+    {
+      "file": "src/Mod/ReverseEngineering/Gui/FitBSplineSurface.ui",
+      "line_start": 86,
+      "line_end": 88,
+      "description": "Same as above for V-direction label: consider consistency with conventions and other UI pages/docs, and ensure translations are updated if needed."
+    },
+    {
+      "file": "src/Mod/ReverseEngineering/Gui/FitBSplineSurface.ui",
+      "line_start": 247,
+      "line_end": 247,
+      "description": "The UI string capitalization change here is inconsistent with the title case pattern applied across other UI strings in this file and other modified files (e.g., 'Fit B-Spline Surface', 'U-Direction', 'V-Direction', 'Create Placement'). 'Total weight' should be 'Total Weight' to maintain consistency.\n\n```suggestion\n            <string>Total Weight</string>\n```"
+    },
+    {
+      "file": "src/Mod/ReverseEngineering/Gui/SegmentationManual.ui",
+      "line_start": 98,
+      "line_end": 98,
+      "description": "Capitalization changed to Title Case. Verify consistency across the UI (other buttons/labels) and that accelerators/shortcuts (if any) are still correct."
+    },
+    {
+      "file": "src/Mod/ReverseEngineering/Gui/SegmentationManual.ui",
+      "line_start": 297,
+      "line_end": 297,
+      "description": "Reworded label improves readability, but consider whether ‘screen-facing’ is clear to the target users and whether it matches terminology used elsewhere (e.g., in docs/tooltips). Also ensure line-wrapping/layout still looks good in the UI at different font sizes/locales."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/FreeCAD/FreeCAD/pull/22235). Upstream base 730e07db5d2acafe7723eb89c83641375c375bc3 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 85. Severity absent in the source. i1: AI comment (Qwen-Coder-480B), Diff Level; i2: AI comment (Qwen-Coder-480B), File Level; i3: AI comment (Qwen-Coder-480B), Diff Level; i4: human comment, Diff Level; i5: human comment, Diff Level; i6: human comment, Diff Level"
+}

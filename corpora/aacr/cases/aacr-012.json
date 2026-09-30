@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-012",
+  "language": "go",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-012/base",
+  "head_branch": "bench/aacr/aacr-012/head",
+  "base_sha": "8e77c6cd5cddc82cb2918b0ae48603535f02fa4a",
+  "head_sha": "055f6300ab708ad79d5696523938f839fc529f4c",
+  "mr_title": "Clean up a bunch of Host-related code",
+  "mr_description": "- Clean up a bunch of Host-related code\n- Eliminate NewLine entirely\n- More removal",
+  "origin": {
+    "repository": "https://github.com/microsoft/typescript-go",
+    "commit": "ae447d3b2a6db00072941e1992a09981b6096061",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/microsoft/typescript-go/pull/1354",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "internal/execute/watch.go",
+      "line_start": 45,
+      "line_end": 48,
+      "category": "correctness",
+      "severity": null,
+      "title": "The change to `fmt.Fprintln` introduces an unintended space before the newline in build s…",
+      "description": "The change to `fmt.Fprintln` introduces an unintended space before the newline in build status messages due to automatic space insertion between arguments; revert to `fmt.Fprint` with explicit newline handling or use `fmt.Fprintf` to preserve original formatting.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The change to `fmt.Fprintln` introduces an unintended space before the newline in build status messages due to automatic space insertion between arguments; revert to `fmt.Fprint` with explicit newline handling or use `fmt.Fprintf` to preserve original formatting."
+    },
+    {
+      "id": "i2",
+      "file": "internal/execute/watcher.go",
+      "line_start": 83,
+      "line_end": 83,
+      "category": "correctness",
+      "severity": null,
+      "title": "The change to `fmt.Fprintln` introduces unintended spaces between arguments in the log me…",
+      "description": "The change to `fmt.Fprintln` introduces unintended spaces between arguments in the log message due to automatic space insertion. Replace with `fmt.Fprintf` using a single formatted string to preserve exact output structure.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The change to `fmt.Fprintln` introduces unintended spaces between arguments in the log message due to automatic space insertion. Replace with `fmt.Fprintf` using a single formatted string to preserve exact output structure."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "internal/execute/outputs.go",
+      "line_start": 101,
+      "line_end": 101,
+      "description": "fmt.Fprintln always writes '\\n'. If the rest of the code uses sys.NewLine() to control line endings, this introduces inconsistency. Prefer fmt.Fprint with sys.NewLine() (or explicitly write sys.NewLine())."
+    },
+    {
+      "file": "internal/execute/outputs.go",
+      "line_start": 147,
+      "line_end": 147,
+      "description": "Hardcoding \"\\n\" bypasses the System.NewLine() abstraction. If System.NewLine() is intended to normalize line endings per OS/host (e.g., \"\\r\\n\" on Windows) or per test harness, this change can cause inconsistent output formatting. Prefer using sys.NewLine() consistently here unless the output spec requires LF-only.\n\n```suggestion\n header = append(header, message+sys.NewLine(), sys.NewLine())\n```"
+    },
+    {
+      "file": "internal/execute/outputs.go",
+      "line_start": 159,
+      "line_end": 159,
+      "description": "Same issue: using \"\\n\" directly makes output depend on LF regardless of System.NewLine(). Consider reverting to sys.NewLine() for portability/consistency across writers and golden tests.\n\n```suggestion\n   output = append(output, \"  \", example, sys.NewLine())\n```"
+    },
+    {
+      "file": "internal/execute/outputs.go",
+      "line_start": 261,
+      "line_end": 263,
+      "description": "This comparison/append should use sys.NewLine() rather than \"\\n\". Otherwise, on CRLF systems the condition may mis-detect the trailing blank line and output formatting may drift.\n\n```suggestion\n nl := sys.NewLine()\n \tif len(lines) < 2 || lines[len(lines)-2] != nl {\n \t\tlines = append(lines, nl)\n \t}\n```"
+    },
+    {
+      "file": "internal/execute/tsc.go",
+      "line_start": 66,
+      "line_end": 66,
+      "description": "Potential behavior regression: hardcoding \"\\n\" for format settings ignores sys.NewLine() (e.g., Windows CRLF). This may change formatting output/newline normalization unexpectedly. Consider keeping sys.NewLine() (or deriving newline from the input file/options) unless you intentionally want LF-only output.\n\n```suggestion\n ctx := format.WithFormatCodeSettings(\n \tcontext.Background(),\n \tformat.GetDefaultFormatCodeSettings(sys.NewLine()),\n \tsys.NewLine(),\n )\n```"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/microsoft/typescript-go/pull/1354). Upstream base 15def0236938e25ec7822755444f4d58c68045be = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 176. Severity absent in the source. i1: human comment, Diff Level; i2: human comment, Diff Level"
+}

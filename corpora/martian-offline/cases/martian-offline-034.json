@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "corpus": "martian-offline",
+  "id": "martian-offline-034",
+  "language": "java",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/martian-offline/martian-offline-034/base",
+  "head_branch": "bench/martian-offline/martian-offline-034/head",
+  "base_sha": "fc81abf18af9df42e51739d2c5d1274998f21046",
+  "head_sha": "261b0603a3b532b14d6e0c3a2766b3f40ed2791b",
+  "mr_title": "Add rolling-updates feature flag and compatibility framework",
+  "mr_description": "- Feature flag: rolling-updates\n- do not use custom image, it fails\n- Enable feature in custom image\n- feedback\n- fix test failure",
+  "origin": {
+    "repository": "https://github.com/keycloak/keycloak",
+    "commit": "62bf98939eda58f0d0a1a41a58aa6d4ecdc24dba",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/keycloak/keycloak/pull/36882",
+    "source_url": "https://github.com/withmartian/code-review-benchmark/blob/e616e849755441da38f18bf3adba2c9583b03803/offline/golden_comments/keycloak.json"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Incorrect method call for exit codes",
+      "description": "Incorrect method call for exit codes. The picocli.exit() method calls System.exit() directly, which is problematic:",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "bug",
+      "source_text": "Incorrect method call for exit codes. The picocli.exit() method calls System.exit() directly, which is problematic:"
+    },
+    {
+      "id": "i2",
+      "file": null,
+      "line_start": null,
+      "line_end": null,
+      "category": "maintainability",
+      "severity": "low",
+      "title": "Need to add changelog/release notes documenting the exit code change and migration guidan…",
+      "description": "Need to add changelog/release notes documenting the exit code change and migration guidance",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "doc_defect",
+      "source_text": "Need to add changelog/release notes documenting the exit code change and migration guidance"
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/keycloak/keycloak/pull/36882). Upstream base 1b28ac610dc16e0de14199f9ca5d2acdf7f3cc16 (merge-base with the default branch, before the merge for merged PRs). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile Core"
+}

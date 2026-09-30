@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-134",
+  "language": "cpp",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-134/base",
+  "head_branch": "bench/aacr/aacr-134/head",
+  "base_sha": "c7e6ec28fbbcdb87bc35a9bf0782a9c369192da6",
+  "head_sha": "5374df21da69d22adb172022830a7a7dbd92957f",
+  "mr_title": "Merge branch 'master' of github.com:ClickHouse/ClickHouse",
+  "mr_description": "- Merge branch 'master' of github.com:ClickHouse/ClickHouse\n- Merge branch 'master' of github.com:ClickHouse/ClickHouse\n- Add documentation to source code\n- Merge branch 'master' of github.com:ClickHouse/ClickHouse\n- Add documentation to source code\n- Add documentation to source code\n- Fix style\n- Fix style\n- Incorporate review feedback from part 6\n- Fix style\n- Actually fix style\n- Fix reference files",
+  "origin": {
+    "repository": "https://github.com/ClickHouse/ClickHouse",
+    "commit": "5fb6ee38d2d7d2fc6e1a67005b12d3b9aaac418f",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/ClickHouse/ClickHouse/pull/80345",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/Functions/array/arrayAggregation.cpp",
+      "line_start": 461,
+      "line_end": 464,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The lambda examples for `arrayMin`/`arrayMax` appear to use a function-argument order inc…",
+      "description": "The lambda examples for `arrayMin`/`arrayMax` appear to use a function-argument order inconsistent with the documented syntax (`arrayMin([func], source, ...)`). The example `SELECT arrayMin(x, y -> x/y, ...)` reads like `func` is the second argument, which may not parse / may confuse users.\n\nSuggestion: align examples with the declared syntax, e.g. `arrayMin((x, y) -> x / y, [..], [..])` (or whatever the engine expects). Please verify the correct lambda signature/order and update accordingly.\n\n```suggestion\n    FunctionDocumentation::Examples examples_min = {\n        {\"Basic example\", \"SELECT arrayMin([5, 3, 2, 7]);\", \"2\"},\n        {\"Usage with lambda function\", \"SELECT arrayMin((x, y) -> x / y, [4, 8, 12, 16], [1, 2, 1, 2]);\", \"4\"},\n    };\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The lambda examples for `arrayMin`/`arrayMax` appear to use a function-argument order inconsistent with the documented syntax (`arrayMin([func], source, ...)`). The example `SELECT arrayMin(x, y -> x/y, ...)` reads like `func` is the second argument, which may not parse / may confuse users.\n\nSuggestion: align examples with the declared syntax, e.g. `arrayMin((x, y) -> x / y, [..], [..])` (or whatever the engine expects). Please verify the correct lambda signature/order and update accordingly.\n\n```suggestion\n    FunctionDocumentation::Examples examples_min = {\n        {\"Basic example\", \"SELECT arrayMin([5, 3, 2, 7]);\", \"2\"},\n        {\"Usage with lambda function\", \"SELECT arrayMin((x, y) -> x / y, [4, 8, 12, 16], [1, 2, 1, 2]);\", \"4\"},\n    };\n```"
+    },
+    {
+      "id": "i2",
+      "file": "src/Functions/array/arrayAggregation.cpp",
+      "line_start": 482,
+      "line_end": 482,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The returned_value description incorrectly states 'minimum element' when this is the arra…",
+      "description": "The returned_value description incorrectly states 'minimum element' when this is the arrayMax function. It should say 'maximum element' to match the function's behavior.\n\n```suggestion\n    FunctionDocumentation::ReturnedValue returned_value_max = \"Returns the maximum element in the source array, or the maximum element of the lambda results if provided.\";\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The returned_value description incorrectly states 'minimum element' when this is the arrayMax function. It should say 'maximum element' to match the function's behavior.\n\n```suggestion\n    FunctionDocumentation::ReturnedValue returned_value_max = \"Returns the maximum element in the source array, or the maximum element of the lambda results if provided.\";\n```"
+    },
+    {
+      "id": "i3",
+      "file": "src/Functions/array/arrayFirstLast.cpp",
+      "line_start": 231,
+      "line_end": 231,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Inconsistent syntax notation: `arrayFirst` uses `λ(x[, y1, ..., yN])` while `arrayFirstOr…",
+      "description": "Inconsistent syntax notation: `arrayFirst` uses `λ(x[, y1, ..., yN])` while `arrayFirstOrNull` uses `func(x[, y1, ..., yN])`. For consistency, all four functions should use the same notation style (either λ or func).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Inconsistent syntax notation: `arrayFirst` uses `λ(x[, y1, ..., yN])` while `arrayFirstOrNull` uses `func(x[, y1, ..., yN])`. For consistency, all four functions should use the same notation style (either λ or func).\n"
+    },
+    {
+      "id": "i4",
+      "file": "src/Functions/array/arrayFirstLast.cpp",
+      "line_start": 262,
+      "line_end": 266,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The 'No match' example for arrayLast incorrectly uses `arrayFirst` instead of `arrayLast`",
+      "description": "The 'No match' example for arrayLast incorrectly uses `arrayFirst` instead of `arrayLast`. This example should demonstrate the arrayLast function's behavior when there is no match, not the arrayFirst function.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The 'No match' example for arrayLast incorrectly uses `arrayFirst` instead of `arrayLast`. This example should demonstrate the arrayLast function's behavior when there is no match, not the arrayFirst function.\n"
+    },
+    {
+      "id": "i5",
+      "file": "src/Functions/array/arrayFirstLastIndex.cpp",
+      "line_start": 128,
+      "line_end": 130,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Inconsistent quotation mark usage detected",
+      "description": "Inconsistent quotation mark usage detected. The word '0' is sometimes enclosed in backticks (\\`0\\`) and sometimes in single quotes ('0'). Consistent formatting improves readability.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Inconsistent quotation mark usage detected. The word '0' is sometimes enclosed in backticks (\\`0\\`) and sometimes in single quotes ('0'). Consistent formatting improves readability.\n"
+    },
+    {
+      "id": "i6",
+      "file": "src/Functions/array/arrayFirstLastIndex.cpp",
+      "line_start": 157,
+      "line_end": 157,
+      "category": "correctness",
+      "severity": null,
+      "title": "The arrayFirstIndex documentation examples use invalid lambda syntax by omitting parenthe…",
+      "description": "The arrayFirstIndex documentation examples use invalid lambda syntax by omitting parentheses for multiple parameters; they should use `(x, y) -> x=y` instead of `x, y -> x=y`.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The arrayFirstIndex documentation examples use invalid lambda syntax by omitting parentheses for multiple parameters; they should use `(x, y) -> x=y` instead of `x, y -> x=y`."
+    },
+    {
+      "id": "i7",
+      "file": "src/Functions/array/arrayFirstLastIndex.cpp",
+      "line_start": 159,
+      "line_end": 159,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Semicolons inside SQL statements in examples are inconsistent with documentation pattern…",
+      "description": "Semicolons inside SQL statements in examples are inconsistent with documentation pattern in other array functions. Semicolons should be outside the SQL statements.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Semicolons inside SQL statements in examples are inconsistent with documentation pattern in other array functions. Semicolons should be outside the SQL statements.\n"
+    },
+    {
+      "id": "i8",
+      "file": "src/Functions/array/arrayFirstLastIndex.cpp",
+      "line_start": 166,
+      "line_end": 166,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The `documentation_last` object was created but not passed to `factory.registerFunction<F…",
+      "description": "The `documentation_last` object was created but not passed to `factory.registerFunction<FunctionArrayLastIndex>()`. This is inconsistent with `FunctionArrayFirstIndex` which properly passes its documentation. Please pass `documentation_last` to the register function.\n\n```suggestion\n    factory.registerFunction<FunctionArrayLastIndex>(documentation_last);\n```",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The `documentation_last` object was created but not passed to `factory.registerFunction<FunctionArrayLastIndex>()`. This is inconsistent with `FunctionArrayFirstIndex` which properly passes its documentation. Please pass `documentation_last` to the register function.\n\n```suggestion\n    factory.registerFunction<FunctionArrayLastIndex>(documentation_last);\n```"
+    },
+    {
+      "id": "i9",
+      "file": "src/Functions/array/arraySplit.cpp",
+      "line_start": 118,
+      "line_end": 118,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The documentation string for `ArraySplit` requires two clarifications:",
+      "description": "The documentation string for `ArraySplit` requires two clarifications:  \n- Replace \"returns something other than zero\" with \"returns true\" for boolean accuracy.  \n- Change \"on the left hand side of the element\" to \"to the left of the element\" for concise phrasing.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The documentation string for `ArraySplit` requires two clarifications:  \n- Replace \"returns something other than zero\" with \"returns true\" for boolean accuracy.  \n- Change \"on the left hand side of the element\" to \"to the left of the element\" for concise phrasing."
+    },
+    {
+      "id": "i10",
+      "file": "src/Functions/array/arraySplit.cpp",
+      "line_start": 121,
+      "line_end": 121,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Doc string formatting: missing space before the markdown link",
+      "description": "Doc string formatting: missing space before the markdown link. `(...)(`y`).[Lambda function]` renders poorly; add a space before `[Lambda function]` for readability.\n\n```suggestion\n        {\"func(x[, y1, ..., yN])\", \"A lambda function which operates on elements of the source array (`x`) and condition arrays (`y`). [Lambda function](/sql-reference/functions/overview#arrow-operator-and-lambda).\"},\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Doc string formatting: missing space before the markdown link. `(...)(`y`).[Lambda function]` renders poorly; add a space before `[Lambda function]` for readability.\n\n```suggestion\n        {\"func(x[, y1, ..., yN])\", \"A lambda function which operates on elements of the source array (`x`) and condition arrays (`y`). [Lambda function](/sql-reference/functions/overview#arrow-operator-and-lambda).\"},\n```"
+    },
+    {
+      "id": "i11",
+      "file": "src/Functions/array/arraySplit.cpp",
+      "line_start": 133,
+      "line_end": 133,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Documentation variable names are ambiguous between split functions",
+      "description": "Documentation variable names are ambiguous between split functions. Rename `FunctionArraySplit`'s documentation variables to `*_split` style (e.g., `description_split`) and `FunctionArrayReverseSplit`'s to `*_reverse_split` style (e.g., `description_reverse_split`) for clear distinction.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Documentation variable names are ambiguous between split functions. Rename `FunctionArraySplit`'s documentation variables to `*_split` style (e.g., `description_split`) and `FunctionArrayReverseSplit`'s to `*_reverse_split` style (e.g., `description_reverse_split`) for clear distinction."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/Functions/array/arrayAll.cpp",
+      "line_start": 67,
+      "line_end": 67,
+      "description": "Inconsistent with the description above. Both should use the same phrasing for clarity and consistency with other array functions."
+    },
+    {
+      "file": "src/Functions/array/arrayExists.cpp",
+      "line_start": 70,
+      "line_end": 70,
+      "description": "The documented syntax format doesn't match the example usage. The syntax shows `func(x[, y1, ..., yN])` suggesting a function call format, but the example uses ClickHouse's lambda syntax `x, y -> x=y`. Consider updating the syntax to: `arrayExists([x[, y1, ..., yN]] -> expr, source[, cond1, ... , condN])` to better match the actual lambda syntax shown in the example."
+    },
+    {
+      "file": "src/Functions/array/arrayFirstLastIndex.cpp",
+      "line_start": 137,
+      "line_end": 137,
+      "description": "The documentation for `arrayFirstIndex` incorrectly uses the Greek letter λ in the returned value description; replace it with `func` to maintain consistency with the parameter name used in the function syntax and arguments documentation."
+    },
+    {
+      "file": "src/Functions/array/arrayFirstLastIndex.cpp",
+      "line_start": 142,
+      "line_end": 142,
+      "description": "The introduced version (v1.1) for arrayFirstIndex in the documentation is unverified and requires confirmation against actual release history."
+    },
+    {
+      "file": "src/Functions/array/arraySplit.cpp",
+      "line_start": 136,
+      "line_end": 136,
+      "description": "- The `arrayReverseSplit` function documentation incorrectly marks the `func` argument as optional; it must be required like `arraySplit`.  \n- Lambda parameter names `x` and `y` in documentation should be renamed to `source_arr` and `cond_arr` for clarity and consistency with argument naming."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/ClickHouse/ClickHouse/pull/80345). Upstream base fe23559f719b77a1f8395ebcaafd778ae7183b6e = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 373. Severity absent in the source. i1: AI comment (GPT-5.2), File Level; i2: AI comment (GLM-4.7), Diff Level; i3: AI comment (Claude-Code/Claude-4.5-Sonnet), Repo Level; i4: AI comment (GLM-4.7), File Level; i5: AI comment (Qwen-Coder-480B), Diff Level; i6: human comment, Diff Level; i7: AI comment (Deepseek-V3.2), Diff Level; i8: AI comment (GLM-4.7), File Level; i9: human comment, File Level; i10: AI comment (GPT-5.2), Diff Level; i11: human comment, File Level"
+}

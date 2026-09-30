@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-083",
+  "language": "c",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-083/base",
+  "head_branch": "bench/aacr/aacr-083/head",
+  "base_sha": "00ebe1abf1607aeb868e5446a483ab04c7629f7d",
+  "head_sha": "07e174c3a5c19ea19f3fe6160c1aef7606db4ab6",
+  "mr_title": "fix server.orig_commands table unable to find entries after commands renamed",
+  "mr_description": "- fix server.orig_commands table unable to find entries after commands renamed\n- clean up ACL code: static functions for better linking and readability, deleted dead code\n- Test renaming command twice\n- clang-format",
+  "origin": {
+    "repository": "https://github.com/valkey-io/valkey",
+    "commit": "ecb3abd53e891861ce996506689336b6442ec8fb",
+    "license": "BSD-3-Clause",
+    "source_case": "https://github.com/valkey-io/valkey/pull/1651",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/config.c",
+      "line_start": 546,
+      "line_end": 549,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Typo in comment: 'If its been renamed previously' should be 'If it's been renamed previou…",
+      "description": "Typo in comment: 'If its been renamed previously' should be 'If it's been renamed previously' (missing apostrophe).\n\n```suggestion\n                    /* cmd->current_name initially points to the same string,\n                     * and we can't leave fullname dangling.\n                     * If it's been renamed previously then this string is only\n                     * used here and should be freed. */\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Typo in comment: 'If its been renamed previously' should be 'If it's been renamed previously' (missing apostrophe).\n\n```suggestion\n                    /* cmd->current_name initially points to the same string,\n                     * and we can't leave fullname dangling.\n                     * If it's been renamed previously then this string is only\n                     * used here and should be freed. */\n```"
+    },
+    {
+      "id": "i2",
+      "file": "tests/unit/acl.tcl",
+      "line_start": 1248,
+      "line_end": 1248,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The long TCL list definition should be split across multiple lines using escaped line bre…",
+      "description": "The long TCL list definition should be split across multiple lines using escaped line breaks for improved readability and maintainability.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The long TCL list definition should be split across multiple lines using escaped line breaks for improved readability and maintainability."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/config.c",
+      "line_start": 545,
+      "line_end": 552,
+      "description": "The verbose multi-line comment justifying the conditional free of `cmd->current_name` is redundant and obscures the straightforward ownership logic; replace it with a concise one-line explanation."
+    },
+    {
+      "file": "src/config.c",
+      "line_start": 551,
+      "line_end": 551,
+      "description": "**Critical Issue: Command not removed from hashtable before renaming**\n\nWhen renaming a command, the code updates `cmd->current_name` and then calls `hashtableAdd()` with the new name. However, the command was previously in the hashtable under its old name (either the original name or a previous rename). \n\nSince hashtables use the key for hashing/lookup, and `commandSetType` uses `current_name` as the key (via `hashtableCommandGetCurrentName`), you must remove the old entry before updating `current_name` and re-adding it.\n\n**Current behavior**: The command remains in the hashtable at the wrong hash bucket (hashed by old name) AND gets added again (hashed by new name), corrupting the hashtable structure.\n\n**Suggested fix**: Before line 551, add:\n```c\nhashtableDelete(server.commands, cmd);\n```\n\nThen update `current_name` and call `hashtableAdd()` as currently done.\n\nThis ensures the old entry is removed before the key field is modified and the command is re-added under the new name."
+    },
+    {
+      "file": "src/config.c",
+      "line_start": 552,
+      "line_end": 556,
+      "description": "Memory leak in error path: If hashtableAdd fails, the newly allocated string in cmd->current_name is not freed before jumping to loaderr. Consider freeing cmd->current_name before goto loaderr to ensure proper cleanup even in error scenarios."
+    },
+    {
+      "file": "src/server.c",
+      "line_start": 3216,
+      "line_end": 3217,
+      "description": "`current_name` is initialized as an alias to `fullname` here. If rename-command later changes `current_name` to a different SDS, ensure the old SDS is freed exactly once and that `fullname` remains the immutable/original string. Otherwise you can get double-free (if both point to same SDS and both are freed) or leaks (if reassignment happens without freeing). Verify command struct destructor / free path handles the aliasing case and that rename logic duplicates SDS before assignment when needed."
+    },
+    {
+      "file": "src/server.h",
+      "line_start": 2468,
+      "line_end": 2468,
+      "description": "`current_name` aliases `fullname` initially and may later become a separately allocated SDS. To avoid double-free / leak / dangling pointer, please ensure all code paths that free or duplicate `serverCommand` treat these two fields consistently (free `current_name` only when it differs from `fullname`, and ensure both are set/updated together on rename/remove). Consider documenting invariants (e.g., `current_name` never NULL) in the struct comment or enforcing via initialization helpers."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/valkey-io/valkey/pull/1651). Upstream base 12ec3d59327166e112cd8e4650cbdf978adbaaf2 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 279. Severity absent in the source. i1: AI comment (GLM-4.7), Diff Level; i2: human comment, Diff Level"
+}

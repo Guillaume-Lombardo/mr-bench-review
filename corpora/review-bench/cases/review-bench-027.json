@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "corpus": "review-bench",
+  "id": "review-bench-027",
+  "language": "go",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/review-bench/review-bench-027/base",
+  "head_branch": "bench/review-bench/review-bench-027/head",
+  "base_sha": "0b8c24125049e3a953809ea64b5d8a6ed4a9d1ee",
+  "head_sha": "3a55199b337dd5fe4447d801f42d8a4e13502757",
+  "mr_title": "Add .Unset method to mock",
+  "mr_description": "* Add .Off method to mock\n\n* Update README.md\n\n* Update mock.go\n\n* Update mock_test.go\n\n* Update README.md\n\n* Fix tests\n\n* Add unset test\n\n* remove prints\n\n* fix test\n\n* update readme",
+  "origin": {
+    "repository": "https://github.com/stretchr/testify",
+    "commit": "ba1076d8b3b67cdaf7bf92c95b3641636a039be2",
+    "license": "MIT",
+    "source_case": "testify-unset-iterate-panic",
+    "source_url": "https://github.com/hyperneolabs/review-bench/tree/93f31c224448e453c00768780795bd6bf6ab4234/cases/testify-unset-iterate-panic"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "mock/mock.go",
+      "line_start": 218,
+      "line_end": 218,
+      "category": "correctness",
+      "severity": null,
+      "title": "Call.Unset() removes matching entries from Parent.ExpectedCalls with an in-place append w…",
+      "description": "Call.Unset() removes matching entries from Parent.ExpectedCalls with an in-place append while iterating by the original range index; once a removal shifts the slice, a later match reslices past the shortened slice's end and panics.\n\nProvenance: fix PR #1250 body (commit 2b00d33); fixes issue #1236.",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "mock/mock.go",
+          "line_start": 223,
+          "line_end": 224
+        },
+        {
+          "file": "mock/mock.go",
+          "line_start": 226,
+          "line_end": 227
+        }
+      ],
+      "source_category": null,
+      "source_text": "Call.Unset() removes matching entries from Parent.ExpectedCalls with an in-place append while iterating by the original range index; once a removal shifts the slice, a later match reslices past the shortened slice's end and panics."
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Imported from review-bench testify-unset-iterate-panic (corpus corpus/v0.1). Introducing PR https://github.com/stretchr/testify/pull/982. Fix https://github.com/stretchr/testify/commit/2b00d33aec28e4fded71d57517ed4ec9d54cb4e2 (PR #1250). Category defaulted to correctness and severity left null because the source has neither; to be reviewed. Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 221-221, review-head lines 218-218) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 226-227, review-head lines 223-224) Ground truth note: fix hunk attributed to the introducing change (fix-parent lines 229-230, review-head lines 226-227)"
+}

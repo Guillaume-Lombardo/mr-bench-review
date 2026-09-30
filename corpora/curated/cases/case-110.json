@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-110",
+  "language": "typescript",
+  "size": "large",
+  "kind": "real",
+  "tier": "core",
+  "base_branch": "bench/curated/case-110/base",
+  "head_branch": "bench/curated/case-110/head",
+  "base_sha": "b900086275d684f4986fd05695d9021ef9768a6e",
+  "head_sha": "c589b4d35dd6e4b9cb8a96ceb03d9527005980af",
+  "mr_title": "feat(devtools): implement CD analyzer",
+  "mr_description": "Implement component highlighting on change detection cycles along with embedding\nthe component-specific data to the directive/component tree explorer.",
+  "origin": {
+    "repository": "https://github.com/angular/angular",
+    "commit": "07605ba793b9c2e23095f1726ad19ffd0d36676d",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "devtools/projects/ng-devtools-backend/src/lib/profiling/cd-analyzer/analyzer.ts",
+      "line_start": 145,
+      "line_end": 145,
+      "category": "maintainability",
+      "severity": "low",
+      "title": "console.warn() used instead of the devtools debug logger",
+      "description": "The new devtools backend code logs with console.warn() directly instead of the project's debugLog utility, so these messages bypass the devtools logging switch and pollute the inspected application's console.\n\nThe devtools backend runs inside the user's page; its convention is to route diagnostics through shared/utils/log (debugLog), which is silenced unless debugging is enabled. The CD analyzer and highlighter added here call console.warn() directly, so end users see devtools-internal warnings in their own application's console.",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "devtools/projects/ng-devtools-backend/src/lib/shared/highlighter/highlights.ts",
+          "line_start": 158,
+          "line_end": 158
+        }
+      ],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/angular/angular/commit/07605ba793b9c2e23095f1726ad19ffd0d36676d. Primary issue confirmed by the later upstream fix https://github.com/angular/angular/commit/c1ac4b750ab1d0638b4c352214df1f4c4dbda8da; its regression test reproduces the problem on this head. Curator difficulty: easy. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

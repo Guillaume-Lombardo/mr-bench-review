@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-098",
+  "language": "typescript",
+  "size": "medium",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-098/base",
+  "head_branch": "bench/curated/case-098/head",
+  "base_sha": "8da89bfdc5557219c5e0e7c793610a6743c7cb53",
+  "head_sha": "c4eb404c741bdca00ff03c4a85cf5ba4df31d84d",
+  "mr_title": "fix(@angular-devkit/build-angular): set base-href in service worker manifest when using i18n and app-shell",
+  "mr_description": "Previously, the base href was not set when using the app-shell builder and i18n.",
+  "origin": {
+    "repository": "https://github.com/angular/angular-cli",
+    "commit": "43f495d57be37fa81cfade3d8e4291483a971f7c",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "packages/angular_devkit/build_angular/src/builders/browser/index.ts",
+      "line_start": 186,
+      "line_end": 186,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Default '/' base href overwrites the base href of index.html",
+      "description": "defaultBaseHref falls back to '/' and is now also used for the index.html generation, so when the builder's baseHref option is not set the <base href> written in the application's src/index.html is overwritten with '/'.\n\nThe '/' default is only meant for the service-worker manifest. Before this change the index generator received `getLocaleBaseHref(...) || options.baseHref`, i.e. undefined when unset, which keeps the base href authored in index.html. Applications deployed under a sub-path with a hand-written `<base href=\"/app/\">` break after the upgrade (all assets 404). The '/' fallback must be limited to the service worker.",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "packages/angular_devkit/build_angular/src/builders/browser/index.ts",
+          "line_start": 322,
+          "line_end": 322
+        }
+      ],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/angular/angular-cli/commit/43f495d57be37fa81cfade3d8e4291483a971f7c. Primary issue confirmed by the later upstream fix https://github.com/angular/angular-cli/commit/88701115c69ced4bbc1bea07e4ef8941a2b54771; its regression test reproduces the problem on this head. Curator difficulty: medium. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

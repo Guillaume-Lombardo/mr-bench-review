@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-063",
+  "language": "javascript",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-063/base",
+  "head_branch": "bench/curated/case-063/head",
+  "base_sha": "9283939f90c1166f2ac93f77e12801a77f8c76e8",
+  "head_sha": "16744aa1e82621ddbf8d28995b8f1c4ca7a9b5ea",
+  "mr_title": "Improving ux for search in webviews on web",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/microsoft/vscode",
+    "commit": "bbc10afedac1f9ea35d510211a5ec59296573cd5",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/vs/workbench/contrib/webview/browser/pre/main.js",
+      "line_start": 1000,
+      "line_end": 1000,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Selection collapsed on every find request, so 'next' never advances",
+      "description": "The selection is collapsed to its anchor before every find request, including 'find next', so window.find() restarts from the beginning of the current match and keeps selecting the same occurrence.\n\nCollapsing the selection is only needed when the search term changes (so refining 'a' to 'ab' re-checks the current position). For repeated next/previous requests with the same term, collapsing to the anchor makes the search start before the current result, which is found again: 'Find next' in webviews never advances. The collapse must be conditional on a changed search value.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/microsoft/vscode/commit/bbc10afedac1f9ea35d510211a5ec59296573cd5. Primary issue confirmed by the later upstream fix https://github.com/microsoft/vscode/commit/925807b77db7dc215738f9df2ce4e4e1ede85217; its regression test reproduces the problem on this head. Curator difficulty: easy. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

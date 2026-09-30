@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-065",
+  "language": "java",
+  "size": "medium",
+  "kind": "clean",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-065/base",
+  "head_branch": "bench/curated/case-065/head",
+  "base_sha": "5780c47da5e28723a151cf0d0ec19db302b4e02d",
+  "head_sha": "ad5bd06ee4e5c07d829ea8b648727f045063f0e6",
+  "mr_title": "Improve fix of duplicate upstream subscription during reactive cache put",
+  "mr_description": "This commit fixes an issue where a Cacheable method which returns a\nFlux (or multi-value publisher) will be invoked once, but the returned\npublisher is actually subscribed twice.\n\nThe previous fix 988f3630c would cause the cached elements to depend on\nthe first usage pattern / request pattern, which is likely to be too\nconfusing to users. This fix reintroduces the notion of exhausting the\noriginal Flux by having a second subscriber dedicated to that, but uses\n`refCount(2)` to ensure that the original `Flux` returned by the cached\nmethod is still only subscribed once.",
+  "origin": {
+    "repository": "https://github.com/spring-projects/spring-framework",
+    "commit": "6d9a2eb9b855a05bc79d22e735209688cada2ac3",
+    "license": "Apache-2.0",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/spring-projects/spring-framework/commit/6d9a2eb9b855a05bc79d22e735209688cada2ac3. No known defect: at least 90% of its added lines were still unchanged upstream on 2026-09-30 and no later commit reports it as faulty. This is not proof of absence. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

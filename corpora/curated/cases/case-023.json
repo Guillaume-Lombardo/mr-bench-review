@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-023",
+  "language": "typescript",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-023/base",
+  "head_branch": "bench/curated/case-023/head",
+  "base_sha": "b9fd512aa84ca76f37a3eea45575ce410caf21b5",
+  "head_sha": "bfd564bce20cb17dcc42a6cbf9aa3510979b5014",
+  "mr_title": "refactor(router): Avoid unnecessary href updates on navigations for routerlink",
+  "mr_description": "The `RouterLink` href does not depend on the state of the router unless\nit uses the `fragment` or `queryParams`. This doesn't bother\nunsubscribing from the events if the inputs change in a way to no longer\ndepend on those values since inputs changing is quite rare (and even\nmore rare for query params handling or preserveFragment to change).",
+  "origin": {
+    "repository": "https://github.com/angular/angular",
+    "commit": "9f432328bb5eb837998ba88300a4267693ae21bb",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "packages/router/src/directives/router_link.ts",
+      "line_start": 275,
+      "line_end": 276,
+      "category": "correctness",
+      "severity": "high",
+      "title": "RouterLink href not updated after navigation in common configurations",
+      "description": "The condition for subscribing to navigation events is inverted/incomplete and ignores that relative links depend on the ActivatedRoute, so with an explicit queryParamsHandling the href of an anchor RouterLink is no longer updated after navigations.\n\n`!this.queryParamsHandling && !dependsOnRouterState(defaultQueryParamsHandling)` subscribes when no handling is set and the default does NOT depend on router state, which is the opposite of the stated intent, and skips the subscription when queryParamsHandling is set to a value such as '' or 'replace'. Moreover, a link's URL also changes when navigation changes the ActivatedRoute used to resolve relative commands, so skipping updateHref() on NavigationEnd leaves stale hrefs (wrong URL on middle-click / open in new tab).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/angular/angular/commit/9f432328bb5eb837998ba88300a4267693ae21bb. Primary issue confirmed by the later upstream fix https://github.com/angular/angular/commit/41cd4a6af800cf7807c46862c99ae036457d8fa7; its regression test reproduces the problem on this head. Curator difficulty: hard. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

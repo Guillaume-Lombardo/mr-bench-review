@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-050",
+  "language": "typescript",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-050/base",
+  "head_branch": "bench/aacr/aacr-050/head",
+  "base_sha": "86acfc5229f9875b92e2eac2d680bb06e6d8d4c4",
+  "head_sha": "4fbf39b6ada44b84121feabdafc024af6d7c6577",
+  "mr_title": "Fix: Improve auth flow and state validation",
+  "mr_description": "Improves the authentication flow and state validation process.  We no longer reset the auth nounce after each sign in as AuthService is a singleton and there is no risk of nonce collision between different users as only one user can be signed in at a time.\n\nChanges:\n    - The `authNonce` is now generated once during `AuthService` instantiation and stored as a read-only property. This ensures that the nonce remains consistent throughout the authentication process.\n    - The `resetAuthNonce` method has been removed, as the nonce is no longer meant to be reset.\n    - The `createAuthRequest` method now uses the URL object for more graceful query construction.\n- **Controller:**\n    - The `validateAuthState` method has been simplified to directly compare the provided state with the stored `authNonce`.\n- **Extension:**\n    - The extension now prompts the user for confirmation if the state parameter in the auth callback does not match the stored `authNonce`. This allows sign-ins initiated from outside the extension (e.g., Cline web) to be handled correctly.\n\nIssue: The issue is that the authNonce is being reset in the validateAuthState method in the Controller, but the extension.ts is directly accessing authService.authNonce without going through the validation method. This creates a race condition where:\n\nUser initiates auth, nonce is generated\nAuth callback comes back with the state\nIf there are multiple auth attempts or the callback is processed multiple times, the nonce might be reset before the validation in extension.ts happens\nUser gets \"Invalid auth state\" error",
+  "origin": {
+    "repository": "https://github.com/cline/cline",
+    "commit": "2195a689b787a963bdacc35d348f4590c30a2692",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/cline/cline/pull/4786",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/core/controller/index.ts",
+      "line_start": 460,
+      "line_end": 460,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Remove async keyword as this method doesn't perform any asynchronous operations",
+      "description": "Remove async keyword as this method doesn't perform any asynchronous operations. This is misleading and unnecessary.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Remove async keyword as this method doesn't perform any asynchronous operations. This is misleading and unnecessary.\n"
+    },
+    {
+      "id": "i2",
+      "file": "src/core/controller/index.ts",
+      "line_start": 461,
+      "line_end": 461,
+      "category": "security",
+      "severity": null,
+      "title": "Potential security issue: Nonce is not being cleared after validation",
+      "description": "Potential security issue: Nonce is not being cleared after validation. This could allow reuse of the same state parameter (replay attack). Consider restoring the call to `this.authService.resetAuthNonce()` upon successful validation.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "Potential security issue: Nonce is not being cleared after validation. This could allow reuse of the same state parameter (replay attack). Consider restoring the call to `this.authService.resetAuthNonce()` upon successful validation.\n"
+    },
+    {
+      "id": "i3",
+      "file": "src/core/controller/index.ts",
+      "line_start": 461,
+      "line_end": 461,
+      "category": "security",
+      "severity": null,
+      "title": "Security issue: Nonce should be single-use to prevent replay attacks",
+      "description": "Security issue: Nonce should be single-use to prevent replay attacks. The current implementation uses a static readonly nonce that never changes, making it vulnerable to replay attacks. Consider generating a new nonce for each authentication request.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "Security issue: Nonce should be single-use to prevent replay attacks. The current implementation uses a static readonly nonce that never changes, making it vulnerable to replay attacks. Consider generating a new nonce for each authentication request.\n"
+    },
+    {
+      "id": "i4",
+      "file": "src/extension.ts",
+      "line_start": 312,
+      "line_end": 312,
+      "category": "maintainability",
+      "severity": null,
+      "title": "State validation logic is duplicated in the activation function; delegate the `authServic…",
+      "description": "State validation logic is duplicated in the activation function; delegate the `authService.authNonce !== state` check to `controller.validateAuthState` to maintain a single source of truth.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "State validation logic is duplicated in the activation function; delegate the `authService.authNonce !== state` check to `controller.validateAuthState` to maintain a single source of truth."
+    },
+    {
+      "id": "i5",
+      "file": "src/services/auth/AuthService.ts",
+      "line_start": 33,
+      "line_end": 33,
+      "category": "security",
+      "severity": null,
+      "title": "**Security Issue: Nonce Reuse Vulnerability**",
+      "description": "**Security Issue: Nonce Reuse Vulnerability**\n\nGenerating the nonce once at service construction creates a serious security vulnerability. The nonce should be unique for each authentication request to provide proper CSRF protection. Reusing the same nonce allows potential replay attacks.\n\n**Recommendation**: Generate a new nonce for each `createAuthRequest()` call. Consider:\n```typescript\nprivate _authNonce: string = ''\n\nasync createAuthRequest(): Promise<String> {\n    if (this._authenticated) {\n        this.sendAuthStatusUpdate()\n        return String.create({ value: \"Already authenticated\" })\n    }\n    \n    // Generate fresh nonce for each auth request\n    this._authNonce = crypto.randomBytes(32).toString(\"hex\")\n    \n    // ... rest of the code\n}\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Security Vulnerability",
+      "source_text": "**Security Issue: Nonce Reuse Vulnerability**\n\nGenerating the nonce once at service construction creates a serious security vulnerability. The nonce should be unique for each authentication request to provide proper CSRF protection. Reusing the same nonce allows potential replay attacks.\n\n**Recommendation**: Generate a new nonce for each `createAuthRequest()` call. Consider:\n```typescript\nprivate _authNonce: string = ''\n\nasync createAuthRequest(): Promise<String> {\n    if (this._authenticated) {\n        this.sendAuthStatusUpdate()\n        return String.create({ value: \"Already authenticated\" })\n    }\n    \n    // Generate fresh nonce for each auth request\n    this._authNonce = crypto.randomBytes(32).toString(\"hex\")\n    \n    // ... rest of the code\n}\n```\n"
+    },
+    {
+      "id": "i6",
+      "file": "src/services/auth/AuthService.ts",
+      "line_start": 173,
+      "line_end": 173,
+      "category": "correctness",
+      "severity": null,
+      "title": "`createAuthRequest(): Promise<String>` uses the protobuf/SDK `String` type (from `@modelc…",
+      "description": "`createAuthRequest(): Promise<String>` uses the protobuf/SDK `String` type (from `@modelcontextprotocol/sdk/types`?) rather than native `string`. This is easy to confuse and can lead to wrong usage. Consider renaming the import (`import { String as RpcString } ...`) and/or changing the method return type to a native `string` if RPC wrapping is not required at this layer.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "`createAuthRequest(): Promise<String>` uses the protobuf/SDK `String` type (from `@modelcontextprotocol/sdk/types`?) rather than native `string`. This is easy to confuse and can lead to wrong usage. Consider renaming the import (`import { String as RpcString } ...`) and/or changing the method return type to a native `string` if RPC wrapping is not required at this layer."
+    },
+    {
+      "id": "i7",
+      "file": "src/services/auth/AuthService.ts",
+      "line_start": 179,
+      "line_end": 181,
+      "category": "correctness",
+      "severity": null,
+      "title": "Throwing a raw Error here may surface as an unhandled exception depending on caller; chec…",
+      "description": "Throwing a raw Error here may surface as an unhandled exception depending on caller; checklist asks for user-friendly error handling in async flows. Consider catching at the boundary and showing `vscode.window.showErrorMessage(...)` or returning a structured error result for the controller layer to display.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Throwing a raw Error here may surface as an unhandled exception depending on caller; checklist asks for user-friendly error handling in async flows. Consider catching at the boundary and showing `vscode.window.showErrorMessage(...)` or returning a structured error result for the controller layer to display."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/core/controller/index.ts",
+      "line_start": 460,
+      "line_end": 460,
+      "description": "The validateAuthState method is unused in the codebase and should be removed to eliminate dead code and improve maintainability."
+    },
+    {
+      "file": "src/core/controller/index.ts",
+      "line_start": 461,
+      "line_end": 461,
+      "description": "**Logic Issue: Validation now returns true for null/undefined state**\n\nThe simplified validation `return state === this.authService.authNonce` will return `true` if both `state` and `authNonce` are `null` or `undefined`, which is not the intended behavior.\n\nWhile `authNonce` is now always a string (never null), the `state` parameter can still be `null`. This means:\n- `null === string` → `false` ✓ (correct)\n- But the code is less defensive and harder to reason about\n\n**Recommendation**:\nAdd explicit null checking for better code clarity and safety:\n\n```typescript\npublic async validateAuthState(state: string | null): Promise<boolean> {\n  if (!state) {\n    return false\n  }\n  return state === this.authService.authNonce\n}\n```\n\nThis makes the intent clearer and protects against future changes where authNonce might become nullable again."
+    },
+    {
+      "file": "src/extension.ts",
+      "line_start": 310,
+      "line_end": 310,
+      "description": "Minor spelling: 'signins' should be 'sign-ins' for better readability."
+    },
+    {
+      "file": "src/extension.ts",
+      "line_start": 319,
+      "line_end": 319,
+      "description": "State mismatch handling during authentication requires verification: test the edge case for external sign-ins (e.g., web-initiated flows) and confirm local testability."
+    },
+    {
+      "file": "src/services/auth/AuthService.ts",
+      "line_start": 183,
+      "line_end": 183,
+      "description": "**Hardcoding**: The extension ID `saoudrizwan.claude-dev` is hardcoded here. It is recommended to define this as a constant or retrieve it dynamically if possible to improve maintainability."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/cline/cline/pull/4786). Upstream base 0ec447c9922dd928c660470842a0236a0e385073 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 69. Severity absent in the source. i1: AI comment (Deepseek-V3.2), Repo Level; i2: AI comment (Qwen-Coder-480B), File Level; i3: AI comment (Deepseek-V3.2), File Level; i4: human comment, File Level; i5: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i6: AI comment (GPT-5.2), File Level; i7: AI comment (GPT-5.2), Repo Level"
+}

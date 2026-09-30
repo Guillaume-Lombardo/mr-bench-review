@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-087",
+  "language": "typescript",
+  "size": "small",
+  "kind": "real",
+  "tier": "extended",
+  "base_branch": "bench/curated/case-087/base",
+  "head_branch": "bench/curated/case-087/head",
+  "base_sha": "868f76cf6de01c9cb9ea0597eb6956d87f0113f7",
+  "head_sha": "51075a25c9eda9187611147c788b48d92e2edf8b",
+  "mr_title": "fix(material/autocomplete): requireSelection incorrectly resetting value when there are no options",
+  "mr_description": "The autocomplete has a check not to reset the value if the user didn't interact with the input. The problem was that we only accounted for it when there are options, because while technically an autocomplete is _attached_ when the user focuses, we don't consider it _open_ until it shows some options.",
+  "origin": {
+    "repository": "https://github.com/angular/components",
+    "commit": "db06fa8d8939d793f598bc3dbedc96a5a71c0db0",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/material/autocomplete/autocomplete-trigger.ts",
+      "line_start": 592,
+      "line_end": 592,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Value captured on every overlay attach, defeating requireSelection",
+      "description": "_valueOnAttach is now re-captured every time _attachOverlay() runs, which also happens on each keystroke that filters options, so with requireSelection the typed text becomes the 'initial' value and is no longer cleared when the panel closes without a selection.\n\nrequireSelection clears the input on close if its value differs from the value captured when the panel was opened. _attachOverlay() is called from the input handler on every change while the panel is open; capturing unconditionally there updates the reference value to the latest typed text, so the comparison sees no change and invalid free text is kept. The value must only be captured when the overlay is actually attached.",
+      "outside_diff": false,
+      "alternative_locations": [
+        {
+          "file": "src/material/autocomplete/autocomplete-trigger.ts",
+          "line_start": 739,
+          "line_end": 739
+        }
+      ],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/angular/components/commit/db06fa8d8939d793f598bc3dbedc96a5a71c0db0. Primary issue confirmed by the later upstream fix https://github.com/angular/components/commit/13629b0cd814ccc5fa01cf670b8b3001bc0021ff; its regression test reproduces the problem on this head. Curator difficulty: hard. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

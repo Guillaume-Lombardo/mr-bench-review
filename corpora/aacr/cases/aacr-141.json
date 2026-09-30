@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-141",
+  "language": "cpp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-141/base",
+  "head_branch": "bench/aacr/aacr-141/head",
+  "base_sha": "3006ed4244cdf9a42ff8fb605bd22a77bb00de4c",
+  "head_sha": "481eced3566600b2e1fd280338800393290305e8",
+  "mr_title": "The key condition can use binary search in more cases",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/ClickHouse/ClickHouse",
+    "commit": "f9987c89a4cfaa95269385f24323dc6f44cda6e9",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/ClickHouse/ClickHouse/pull/80597",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/Storages/MergeTree/KeyCondition.cpp",
+      "line_start": 2924,
+      "line_end": 2929,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The first for-each loop iterates through all RPN elements without filtering by element ty…",
+      "description": "The first for-each loop iterates through all RPN elements without filtering by element type. Elements like FUNCTION_AND, FUNCTION_OR, FUNCTION_NOT, ALWAYS_TRUE, etc. have no monotonic_functions_chain and should be skipped early to avoid unnecessary function calls and improve clarity. Consider adding a condition to skip non-relevant element types before checking monotonic chains.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The first for-each loop iterates through all RPN elements without filtering by element type. Elements like FUNCTION_AND, FUNCTION_OR, FUNCTION_NOT, ALWAYS_TRUE, etc. have no monotonic_functions_chain and should be skipped early to avoid unnecessary function calls and improve clarity. Consider adding a condition to skip non-relevant element types before checking monotonic chains."
+    },
+    {
+      "id": "i2",
+      "file": "src/Storages/MergeTree/KeyCondition.cpp",
+      "line_start": 2924,
+      "line_end": 2938,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Maintainability/perf: the function does two full passes over `rpn` (first to validate mon…",
+      "description": "Maintainability/perf: the function does two full passes over `rpn` (first to validate monotonic chains, second to build constraints). If `rpn` can be large, consider merging the checks into a single pass or caching validation results per element to avoid repeated scanning. Also consider binding `const auto & mappings = elem.set_index->getIndexesMapping();` if it returns by value to avoid extra copies.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "Maintainability/perf: the function does two full passes over `rpn` (first to validate monotonic chains, second to build constraints). If `rpn` can be large, consider merging the checks into a single pass or caching validation results per element to avoid repeated scanning. Also consider binding `const auto & mappings = elem.set_index->getIndexesMapping();` if it returns by value to avoid extra copies."
+    },
+    {
+      "id": "i3",
+      "file": "src/Storages/MergeTree/KeyCondition.cpp",
+      "line_start": 2929,
+      "line_end": 2929,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The condition `elem.set_index->size() != 1` seems restrictive",
+      "description": "The condition `elem.set_index->size() != 1` seems restrictive. The comment and PR description don't explain why binary search should only work with sets of size 1. \n\nWhat happens with sets of size 2 or more? If this is an intentional limitation for the initial implementation, it should be documented with a comment explaining why and potentially a TODO for future improvement.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The condition `elem.set_index->size() != 1` seems restrictive. The comment and PR description don't explain why binary search should only work with sets of size 1. \n\nWhat happens with sets of size 2 or more? If this is an intentional limitation for the initial implementation, it should be documented with a comment explaining why and potentially a TODO for future improvement."
+    },
+    {
+      "id": "i4",
+      "file": "tests/queries/0_stateless/03518_key_condition_binary_search.sh",
+      "line_start": 25,
+      "line_end": 25,
+      "category": "correctness",
+      "severity": null,
+      "title": "Incorrect time zone string casing in DateTime64 column definition: 'Asia/shanghai' must b…",
+      "description": "Incorrect time zone string casing in DateTime64 column definition: 'Asia/shanghai' must be 'Asia/Shanghai' to avoid BAD_ARGUMENTS exception.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Incorrect time zone string casing in DateTime64 column definition: 'Asia/shanghai' must be 'Asia/Shanghai' to avoid BAD_ARGUMENTS exception."
+    },
+    {
+      "id": "i5",
+      "file": "tests/queries/0_stateless/03518_key_condition_binary_search.sh",
+      "line_start": 31,
+      "line_end": 31,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Missing newline at end of file",
+      "description": "Missing newline at end of file. While this might not cause functional issues, it's a best practice to end shell scripts with a newline character. Most linters and style guides require this.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Missing newline at end of file. While this might not cause functional issues, it's a best practice to end shell scripts with a newline character. Most linters and style guides require this."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/Storages/MergeTree/KeyCondition.cpp",
+      "line_start": 2904,
+      "line_end": 2905,
+      "description": "Capturing empty Field by reference and using it in getMonotonicityForRange may lead to incorrect results. Consider passing meaningful values or re-evaluating the approach."
+    },
+    {
+      "file": "src/Storages/MergeTree/KeyCondition.cpp",
+      "line_start": 2905,
+      "line_end": 2905,
+      "description": "Lambda capture style: The lambda captures `field` by reference `[&field]`, but since `field` is a const local variable that's immediately available, capturing by value `[field]` would be more idiomatic and clearer. While capturing by reference works here, capturing by value better expresses the intent that the lambda doesn't modify the captured variable and avoids potential confusion about lifetime."
+    },
+    {
+      "file": "src/Storages/MergeTree/KeyCondition.cpp",
+      "line_start": 2910,
+      "line_end": 2910,
+      "description": "Missing null check: You check `!func` but this only handles the case where the function pointer itself is null. However, the functions vector might contain elements where `hasInformationAboutMonotonicity()` could throw or behave unexpectedly. Consider wrapping this in a try-catch or adding more defensive checks."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/ClickHouse/ClickHouse/pull/80597). Upstream base 1b7dc9c25090cf8cd75eb92b951cc74033eccab0 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 76. Severity absent in the source. i1: AI comment (GLM-4.7), File Level; i2: AI comment (GPT-5.2), Diff Level; i3: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i4: human comment, Diff Level; i5: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level"
+}

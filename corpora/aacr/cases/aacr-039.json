@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-039",
+  "language": "cpp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-039/base",
+  "head_branch": "bench/aacr/aacr-039/head",
+  "base_sha": "362bb040aa758249af67d88a7486edbde82a5eb1",
+  "head_sha": "30aaa0480c9a57bd7a28a8f236154f7229372146",
+  "mr_title": "imgcodecs: png: add log if first chunk is not IHDR",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/opencv/opencv",
+    "commit": "e546382fc1cbb61a7679c0511303729844a70111",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/opencv/opencv/pull/27297",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "modules/imgcodecs/src/grfmt_png.cpp",
+      "line_start": 293,
+      "line_end": 294,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Grammar and formatting issues in log messages:",
+      "description": "Grammar and formatting issues in log messages:\n1. Missing space after 'chunk' before parenthesis\n2. Awkward phrasing 'shall not be first instead of' - consider 'should not appear before' or 'detected instead of'\n\nSuggested improvement for clarity and consistency.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Grammar and formatting issues in log messages:\n1. Missing space after 'chunk' before parenthesis\n2. Awkward phrasing 'shall not be first instead of' - consider 'should not appear before' or 'detected instead of'\n\nSuggested improvement for clarity and consistency.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "modules/imgcodecs/src/grfmt_png.cpp",
+      "line_start": 293,
+      "line_end": 294,
+      "description": "The second CV_LOG_IF_ERROR condition `id != id_CgBI` is redundant. Since we are already inside the `if (id != id_IHDR)` block, and `id_CgBI` is a specific value different from `id_IHDR`, the condition `id != id_CgBI` will always be true when the first condition `id == id_CgBI` is false. This means the second log message will always be printed for non-IHDR chunks that are also not CgBI. The logic should be restructured using an if-else statement to clearly separate the two cases.\n\n```suggestion\n        if (id == id_CgBI) {\n            CV_LOG_ERROR(NULL, \"CgBI chunk(Apple private) shall not be first instead of IHDR\");\n        } else {\n            CV_LOG_ERROR(NULL, \"IHDR chunk shall be first, this data may be broken\");\n        }\n```"
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/opencv/opencv/pull/27297). Upstream base 16a3d37dc159dbcaaf8ee74cf63669f0203f9655 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 48. Severity absent in the source. i1: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level"
+}

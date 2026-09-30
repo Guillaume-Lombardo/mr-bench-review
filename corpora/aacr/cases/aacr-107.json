@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-107",
+  "language": "typescript",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-107/base",
+  "head_branch": "bench/aacr/aacr-107/head",
+  "base_sha": "9234c7ff531207ee23cca6ac501545bb557f4141",
+  "head_sha": "82884c02d4c4250db541b67f01933faeb2c3e47d",
+  "mr_title": "chore(server): split album update notifications into multiple jobs",
+  "mr_description": "We would like to move away from the concept of finding and removing pending\njobs. The only place this is used is for album update notifications, and this\nis done so that users who initially uploaded assets to an album will also\nreceive a notification if someone else then adds assets to the same album. This\ncan also be achieved with a job for each recipient. Multiple jobs also has the\nadvantage that it will scale better for albums with many users, it's possible\nto send notifications concurrently, retries are possible without sending\nduplicate notifications, and it's clear what recipient a job failed for.",
+  "origin": {
+    "repository": "https://github.com/immich-app/immich",
+    "commit": "b7a12558bc8e69c9c96b9a5b12f61f94689ea0e3",
+    "license": "AGPL-3.0",
+    "source_case": "https://github.com/immich-app/immich/pull/17879",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "server/src/repositories/event.repository.ts",
+      "line_start": 50,
+      "line_end": 50,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The codebase convention uses \"Id\" (capital 'I', lowercase 'd') for identifier suffixes, b…",
+      "description": "The codebase convention uses \"Id\" (capital 'I', lowercase 'd') for identifier suffixes, but the diff uses `recipientID` with uppercase \"ID\".  \nRename `recipientID` to `recipientId` to maintain naming consistency.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The codebase convention uses \"Id\" (capital 'I', lowercase 'd') for identifier suffixes, but the diff uses `recipientID` with uppercase \"ID\".  \nRename `recipientID` to `recipientId` to maintain naming consistency."
+    },
+    {
+      "id": "i2",
+      "file": "server/src/repositories/job.repository.ts",
+      "line_start": 209,
+      "line_end": 212,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential null/undefined in jobId composition: `item.data.recipientID` is concatenated in…",
+      "description": "Potential null/undefined in jobId composition: `item.data.recipientID` is concatenated into the jobId string without optional chaining/validation. If recipientID can be undefined/null, you will generate ids like `abc/undefined`, causing removal/dedup to fail and making debugging harder. Consider validating required fields for NOTIFY_ALBUM_UPDATE (and throwing/guarding) or only appending recipientID when present.\n\n```suggestion\n        if (!item.data?.id || !item.data?.recipientID) {\n                  throw new ImmichStartupError('NOTIFY_ALBUM_UPDATE requires id and recipientID');\n                }\n                return {\n                  jobId: `${item.data.id}/${item.data.recipientID}`,\n                  delay: item.data?.delay,\n                };\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential null/undefined in jobId composition: `item.data.recipientID` is concatenated into the jobId string without optional chaining/validation. If recipientID can be undefined/null, you will generate ids like `abc/undefined`, causing removal/dedup to fail and making debugging harder. Consider validating required fields for NOTIFY_ALBUM_UPDATE (and throwing/guarding) or only appending recipientID when present.\n\n```suggestion\n        if (!item.data?.id || !item.data?.recipientID) {\n                  throw new ImmichStartupError('NOTIFY_ALBUM_UPDATE requires id and recipientID');\n                }\n                return {\n                  jobId: `${item.data.id}/${item.data.recipientID}`,\n                  delay: item.data?.delay,\n                };\n```"
+    },
+    {
+      "id": "i3",
+      "file": "server/src/repositories/job.repository.ts",
+      "line_start": 233,
+      "line_end": 233,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The deprecated `removeJob` method should use JSDoc `@deprecated` annotation instead of a…",
+      "description": "The deprecated `removeJob` method should use JSDoc `@deprecated` annotation instead of a simple comment to enable proper IDE integration, including strikethrough visualization and tooltip documentation for consumers.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The deprecated `removeJob` method should use JSDoc `@deprecated` annotation instead of a simple comment to enable proper IDE integration, including strikethrough visualization and tooltip documentation for consumers."
+    },
+    {
+      "id": "i4",
+      "file": "server/src/services/album.service.ts",
+      "line_start": 173,
+      "line_end": 175,
+      "category": "maintainability",
+      "severity": null,
+      "title": "According to the 'Loop Asynchronous' rule in the review checklist, these are independent…",
+      "description": "According to the 'Loop Asynchronous' rule in the review checklist, these are independent asynchronous operations that could benefit from parallel execution using Promise.all instead of sequential execution in a for-await loop. This would improve performance when there are multiple recipients.\n\n```suggestion\n      await Promise.all(\n        allUsersExceptUs.map((recipientID) =>\n          this.eventRepository.emit('album.update', { id, recipientID }),\n        ),\n      );\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "According to the 'Loop Asynchronous' rule in the review checklist, these are independent asynchronous operations that could benefit from parallel execution using Promise.all instead of sequential execution in a for-await loop. This would improve performance when there are multiple recipients.\n\n```suggestion\n      await Promise.all(\n        allUsersExceptUs.map((recipientID) =>\n          this.eventRepository.emit('album.update', { id, recipientID }),\n        ),\n      );\n```"
+    },
+    {
+      "id": "i5",
+      "file": "server/src/services/notification.service.ts",
+      "line_start": 98,
+      "line_end": 102,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The logic of removing and immediately re-queueing the same job might be inefficient",
+      "description": "The logic of removing and immediately re-queueing the same job might be inefficient. Consider if this is necessary or if the job could be updated instead of removed and re-added.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "The logic of removing and immediately re-queueing the same job might be inefficient. Consider if this is necessary or if the job could be updated instead of removed and re-added.\n"
+    },
+    {
+      "id": "i6",
+      "file": "server/src/services/notification.service.ts",
+      "line_start": 309,
+      "line_end": 312,
+      "category": "correctness",
+      "severity": null,
+      "title": "Missing defensive programming idioms surrounding external dependency invocations expose c…",
+      "description": "Missing defensive programming idioms surrounding external dependency invocations expose consumers risks associated with undetected anomalies originating beyond trusted boundaries. Encourage wrapping suspect method chains within protective blocks equipped graceful fallback procedures ensuring continuity even amid transient disruptions.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Missing defensive programming idioms surrounding external dependency invocations expose consumers risks associated with undetected anomalies originating beyond trusted boundaries. Encourage wrapping suspect method chains within protective blocks equipped graceful fallback procedures ensuring continuity even amid transient disruptions.\n"
+    },
+    {
+      "id": "i7",
+      "file": "server/src/services/notification.service.ts",
+      "line_start": 309,
+      "line_end": 312,
+      "category": "correctness",
+      "severity": null,
+      "title": "The previous logic that verified recipients were actually part of the album has been remo…",
+      "description": "The previous logic that verified recipients were actually part of the album has been removed. Consider adding validation to ensure the recipientID belongs to this album before sending notifications.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The previous logic that verified recipients were actually part of the album has been removed. Consider adding validation to ensure the recipientID belongs to this album before sending notifications.\n"
+    },
+    {
+      "id": "i8",
+      "file": "server/src/services/notification.service.ts",
+      "line_start": 335,
+      "line_end": 335,
+      "category": "correctness",
+      "severity": null,
+      "title": "Queueing SEND_EMAIL now uses `user.email`",
+      "description": "Queueing SEND_EMAIL now uses `user.email`. If `user.email` can be null/empty for certain accounts (e.g., OAuth-only), you might want to guard and SKIP to avoid queueing invalid email jobs.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Queueing SEND_EMAIL now uses `user.email`. If `user.email` can be null/empty for certain accounts (e.g., OAuth-only), you might want to guard and SKIP to avoid queueing invalid email jobs."
+    },
+    {
+      "id": "i9",
+      "file": "server/src/types.ts",
+      "line_start": 255,
+      "line_end": 255,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Naming inconsistency detected: `INotifyAlbumInviteJob` uses `recipientId` (lowercase 'd')…",
+      "description": "Naming inconsistency detected: `INotifyAlbumInviteJob` uses `recipientId` (lowercase 'd') while `INotifyAlbumUpdateJob` uses `recipientID` (uppercase 'D'). For code consistency, both interfaces should follow the same naming convention. Consider using `recipientId` (lowercase 'd') to match the existing `INotifyAlbumInviteJob` interface and maintain consistency across the codebase.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Naming inconsistency detected: `INotifyAlbumInviteJob` uses `recipientId` (lowercase 'd') while `INotifyAlbumUpdateJob` uses `recipientID` (uppercase 'D'). For code consistency, both interfaces should follow the same naming convention. Consider using `recipientId` (lowercase 'd') to match the existing `INotifyAlbumInviteJob` interface and maintain consistency across the codebase."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "server/src/repositories/job.repository.ts",
+      "line_start": 235,
+      "line_end": 235,
+      "description": "There's an inconsistency in parameter naming. The method parameter is named jobID (uppercase D) while the property in the options object is named jobId (lowercase d). Consistent naming improves readability."
+    },
+    {
+      "file": "server/src/services/album.service.ts",
+      "line_start": 174,
+      "line_end": 174,
+      "description": "The event design for album updates is misaligned with domain semantics; replace 'album.update' with 'album.addAssets' using payload { albumId, userId } (actor) to enable notification services to exclude the actor and eliminate unnecessary user list processing."
+    },
+    {
+      "file": "server/src/services/notification.service.ts",
+      "line_start": 97,
+      "line_end": 97,
+      "description": "Potential typo/inconsistency: event payload field changed from `recipientIds` to `recipientID`. In this codebase most identifiers use `Id/Ids` (camelCase) rather than `ID`. If `ArgOf<'album.update'>` actually defines `recipientId`/`recipientIds`, this will break at runtime (undefined) and TypeScript may not catch if the event payload is `any`. Please align naming with the event type and use a consistent `recipientId`/`recipientIds` convention."
+    },
+    {
+      "file": "server/src/services/notification.service.ts",
+      "line_start": 101,
+      "line_end": 101,
+      "description": "Hardcoded delay interval utilized directly within implementation contradicts principle advocating decoupling runtime behaviors from source definitions wherever practicable. Suggest sourcing threshold externally e.g., environment-specific configurations."
+    },
+    {
+      "file": "server/src/services/notification.service.ts",
+      "line_start": 101,
+      "line_end": 101,
+      "description": "Logic change: previously skipped queuing when `recipientIds` was empty and merged recipients from a previous job to avoid losing earlier recipients. With per-recipient job IDs this may be OK, but ensure the emitter triggers one event per recipient; otherwise only a single `recipientID` will be notified and others will be dropped. Add a guard for falsy `recipientID` to avoid queueing malformed jobs (`${id}/undefined`)."
+    },
+    {
+      "file": "server/src/services/notification.service.ts",
+      "line_start": 293,
+      "line_end": 293,
+      "description": "Please ensure the job type `JobOf<JobName.NOTIFY_ALBUM_UPDATE>` matches the new payload shape (`recipientID`). If `JobOf` is derived from a central mapping, this change might require updates elsewhere; otherwise destructuring `{ recipientID }` could be undefined and lead to wrong SKIPPED/SUCCESS behavior."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/immich-app/immich/pull/17879). Upstream base d0014bdf94feecf84b375499a8e48bb9fa47a8b3 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 213. Severity absent in the source. i1: human comment, File Level; i2: AI comment (GPT-5.2), Diff Level; i3: human comment, Diff Level; i4: AI comment (GLM-4.7), Diff Level; i5: AI comment (Deepseek-V3.2), File Level; i6: AI comment (Qwen-Coder-480B), Repo Level; i7: AI comment (Deepseek-V3.2), File Level; i8: AI comment (GPT-5.2), Diff Level; i9: AI comment (GLM-4.7), File Level"
+}

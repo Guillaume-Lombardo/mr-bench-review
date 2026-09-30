@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "corpus": "curated",
+  "id": "case-093",
+  "language": "typescript",
+  "size": "medium",
+  "kind": "real",
+  "tier": "core",
+  "base_branch": "bench/curated/case-093/base",
+  "head_branch": "bench/curated/case-093/head",
+  "base_sha": "629334b562dce51bf949f8a8a99cacd1fc7276a0",
+  "head_sha": "2576e5d1ed75c8c3dd5f5a0f41be204041e6ecf1",
+  "mr_title": "fix(router): Ensure newly resolved data is inherited by child routes",
+  "mr_description": "The current way of computing a route's params and data recomputes\ninherited data from the inheritance root every time. When the\ninheritance strategy is \"emptyOnly\", this isn't necessarily the root of\nthe tree, but some point along the way (it stops once it reaches an\nancestor route with a component).\n\nInstead, this commit updates parameter inheritance to only inherit data\ndirectly from the parent route (again, instead of recomputing all\ninherited data back to the inheritance root). The only requirement for\nmaking this work is that the parent route data has already calculated\nand updated its own inherited data. This was really already a\nrequirement -- parents need to be processed before children.\n\nIn addition, the update to the inheritance algorithm in this commit\nrequires more of an understanding that a resolver running higher up in\nthe tree has to propagate inherited data downwards. The previous\nalgorithm hid this knowledge because resolvers would recompute inherited\ndata from the root when run. However, routes that did not have resolvers\nrerun or never had resolvers at all would not get the updated resolved data.",
+  "origin": {
+    "repository": "https://github.com/angular/angular",
+    "commit": "327896606832bf6fbfc8f23989755123028136a8",
+    "license": "MIT",
+    "source_case": null,
+    "source_url": null
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "packages/router/src/router_state.ts",
+      "line_start": 269,
+      "line_end": 270,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Route data returned by reference and later frozen",
+      "description": "When data is not inherited, getInherited() returns route.params/route.data by reference; the router later freezes the inherited data, which freezes the user's original `data` object from the Route config.\n\nPreviously a new object was always built. Returning the same reference means the snapshot's data object is the one declared in the application's route configuration (or produced elsewhere). Since the router freezes snapshot data, application code that mutates its own config object afterwards throws in strict mode ('Cannot assign to read only property'). Params and data must be shallow-copied as in the inheriting branch.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
+  "known_false_positives": [],
+  "annotator_notes": "Upstream change https://github.com/angular/angular/commit/327896606832bf6fbfc8f23989755123028136a8. Primary issue confirmed by the later upstream fix https://github.com/angular/angular/commit/0696ab6a5bea8acd6dafde488151150bf3332b79; its regression test reproduces the problem on this head. Curator difficulty: hard. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+}

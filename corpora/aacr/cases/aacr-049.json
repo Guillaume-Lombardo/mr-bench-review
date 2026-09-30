@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-049",
+  "language": "typescript",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-049/base",
+  "head_branch": "bench/aacr/aacr-049/head",
+  "base_sha": "306602c2356276227b3b006f7b80b302bfe1ce31",
+  "head_sha": "f4e06f7354ea0392dcce551aaae1a9bcb5e662ef",
+  "mr_title": "Fix Non-UTF-8 File Handling: Improve Encoding Detection to Prevent Garbled Text and Binary Misclassification",
+  "mr_description": "",
+  "origin": {
+    "repository": "https://github.com/cline/cline",
+    "commit": "7d18fb9df620c61420c6939df22fb6f7af836bb2",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/cline/cline/pull/2347",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/integrations/editor/DiffViewProvider.ts",
+      "line_start": 49,
+      "line_end": 51,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The encoding detection logic is complex and could benefit from a comment explaining why e…",
+      "description": "The encoding detection logic is complex and could benefit from a comment explaining why encoding detection is necessary (e.g., supporting non-UTF8 files) and the fallback behavior.\n\n```suggestion\n \t\tconst fileBuffer = await fs.readFile(absolutePath)\n \t\t// Detect file encoding to support non-UTF8 files (e.g., GBK, Shift-JIS)\n \t\t// Falls back to UTF8 if detection fails\n \t\tconst detected = chardet.detect(fileBuffer)\n \t\tthis.fileEncoding =\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The encoding detection logic is complex and could benefit from a comment explaining why encoding detection is necessary (e.g., supporting non-UTF8 files) and the fallback behavior.\n\n```suggestion\n \t\tconst fileBuffer = await fs.readFile(absolutePath)\n \t\t// Detect file encoding to support non-UTF8 files (e.g., GBK, Shift-JIS)\n \t\t// Falls back to UTF8 if detection fails\n \t\tconst detected = chardet.detect(fileBuffer)\n \t\tthis.fileEncoding =\n```"
+    },
+    {
+      "id": "i2",
+      "file": "src/integrations/editor/DiffViewProvider.ts",
+      "line_start": 49,
+      "line_end": 57,
+      "category": "correctness",
+      "severity": null,
+      "title": "Missing error handling for file reading and encoding operations",
+      "description": "Missing error handling for file reading and encoding operations. If readFile fails or if encoding detection/decoding fails, it could cause unhandled exceptions. Consider wrapping in try/catch blocks and providing appropriate fallback behavior.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Missing error handling for file reading and encoding operations. If readFile fails or if encoding detection/decoding fails, it could cause unhandled exceptions. Consider wrapping in try/catch blocks and providing appropriate fallback behavior.\n"
+    },
+    {
+      "id": "i3",
+      "file": "src/integrations/editor/DiffViewProvider.ts",
+      "line_start": 237,
+      "line_end": 240,
+      "category": "correctness",
+      "severity": null,
+      "title": "Missing error handling for file writing operation",
+      "description": "Missing error handling for file writing operation. The writeFile operation should be wrapped in a try/catch block to handle potential errors during file encoding or disk I/O operations.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Missing error handling for file writing operation. The writeFile operation should be wrapped in a try/catch block to handle potential errors during file encoding or disk I/O operations.\n"
+    },
+    {
+      "id": "i4",
+      "file": "src/integrations/editor/DiffViewProvider.ts",
+      "line_start": 239,
+      "line_end": 239,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Remove the unnecessary double type cast (`as unknown as Uint8Array`) in the `fs.writeFile…",
+      "description": "Remove the unnecessary double type cast (`as unknown as Uint8Array`) in the `fs.writeFile` call since `iconv.encode` returns a Buffer which is natively supported by the function.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Remove the unnecessary double type cast (`as unknown as Uint8Array`) in the `fs.writeFile` call since `iconv.encode` returns a Buffer which is natively supported by the function."
+    },
+    {
+      "id": "i5",
+      "file": "src/integrations/misc/extract-text.ts",
+      "line_start": 7,
+      "line_end": 7,
+      "category": "maintainability",
+      "severity": null,
+      "title": "`getFileSizeInKB` is imported but no longer used in the code",
+      "description": "`getFileSizeInKB` is imported but no longer used in the code. It is recommended to use it to check the file size before `fs.readFile` to avoid reading large files into memory.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "`getFileSizeInKB` is imported but no longer used in the code. It is recommended to use it to check the file size before `fs.readFile` to avoid reading large files into memory.\n"
+    },
+    {
+      "id": "i6",
+      "file": "src/integrations/misc/extract-text.ts",
+      "line_start": 26,
+      "line_end": 29,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Reading the entire file into memory before checking its size can lead to high memory cons…",
+      "description": "Reading the entire file into memory before checking its size can lead to high memory consumption or crashes with large files. It is strictly recommended to check the file size using `fs.stat` (or `getFileSizeInKB`) before reading the file content.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Performance",
+      "source_text": "Reading the entire file into memory before checking its size can lead to high memory consumption or crashes with large files. It is strictly recommended to check the file size using `fs.stat` (or `getFileSizeInKB`) before reading the file content.\n"
+    },
+    {
+      "id": "i7",
+      "file": "src/integrations/misc/extract-text.ts",
+      "line_start": 59,
+      "line_end": 63,
+      "category": "maintainability",
+      "severity": null,
+      "title": "`extractTextFromIPYNB` now duplicates the encoding-detection + decode logic from the defa…",
+      "description": "`extractTextFromIPYNB` now duplicates the encoding-detection + decode logic from the default branch. Consider extracting a small helper like `readTextFileWithEncodingDetection(filePath)` to reduce duplication and keep behavior consistent (size limit, binary check, confidence threshold, normalization, error handling).",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "`extractTextFromIPYNB` now duplicates the encoding-detection + decode logic from the default branch. Consider extracting a small helper like `readTextFileWithEncodingDetection(filePath)` to reduce duplication and keep behavior consistent (size limit, binary check, confidence threshold, normalization, error handling)."
+    },
+    {
+      "id": "i8",
+      "file": "src/integrations/misc/extract-text.ts",
+      "line_start": 61,
+      "line_end": 62,
+      "category": "maintainability",
+      "severity": null,
+      "title": "This nested ternary expression is difficult to read and violates the coding standard",
+      "description": "This nested ternary expression is difficult to read and violates the coding standard. Refactor to use if-else statements for better readability.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "This nested ternary expression is difficult to read and violates the coding standard. Refactor to use if-else statements for better readability.\n"
+    },
+    {
+      "id": "i9",
+      "file": "src/integrations/misc/extract-text.ts",
+      "line_start": 61,
+      "line_end": 62,
+      "category": "correctness",
+      "severity": null,
+      "title": "Using 'as any' weakens type safety",
+      "description": "Using 'as any' weakens type safety. Prefer validating existence of '.encoding' before accessing it, e.g., 'if (detected && typeof detected === 'object' && 'encoding' in detected)'",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Using 'as any' weakens type safety. Prefer validating existence of '.encoding' before accessing it, e.g., 'if (detected && typeof detected === 'object' && 'encoding' in detected)'\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/integrations/editor/DiffViewProvider.ts",
+      "line_start": 28,
+      "line_end": 28,
+      "description": "Hardcoded string \"utf8\" should be extracted as a constant to avoid duplication and improve maintainability."
+    },
+    {
+      "file": "src/integrations/editor/DiffViewProvider.ts",
+      "line_start": 50,
+      "line_end": 50,
+      "description": "The `detected` variable from `chardet.detect` requires explicit typing as `chardet.DetectResult | null` to prevent unsafe implicit `any` usage and ensure proper type safety."
+    },
+    {
+      "file": "src/integrations/editor/DiffViewProvider.ts",
+      "line_start": 59,
+      "line_end": 60,
+      "description": "Another hardcoded \"utf8\" string. This should use the same constant as the class property to maintain consistency."
+    },
+    {
+      "file": "src/integrations/editor/DiffViewProvider.ts",
+      "line_start": 237,
+      "line_end": 240,
+      "description": "**Critical: Incomplete write logic**: This code only writes the file when encoding is NOT UTF-8, but there's no else branch to handle UTF-8 files. This means UTF-8 files won't be written at all, which will cause data loss. The original `fs.writeFile` call for UTF-8 files appears to be missing."
+    },
+    {
+      "file": "src/integrations/editor/DiffViewProvider.ts",
+      "line_start": 237,
+      "line_end": 240,
+      "description": "This logic introduces a double-write issue for non-UTF8 files. An unconditional `fs.writeFile` call exists earlier in this method (around line 218) which writes the file as UTF-8. This block then overwrites it with the encoded content. It is recommended to consolidate the write logic: remove the earlier `fs.writeFile` call and use `iconv.encode` (which supports utf8) to handle the write operation for all encodings in a single step."
+    },
+    {
+      "file": "src/integrations/misc/extract-text.ts",
+      "line_start": 30,
+      "line_end": 30,
+      "description": "Encoding detection logic using `chardet.detect` is duplicated across the codebase; abstract into a reusable helper function to eliminate redundancy and ensure consistent implementation."
+    },
+    {
+      "file": "src/integrations/misc/extract-text.ts",
+      "line_start": 30,
+      "line_end": 36,
+      "description": "`jschardet.detect` returns an object like `{ encoding, confidence }` (not a string). This branch is likely dead and also you’re not checking `confidence`, so low-confidence guesses may produce mojibake or throw in `iconv.decode`. Consider: if `!detected?.encoding || detected.confidence < threshold` fallback to `utf8` (or rerun binary check), and normalize encoding names (e.g., `UTF-8`, `windows-1252`). Also consider wrapping `iconv.decode` in try/catch to provide a clearer error and fallback behavior.\n\n```suggestion\n   const detected = chardet.detect(fileBuffer)\n   const encoding =\n   \tdetected && typeof detected === \"object\" && detected.encoding && detected.confidence >= 0.6\n   \t\t? detected.encoding\n   \t\t: \"utf8\"\n   \n   // Optional: normalize common aliases here\n   \n   let text: string\n   try {\n   \ttext = iconv.decode(fileBuffer, encoding)\n   } catch {\n   \ttext = iconv.decode(fileBuffer, \"utf8\")\n   }\n   return text\n```"
+    },
+    {
+      "file": "src/integrations/misc/extract-text.ts",
+      "line_start": 31,
+      "line_end": 31,
+      "description": "**Same Type Safety Issue**: Use optional chaining instead of `(detected as any).encoding`:\n\n```typescript\nconst detected = chardet.detect(fileBuffer)\nconst encoding = detected?.encoding || \"utf8\"\nif (!encoding || encoding === \"utf8\") {\n    const isBinary = await isBinaryFile(fileBuffer).catch(() => false)\n    if (isBinary) {\n        throw new Error(`Cannot read text for file type: ${fileExtension}`)\n    }\n}\nreturn iconv.decode(fileBuffer, encoding)\n```\n\nThis simplifies the logic and removes the need for `typeof detected === \"string\"` check (which seems incorrect based on jschardet's API)."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/cline/cline/pull/2347). Upstream base 23a0d4164651f039da6c730dac07a4a47689513e = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 63. Severity absent in the source. i1: AI comment (GLM-4.7), File Level; i2: AI comment (Qwen-Coder-480B), Repo Level; i3: AI comment (Qwen-Coder-480B), File Level; i4: human comment, File Level; i5: AI comment (Gemini-3-Pro), File Level; i6: AI comment (Gemini-3-Pro), File Level; i7: AI comment (GPT-5.2), File Level; i8: AI comment (GLM-4.7), File Level; i9: AI comment (Qwen-Coder-480B), File Level"
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-088",
+  "language": "cpp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-088/base",
+  "head_branch": "bench/aacr/aacr-088/head",
+  "base_sha": "32d575a565a2d4effa6c8c90d01956cf212c2bc9",
+  "head_sha": "bb30064b400c9cee66c3c0e09c93b05feb2fffdd",
+  "mr_title": "netinfo: return local services in the default report",
+  "mr_description": "- netinfo: return local services in the default report\n- netinfo: return shortened services, if peers list requested",
+  "origin": {
+    "repository": "https://github.com/bitcoin/bitcoin",
+    "commit": "724546e28a5778e1c3f5100406ed7237f76aab55",
+    "license": "MIT",
+    "source_case": "https://github.com/bitcoin/bitcoin/pull/31886",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/bitcoin-cli.cpp",
+      "line_start": 484,
+      "line_end": 493,
+      "category": "correctness",
+      "severity": null,
+      "title": "Potential formatting/consistency issue: you lower-case service names and replace '_' with…",
+      "description": "Potential formatting/consistency issue: you lower-case service names and replace '_' with spaces, which may diverge from how services are displayed elsewhere (e.g., FormatServices output). If the intention is to match FormatServices, consider reusing it or at least keep the same casing/separator rules. Also, `services[i].get_str()` will throw if elements aren’t strings; consider validating type (`isStr()`) or using `getValStr()`/defensive handling to avoid unexpected exceptions when RPC output changes.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Potential formatting/consistency issue: you lower-case service names and replace '_' with spaces, which may diverge from how services are displayed elsewhere (e.g., FormatServices output). If the intention is to match FormatServices, consider reusing it or at least keep the same casing/separator rules. Also, `services[i].get_str()` will throw if elements aren’t strings; consider validating type (`isStr()`) or using `getValStr()`/defensive handling to avoid unexpected exceptions when RPC output changes."
+    },
+    {
+      "id": "i2",
+      "file": "src/bitcoin-cli.cpp",
+      "line_start": 487,
+      "line_end": 487,
+      "category": "correctness",
+      "severity": null,
+      "title": "The ServicesList function outputs services in arbitrary order, which may cause inconsiste…",
+      "description": "The ServicesList function outputs services in arbitrary order, which may cause inconsistent or confusing presentation; sort the vector of service names before generating the output string.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "The ServicesList function outputs services in arbitrary order, which may cause inconsistent or confusing presentation; sort the vector of service names before generating the output string."
+    },
+    {
+      "id": "i3",
+      "file": "src/bitcoin-cli.cpp",
+      "line_start": 488,
+      "line_end": 490,
+      "category": "maintainability",
+      "severity": null,
+      "title": "**Compatibility Issue**: `std::ranges::replace` is a C++20 feature",
+      "description": "**Compatibility Issue**: `std::ranges::replace` is a C++20 feature. If the project does not enforce C++20, this will cause a build failure. Using `std::replace` from `<algorithm>` is safer and compatible with C++17 and earlier.\n\nAlso, `ToLower` returns a new string, so modifying it in place is correct.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "**Compatibility Issue**: `std::ranges::replace` is a C++20 feature. If the project does not enforce C++20, this will cause a build failure. Using `std::replace` from `<algorithm>` is safer and compatible with C++17 and earlier.\n\nAlso, `ToLower` returns a new string, so modifying it in place is correct.\n"
+    },
+    {
+      "id": "i4",
+      "file": "src/bitcoin-cli.cpp",
+      "line_start": 585,
+      "line_end": 585,
+      "category": "correctness",
+      "severity": null,
+      "title": "Dangerous use of std::string_view with temporary string",
+      "description": "Dangerous use of std::string_view with temporary string. The strprintf() function returns a temporary std::string that will be destroyed immediately, leaving the string_view with a dangling reference. This will cause undefined behavior when the string_view is used later. Change std::string_view to std::string to safely store the result.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Dangerous use of std::string_view with temporary string. The strprintf() function returns a temporary std::string that will be destroyed immediately, leaving the string_view with a dangling reference. This will cause undefined behavior when the string_view is used later. Change std::string_view to std::string to safely store the result.\n"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/bitcoin-cli.cpp",
+      "line_start": 668,
+      "line_end": 671,
+      "description": "Output formatting: this appends \"\\n\\nLocal services: ...\" and then immediately appends \"\\n\\nLocal addresses\". That results in two blank lines between the sections and may be inconsistent with surrounding formatting. Consider using a single leading newline (or no leading newline) so spacing matches the rest of the report."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/bitcoin/bitcoin/pull/31886). Upstream base db36a92c02b83f2e6477a5a55fc061319f7cc6a3 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 34. Severity absent in the source. i1: AI comment (GPT-5.2), File Level; i2: human comment, Repo Level; i3: AI comment (Gemini-3-Pro), Diff Level; i4: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level"
+}

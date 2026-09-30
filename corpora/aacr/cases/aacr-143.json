@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-143",
+  "language": "cpp",
+  "size": "small",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-143/base",
+  "head_branch": "bench/aacr/aacr-143/head",
+  "base_sha": "785a7cd6372176bf72b18b2c17cb542be7364155",
+  "head_sha": "c93ef1ea28f0f7d23b9677b18f44d027b56edfb0",
+  "mr_title": "Metrics and Logs for DiskChecker",
+  "mr_description": "- Metrics and Logs for DiskChecker\n- revert server async metrics",
+  "origin": {
+    "repository": "https://github.com/ClickHouse/ClickHouse",
+    "commit": "f9d51faa7cba634f38a711494003d404946b05de",
+    "license": "Apache-2.0",
+    "source_case": "https://github.com/ClickHouse/ClickHouse/pull/80391",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/Disks/DiskLocalCheckThread.cpp",
+      "line_start": 35,
+      "line_end": 38,
+      "category": "correctness",
+      "severity": null,
+      "title": "Startup log uses `formatReadableTime(static_cast<double>(check_period_ms) * 1e6 /* ns */)`",
+      "description": "Startup log uses `formatReadableTime(static_cast<double>(check_period_ms) * 1e6 /* ns */)`. This assumes `check_period_ms` is milliseconds and converts to nanoseconds by multiplying 1e6, which is correct, but it’s easy to misread and susceptible to overflow/precision loss when `check_period_ms` is large.\n\nPrefer using `std::chrono` conversions and pass an integer duration in nanoseconds if the API supports it, or at least cast to `UInt64` before multiply to avoid double precision issues.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "Startup log uses `formatReadableTime(static_cast<double>(check_period_ms) * 1e6 /* ns */)`. This assumes `check_period_ms` is milliseconds and converts to nanoseconds by multiplying 1e6, which is correct, but it’s easy to misread and susceptible to overflow/precision loss when `check_period_ms` is large.\n\nPrefer using `std::chrono` conversions and pass an integer duration in nanoseconds if the API supports it, or at least cast to `UInt64` before multiply to avoid double precision issues."
+    },
+    {
+      "id": "i2",
+      "file": "src/Disks/DiskLocalCheckThread.cpp",
+      "line_start": null,
+      "line_end": null,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The logging statements in disk operations omit the disk name parameter, making it impossi…",
+      "description": "The logging statements in disk operations omit the disk name parameter, making it impossible to correlate log entries with specific disks in multi-disk environments. This affects both the new startup period log and the disk recovery message in the run method.",
+      "outside_diff": true,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The logging statements in disk operations omit the disk name parameter, making it impossible to correlate log entries with specific disks in multi-disk environments. This affects both the new startup period log and the disk recovery message in the run method."
+    },
+    {
+      "id": "i3",
+      "file": "src/Disks/DiskLocalCheckThread.cpp",
+      "line_start": 41,
+      "line_end": 41,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Function parameters should be const since they are not modified",
+      "description": "Function parameters should be const since they are not modified. This improves code clarity and prevents accidental modification.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Function parameters should be const since they are not modified. This improves code clarity and prevents accidental modification.\n"
+    },
+    {
+      "id": "i4",
+      "file": "src/Disks/DiskLocalCheckThread.cpp",
+      "line_start": 41,
+      "line_end": 44,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The helper function `diskStatusChange` should be placed in an anonymous namespace or mark…",
+      "description": "The helper function `diskStatusChange` should be placed in an anonymous namespace or marked as `static` to limit its scope to this translation unit and avoid potential ODR (One Definition Rule) violations. Additionally, consider marking it as `constexpr` for compile-time evaluation.\n\nSuggested approach:\n```cpp\nnamespace\n{\n    constexpr int diskStatusChange(bool old_val, bool new_val)\n    {\n        return static_cast<int>(new_val) - static_cast<int>(old_val);\n    }\n}\n```\nOr simply:\n```cpp\nstatic constexpr int diskStatusChange(bool old_val, bool new_val)\n{\n    return static_cast<int>(new_val) - static_cast<int>(old_val);\n}\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The helper function `diskStatusChange` should be placed in an anonymous namespace or marked as `static` to limit its scope to this translation unit and avoid potential ODR (One Definition Rule) violations. Additionally, consider marking it as `constexpr` for compile-time evaluation.\n\nSuggested approach:\n```cpp\nnamespace\n{\n    constexpr int diskStatusChange(bool old_val, bool new_val)\n    {\n        return static_cast<int>(new_val) - static_cast<int>(old_val);\n    }\n}\n```\nOr simply:\n```cpp\nstatic constexpr int diskStatusChange(bool old_val, bool new_val)\n{\n    return static_cast<int>(new_val) - static_cast<int>(old_val);\n}\n```\n"
+    },
+    {
+      "id": "i5",
+      "file": "src/Disks/DiskLocalCheckThread.cpp",
+      "line_start": 64,
+      "line_end": 64,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Disk name should be included in readonly log message to identify the affected disk",
+      "description": "Disk name should be included in readonly log message to identify the affected disk.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Disk name should be included in readonly log message to identify the affected disk.\n"
+    },
+    {
+      "id": "i6",
+      "file": "src/Disks/DiskLocalCheckThread.cpp",
+      "line_start": 77,
+      "line_end": 77,
+      "category": "maintainability",
+      "severity": null,
+      "title": "Removing disk name from log messages reduces debuggability when multiple disks are present",
+      "description": "Removing disk name from log messages reduces debuggability when multiple disks are present. Consider keeping the disk name in logs for easier troubleshooting.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "Removing disk name from log messages reduces debuggability when multiple disks are present. Consider keeping the disk name in logs for easier troubleshooting.\n"
+    },
+    {
+      "id": "i7",
+      "file": "src/Disks/DiskLocalCheckThread.cpp",
+      "line_start": 83,
+      "line_end": 84,
+      "category": "correctness",
+      "severity": null,
+      "title": "CurrentMetrics updates are added at the end, but `run()` can return early when `need_stop…",
+      "description": "CurrentMetrics updates are added at the end, but `run()` can return early when `need_stop` is set, and more importantly it may throw from `disk->canRead()/canWrite()/isReadOnly()/isBroken()` depending on implementation. If an exception occurs mid-run, metrics may become stale or inconsistent.\n\nConsider wrapping the disk probing/decision logic in try/catch to (1) mark disk broken consistently and (2) still update metrics based on final state, or compute deltas right when state changes (immediately after setting `disk->readonly`/`disk->broken`) to avoid relying on re-reading `isReadOnly()/isBroken()`.\n\nAlso: `readonly`/`broken` are sampled via methods (`isReadOnly/isBroken`) but state is mutated via fields (`disk->readonly`, `disk->broken`). Mixing access paths can lead to mismatches if the methods include extra logic. Prefer using one consistent API (either methods or fields) for both snapshot and mutation.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Code Defect",
+      "source_text": "CurrentMetrics updates are added at the end, but `run()` can return early when `need_stop` is set, and more importantly it may throw from `disk->canRead()/canWrite()/isReadOnly()/isBroken()` depending on implementation. If an exception occurs mid-run, metrics may become stale or inconsistent.\n\nConsider wrapping the disk probing/decision logic in try/catch to (1) mark disk broken consistently and (2) still update metrics based on final state, or compute deltas right when state changes (immediately after setting `disk->readonly`/`disk->broken`) to avoid relying on re-reading `isReadOnly()/isBroken()`.\n\nAlso: `readonly`/`broken` are sampled via methods (`isReadOnly/isBroken`) but state is mutated via fields (`disk->readonly`, `disk->broken`). Mixing access paths can lead to mismatches if the methods include extra logic. Prefer using one consistent API (either methods or fields) for both snapshot and mutation."
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "src/Common/CurrentMetrics.cpp",
+      "line_start": 400,
+      "line_end": 400,
+      "description": "The ReadonlyDisks metric description contains awkward phrasing and unnecessary implementation details; update it to \"How many disks are marked as readonly during disk check.\" for clarity and conciseness."
+    },
+    {
+      "file": "src/Common/CurrentMetrics.cpp",
+      "line_start": 401,
+      "line_end": 401,
+      "description": "The proposed description for the `BrokenDisks` metric is overly specific regarding implementation details; update it to \"How many disks are marked as broken during disk check.\" for clarity and consistency."
+    },
+    {
+      "file": "src/Disks/DiskLocal.cpp",
+      "line_start": 537,
+      "line_end": 537,
+      "description": "Logger initialization should use a fixed \"DiskLocal\" name instead of dynamically including the disk name to prevent unnecessary per-instance logger creation and memory overhead."
+    },
+    {
+      "file": "src/Disks/DiskLocal.cpp",
+      "line_start": 537,
+      "line_end": 537,
+      "description": "This change makes the logger name dynamic via `fmt::format`. Two concerns:\n1) This file does not explicitly include a fmt header (only `logger_useful.h` etc.). If fmt is currently available only via transitive includes, this can become a fragile build dependency. Consider adding the appropriate fmt include (e.g. `<fmt/format.h>` or the project’s wrapper) in this TU.\n2) Dynamic logger names can increase logger cardinality and may break existing log-level/config rules targeting the stable name `DiskLocal`. If stable config is desired, consider keeping `getLogger(\"DiskLocal\")` and including `name_` in log messages, or use a supported child/logger component mechanism."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/ClickHouse/ClickHouse/pull/80391). Upstream base 76957a2de2b46b54f45f87d3f2e814e774d4f85a = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 166. Severity absent in the source. i1: AI comment (GPT-5.2), Repo Level; i2: human comment, Diff Level, left-side comment (source lines 39-39, side left); i3: AI comment (Qwen-Coder-480B), Diff Level; i4: AI comment (Claude-Code/Claude-4.5-Sonnet), File Level; i5: AI comment (Deepseek-V3.2), Diff Level; i6: AI comment (Qwen-Coder-480B), Diff Level; i7: AI comment (GPT-5.2), Repo Level"
+}

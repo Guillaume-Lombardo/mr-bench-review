@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "corpus": "aacr",
+  "id": "aacr-041",
+  "language": "php",
+  "size": "medium",
+  "kind": "real",
+  "tier": null,
+  "base_branch": "bench/aacr/aacr-041/base",
+  "head_branch": "bench/aacr/aacr-041/head",
+  "base_sha": "2ac7d23b4580a7c9f9d372863cdf0b47c4a36db6",
+  "head_sha": "f5e01446c3105787df439dccb10080f931fb3cc3",
+  "mr_title": "refactor: add missing template implements where needed",
+  "mr_description": "- refactor: add missing template implements where needed\n- refactor: migrate from OC to OCP in public interfaces",
+  "origin": {
+    "repository": "https://github.com/nextcloud/server",
+    "commit": "51b5ea92ccb5f4683b0f52840a01031e1ed0baa3",
+    "license": "AGPL-3.0",
+    "source_case": "https://github.com/nextcloud/server/pull/52846",
+    "source_url": "https://github.com/alibaba/aacr-bench/blob/68a569759289a83654a59d06db2a72910edf0a4a/dataset"
+  },
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "lib/public/Files_FullTextSearch/Model/AFilesDocument.php",
+      "line_start": 19,
+      "line_end": 19,
+      "category": "maintainability",
+      "severity": null,
+      "title": "The example code references `IEventDispatcher::class` but doesn't include the full namesp…",
+      "description": "The example code references `IEventDispatcher::class` but doesn't include the full namespace. Since this is a documentation example, it should be self-contained. Consider using the fully qualified class name `\\OCP\\EventDispatcher\\IEventDispatcher::class` to make the example immediately usable without requiring developers to guess the correct import.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "The example code references `IEventDispatcher::class` but doesn't include the full namespace. Since this is a documentation example, it should be self-contained. Consider using the fully qualified class name `\\OCP\\EventDispatcher\\IEventDispatcher::class` to make the example immediately usable without requiring developers to guess the correct import.\n"
+    },
+    {
+      "id": "i2",
+      "file": "lib/public/Security/ICrypto.php",
+      "line_start": 16,
+      "line_end": 16,
+      "category": "maintainability",
+      "severity": null,
+      "title": "**Issue: Incorrect API usage in documentation**",
+      "description": "**Issue: Incorrect API usage in documentation**\n\nThe documentation shows `\\OCP\\Server::getCrypto()` but this method doesn't exist on `\\OCP\\Server`. The correct usage should be:\n\n```php\n$encryptWithDefaultPassword = \\OCP\\Server::get(ICrypto::class)->encrypt('EncryptedText');\n```\n\nThe same issue exists on line 17. Both lines should be updated to use the `get()` method with the class name, not a direct method call like `getCrypto()`.\n\n**Suggested fix:**\n```\nFix lib/public/Security/ICrypto.php:16-17: Replace \\OCP\\Server::getCrypto() with \\OCP\\Server::get(ICrypto::class) in both example lines, as the getCrypto() method does not exist on \\OCP\\Server.\n```",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": "Maintainability and Readability",
+      "source_text": "**Issue: Incorrect API usage in documentation**\n\nThe documentation shows `\\OCP\\Server::getCrypto()` but this method doesn't exist on `\\OCP\\Server`. The correct usage should be:\n\n```php\n$encryptWithDefaultPassword = \\OCP\\Server::get(ICrypto::class)->encrypt('EncryptedText');\n```\n\nThe same issue exists on line 17. Both lines should be updated to use the `get()` method with the class name, not a direct method call like `getCrypto()`.\n\n**Suggested fix:**\n```\nFix lib/public/Security/ICrypto.php:16-17: Replace \\OCP\\Server::getCrypto() with \\OCP\\Server::get(ICrypto::class) in both example lines, as the getCrypto() method does not exist on \\OCP\\Server.\n```"
+    }
+  ],
+  "known_false_positives": [
+    {
+      "file": "lib/public/AppFramework/ApiController.php",
+      "line_start": 61,
+      "line_end": 62,
+      "description": "The change to use `$this->request->getHeader('origin')` may not reliably retrieve the Origin header across all server environments, as framework header handling can differ from direct `$_SERVER` access; verify consistent behavior matches the previous fallback logic."
+    },
+    {
+      "file": "lib/public/AppFramework/App.php",
+      "line_start": 51,
+      "line_end": 52,
+      "description": "Consider using constructor dependency injection instead of the service locator pattern. While this change improves upon the global `\\OC::$server` access, calling `\\OCP\\Server::get()` in the constructor still couples the class to the service locator. If possible, inject `IConfig` as a constructor parameter to improve testability and follow dependency injection best practices."
+    },
+    {
+      "file": "lib/public/AppFramework/Http/Response.php",
+      "line_start": 96,
+      "line_end": 96,
+      "description": "Removing the type hint comment for ITimeFactory may cause issues with static analysis tools like Psalm. The variable $time is used to call getTime() method which is defined in ITimeFactory interface. Consider keeping the type hint or using a proper type declaration."
+    },
+    {
+      "file": "lib/public/AppFramework/Http/Response.php",
+      "line_start": 186,
+      "line_end": 186,
+      "description": "Switching from \\OC::$server to \\OCP\\Server::get() changes the service locator used. Please ensure \\OCP\\Server is always initialized in the execution contexts where Response::addHeader()/render() are used (e.g., early bootstrap, CLI, unit tests). Otherwise this could throw and break response handling. If some contexts rely on \\OC::$server being available earlier, consider a fallback (try OCP\\Server first, then OC::$server) or inject dependencies instead of hard-calling the locator here."
+    },
+    {
+      "file": "lib/public/AppFramework/Http/Response.php",
+      "line_start": 231,
+      "line_end": 231,
+      "description": "This file now mixes direct global service fetching (\\OCP\\Server::get) inside a low-level HTTP Response. That makes the class harder to test and can cause hidden side effects (logger/config/request access) when just setting headers. Consider passing IRequest/IConfig/LoggerInterface in from callers (or lazily fetching via a small internal helper) to keep Response more passive. At minimum, wrap the lookup in a method so it can be overridden/mocked."
+    },
+    {
+      "file": "lib/public/Files.php",
+      "line_start": 72,
+      "line_end": 72,
+      "description": "For consistency with other files in this refactoring (see Util.php, App.php), consider using the fully qualified namespace `\\OCP\\Server::get()` instead of `Server::get()`. While both work since this file is in the OCP namespace, using the fully qualified name improves code clarity and consistency."
+    },
+    {
+      "file": "lib/public/Security/ICrypto.php",
+      "line_start": 16,
+      "line_end": 17,
+      "description": "Docs change: switching examples from `\\OC::$server->getCrypto()` to `\\OCP\\Server::getCrypto()` may break for older Nextcloud/ownCloud versions or in contexts where `OCP\\Server` is not available/bootstrapped (e.g., some unit tests/CLI scripts). Consider adding a brief note about minimum supported version / required bootstrap, or keep the old example if backward compatibility is intended."
+    },
+    {
+      "file": "lib/public/Util.php",
+      "line_start": 585,
+      "line_end": 585,
+      "description": "**Issue: Using internal OC class in public interface**\n\nThis line uses `\\OC\\SystemConfig::class` which is an internal class (in the `\\OC` namespace). The goal of this refactoring is to migrate from OC (internal) to OCP (public) classes in public interfaces.\n\nThe public interface for system configuration is `\\OCP\\IConfig`, which should be used instead. The correct refactoring should be:\n\n```php\nself::$needUpgradeCache = \\OC_Util::needUpgrade(\\OCP\\Server::get(IConfig::class));\n```\n\nHowever, you'll need to verify that `\\OC_Util::needUpgrade()` accepts `IConfig` instead of `SystemConfig`. If it specifically requires `SystemConfig`, then this indicates a deeper architectural issue where a public API method (`Util::needUpgrade()`) depends on internal implementation details, which may need to be addressed differently."
+    }
+  ],
+  "annotator_notes": "Imported from AACR-Bench (https://github.com/nextcloud/server/pull/52846). Upstream base c3ddd1da46c9f75071f61d3cf7381570297a74d6 = merge-base of source_commit (target branch) and target_commit (PR head); declared change_line_count 165. Severity absent in the source. i1: AI comment (Claude-Code/Claude-4.5-Sonnet), Diff Level; i2: AI comment (Claude-Code/Claude-4.5-Sonnet), Repo Level"
+}
