@@ -38,6 +38,7 @@ from convert_common import (
     neutral_title,
     on_changed_lines,
     pinned_checkout,
+    secret_reason,
     short_title,
     write_case,
 )
@@ -127,6 +128,7 @@ for _repo in (
     "symfony/symfony",
 ):
     LICENCES[_repo] = ("MIT", MIT)
+PUSH_PROTECTION = json.loads((ROOT / "tools/sources/aacr.push-protection.json").read_text())
 LICENSE_NAME = re.compile(r"^(licen[cs]e|copying)([.-].*)?$", re.IGNORECASE)
 
 
@@ -233,6 +235,8 @@ def convert(
     spdx, marker = LICENCES.get(repo, (None, "unknown licence"))
     if spdx is None:
         return None, marker
+    if url in PUSH_PROTECTION:
+        return None, secret_reason(PUSH_PROTECTION[url])
     upstream = f"https://github.com/{repo}"
     hist = history(cache, repo)
     head_up = entry["target_commit"]

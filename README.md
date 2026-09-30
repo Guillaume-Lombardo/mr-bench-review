@@ -19,21 +19,21 @@ Everything is plain Git: branches and files. The repository can be mirrored with
 <!-- stats:begin -->
 | Corpus | Created | Default | Cases | Clean | Issues | Location | Severity | Licence |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
-| `aacr` | 2026-09-30 | no | 177 | 4 | 1297 | lines | no | Apache-2.0 annotations; upstream code per case, see cases/*.json |
+| `aacr` | 2026-09-30 | no | 154 | 3 | 1156 | lines | no | Apache-2.0 annotations; upstream code per case, see cases/*.json |
 | `curated` | 2026-09-30 | yes | 113 | 18 | 106 | lines | yes | per case, see cases/*.json |
-| `martian-offline` | 2026-09-30 | no | 30 | 0 | 96 | none | yes | MIT golden comments; upstream code per case, see cases/*.json |
+| `martian-offline` | 2026-09-30 | no | 29 | 0 | 93 | none | yes | MIT golden comments; upstream code per case, see cases/*.json |
 | `review-bench` | 2026-09-30 | no | 27 | 10 | 17 | lines | no | CC-BY-4.0 annotations; upstream code per case (MIT, BSD-3-Clause, Apache-2.0) |
 
 ### `aacr`
 
 | Dimension | Distribution |
 | --- | --- |
-| language | cpp 32, java 25, go 22, typescript 21, python 20, c 15, javascript 12, php 11, csharp 10, rust 9 |
-| size | small 83, medium 76, large 18 |
-| kind | real 173, clean 4 |
-| tier | none 177 |
-| category | maintainability 639, correctness 607, security 51 |
-| severity | null 1297 |
+| language | cpp 32, go 22, java 18, c 15, python 15, typescript 14, javascript 12, csharp 10, php 8, rust 8 |
+| size | small 73, medium 65, large 16 |
+| kind | real 151, clean 3 |
+| tier | none 154 |
+| category | maintainability 576, correctness 534, security 46 |
+| severity | null 1156 |
 
 ### `curated`
 
@@ -50,12 +50,12 @@ Everything is plain Git: branches and files. The repository can be mirrored with
 
 | Dimension | Distribution |
 | --- | --- |
-| language | java 10, ruby 8, go 8, other 2, typescript 2 |
-| size | medium 11, small 10, large 9 |
-| kind | real 30 |
-| tier | none 30 |
-| category | correctness 68, maintainability 18, security 9, tests 1 |
-| severity | medium 35, low 26, high 26, critical 9 |
+| language | java 10, go 8, ruby 7, other 2, typescript 2 |
+| size | small 10, medium 10, large 9 |
+| kind | real 29 |
+| tier | none 29 |
+| category | correctness 66, maintainability 18, security 8, tests 1 |
+| severity | medium 33, low 26, high 26, critical 8 |
 
 ### `review-bench`
 
@@ -74,6 +74,11 @@ clean cases, at least ten large cases and all four categories. The actual curate
 Python, 35 Java, 35 TypeScript (25 of them from Angular projects) and 1 JavaScript; 18 clean
 cases (16%); 10 large cases. See each corpus's `SOURCE.md` for provenance, licences,
 conversion choices and known gaps, and `EXCLUDED.md` for cases that were dropped and why.
+
+Twenty-four imported cases (23 `aacr`, 1 `martian-offline`) are excluded because GitHub push
+protection classifies strings in their upstream snapshots as secrets. They are listed with the
+flagged paths in `tools/sources/*.push-protection.json` and stay out until the owner confirms
+the strings are public test values.
 
 Not imported:
 

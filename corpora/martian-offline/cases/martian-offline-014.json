@@ -134,5 +134,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/ai-code-review-evaluation/discourse-graphite/pull/4). Upstream base 62db063e1e1abe691313ab42682a68f796d63769 (merge-base with the default branch, before the merge for merged PRs). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile Strict; i3: Martian profile Strict; i4: Martian profile Strict; i5: Martian profile Strict; i6: Martian profile Strict; i7: Martian profile Strict; i8: Martian profile Strict"
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/ai-code-review-evaluation/discourse-graphite/pull/4). Upstream base 62db063e1e1abe691313ab42682a68f796d63769 (resolved as described in SOURCE.md). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile Strict; i3: Martian profile Strict; i4: Martian profile Strict; i5: Martian profile Strict; i6: Martian profile Strict; i7: Martian profile Strict; i8: Martian profile Strict"
 }

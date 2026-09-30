@@ -12,6 +12,14 @@ at commit `e616e849755441da38f18bf3adba2c9583b03803`, `offline/golden_comments/*
   licence files are kept on both branches. Sentry (Functional Source License, source-available)
   and Cal.com (enterprise code under the Cal.com Commercial License) are excluded; see
   EXCLUDED.md.
+- `discourse-graphite` PR 3 (`martian-offline-013`) is excluded because GitHub push protection
+  flags strings in its snapshot as secrets (`tools/sources/martian-offline.push-protection.json`);
+  re-including it needs the owner's confirmation that they are public test values.
+
+## Figures
+
+50 source PRs; 29 imported (all real, 93 unlocated expected issues), 21 excluded: 20 Sentry and
+Cal.com PRs for licence reasons and one blocked by push protection.
 
 ## Rebuilding base and head
 

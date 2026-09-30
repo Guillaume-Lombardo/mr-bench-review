@@ -50,5 +50,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/keycloak/keycloak/pull/40940). Upstream base 7fd37690c44c7068cb19ecee3aa6ff99c46a821d (merge-base with the default branch, before the merge for merged PRs). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile Strict"
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/keycloak/keycloak/pull/40940). Upstream base 7fd37690c44c7068cb19ecee3aa6ff99c46a821d (resolved as described in SOURCE.md). Golden comments are unlocated. i1: Martian profile Strict; i2: Martian profile Strict"
 }

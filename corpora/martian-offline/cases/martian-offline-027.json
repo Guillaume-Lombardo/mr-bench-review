@@ -50,5 +50,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/grafana/grafana/pull/80329). Upstream base a886bd3c79a417a70b51509384d1f1ec3e87e96b (merge-base with the default branch, before the merge for merged PRs). Golden comments are unlocated. i1: Martian profile Core; i2: Martian profile Core"
+  "annotator_notes": "Imported from Martian code-review-benchmark offline golden comments (https://github.com/grafana/grafana/pull/80329). Upstream base a886bd3c79a417a70b51509384d1f1ec3e87e96b (resolved as described in SOURCE.md). Golden comments are unlocated. i1: Martian profile Core; i2: Martian profile Core"
 }

@@ -25,6 +25,7 @@ from convert_common import (
     neutral_description,
     neutral_title,
     pinned_checkout,
+    secret_reason,
     short_title,
     treeless_history,
     write_case,
@@ -35,6 +36,9 @@ SOURCE_URL = "https://github.com/withmartian/code-review-benchmark"
 SOURCE_COMMIT = "e616e849755441da38f18bf3adba2c9583b03803"
 CORPUS = "martian-offline"
 LOCK = ROOT / "tools" / "sources" / "martian-offline.lock.json"
+PUSH_PROTECTION = json.loads(
+    (ROOT / "tools" / "sources" / "martian-offline.push-protection.json").read_text()
+)
 FILES = ("cal_dot_com", "discourse", "grafana", "keycloak", "sentry")
 CATEGORY = {
     "bug": "correctness",
@@ -132,7 +136,9 @@ def main(argv: list[str] | None = None) -> None:
             number += 1
             case_id = f"{CORPUS}-{number:03d}"
             url = pr["url"]
-            if spdx is None:
+            if spdx is None or url in PUSH_PROTECTION:
+                if spdx is not None:
+                    reason = secret_reason(PUSH_PROTECTION[url])
                 excluded.append((case_id, url, reason))
                 print(f"{case_id} {url}: EXCLUDED", flush=True)
                 continue
