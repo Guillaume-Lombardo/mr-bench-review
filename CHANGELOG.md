@@ -2,21 +2,6 @@
 
 All changes per corpus. Versions follow the rules in README.md ("Versioning").
 
-## 1.1.0 — unreleased (2026-10-02)
-
-### curated
-- Audit all 113 cases with AI-assisted annotation and snapshot-diff review; record the
-  checker, per-case findings and limitations. Independent human release sign-off is pending.
-- Correct inaccurate descriptions and examples, including cases 005, 021, 023, 029, 036,
-  055, 082 and 106. Remove unsupported claims of executed upstream regression tests.
-- Reclassify 064 and 095 as real and 066 as clean (its finding predates the snapshot diff).
-- Add nine issues covering grouped-option sorting, skipped index checks, cookie flags,
-  traceback source alignment, permission renaming, public typing compatibility, peer
-  field fetching and srcset parsing; remove one misattributed finding.
-- Corpus totals: 113 cases, 96 real, 17 clean, 114 issues. Snapshot SHAs and MR text unchanged.
-- Add four executable source-level probes and refresh README statistics and reproduction
-  guidance. Imported corpus annotations are unchanged.
-
 ## 1.0.0 — unreleased (not yet tagged)
 
 Initial dataset, contract v1, validator, converters and CI.
@@ -30,6 +15,22 @@ Initial dataset, contract v1, validator, converters and CI.
 Snapshots leave out the media and other binary files that the change does not touch (see
 README.md, "Branches"); the repository shrinks from about 2.7 GB to about 1.2 GB and the diffs
 are unchanged.
+
+### curated annotation audit (2026-10-02)
+- Audit all 113 cases with AI-assisted annotation and snapshot-diff review; record the
+  checker, per-case findings and limitations. Independent human release sign-off is pending.
+- Correct inaccurate descriptions and examples, including cases 005, 021, 023, 029, 036,
+  055, 082 and 106. Remove unsupported claims of executed upstream regression tests.
+- Reclassify 064 and 095 as real; replace 066's pre-existing Space finding with a
+  browser-confirmed Enter double-activation issue.
+- Add ten issues covering grouped-option sorting, skipped index checks, cookie flags,
+  traceback source alignment, permission renaming, public typing compatibility, peer
+  field fetching, srcset parsing and Enter activation; remove one misattributed finding.
+- Corpus totals: 113 cases, 97 real, 16 clean, 115 issues. Snapshot SHAs and MR text unchanged.
+- Add four executable source-level probes and refresh README statistics and reproduction
+  guidance. Imported corpus annotations are unchanged.
+- Keep dataset version 1.0.0 while the initial release is untagged. Reserve the human
+  `Second check:` marker and identify AI results with `AI audit (YYYY-MM-DD):`.
 
 ### curated (created 2026-09-30)
 - 113 cases (95 real, 18 clean) from the selection made for bdf-review, with 5 pilot, 30 core

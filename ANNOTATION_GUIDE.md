@@ -88,5 +88,7 @@ for missing issues, and records the result at the end of `annotator_notes` ("Sec
 
 An AI-assisted check must identify the checker as AI and state its scope and execution limits.
 It can complete the annotation audit, but does not count as the independent second person
-required for release sign-off. Record any focused reproductions separately from full upstream
-test-suite execution.
+required for release sign-off. Use `AI audit (YYYY-MM-DD): …` for AI results and state
+that independent human sign-off is pending. Reserve `Second check: …` for the completed
+human check; do not use its presence alone as a release gate. Record any focused
+reproductions separately from full upstream test-suite execution.

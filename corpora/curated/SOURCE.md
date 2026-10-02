@@ -27,11 +27,11 @@ written or modified for the benchmark.
   behaviour changes, one API-compatibility remark, one error-handling remark). Extended cases
   initially carried the primary issue only. On 2026-10-02, Codex performed an AI-assisted
   annotation and snapshot-diff audit of all 113 cases, recording a case-specific result in
-  `annotator_notes` and [the audit log](audit/2026-10-02.json). The corpus now has 96 real
-  cases, 17 clean cases and 114 issues: cases 064 and 095 were reclassified as real, and
-  case 066 as clean because its former finding already existed in the base. Nine new
-  issues were added and one misattributed issue removed. This is not the independent
-  human second-person sign-off required for release.
+  `annotator_notes` and [the audit log](audit/2026-10-02.json). The corpus now has 97 real
+  cases, 16 clean cases and 115 issues: cases 064 and 095 were reclassified as real, and
+  case 066 remains real with a newly reproduced Enter-activation issue replacing the
+  pre-existing Space finding. Ten new issues were added and one misattributed issue
+  removed. This is not the independent human second-person sign-off required for release.
 - **Neutral MR text.** Titles and descriptions are the upstream commit subject and body without
   issue numbers, trailers, links to issues and ticket prefixes. They are the developer's own
   words and never mention the expected issues. Merge commits use the PR title from the body.
@@ -59,6 +59,7 @@ for one older Spring Framework tree under `src/docs/dist/license.txt`).
 
 ## Known gaps
 
+- The current 16/113 clean cases (14.2%) fall below the 15–20% selection target.
 - The AI-assisted annotation check covers all tiers; independent human release sign-off
   remains pending for every case.
 - Full upstream test suites were not run. The four focused source-level probes can be rerun
@@ -67,3 +68,20 @@ for one older Spring Framework tree under `src/docs/dist/license.txt`).
 - Upstream code and fixes are public, so models may have seen them; results compare reviewers
   relative to each other.
 - Size is counted on the whole change, tests and documentation included.
+
+## Native Enter follow-up for case 066
+
+Generate the browser fixture with:
+
+```sh
+uv run python corpora/curated/audit/reproduce.py --browser-fixture /tmp/curated-case066.html
+uv run python -m http.server 8766 --bind 127.0.0.1 --directory /tmp
+```
+
+Open `http://127.0.0.1:8766/curated-case066.html` in Chromium. Focus each tab and press
+Enter once (a real key press, not `dispatchEvent`). The displayed click counts should be
+`base-href: 1`, `head-href: 2`, `base-no-href: 0`, `head-no-href: 1`, and zero for both
+disabled controls. The fixture cancels native navigation in its click listeners, as routed
+links do, so focus remains on the anchor. Without that cancellation, fragment navigation
+can move focus and mask the second activation. This tests native DOM behavior with the
+snapshot handlers; it is not a full Angular integration test.

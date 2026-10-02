@@ -4,7 +4,7 @@
   "id": "case-066",
   "language": "typescript",
   "size": "small",
-  "kind": "clean",
+  "kind": "real",
   "tier": "extended",
   "base_branch": "bench/curated/case-066/base",
   "head_branch": "bench/curated/case-066/head",
@@ -19,7 +19,22 @@
     "source_case": null,
     "source_url": null
   },
-  "expected_issues": [],
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/material/tabs/tab-nav-bar/tab-nav-bar.ts",
+      "line_start": 268,
+      "line_end": 268,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Enter activates routed tab links twice",
+      "description": "With a tabPanel, the new Enter branch calls nativeElement.click() without cancelling the key event. On an anchor with href whose click handler prevents native navigation (as a routed link can), focus stays on the anchor and the browser then performs its own Enter activation. One key press therefore invokes click handlers twice, causing duplicate application actions or routing requests.\n\nA Chromium probe using the exact base/head handlers produced one click for the base and two for the head. Without href the counts are zero and one, confirming why explicit activation is needed for that case; disabled links produce zero in both versions. Preserve activation for non-native links while avoiding an extra synthetic click on natively activating anchors. The pre-existing Space behavior remains a known false positive. Generate the browser fixture with reproduce.py --browser-fixture and use real keyboard input; synthetic key-event dispatch does not exercise the browser default action.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
   "known_false_positives": [
     {
       "file": "src/material/tabs/tab-nav-bar/tab-nav-bar.ts",
@@ -28,5 +43,5 @@
       "description": "Space activation without preventDefault() is already present in base_sha for enabled links with a tabPanel. The diff adds Enter handling; it does not remove Space prevention. The later upstream fix was incorrectly associated with this introducing snapshot. Executing both handlers in corpora/curated/audit/reproduce.py confirms identical Space behavior."
     }
   ],
-  "annotator_notes": "Upstream change https://github.com/angular/components/commit/fd97395cd4c02c8bea7f51a01ff0e76c61589f5c. Previously associated upstream fix https://github.com/angular/components/commit/f9621a7c8c4bf96c12003e2c092b79c76b023efc was found to address behavior already present in base_sha. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: easy. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted second check recorded below; independent human release sign-off remains pending. Second check: 2026-10-02, Codex (AI-assisted static review of annotations and snapshot diff). Reclassified as clean for this diff: source-level execution of both base and head confirms that enabled Space activation already lacked preventDefault(). Recorded the misattributed finding as a known false positive. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off. Focused executable evidence: uv run python corpora/curated/audit/reproduce.py."
+  "annotator_notes": "Upstream change https://github.com/angular/components/commit/fd97395cd4c02c8bea7f51a01ff0e76c61589f5c. Previously associated upstream fix https://github.com/angular/components/commit/f9621a7c8c4bf96c12003e2c092b79c76b023efc was found to address behavior already present in base_sha. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: easy. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted audit recorded below; independent human release sign-off remains pending. AI audit (2026-10-02): Codex (AI-assisted static review of annotations and snapshot diff). PR follow-up: retained as real after a Chromium native-keyboard probe confirmed duplicate Enter activation on anchors whose click handler cancels navigation (base: one click; head: two). Space still behaves identically in base/head and remains a known false positive. The upstream correction only adds Space prevention and does not fix Enter. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off. Focused executable evidence: uv run python corpora/curated/audit/reproduce.py."
 }

@@ -1,7 +1,7 @@
 {
   "date": "2026-10-02",
   "reviewer": "Codex (AI)",
-  "method": "Static annotation and snapshot-diff review, plus four focused source-level probes. Upstream integration suites not executed. Independent human release sign-off remains pending.",
+  "method": "Static annotation and snapshot-diff review, four focused source-level probes, and a Chromium native-Enter follow-up for case 066. Upstream integration suites not executed. Independent human release sign-off remains pending.",
   "cases": [
     {
       "case": "case-001",
@@ -511,7 +511,7 @@
       "case": "case-064",
       "base_sha": "b1f06f86641bb4f5de31213dc1bfafa3c5bd46d9",
       "head_sha": "720d1894469b9e37a9ab4230edc5030c573c71c8",
-      "result": "Reclassified as real: source-level execution confirms strip() leaves raw_lines unsliced while displayed lines lose leading blanks.",
+      "result": "Reclassified as real: source-level execution confirms strip() leaves raw_lines unsliced while displayed lines lose leading blanks. PR follow-up: corrected the issue location to strip() line 83; the probe now verifies the annotation against the source AST.",
       "focused_probe_executed": true,
       "upstream_fix_patch_sha256": null
     },
@@ -527,9 +527,22 @@
       "case": "case-066",
       "base_sha": "2dfcf31623695b69f46ad9433bfd47c8039c82aa",
       "head_sha": "94888e603e3d3e5de25809ccfde79e96f558635b",
-      "result": "Reclassified as clean for this diff: source-level execution of both base and head confirms that enabled Space activation already lacked preventDefault(). Recorded the misattributed finding as a known false positive.",
+      "result": "PR follow-up: retained as real after a Chromium native-keyboard probe confirmed duplicate Enter activation on anchors whose click handler cancels navigation (base: one click; head: two). Space still behaves identically in base/head and remains a known false positive. The upstream correction only adds Space prevention and does not fix Enter.",
       "focused_probe_executed": true,
-      "upstream_fix_patch_sha256": "5778a965f28927b4cb7791249f33cdc5b27814484f5592de53797c3c9b1eff30"
+      "upstream_fix_patch_sha256": "5778a965f28927b4cb7791249f33cdc5b27814484f5592de53797c3c9b1eff30",
+      "browser_probe": {
+        "browser": "HeadlessChrome/154.0.0.0",
+        "input": "One real Enter key press per focused anchor, with click handlers cancelling native navigation. Exact handlers extracted from snapshot SHAs.",
+        "counts": {
+          "base-href": 1,
+          "base-no-href": 0,
+          "base-disabled": 0,
+          "head-href": 2,
+          "head-no-href": 1,
+          "head-disabled": 0
+        },
+        "scope": "Native DOM activation with snapshot handlers; not an Angular integration suite."
+      }
     },
     {
       "case": "case-067",

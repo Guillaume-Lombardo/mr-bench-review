@@ -7,6 +7,7 @@ Source snippets are loaded from the case SHAs; no copied implementation is maint
 
 import __future__
 
+import argparse
 import ast
 import json
 import subprocess
@@ -24,6 +25,48 @@ def source(number: int, path: str, side: str = "head") -> str:
 
 def javascript(code: str) -> None:
     subprocess.run(["node", "--input-type=commonjs", "-e", code], check=True, cwd=ROOT)
+
+
+def write_enter_fixture(path: Path) -> None:
+    """Build a browser fixture; real keyboard input must supply native activation."""
+    # Model a routed link: the click listener cancels native navigation.
+    # This preserves focus so both scripted and native Enter activation are observed.
+    scripts = ["const SPACE = 32, ENTER = 13; window.clickCounts = {};"]
+    links = []
+    for side in ("base", "head"):
+        src = source(66, "src/material/tabs/tab-nav-bar/tab-nav-bar.ts", side)
+        method = src.split("  _handleKeydown(event: KeyboardEvent) {", 1)[1].split("\n  }", 1)[0]
+        for mode in ("href", "no-href", "disabled"):
+            key = f"{side}-{mode}"
+            href = 'href="#target"' if mode != "no-href" else ""
+            links.append(f'<a id="{key}" {href} role="tab" tabindex="0">{key}</a><br>')
+            scripts.append(
+                "{ const element = document.getElementById("
+                + json.dumps(key)
+                + ");"
+                + "const self = {disabled: "
+                + str(mode == "disabled").lower()
+                + ", _tabNavBar: {tabPanel: true}, elementRef: {nativeElement: element}};"
+                + "window.clickCounts[element.id] = 0;"
+                + "element.addEventListener('click', event => {event.preventDefault();"
+                + "window.clickCounts[element.id]++;"
+                + "document.getElementById('counts').textContent = "
+                + "JSON.stringify(window.clickCounts); });"
+                + "element.addEventListener('keydown', function(event) {"
+                + "(function(event) {"
+                + method
+                + "}).call(self, event); }); }"
+            )
+    path.write_text(
+        '<!doctype html><meta charset="utf-8"><title>Case 066 native Enter probe</title>'
+        + "<p>Focus each tab and press Enter once. Inspect clickCounts.</p>"
+        + "".join(links)
+        + '<pre id="counts"></pre><div id="target">Target</div>'
+        + "<script>"
+        + "\n".join(scripts)
+        + "</script>"
+    )
+    print(f"Browser fixture written to {path}")
 
 
 def main() -> None:
@@ -81,6 +124,16 @@ def main() -> None:
         for n in cls.body
         if isinstance(n, ast.FunctionDef) and n.name in {"__init__", "__len__", "strip"}
     ]
+    strip_method = next(n for n in cls.body if n.name == "strip")
+    raw_assignment = next(
+        n
+        for n in ast.walk(strip_method)
+        if isinstance(n, ast.Assign)
+        and any(isinstance(t, ast.Attribute) and t.attr == "raw_lines" for t in n.targets)
+    )
+    annotation = json.loads((ROOT / "corpora/curated/cases/case-064.json").read_text())
+    issue = annotation["expected_issues"][0]
+    assert issue["line_start"] == issue["line_end"] == raw_assignment.lineno
     namespace = {}
     exec(
         compile(
@@ -126,4 +179,10 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--browser-fixture", type=Path, help="write the case-066 Enter HTML probe")
+    args = parser.parse_args()
+    if args.browser_fixture:
+        write_enter_fixture(args.browser_fixture)
+    else:
+        main()
