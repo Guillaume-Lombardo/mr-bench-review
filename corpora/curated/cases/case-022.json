@@ -28,7 +28,7 @@
       "category": "correctness",
       "severity": "high",
       "title": "Optional/mandatory check inverted for empty directory locations",
-      "description": "The condition is inverted: an optional directory location without sub-directories now fails, while a mandatory one without sub-directories is silently accepted.\n\nThe intent (and the commit title) is to only require sub-directories when the location is not optional. `location.isOptional() && isEmpty(...)` throws ConfigDataLocationNotFoundException for `optional:` pattern locations — the exact case meant to be allowed — and removes the check for mandatory ones. It must be `!location.isOptional()`.",
+      "description": "The empty-directory check is guarded by location.isOptional(), so a mandatory pattern location with no subdirectories is silently accepted instead of raising ConfigDataLocationNotFoundException.\n\nThe resolver also throws for optional empty locations, contrary to its intended condition, although an upper layer can ignore that optional-location exception. The guard should test !location.isOptional(); do not infer that every optional location necessarily makes application startup fail.",
       "outside_diff": false,
       "alternative_locations": [],
       "source_category": null,
@@ -36,5 +36,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/spring-projects/spring-boot/commit/01dd68e29edc43cb52651f568af482d94ade01fe. Primary issue confirmed by the later upstream fix https://github.com/spring-projects/spring-boot/commit/38b9a833bd16b12a4fe73fe3595e15e2c19c4e64; its regression test reproduces the problem on this head. Curator difficulty: easy. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/spring-projects/spring-boot/commit/01dd68e29edc43cb52651f568af482d94ade01fe. Primary issue confirmed by the later upstream fix https://github.com/spring-projects/spring-boot/commit/38b9a833bd16b12a4fe73fe3595e15e2c19c4e64. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: easy. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted second check recorded below; independent human release sign-off remains pending. Second check: 2026-10-02, Codex (AI-assisted static review of annotations and snapshot diff). Confirmed optional condition inverted; optional exception can be ignored by upper layer, so describe resolver behavior and missing mandatory failure precisely. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

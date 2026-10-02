@@ -27,8 +27,8 @@
       "line_end": 459,
       "category": "correctness",
       "severity": "medium",
-      "title": "ViewContainerRef injected lazily after the view is rendered",
-      "description": "ViewContainerRef is no longer injected in the constructor but fetched lazily from the injector when the tooltip is first shown; injecting ViewContainerRef creates an anchor node next to the host, so doing it late changes the DOM structure of the host's view at an arbitrary time.\n\nIn Angular, injecting ViewContainerRef on a node materialises a container (comment anchor) for that element. When this happens during the component's creation the view shape is stable; creating it on first hover inserts a new node into an already rendered view, which breaks consumers relying on DOM structure/order (e.g. CSS sibling selectors, :last-child, content projection tests) and can differ between hovered and non-hovered instances. ViewContainerRef must be injected eagerly; only the other services can be deferred.",
+      "title": "Lazy ViewContainerRef injection breaks tooltip hydration",
+      "description": "Deferring ViewContainerRef injection until the first tooltip display changes the view-container structure after component creation. During hydration, a tooltip can then fail on first hover because the client materializes a container that was not established in the corresponding server-rendered view.\n\nThe linked upstream correction explicitly restores eager ViewContainerRef injection for hydration. Keep this dependency eager while deferring other services. Comment anchors do not count as CSS element siblings, so :last-child and ordinary sibling selectors are not valid examples of this defect.",
       "outside_diff": false,
       "alternative_locations": [],
       "source_category": null,
@@ -36,5 +36,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/angular/components/commit/622152de761b629a426b744ec2ff3e4e79d18889. Primary issue confirmed by the later upstream fix https://github.com/angular/components/commit/68b267dd59f3addf92a3b9f8ce9e8baa479df7f4; its regression test reproduces the problem on this head. Curator difficulty: hard. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/angular/components/commit/622152de761b629a426b744ec2ff3e4e79d18889. Primary issue confirmed by the later upstream fix https://github.com/angular/components/commit/68b267dd59f3addf92a3b9f8ce9e8baa479df7f4. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: hard. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted second check recorded below; independent human release sign-off remains pending. Second check: 2026-10-02, Codex (AI-assisted static review of annotations and snapshot diff). Replaced unsupported CSS-selector examples with the hydration regression explicitly described by the upstream correction. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

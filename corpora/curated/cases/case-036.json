@@ -28,7 +28,7 @@
       "category": "correctness",
       "severity": "medium",
       "title": "Accepted media types sorted by specificity instead of quality",
-      "description": "accepted_types is now sorted by specificity before quality, so get_preferred_type() prefers a more specific but lower-quality media type over a higher-quality one.\n\nSpecificity should only decide which Accept entry applies to a given candidate type; the preference order between candidates must follow the q-values. With `Accept: text/html;q=0.8, application/json` (or `text/*;q=1, text/plain;q=0.1`), sorting by (specificity, quality) makes get_preferred_type() return the lower-quality type, breaking content negotiation per RFC 9110. Two orderings are needed: by quality for preference, by specificity for matching.",
+      "description": "accepted_types is now sorted by specificity before quality, so get_preferred_type() prefers a more specific but lower-quality media type over a higher-quality one.\n\nSpecificity should only decide which Accept entry applies to a given candidate type; the preference order between candidates must follow the q-values. With `Accept: text/html;level=1;q=0.1, application/json;q=1` and offered types `text/html;level=1` and `application/json`, sorting by (specificity, quality) makes get_preferred_type() return the lower-quality type, breaking content negotiation per RFC 9110. Two orderings are needed: by quality for preference, by specificity for matching.",
       "outside_diff": false,
       "alternative_locations": [],
       "source_category": null,
@@ -36,5 +36,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/django/django/commit/c075508b4de8edf9db553b409f8a8ed2f26ecead. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/4de4edf2c05cc80c514c989db480f2fe23ad5ee2; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/c075508b4de8edf9db553b409f8a8ed2f26ecead. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/4de4edf2c05cc80c514c989db480f2fe23ad5ee2. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted second check recorded below; independent human release sign-off remains pending. Second check: 2026-10-02, Codex (AI-assisted static review of annotations and snapshot diff). Specificity-first sorting confirmed; replaced an example with equal specificity by a parameterized media type that actually distinguishes the orderings. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

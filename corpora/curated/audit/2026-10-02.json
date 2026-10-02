@@ -1,0 +1,911 @@
+{
+  "date": "2026-10-02",
+  "reviewer": "Codex (AI)",
+  "method": "Static annotation and snapshot-diff review, plus four focused source-level probes. Upstream integration suites not executed. Independent human release sign-off remains pending.",
+  "cases": [
+    {
+      "case": "case-001",
+      "base_sha": "3329fc3ad0056ba054d596eae72ab110fb2d51cf",
+      "head_sha": "1973e11f13c634fc76089c4dfabdd6374e418707",
+      "result": "Confirmed Runnable wrapping loses Callable results; periodic-task test does not exercise returned values.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "a110ea851ced9c51a96da88c3a4e729ccdc088a4605cf30f2410fc0cc3834f6a"
+    },
+    {
+      "case": "case-002",
+      "base_sha": "ec841a1a6879d39151806e20224a8b7da5085ab1",
+      "head_sha": "8fbde78d552cc22305bca89eefb5f6985dcb0fd7",
+      "result": "Signal reads/writes consistently replace private fields; explicit null and disabled fallbacks preserved. No concrete defect found in listbox or key-manager changes.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-003",
+      "base_sha": "5426ac8d02af38f9eb5fad20943a10a65bebe9be",
+      "head_sha": "8561cdbe0ecb50860a1d8eab5328f3d10e43d038",
+      "result": "Confirmed duplicate resolver lookup; forwarded-header extraction/removal and builder wiring reviewed. Duplicate lookup need not return the same instance for prototype beans.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "d005fdeb38c7c834ab2b267649e40726b62af8ae820f641c193b1a205667a2f6"
+    },
+    {
+      "case": "case-004",
+      "base_sha": "7bf166ceec5d7bf8f6d9031cd41662cb755a3dd5",
+      "head_sha": "5c5b239692278ac111e0d8b5dda07399eab56501",
+      "result": "Snapshot preserves read access after completion and delegates writes; session access after completion is explicitly outside its documented contract. No concrete defect found.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-005",
+      "base_sha": "8e21662d2849d91b31e131954a910be202e25b40",
+      "head_sha": "60a259ca3bae16a99abf13f87850cb2a4993e9dc",
+      "result": "Confirmed deferred Content-Type breaks empty/uncached responses and charset selection; corrected the false claim that copyBodyToResponse never forwards it.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "d6e2eed1fcc25da07e3af24b1ca8f96a83f6085a1bc80f260d898f71785794b6"
+    },
+    {
+      "case": "case-006",
+      "base_sha": "068baeec5f414126dcd38e3e0406a85046e00df4",
+      "head_sha": "629b95594200fef5291e3f3762a6a39512c4875d",
+      "result": "Confirmed raw SQLite connection dereference before ensure_connection; new tests open the connection first.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "fd5b63273a8f3bf0687adacee6d9da2cd13bc25a13f2be7f2f873438d1f80f38"
+    },
+    {
+      "case": "case-007",
+      "base_sha": "c5e721155c6f4ba32dbb05b04d3076d6664b80c5",
+      "head_sha": "fe70dccbe527581f77e1ba5463cbc29a08c4196e",
+      "result": "Confirmed literals pass through str(var) and incorrectly trigger double-dot warning.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "8c3b4fcdd268e663b63459a29378bdc619d6a50553cf16c1e25e410a68d8bd7d"
+    },
+    {
+      "case": "case-008",
+      "base_sha": "855b216c291c580a5e60fea341eafaf7b0ae2de4",
+      "head_sha": "e9ce1d6b2b92b6d11912d9b26052e32a52a38bb8",
+      "result": "Confirmed removal of request.user updates; async tests check only request.auser.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "4c90d8e98deeafd6fa52508b38bb5432ab2c0c6d17e07209fdf154e057a1bf43"
+    },
+    {
+      "case": "case-009",
+      "base_sha": "24806a0185ada409ba02a7b2a312c9e182d0fb6b",
+      "head_sha": "1cf2323d1932717c6802517d551d0d8bd5ac968d",
+      "result": "Confirmed Path.rstrip failure and no tests added in this diff; existing tests require separate wording from absence of new regression coverage.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "50730b1abac6b4e6179da9567939d786e63e126f854ca9b13c5988c1bc9bb8f3"
+    },
+    {
+      "case": "case-010",
+      "base_sha": "4d513a90a3a91fc4a9d390efc7046097ddd5b7d8",
+      "head_sha": "dce1a70f35bca0317ffc9b1b96de45dbe4af1b69",
+      "result": "Confirmed lazy route TypeError in non-endpoint prefix matching; endpoint equality does not require a native str.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "3870796586402932456e4b0208fa508b5f4003badacb30e4c62be5e5f8d6e348"
+    },
+    {
+      "case": "case-011",
+      "base_sha": "51159117b3d816b6038189babb1c7059c78149cd",
+      "head_sha": "15a7945f49317eaa7b369facc87fe088cf43728a",
+      "result": "Depth check accounts for document frame; boundary, zero, skipValue and negative limits covered. JsonTreeReader intentionally ignores depth as tested. No concrete defect found.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-012",
+      "base_sha": "c06b86c829c113f5ec6b76d86561b31c1859c2a9",
+      "head_sha": "53e0216b95491a9e8a3430e7973d84aa8a118f68",
+      "result": "Confirmed integer mtime comparison skips hashing same-size edits within a second; concurrency integration reviewed.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "d6d1a4821bc6ec97dea79ee24e8464609d5fb3a0cb9fc5a74d9bd775b75fc997"
+    },
+    {
+      "case": "case-013",
+      "base_sha": "fc92f965b741b9a18d595799acd75733a9399771",
+      "head_sha": "2805f0fcd3d07828ff7e2fde9ba18c101f9c329f",
+      "result": "Confirmed old tuple state incompatible with dict indexing; missing attributes or TypeError depending on tuple values.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "a76ad8fe832021248c745675b2fb8b05dee34ec952909bdc7ab9255310330103"
+    },
+    {
+      "case": "case-014",
+      "base_sha": "9a5d3814274644715bc3bd96c85dbd1a14f9dfee",
+      "head_sha": "a01194ae90222fc6d1af165cb71379ab1d830e81",
+      "result": "Confirmed fallback omits test* directories; explicit anchors retain scanning.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "961f99149032d3c5353a48560cd82035ace07c01662913b0d575f781575dc83d"
+    },
+    {
+      "case": "case-015",
+      "base_sha": "3a053473c8983452bed3d5a3f5982796d8034979",
+      "head_sha": "00d6b11e7ccae76e2f442bc6705520743ae20834",
+      "result": "Confirmed catch path invokes acknowledgement through both InterceptorCallback and onSendError; added test asserts metadata but not interceptor count.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "be5d253ba8a57fc994febf33c040582594ad0507c03731180f812ec259055bac"
+    },
+    {
+      "case": "case-016",
+      "base_sha": "f5cf070056ab8628cb3ccbe44d296c0718bfc73b",
+      "head_sha": "f8af234b2f1205ba7c92ab6bc4c0b4743df27aa0",
+      "result": "Single-placeholder and whitespace cases intentionally omitted; multiple placeholders retained. Guards restrict checks to single text/attribute nodes. No concrete defect found.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-017",
+      "base_sha": "ca9cd00e2dd6c0aefb9057321a93c1c475517a77",
+      "head_sha": "fda7aa9a83ce54e953df32081ae15c39ffd1c3d2",
+      "result": "Confirmed raw descending/random ordering strings are passed to F in grouped count path.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "3e72cd9a92910ff2ac9137065ca605959660091d1c3f41a46a991765db313203"
+    },
+    {
+      "case": "case-018",
+      "base_sha": "4dab65e9f16e43bc217379d70ab49329cc383e7d",
+      "head_sha": "4995c1a471e99d8333a7d89084e86a35659458cb",
+      "result": "Confirmed converter-bean service has no collection converters and fallback lacks custom converter registrations.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "084bd28e47889faf052e6246f53fa6d76ff86ddcf32f2712cbefce3c191dab43"
+    },
+    {
+      "case": "case-019",
+      "base_sha": "c0b008fb4a0edb84f33437377ee84afb16f8b2ec",
+      "head_sha": "8d2a7cad4f8e5756abf3657f57e141c8c2deb4d9",
+      "result": "Confirmed regex omits domain_re for multi-label bare domains; www and explicit protocols take separate paths.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "bab07d57c068b3b5a3d031d665248d1666b43c8b047ae19e806b00790358c446"
+    },
+    {
+      "case": "case-020",
+      "base_sha": "d38596d4a2ffc38337c64ae1d059c16d498ca557",
+      "head_sha": "f10eb29d7f3ce65f22b7c40d7f75d69d0b4caec3",
+      "result": "Documentation and serialization tests preserve existing behavior; NaN/Infinity exception explicitly documented. No concrete defect found.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-021",
+      "base_sha": "42a51397bce61703fe48314753796912a6102b94",
+      "head_sha": "e332783a5f4bf59b6ced5d5ff83adbf30c1f772b",
+      "result": "Confirmed quoted local-asset parentheses are truncated; data URI rewriting is skipped in a path that invalidates the former corruption example.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "8070a9cc67f33537c5e6f6c39aaaee325e52804afb17468595351027f1ac443d"
+    },
+    {
+      "case": "case-022",
+      "base_sha": "77706b3abf9c4ec5a09b957ddb593dadb4e994c1",
+      "head_sha": "461266b10c59ede218cd4df9db059e0aff904ab6",
+      "result": "Confirmed optional condition inverted; optional exception can be ignored by upper layer, so describe resolver behavior and missing mandatory failure precisely.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "98bf00e6b814eba8410d8f4e0c859af5759c93dd0529c08b922cc1cbbd7d2433"
+    },
+    {
+      "case": "case-023",
+      "base_sha": "3f2a5a3e4896476b7173b502201910b675ce3159",
+      "head_sha": "773ca71f7347e5ea0e519e72e5e9394ea7abefec",
+      "result": "Confirmed subscription default predicate inverted; empty string is falsy and must not be described as always skipping subscription. Constructor inversion is partly masked by routerLink setter tabindex update.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "936b1e34bee996b061c00deffe0b79238da450f2cb588e4c3eca85cffe421b97"
+    },
+    {
+      "case": "case-024",
+      "base_sha": "c8424553852715d264a7f499b1f17e217eca5bcf",
+      "head_sha": "f5f657b5d70e26ffdcffb4eef63c168cd524c2b5",
+      "result": "Async paginator and page paths reviewed; deprecated asyncio helper is actionable. Remove unsubstantiated claim that it necessarily misclassifies marked callables.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "51a773505cc9aff0893adfad8d70b671664dabac3b2ed7005b1efb284042fe5b"
+    },
+    {
+      "case": "case-025",
+      "base_sha": "24ad162f599b94ae0b923e21c34bb9d8de4b032e",
+      "head_sha": "95b98e19d9d3a222d779370c2d41e143f74e8464",
+      "result": "Confirmed cleanup removes live descriptor children during iteration; feature opt-in must be explicit in severity rationale.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "cd4efb97b2f7ecb4dc865a8a55215617930136abb741c6eb5cebfe575ffd4bdc"
+    },
+    {
+      "case": "case-026",
+      "base_sha": "5348e5cc1d9207bc8ccc60e841bb74955b2baf7f",
+      "head_sha": "f26060c38ef53294a51bf670965fbad7505d0f0f",
+      "result": "Confirmed hint and error wrappers use the same animation CSS; retaining the wrapper prevents animation restart on message switches.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "1f1addcbfdb62010fe6563e26c6b5004a8ac5d148cd3ab8a018770ac69391473"
+    },
+    {
+      "case": "case-027",
+      "base_sha": "3ac611fca7a2662c411926f5c9f42b9670906670",
+      "head_sha": "553f440982f986b584f44055c1375a34bc40c07d",
+      "result": "Confirmed asymmetric prefix tie-break regression in both comparators; diff adds no regression test.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "0d5ec3e451aa188d7ebb1ed004391f639083c9315423004a3f88e3f064c915c2"
+    },
+    {
+      "case": "case-028",
+      "base_sha": "c25eba3fc1b13077919ec4de4247d8657f2184d5",
+      "head_sha": "2ed441c238f48d7da23d77e6d7123e49a6caef76",
+      "result": "Confirmed positive cap above buffer size truncates to buffer; unlimited reads are a distinct branch.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "d29b49292984cba52a0fa1b4a3541edecd94cf70a787dddfaef607d80479abd7"
+    },
+    {
+      "case": "case-029",
+      "base_sha": "9452c590bfe52acbe50ec07d6065b1f926f2c726",
+      "head_sha": "53cd69ef776d57904d0fa755ada193614edff13d",
+      "result": "Upstream correction confirms active-drag layout guard; fix adds no test. Existing resize callback already handled subsequent resizes; first-emission change should not be described as enabling every resize.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "bb6c5f24510036d944bacb47e609aa48047c2689ac13c78a06a8f7810f77cdb5"
+    },
+    {
+      "case": "case-030",
+      "base_sha": "dcd634ade56b3ac14fdd8cae84c7c9d51158dab9",
+      "head_sha": "99c338ae3fddbe05cac11059ba94891c97993eda",
+      "result": "Confirmed unregistered-model lookup failure; executed the comparator and found interleaved group labels producing duplicate optgroups.",
+      "focused_probe_executed": true,
+      "upstream_fix_patch_sha256": "ff576430b522ad37cb5c374a6297ab1bf72738aa4f3f7294c7b72e681e647d4f"
+    },
+    {
+      "case": "case-031",
+      "base_sha": "f0fb4631d1a7fc1d1465ccb9e2666ef4b522469e",
+      "head_sha": "7c65224e8933f3ae98cba1a70bbbc43251dc8ed7",
+      "result": "Confirmed that DBAPIModule is imported only under TYPE_CHECKING but evaluated by cast() at runtime.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "04a5ca55e8daaeba761b6a4410e7f69b5d57e8976f1bdb133b92bd8b724e568a"
+    },
+    {
+      "case": "case-032",
+      "base_sha": "f852b1e9ed1c42a41e7b225bc817fb05dc30f04f",
+      "head_sha": "0b540860033d3f902748641effecdc32e267d4d4",
+      "result": "Confirmed that explicit casts to varchar(n)[] in the UNNEST insert path truncate overlong strings before insertion.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "f4cb94765c2511c7305e8621492153f9b3897166659b137eeb0bc65326f0edba"
+    },
+    {
+      "case": "case-033",
+      "base_sha": "577a74e696989d5a3dd30c29d2a0158dcd2e8337",
+      "head_sha": "ea6835ef1e8a196d901d88f22f38211d59b58b39",
+      "result": "Confirmed fish newline splitting separates type, value and help into different completion items.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "65f6301cc85208aab39d4859946a64b87cc4e78a01c33d3343b402e034bca53f"
+    },
+    {
+      "case": "case-034",
+      "base_sha": "38fe9bce04981a8d720672239377be8a6fd10af2",
+      "head_sha": "c8b68ff996120710437f9b3a0ba4ddc049eacb8e",
+      "result": "Confirmed the extra module path is passed to all meta-path finders and can resolve a same-named module instead of its package.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "b015fc1d6ed23d7006eb0c22913a7057f8b51a5073f47a359e4990e7624c5cc9"
+    },
+    {
+      "case": "case-035",
+      "base_sha": "d738d44ee94a1f958369c96ba09cd8a548f8a8ad",
+      "head_sha": "9244e2184c6c4b9a1aef81bb34a29407b6199758",
+      "result": "Confirmed the inverted missing-BeanDefinition case rejects registered singletons; the diff lacks coverage for that condition.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "456fdaac18811be9a0044eccc4d24657fa900a0675e438abbbbb0e4f44373f59"
+    },
+    {
+      "case": "case-036",
+      "base_sha": "c56d9b79a8995f07643a9cd74f9aa9017c3606fc",
+      "head_sha": "04020e5475801131d08938cce0cdafbb4901c7a6",
+      "result": "Specificity-first sorting confirmed; replaced an example with equal specificity by a parameterized media type that actually distinguishes the orderings.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "63e2dc3af11b52bc29fbcd45c1217e153c1b4f9679783cb0d90c108eeee0fc27"
+    },
+    {
+      "case": "case-037",
+      "base_sha": "d626f4456cef45b50fbc116a176508ae683770a6",
+      "head_sha": "cd16f6a2a6bb8e03dd867c8b9221cdf636526013",
+      "result": "Reviewed pytest instance creation and unittest integration, including static/class method tests; no concrete new defect established.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-038",
+      "base_sha": "2a7e04e86e69892044f65dea9ee4de640568252b",
+      "head_sha": "3ef08563be56598ef5f1c8d3204c7dab0be9e8bb",
+      "result": "Confirmed that non-empty scalar strings bypass handleNonArray; used List<Object> to avoid the specialized StringCollectionDeserializer path.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "14beb0d175fd77db399e82cfc13fb8779a5fee424b1d8d66ea22b84deed33f5d"
+    },
+    {
+      "case": "case-039",
+      "base_sha": "d7226a333ba8c46beed67ca62ecbc0039cd51dad",
+      "head_sha": "b6531d586d1a6c25ba682e527d6a39022c8b30bd",
+      "result": "Confirmed that the new outputs are subscribed through the Maps API rather than native DOM listeners for unsupported AdvancedMarkerElement events.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "1a83f314bbab68e03a3e988ba1d5b2b7cd77e26912a60ecca554ead3d63907c8"
+    },
+    {
+      "case": "case-040",
+      "base_sha": "8ec4fb1939e11680438b8b682da4395acdae804f",
+      "head_sha": "03e3c09ea8292a1b122773dbc3a74786910d256d",
+      "result": "Confirmed eager optional-dependency loading, degraded missing-plugin diagnostics, and missing added regression coverage.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "084197002fd32740b0475bab49a10107a594c30c4c47fdf56fa45383abed2f1b"
+    },
+    {
+      "case": "case-041",
+      "base_sha": "1800a71560268bd244d0aea925254ec9be7234a6",
+      "head_sha": "08be265f1a9afd92ffc83737117981ab50095ebd",
+      "result": "Reviewed mechanical local-variable renames across ArrayUtils and the tests; no behavior change or new defect established.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-042",
+      "base_sha": "3e0e6e74e84d30bb31bb4377dc3ac49ac77de9bd",
+      "head_sha": "71f55b531a2ebcea35753d51d116f8b35eefa8c8",
+      "result": "Confirmed null-key contains() failure in startObject/startArray; corrected the number of affected overrides.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "6af02cfaa0f97597454e38d87f84d39192bd14cadf6ba5497d6d9cc31425f086"
+    },
+    {
+      "case": "case-043",
+      "base_sha": "93c8f09f58a7a1f0b2b5d749b6f1d6749c7cde2c",
+      "head_sha": "54530f1a4a1921762ef88114a461c737cf599cf6",
+      "result": "Confirmed schema-qualified names are escaped as aliases not declared by the INSERT statement.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "4c65dfc3fccf9864d287a19edeba18b636d6f0c10f8d8ad5736c7a32a2370a10"
+    },
+    {
+      "case": "case-044",
+      "base_sha": "775faf7b887e92af79aa8c07fddb5211732750d9",
+      "head_sha": "c9cf2e6d5b5b3f1c08efc540538b3b152b603f91",
+      "result": "Confirmed controller registration repeatedly adds listeners to the main-thread lifetime store.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "a96d39eff717b5cea46b8ac203b75e3826a324d5defd8a847851ba921c1fa63b"
+    },
+    {
+      "case": "case-045",
+      "base_sha": "abf894e21e18501197e8ca765ea8e5e1a4c27e24",
+      "head_sha": "5f5c87a0479c092999981a8f9d421dd2eb592636",
+      "result": "Confirmed descending index field handling and newly skipped database-independent checks when databases is empty.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "85a69eef0a95754ba657abc72dd8b2e8dd602ffeefc3f89f8fd3af800de1a5bb"
+    },
+    {
+      "case": "case-046",
+      "base_sha": "f43aa179e01c4b26ab29cb6ae9a0bb765506c4a5",
+      "head_sha": "a2dd8eaa2986bc381ec194650df1178ec4f05f5d",
+      "result": "Confirmed list.args failure; regression coverage annotation refers to tests added by this change, not a claim to have run the full suite.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "8434fcbcd2308f9fbb081de2356c4cad89f1c0f4c78f8da8e73585d41a07d3de"
+    },
+    {
+      "case": "case-047",
+      "base_sha": "9f33c0a4d409e773da9639dfd179ac37020e6f6a",
+      "head_sha": "ef0881958fdcd9059db41ae0ef968dd79f452e49",
+      "result": "Confirmed Windows path mismatch; narrowed impact to nested assets because root-level relative paths can still work.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "d7fb1ab7a82204e55d79875b430da3df31d77fd8492582639db2fff8abea808a"
+    },
+    {
+      "case": "case-048",
+      "base_sha": "ce6f5c9f75480029c0b40808fb065ef48c68fc35",
+      "head_sha": "b418974bc0fdbf56a72716916bb808c33a5ce30a",
+      "result": "Reviewed the source and test changes; no concrete new defect established.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-049",
+      "base_sha": "c7bbd99615e1deca73cd99c41ee4dd8e8664233b",
+      "head_sha": "6e8e37203b15ea94a021c63277219dc144be480a",
+      "result": "Confirmed the finally block closes the file channel after every chunk, resetting subsequent reads to the start.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "e63a243632aa9c89bbd75d11a7048d5e49664f2a71a7d27fb977bb70ba5c2db7"
+    },
+    {
+      "case": "case-050",
+      "base_sha": "7ca87b540ff3da2daf6060c808fab78f06f1f4f4",
+      "head_sha": "e26096fce1e954db64a92f7fd1d6bf5c5d2adf00",
+      "result": "Confirmed pre_save is now called early with add=False before the ordinary save path; upload paths can observe unset auto_now_add values.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "3cc2164ccaabcfdb9b42222b5ee896161a1805d57907a0548c7b3bd7eadea747"
+    },
+    {
+      "case": "case-051",
+      "base_sha": "51f70725600865de9d73a7b14f4645e1d2544d70",
+      "head_sha": "52cf171cd7486f75202b5cf08ef5a7b3e92bca87",
+      "result": "Confirmed absolute env-file paths are compared to a basename; no added restart regression test.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "6e6edc9dae78bc91d025f201d4765c49d2fca47294c596b33dd614934bc144be"
+    },
+    {
+      "case": "case-052",
+      "base_sha": "359062294434d55bcbbf77bbb0a205c2c3813823",
+      "head_sha": "c5dbab3519902630c25719ecadd7e8914655b7f3",
+      "result": "Confirmed that the extra order scan consumes one-shot iterables before later processing.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "3259c48e884bf944e6215453a687030d266dc2a8c8cc2fac30effd89cc0b8b53"
+    },
+    {
+      "case": "case-053",
+      "base_sha": "5313ce842630477aa93626f0923a3aa33719701c",
+      "head_sha": "5fd35239bfff1ac3d136fff708391518a36f9f15",
+      "result": "Reviewed the source and test changes; no concrete new defect established.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-054",
+      "base_sha": "e99e88c24b6022c7f52ac477d7f05a288ea581fb",
+      "head_sha": "cd559294511d90d9f9adb933d76597a703c5357e",
+      "result": "Confirmed invalid catch-all cookie attribute parsing and the new setPartitioned(false) bug.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "e4349f09a890217017eba1ed3490bc4638f9998870a681bcc344830e4cc3a9e8"
+    },
+    {
+      "case": "case-055",
+      "base_sha": "f9c618fee04a47c363ba54974b0c3ffd9e940060",
+      "head_sha": "3b87c698566fb25f6798d6abfe10dc17a486febb",
+      "result": "Replaced unsupported CSS-selector examples with the hydration regression explicitly described by the upstream correction.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "1da573257b6b96f26cc7f4deca9bfc122d6136e0cfe219dca288044c86172d9d"
+    },
+    {
+      "case": "case-056",
+      "base_sha": "e0e11a1943f5616c3c018ce9ac70e784ab174538",
+      "head_sha": "7fbdeba1cac7db530c768eccc08f88397d25979f",
+      "result": "Confirmed firstValueFrom can reject with EmptyError when a matcher completes without emitting; upstream correction handles that case.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "c21c394269ef80dead1e4e96b0806e99559dfc336ce4b487c7c07f26ef70abe7"
+    },
+    {
+      "case": "case-057",
+      "base_sha": "a8a0c55c63b69d095a93fa889142ed5a0c5e65a6",
+      "head_sha": "07c0cbb63c69ea8f40a6fb5e14c4f74b1fff1d1c",
+      "result": "Confirmed nested subagent authorization uses the top-level session mode instead of the actual calling agent.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "70a67681b9c955e956cbbe53d026cd34bf38d22f0db41bd9d65f582db969442f"
+    },
+    {
+      "case": "case-058",
+      "base_sha": "2f9e32e9f7a7964e29f3a0bd3fc0432bb9ee5d01",
+      "head_sha": "aeee822e5c9913c74deb5e7426c3e5b6e04f40d5",
+      "result": "Reviewed the source and test changes; no concrete new defect established.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-059",
+      "base_sha": "91722fd9572c7396081f5385a60a33a52adf6263",
+      "head_sha": "d5c6a13b293bc9e2a9c3de0ed991d73f22969aeb",
+      "result": "Confirmed that adding an abstract method breaks existing SingletonBeanRegistry implementations.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-060",
+      "base_sha": "57268e7824821ccb98af2dd5c940141458f3cab7",
+      "head_sha": "39bb1927a26c9108e042bd1caf92f0387eebfd05",
+      "result": "Reviewed the source and test changes; no concrete new defect established.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-061",
+      "base_sha": "f7c745bb3110edea8537f8450f019a155b0526ff",
+      "head_sha": "8cf3a2f43040f749a8ca7aec2be981727266348a",
+      "result": "Confirmed decoding non-UTF-8 byte passwords raises before hashing in PBKDF2/MD5 paths.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "a04748eded4210ce6afc68a2a6b92272a66fafaa364dc97de95fbc3661d5bca8"
+    },
+    {
+      "case": "case-062",
+      "base_sha": "31beadd099477bd47f2325dfdf437942a48808f3",
+      "head_sha": "dda4722157fa3dd1c417d0ca8f7ff2848181117b",
+      "result": "Confirmed the HTTP client constructs SSL configuration even for a plain HTTP target.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "ced60e69cd6e997e9286ebd05150580489283c8bc90a4a8896b91ecdd6334a97"
+    },
+    {
+      "case": "case-063",
+      "base_sha": "a39d73a8ad18ad39fbdf8407f69a6444d869a07b",
+      "head_sha": "eec16712d7db422b1bb0c7e9fb4681629492242f",
+      "result": "Confirmed unconditional selection.collapse; its omitted offset resets to zero in the anchor node, not the previous match offset.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "5449c377111a30bcd97d7967385b0f8791b0f3740cc235549f61e41f04081392"
+    },
+    {
+      "case": "case-064",
+      "base_sha": "b1f06f86641bb4f5de31213dc1bfafa3c5bd46d9",
+      "head_sha": "720d1894469b9e37a9ab4230edc5030c573c71c8",
+      "result": "Reclassified as real: source-level execution confirms strip() leaves raw_lines unsliced while displayed lines lose leading blanks.",
+      "focused_probe_executed": true,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-065",
+      "base_sha": "3b311f8ea65927976aedfd4da0e3075e6b3a1450",
+      "head_sha": "6a16f3dd22462627eff7d235537e316a0d95727a",
+      "result": "Reviewed the source and test changes; no concrete new defect established.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-066",
+      "base_sha": "2dfcf31623695b69f46ad9433bfd47c8039c82aa",
+      "head_sha": "94888e603e3d3e5de25809ccfde79e96f558635b",
+      "result": "Reclassified as clean for this diff: source-level execution of both base and head confirms that enabled Space activation already lacked preventDefault(). Recorded the misattributed finding as a known false positive.",
+      "focused_probe_executed": true,
+      "upstream_fix_patch_sha256": "5778a965f28927b4cb7791249f33cdc5b27814484f5592de53797c3c9b1eff30"
+    },
+    {
+      "case": "case-067",
+      "base_sha": "c6f59862b70432a2ba811f8a2a8d1f119af970ed",
+      "head_sha": "ac18faec1318022e5708c0f35e7ce922934c2afd",
+      "result": "Reviewed route-prefix indexing and changed ordering expectations; retained the annotated index regression rather than treating intentional ordering changes as defects.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "d4bf236575d6ea881d0e3a9c6797dc777ffbcb0713dafe3622b089b7e61eaf9d"
+    },
+    {
+      "case": "case-068",
+      "base_sha": "088eabef8e86762196c1e9a37fa53f26ec0752a3",
+      "head_sha": "1e8397b60de80f823255e0a051789a9322c54b9a",
+      "result": "Confirmed missing database alias propagation, substring content-type selection, and rewriting of custom permission names.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "906708ee688e18bba15e5bcd92fd097c9739ff3efa4fd34afd032ed0a2e6b07b"
+    },
+    {
+      "case": "case-069",
+      "base_sha": "f06c7791f6675596f9e5d1f8ea161931dd84ddf9",
+      "head_sha": "564ebb3ef4c13e4e71a6ac9e1425f888a777c26b",
+      "result": "Confirmed the write-filter condition is the inverse of pending-buffer state.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "a70e447734d1de8eaa66fc34b24cc95d542c56b0fbb2a38025c5fbe4162234ae"
+    },
+    {
+      "case": "case-070",
+      "base_sha": "a73642110935248ff372473bef077662ba147c7a",
+      "head_sha": "d837e315ef5eb4fc638ae58c26c46272c9484a19",
+      "result": "Confirmed that the early version handling misses the -V alias.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "2ffa0db494e1d4d0d640ec44dd57f8020338e092e99a47dbb8a04f1e65942d5c"
+    },
+    {
+      "case": "case-071",
+      "base_sha": "851d73274c7abf0768e6cf8d887f4884ae4cb55e",
+      "head_sha": "78cc28ef7531355e39714a3cabe676a0b3147923",
+      "result": "Confirmed inconsistent GET/POST permission selection; the separate save_formset permission check prevents inferring an unchecked write bypass.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "5938a7e6f80b4ceb402c8b98733af00df61cb43f073b776164468d3d684f8de2"
+    },
+    {
+      "case": "case-072",
+      "base_sha": "4696c30f6c5ed07e02d9de707a98b81ebb1cade2",
+      "head_sha": "2c0a15ebf93695fa1e1638ae623cccdffdb68cdf",
+      "result": "Confirmed recursion inspection evaluates definition getters, including default factories; retained the lazy-evaluation finding.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "fbd7cd48b8673aab530e2768173966e3d6324d6ede291d7996ba55b527d5dfa3"
+    },
+    {
+      "case": "case-073",
+      "base_sha": "7eb66a256c3b3a31c6909f1fb4216dfbb1b39d99",
+      "head_sha": "a87d6e6d69182455a6e364d616842bccf081e5f6",
+      "result": "Confirmed published Sass import mismatch; the warning comment is retained, not removed.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "1e811528a4015b73a8a65f66c33a5c77ee3b41d4db25e81658176eaa32894c97"
+    },
+    {
+      "case": "case-074",
+      "base_sha": "2d12b7b16699d5b8e929ecebd8a70ffef99895cb",
+      "head_sha": "9dca08732ba6a83d725eed72b2126e5c7eba4730",
+      "result": "Confirmed inconsistent equality-option spelling and the public interface compatibility break from a mandatory type parameter.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "749345cfa69b2975c5ad6d3afbfa9f61a481797d28771f4fa453d553f4a406de"
+    },
+    {
+      "case": "case-075",
+      "base_sha": "393f3dba020bf30ff167f95b9e4370639b3ef489",
+      "head_sha": "8491f3dd08053ff05c9c0927857ebaf04c560674",
+      "result": "Reviewed the source and test changes; no concrete new defect established.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-076",
+      "base_sha": "fdecc119cf4f2a93c56c6f9a330232c5b741c14e",
+      "head_sha": "0092a01e2063e07a83f081a4bebaf7f5f825fd81",
+      "result": "Reviewed the source and test changes; no concrete new defect established.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-077",
+      "base_sha": "35ac5c9a6585428994f0848ddd5c1239088e1485",
+      "head_sha": "8a6046119e29b04dc82552456e6a3e4d0db09fce",
+      "result": "Confirmed bracketed and grouped clauses do not set seenNonCombinator before a subsequent combinator.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "cd64bd2805041468417ce314b2f5b782bcc157f0d70de9be8cfc13eb85570e01"
+    },
+    {
+      "case": "case-078",
+      "base_sha": "e29619f527ef77f6cedcbd7c84b3060351f07dac",
+      "head_sha": "fdb5a8aecd5acbe6a36d47e5295cfc7c6f588dac",
+      "result": "Confirmed that list-valued node members become unhashable in the new hash implementation; intentional Python 2 removal is not a defect.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "0e86f305641c3976361e97cbef613c69c589429a5a262546c23e74c3356cd893"
+    },
+    {
+      "case": "case-079",
+      "base_sha": "943ded74207b6eedd3bc4ec92e637351a9b71cae",
+      "head_sha": "d27bb0dfba5da6d7cef1c660d6a67b5b0290db6a",
+      "result": "Callable annotations align with existing runtime conversion behavior across Headers and multidict classes; no new concrete defect established.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-080",
+      "base_sha": "7d87b8535c0f092c593051a5808caa8fa4d2b917",
+      "head_sha": "d497e8a1134b7f848ffa28abb04e9d94c7c83f15",
+      "result": "Reviewed token handling and closed-socket ping paths; no new concrete defect established.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-081",
+      "base_sha": "07140e80dbc9381091fdf35bf321c0c6f20dc803",
+      "head_sha": "f7eb7853b014bbb14d692cdb7c62bf10a3abc926",
+      "result": "Confirmed that pk classification precedes related-field pre-save processing.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "5e19e85e64bc10f08830d0e234c2a10d4f1ea73925e19db9b9caae33d701a525"
+    },
+    {
+      "case": "case-082",
+      "base_sha": "a76c79f4eebeb17bb7d359b3903d94a3eee4e140",
+      "head_sha": "d3e48e76a3bee4ca486f9e2263b55a17f50942b7",
+      "result": "Confirmed changed contributor grouping; replaced a generic two-file precedence example with the upstream test involving an external default file and a classpath profile file.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "705dbdd279eb59520d2c20a224789568b1633b0afe97a694d0266e9327666148"
+    },
+    {
+      "case": "case-083",
+      "base_sha": "2c5c28ec83800be164479db317125b91d767cdfd",
+      "head_sha": "836dae148f751651b3f0663b9e2ed8e330f94d96",
+      "result": "Confirmed the multibyte buffer-boundary overrun in the changed copy path.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "9e811ef4d54e8841520868132d50dd2146aa0edf880b4193c13179fcb7ba1b1e"
+    },
+    {
+      "case": "case-084",
+      "base_sha": "e6140a240dee83fb4a6452833b599fbfe73db128",
+      "head_sha": "c4400de48adff899b7be640bec4e654bf77c7101",
+      "result": "Confirmed incompatible from_db keyword calls in ModelIterable/RawModelIterable. Also found scalar peer fields assigned tuples; this snapshot explicitly supports values_list().in_bulk(), so rejection of values_list itself would be a false finding.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "791922915127059665e2a64082182ad4792839cb207390188396f3e707ea6acb"
+    },
+    {
+      "case": "case-085",
+      "base_sha": "9b3b3a1541bc7041081fe08d1f30cea6e93e0c34",
+      "head_sha": "e0d404569dd6e40e1933a61113c3065ab0516c12",
+      "result": "Confirmed builder.up() is conditional on a non-null LDAP version despite a successful health operation.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "e82db29250fdbdd73ad6ee5cd9ff2487035513e52e8fccfe0f1144e519163ecc"
+    },
+    {
+      "case": "case-086",
+      "base_sha": "f8c5d80fe6cd92a3079399817564626bffcb7edf",
+      "head_sha": "8927960c6f67df87d55c5017af3303928f692f89",
+      "result": "Confirmed the shared-prototype key guard suppresses derived lazy overrides.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "bfcea44162b0432d41f586827c71fa316f056371553e5d2fa1cfd5ec06e301b0"
+    },
+    {
+      "case": "case-087",
+      "base_sha": "01dc53ec56cccd1a914147794d06f85aff1c61e1",
+      "head_sha": "432c46c0aa5826f0231c496a062cfdd69c4eb0ac",
+      "result": "Confirmed active-element capture occurs on overlay attachment and can overwrite the original focus target.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "55a77da632399e90dfec677d3b9d33b642d9d43a423a10795fe3d9ba9a2e01ab"
+    },
+    {
+      "case": "case-088",
+      "base_sha": "75011b8789620d8f883c076090be23f98a6ea0eb",
+      "head_sha": "d5338c6a8e79a798b51c82e4973d9cccd8bd1020",
+      "result": "Confirmed ForeignKey is excluded by the internal-type filter; retained the affected relationship scenario.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "f97833c6359c8dede9c928a929fcecd5c47360a25b24925200cf0fa5f0d2e834"
+    },
+    {
+      "case": "case-089",
+      "base_sha": "20fc9c326b59b723099ae0a9ed74e9dc7f684c15",
+      "head_sha": "f17bae1f9ee94d6bd26c047a564982bf82198297",
+      "result": "Confirmed that non-field relation objects returned by get_fields() reach field-only processing.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "77ae4196425ca3c509e1c1205450adf8bfcdb17769dceedfdb723c904c06b0db"
+    },
+    {
+      "case": "case-090",
+      "base_sha": "fd5f106461df47b8b547d7be3c22c742baedb992",
+      "head_sha": "0ced32182860102494adc50dae4d32f5776dab86",
+      "result": "Confirmed newly required preview/placeholder dependencies and absence of added tests for the affected construction path.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "99d9765b7b06d661a0c5318e8edf2aa3c3d9da85c2efbd2e137324db2295f397"
+    },
+    {
+      "case": "case-091",
+      "base_sha": "aefe773cbe929fd2ea171d42fd53a2283fa48717",
+      "head_sha": "a184b6bb42f92445db44f5ddeaab36984ba3eeb1",
+      "result": "Confirmed two passes over a potentially one-shot iterable in the changed preparation path.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "227a50a9810fffe9745b3dbd16e86d89a38748d53e065c05f8e2a38ad0a8931d"
+    },
+    {
+      "case": "case-092",
+      "base_sha": "90806986098a17a87141a757f8b4c57c77f50417",
+      "head_sha": "549b51a26c082fa3d932a376bf0ee4adfd251681",
+      "result": "Confirmed removal of the protected three-argument extension point; clarified that a compatibility overload must preserve dispatch to old overrides.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "612808a9c55264fcf3c37dee01c07e235166147fa695fc377c65b8d45d2dc65b"
+    },
+    {
+      "case": "case-093",
+      "base_sha": "ade304b67911c933f8cfa0c7f9b87bd206639193",
+      "head_sha": "236d4ad71f885b21ad9d91f4ddfe0421e687b3ec",
+      "result": "Confirmed freezing route data can freeze caller-owned references.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "78ce1b0cb2f4492fb2bd79f87ceae84d1fd251c09caaeeccd246349aac37435d"
+    },
+    {
+      "case": "case-094",
+      "base_sha": "7c612e41e998b3bc5e4b65cc21a1726bac35793c",
+      "head_sha": "720fb251de5c939b93c900d791c2660ee747a59d",
+      "result": "Confirmed optional Router injection can yield null on the newly used path.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "31d65d2a13c227c8e531a3112c900049824d9cb0e6f25eeb210fa9aef9005d97"
+    },
+    {
+      "case": "case-095",
+      "base_sha": "4fc11863dc9436963a09b688f5e03ca7dc483d8c",
+      "head_sha": "492653db9a4872e106611db1764825e3ea5491b9",
+      "result": "Reclassified as real: executed the snapshot parser and confirmed srcset=\"a\" loses its sole candidate, while \"ab\" works.",
+      "focused_probe_executed": true,
+      "upstream_fix_patch_sha256": null
+    },
+    {
+      "case": "case-096",
+      "base_sha": "d166846d1cb755e48fc6bd902e3fee5c158d016a",
+      "head_sha": "060954d2f7555000e3aed8680f123996373c4148",
+      "result": "Confirmed unconditional forwarding of a certifi bundle. The upstream fix reports loss of system-CA support and explicitly says it adds no truststore test; TLS integration behavior was not executed in this audit.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "2c390d14bee2a89e85c54fa71b21be71eae113c0d5879e07c651ef07f71eab18"
+    },
+    {
+      "case": "case-097",
+      "base_sha": "36ae2e50ab5beb88faf5004fe8799bd43fbdcc70",
+      "head_sha": "70dc4056a8a71fd04883b6cce12627f3d17ecbdf",
+      "result": "Confirmed explicit Inet6Address destinations no longer influence the native family flag in send paths.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "d17395a81be12d3a63e193c8f727a80f4e27a925c301058dbcc1cc6d2b00607a"
+    },
+    {
+      "case": "case-098",
+      "base_sha": "5b369052a8272b2f7d33ab31ea1cb891524e89f2",
+      "head_sha": "8973678a36eeb4ff6433634c6ce201e665be17c0",
+      "result": "Confirmed changed base-href fallback in builder output; did not infer failure from unreachable fallback shapes.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "d74f81c54bd05d6d7c2efa91aab8ba1a2817733c0ddc57a937138498178599ab"
+    },
+    {
+      "case": "case-099",
+      "base_sha": "40b83f454be692d5c923a6be4782a2230b9fb91a",
+      "head_sha": "4a7b80c881ad162ffeca6869ad62f600e5f866e6",
+      "result": "Confirmed formfield.to_python is not the TypedChoiceField coercion step, so values can retain inappropriate types.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "743bec11a3035e4e68a302dd0420e5d5aa0fc7ed4874a8174138447431f1685c"
+    },
+    {
+      "case": "case-100",
+      "base_sha": "11b323c5116605dd7dab745e3ee27015ef58568a",
+      "head_sha": "7741c1e77bf36890866e5d1db70b7a6d7fc5ebbb",
+      "result": "Confirmed single-match traversal misses sibling matches after the changed search path.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "d1d2ef81438d724199e51ddf87ec1873ab38fad17cd15fa96a22742cb3592006"
+    },
+    {
+      "case": "case-101",
+      "base_sha": "741be144aa0f0d381870a880570cb5526ee82572",
+      "head_sha": "2c552a60ea6bd3832e5551bfdf7895299bcecfef",
+      "result": "Confirmed Stream.concat binds child spliterators before descriptor removal can mutate the second traversal.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "f311bb09e8face87d7e64fda1cc829019d21c63763c9ded5b08e31ab739ec463"
+    },
+    {
+      "case": "case-102",
+      "base_sha": "cc2ac02e2b099d45ee48493ee07593e6a85cda8a",
+      "head_sha": "e365b88d145e6c1ae3af8f2565bea7f161e0e0ad",
+      "result": "Confirmed the changed managed-resource path omits stale-entry removal.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "a8927ae2ce77e035ecdb3032eccb44c223ea78b50de24836008f127bf85e603c"
+    },
+    {
+      "case": "case-103",
+      "base_sha": "84482661168ba97e66ba2a5122a60500ac02f613",
+      "head_sha": "ffec2e3ff3553628051e0655922445839b3e9f1a",
+      "result": "Confirmed the returned workspace-selection subscription is discarded; upstream correction registers that disposable.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "73a796632eddf628c758266e22bb24f5c160d55d744f062932a5f0fe3f703a77"
+    },
+    {
+      "case": "case-104",
+      "base_sha": "2faf3bdb88240eb59e3cfce1754e04dcf5231702",
+      "head_sha": "44026aa6275f393bc6986354ae3f1acd8e620fb8",
+      "result": "Confirmed MDC storage moved outside the map copied for nested contexts; upstream correction supplies REST-client and nested-context tests.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "b380de882d516bdf3beecb5ffeac59d39899b03065770d953619412d8c519da5"
+    },
+    {
+      "case": "case-105",
+      "base_sha": "388e0e243824a6d0bb08a6c6522ff0d1c2b3cb9b",
+      "head_sha": "116389a3a24fe15e542bf7760f1923a8795d846d",
+      "result": "Confirmed the root EnvironmentInjector fallback loses child scope specifically in the no-viewContainerRef branch.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "9fff73ca0b8769ae2c30a220ad85b254a61ee0e4733164fa0573fe2117d86556"
+    },
+    {
+      "case": "case-106",
+      "base_sha": "2a0952232f27d409461f0aa24ffce24c034a01a6",
+      "head_sha": "1cf8f65b90b0a44bfcb2a71df352977a6e6e4553",
+      "result": "Confirmed Text-state EOF reprocessing has no escape when originalState is Text; retained the upstream fuzz fixture as evidence and removed an unverified minimal HTML example.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "085a28f313a38f0e56dc1f2469306a41d8a9d0f484062bc6a76a37fb436ad8ae"
+    },
+    {
+      "case": "case-107",
+      "base_sha": "89c2cb5e71bebed7acc088ea5856c5ef51d90570",
+      "head_sha": "0859541336aa4048269a931b491bf321b9ab30b4",
+      "result": "Confirmed error attributes are computed twice per reactive error response, invoking a user extension point twice.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "a8639b5dfc827fe8d5975219e033f2e451ade16ebcf2992c7d64fe6b22e66897"
+    },
+    {
+      "case": "case-108",
+      "base_sha": "037bbf152a82d139deff99daa5ea9c2a100bffda",
+      "head_sha": "026ea9b9dce3d732ea3438f2181d0803d763a6ff",
+      "result": "Confirmed RemoteUserMiddleware no longer calls overridden process_request methods after dropping MiddlewareMixin.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "10c51b4ded7d1906a37ea8722bf23cde4b4cf322cda6f16457c1f5e53d36efa1"
+    },
+    {
+      "case": "case-109",
+      "base_sha": "dde3cf6fa88e30315a66e894754a8a705715508f",
+      "head_sha": "c451cbeae210a37cc0e459229d9bdff4d2e90616",
+      "result": "Confirmed duplicate keys and inflated length from merged parent/child keywords; removed the unsupported claim that -k matching necessarily breaks.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "b8ab16093442b145ff684b096a92443393661c7d2c8d3537940ae008b09539cc"
+    },
+    {
+      "case": "case-110",
+      "base_sha": "80c4429974120f799438d19d6fac733147c09081",
+      "head_sha": "ce2219bf034f86ad638b8be805d5eaf8aa8c8883",
+      "result": "Confirmed diagnostic warnings bypass the existing opt-in debug logger.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "417cd117f2a7344151561ef366472cb3f38fd4a04de9147cb9e4d4a1fc4a05cf"
+    },
+    {
+      "case": "case-111",
+      "base_sha": "085399bcc91a158163380d9673aadeed0e66bc1f",
+      "head_sha": "043649e7b211567f84bc89fea677ab8df37136a9",
+      "result": "Confirmed duration strings are converted to milliseconds then converted again using timeUnit.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "cb9e9295a4745f566910338301257e0c99b225b90df05e5916d91b799f42ddf5"
+    },
+    {
+      "case": "case-112",
+      "base_sha": "f999d31722e9530831f83d8cae695dc9166bd96a",
+      "head_sha": "cc743ddd3ad489433c9ce31b6cbb00830a347538",
+      "result": "Confirmed default-session selection in the positional Object... update overload; the Map overload still selects the entity session.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "b76e5fc9a992530f544e809933df7dd3f9a175065f2ca960ffe88682cf86042e"
+    },
+    {
+      "case": "case-113",
+      "base_sha": "817db0403483fbb0d366219dc5600393e7f49974",
+      "head_sha": "e93423b75f6778207556046e993ae2a13970c36c",
+      "result": "Confirmed the first-child fallback also runs for a return-to-original-container end index when sorting is disabled.",
+      "focused_probe_executed": false,
+      "upstream_fix_patch_sha256": "2a8f2c29c6116a5db56beaa67ccc16a934dc056047620c3e066acdf6ad2ace1e"
+    }
+  ]
+}

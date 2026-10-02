@@ -26,7 +26,7 @@
       "line_start": 45,
       "line_end": 45,
       "category": "correctness",
-      "severity": "high",
+      "severity": "medium",
       "title": "Descriptors removed from parents while engines iterate their children",
       "description": "The cleanup listener removes each finished descriptor from its parent while engines are still iterating the parent's getChildren(), which is only an unmodifiable view over the live set, causing ConcurrentModificationException in engines such as the Suite and Vintage engines.\n\nAbstractTestDescriptor.getChildren() returns Collections.unmodifiableSet(children): it cannot be modified through the view but reflects concurrent changes. Engines typically do `for (child : descriptor.getChildren()) execute(child)`; with the new option enabled, executionFinished(child) calls child.removeFromHierarchy(), mutating the set being iterated. Either getChildren() must return a copy or removal must be deferred until the parent finishes.",
       "outside_diff": false,
@@ -36,5 +36,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/junit-team/junit5/commit/795d3d444c14a7445ffb82ec3088890da1aeade4. Primary issue confirmed by the later upstream fix https://github.com/junit-team/junit5/commit/959c26ce63a71eabbef5d24732b6f24514cedf4a; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/junit-team/junit5/commit/795d3d444c14a7445ffb82ec3088890da1aeade4. Primary issue confirmed by the later upstream fix https://github.com/junit-team/junit5/commit/959c26ce63a71eabbef5d24732b6f24514cedf4a. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted second check recorded below; independent human release sign-off remains pending. Second check: 2026-10-02, Codex (AI-assisted static review of annotations and snapshot diff). Confirmed cleanup removes live descriptor children during iteration; feature opt-in must be explicit in severity rationale. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

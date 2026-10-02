@@ -28,7 +28,7 @@
       "category": "correctness",
       "severity": "medium",
       "title": "Selection collapsed on every find request, so 'next' never advances",
-      "description": "The selection is collapsed to its anchor before every find request, including 'find next', so window.find() restarts from the beginning of the current match and keeps selecting the same occurrence.\n\nCollapsing the selection is only needed when the search term changes (so refining 'a' to 'ab' re-checks the current position). For repeated next/previous requests with the same term, collapsing to the anchor makes the search start before the current result, which is found again: 'Find next' in webviews never advances. The collapse must be conditional on a changed search value.",
+      "description": "The selection is collapsed to offset zero in its anchor node before every find request, including 'find next', so window.find() restarts from the beginning of that text node and keeps selecting the same occurrence.\n\nCollapsing the selection is only needed when the search term changes (so refining 'a' to 'ab' re-checks the current position). For repeated next/previous requests with the same term, collapsing to the start of the anchor node makes the search start before the current result, which is found again: 'Find next' in webviews never advances. The collapse must be conditional on a changed search value.",
       "outside_diff": false,
       "alternative_locations": [],
       "source_category": null,
@@ -36,5 +36,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/microsoft/vscode/commit/bbc10afedac1f9ea35d510211a5ec59296573cd5. Primary issue confirmed by the later upstream fix https://github.com/microsoft/vscode/commit/925807b77db7dc215738f9df2ce4e4e1ede85217; its regression test reproduces the problem on this head. Curator difficulty: easy. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/microsoft/vscode/commit/bbc10afedac1f9ea35d510211a5ec59296573cd5. Primary issue confirmed by the later upstream fix https://github.com/microsoft/vscode/commit/925807b77db7dc215738f9df2ce4e4e1ede85217. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: easy. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted second check recorded below; independent human release sign-off remains pending. Second check: 2026-10-02, Codex (AI-assisted static review of annotations and snapshot diff). Confirmed unconditional selection.collapse; its omitted offset resets to zero in the anchor node, not the previous match offset. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

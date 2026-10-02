@@ -28,7 +28,7 @@
       "category": "maintainability",
       "severity": "medium",
       "title": "Protected extension method signature changed without keeping the old overload",
-      "description": "The signature of the protected extension point _constructStdTypeResolverBuilder is changed in place, breaking subclasses that override the old 3-argument method.\n\nTypeResolverProvider is designed to be subclassed (jackson-dataformat-xml overrides this method). Replacing the 3-argument protected method by a 4-argument one means existing overrides silently stop being called (or fail to compile with @Override), in a minor release. The old signature should be kept as a deprecated overload delegating to the new one.",
+      "description": "The signature of the protected extension point _constructStdTypeResolverBuilder is changed in place, breaking subclasses that override the old 3-argument method.\n\nTypeResolverProvider is designed to be subclassed (jackson-dataformat-xml overrides this method). Replacing the 3-argument protected method by a 4-argument one means existing overrides silently stop being called (or fail to compile with @Override), in a minor release. Retain a compatibility path that still dispatches through existing overrides of the old signature; merely adding an unused deprecated overload does not preserve that behavior.",
       "outside_diff": false,
       "alternative_locations": [],
       "source_category": null,
@@ -36,5 +36,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/FasterXML/jackson-databind/commit/590acf6d262d65b39b88604b8bed5f3473acf30f. Primary issue confirmed by the later upstream fix https://github.com/FasterXML/jackson-databind/commit/e7a0198e6a37d3a0022d5ec1707189ac62cd9232; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/FasterXML/jackson-databind/commit/590acf6d262d65b39b88604b8bed5f3473acf30f. Primary issue confirmed by the later upstream fix https://github.com/FasterXML/jackson-databind/commit/e7a0198e6a37d3a0022d5ec1707189ac62cd9232. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted second check recorded below; independent human release sign-off remains pending. Second check: 2026-10-02, Codex (AI-assisted static review of annotations and snapshot diff). Confirmed removal of the protected three-argument extension point; clarified that a compatibility overload must preserve dispatch to old overrides. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

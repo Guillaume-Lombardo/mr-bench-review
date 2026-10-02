@@ -28,7 +28,7 @@
       "category": "correctness",
       "severity": "medium",
       "title": "URL regex stops at the first ')' inside quoted values",
-      "description": "The new lazy regex ends the URL at the first ')' even inside a quoted value, so quoted data URIs containing parentheses (e.g. SVG `mask='url(#clip)'`) are truncated and the emitted CSS is corrupted.\n\nThe previous pattern matched quoted values as a whole (`\"([^\"]+)\"|'([^']+)'`). The replacement `url(\\(\\s*['\"]?)(.*?)(['\"]?\\s*\\))` does not tie the closing quote to the opening one, so `url(\"data:image/svg+xml,<svg><g mask='url(%23clip)'/></svg>\")` stops at the inner ')'. The closing delimiter must be matched with a back-reference to the opening quote.",
+      "description": "The lazy URL capture stops at the first closing parenthesis even inside quotes. For example, url(\"icon(1).svg\") captures icon(1 as the asset path, so resolution fails or rewrites the wrong resource.\n\nThe previous alternatives matched the full quoted value. Preserve quote-aware delimiters and the existing unquoted form. A data URI alone is not a reliable corruption reproducer: the subsequent code can skip rewriting it and preserve the original CSS.",
       "outside_diff": false,
       "alternative_locations": [],
       "source_category": null,
@@ -36,5 +36,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/angular/angular-cli/commit/70bc35456aa5b58ce1a0e2440ebb6533c7f5e48b. Primary issue confirmed by the later upstream fix https://github.com/angular/angular-cli/commit/147f8c3ebbad883826da1a94f09054938ed9b534; its regression test reproduces the problem on this head. Curator difficulty: easy. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/angular/angular-cli/commit/70bc35456aa5b58ce1a0e2440ebb6533c7f5e48b. Primary issue confirmed by the later upstream fix https://github.com/angular/angular-cli/commit/147f8c3ebbad883826da1a94f09054938ed9b534. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: easy. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted second check recorded below; independent human release sign-off remains pending. Second check: 2026-10-02, Codex (AI-assisted static review of annotations and snapshot diff). Confirmed quoted local-asset parentheses are truncated; data URI rewriting is skipped in a path that invalidates the former corruption example. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

@@ -33,8 +33,22 @@
       "alternative_locations": [],
       "source_category": null,
       "source_text": null
+    },
+    {
+      "id": "i2",
+      "file": "django/db/models/base.py",
+      "line_start": 2119,
+      "line_end": 2119,
+      "category": "correctness",
+      "severity": "medium",
+      "title": "Index checks disappear when no database is explicitly requested",
+      "description": "All index.check() calls now sit inside the databases loop. The normal database-independent model check passes an empty databases collection, so invalid index names and references to missing/local-incompatible fields are no longer checked at all. Preserve name and field checks outside the per-database loop; only backend-specific checks should require a database.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/django/django/commit/8638d8bf74c1a58302c97d4436ad2eb08438145b. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/86e7406cfb839a6c5384e9f72a55ef78eccc9a3c; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/8638d8bf74c1a58302c97d4436ad2eb08438145b. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/86e7406cfb839a6c5384e9f72a55ef78eccc9a3c. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted second check recorded below; independent human release sign-off remains pending. Second check: 2026-10-02, Codex (AI-assisted static review of annotations and snapshot diff). Confirmed descending index field handling and newly skipped database-independent checks when databases is empty. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

@@ -53,7 +53,7 @@
       "category": "tests",
       "severity": "medium",
       "title": "Optimisation of a public API ships without tests of nested matches",
-      "description": "findValue(s)/findParent(s) are rewritten for speed without any test; a test with the same property name at several nesting levels would have shown the lost sibling matches.",
+      "description": "findValue(s)/findParent(s) are rewritten for speed without adding a regression test; a test with the same property name at several nesting levels would have shown the lost sibling matches.",
       "outside_diff": false,
       "alternative_locations": [],
       "source_category": null,
@@ -61,5 +61,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/FasterXML/jackson-databind/commit/8050a1eaa3eeaf0f98d75567c55969da011e2f03. Primary issue confirmed by the later upstream fix https://github.com/FasterXML/jackson-databind/commit/1c66e4973eb1758c650ca6d52c43458d8ef25dd4; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/FasterXML/jackson-databind/commit/8050a1eaa3eeaf0f98d75567c55969da011e2f03. Primary issue confirmed by the later upstream fix https://github.com/FasterXML/jackson-databind/commit/1c66e4973eb1758c650ca6d52c43458d8ef25dd4. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted second check recorded below; independent human release sign-off remains pending. Second check: 2026-10-02, Codex (AI-assisted static review of annotations and snapshot diff). Confirmed single-match traversal misses sibling matches after the changed search path. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

@@ -2,6 +2,21 @@
 
 All changes per corpus. Versions follow the rules in README.md ("Versioning").
 
+## 1.1.0 — unreleased (2026-10-02)
+
+### curated
+- Audit all 113 cases with AI-assisted annotation and snapshot-diff review; record the
+  checker, per-case findings and limitations. Independent human release sign-off is pending.
+- Correct inaccurate descriptions and examples, including cases 005, 021, 023, 029, 036,
+  055, 082 and 106. Remove unsupported claims of executed upstream regression tests.
+- Reclassify 064 and 095 as real and 066 as clean (its finding predates the snapshot diff).
+- Add nine issues covering grouped-option sorting, skipped index checks, cookie flags,
+  traceback source alignment, permission renaming, public typing compatibility, peer
+  field fetching and srcset parsing; remove one misattributed finding.
+- Corpus totals: 113 cases, 96 real, 17 clean, 114 issues. Snapshot SHAs and MR text unchanged.
+- Add four executable source-level probes and refresh README statistics and reproduction
+  guidance. Imported corpus annotations are unchanged.
+
 ## 1.0.0 — unreleased (not yet tagged)
 
 Initial dataset, contract v1, validator, converters and CI.

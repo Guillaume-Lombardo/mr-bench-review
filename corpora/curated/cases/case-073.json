@@ -28,7 +28,7 @@
       "category": "correctness",
       "severity": "high",
       "title": "Relative Sass import breaks in the published package layout",
-      "description": "The overlay stylesheet now imports '../a11y/a11y', but this file is copied to the top level of the published @angular/cdk package where that relative path does not exist, so `@import '~@angular/cdk/overlay'` fails to compile.\n\nThe comment removed by this change explicitly warned that the high-contrast mixin cannot be used here because the import path to _a11y.scss cannot be normalised both for sources and for the distributed file (#10908). Consumers importing the overlay styles through the shorthand path get a Sass compilation error. The media query must stay inlined.",
+      "description": "The overlay stylesheet now imports '../a11y/a11y', but this file is copied to the top level of the published @angular/cdk package where that relative path does not exist, so `@import '~@angular/cdk/overlay'` fails to compile.\n\nThe comment retained beside this change explicitly warned that the high-contrast mixin cannot be used here because the import path to _a11y.scss cannot be normalised both for sources and for the distributed file (#10908). Consumers importing the overlay styles through the shorthand path get a Sass compilation error. The media query must stay inlined.",
       "outside_diff": false,
       "alternative_locations": [
         {
@@ -42,5 +42,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/angular/components/commit/8542243fd598376c29556d9b59b1199b7992a4db. Primary issue confirmed by the later upstream fix https://github.com/angular/components/commit/2010bb5340e445b50ff1ab6eb89262753549b52f; its regression test reproduces the problem on this head. Curator difficulty: medium. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/angular/components/commit/8542243fd598376c29556d9b59b1199b7992a4db. Primary issue confirmed by the later upstream fix https://github.com/angular/components/commit/2010bb5340e445b50ff1ab6eb89262753549b52f. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: medium. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted second check recorded below; independent human release sign-off remains pending. Second check: 2026-10-02, Codex (AI-assisted static review of annotations and snapshot diff). Confirmed published Sass import mismatch; the warning comment is retained, not removed. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

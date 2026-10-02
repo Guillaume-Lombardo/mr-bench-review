@@ -27,8 +27,8 @@
       "line_end": 50,
       "category": "correctness",
       "severity": "high",
-      "title": "POSIX path functions applied to native Windows paths",
-      "description": "path.posix.relative/join are applied to native file-system paths, which on Windows contain drive letters and backslashes, producing '../C:\\...' entries, so the generated ngsw.json caches no assets on Windows.\n\n`this.base` and `dir` come from the OS (e.g. C:\\project\\dist). POSIX path functions do not understand them, so relative() yields paths outside the base and the service-worker config generator matches no files. Native path functions must be used and the result normalised to forward slashes.",
+      "title": "Nested Windows assets get invalid service-worker paths",
+      "description": "The asset walker applies path.posix.relative/join to native Windows paths. Root-level files can still yield valid relative names, but nested directories containing backslashes are treated as a single POSIX component.\n\nFor a base such as C:\\project\\dist and a nested dir C:\\project\\dist\\assets, relative() can produce a ../C:\\... path instead of assets/file. Asset-group patterns then omit nested files from ngsw.json. Compute paths with native filesystem semantics and normalize the resulting relative names to forward slashes.",
       "outside_diff": false,
       "alternative_locations": [],
       "source_category": null,
@@ -36,5 +36,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/angular/angular-cli/commit/d3bc530c103849ca83742ab63eea7709d9af613d. Primary issue confirmed by the later upstream fix https://github.com/angular/angular-cli/commit/d1953bf1aab39743058cdf73debc8493af503fc0; its regression test reproduces the problem on this head. Curator difficulty: medium. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/angular/angular-cli/commit/d3bc530c103849ca83742ab63eea7709d9af613d. Primary issue confirmed by the later upstream fix https://github.com/angular/angular-cli/commit/d1953bf1aab39743058cdf73debc8493af503fc0. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: medium. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted second check recorded below; independent human release sign-off remains pending. Second check: 2026-10-02, Codex (AI-assisted static review of annotations and snapshot diff). Confirmed Windows path mismatch; narrowed impact to nested assets because root-level relative paths can still work. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

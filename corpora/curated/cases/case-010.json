@@ -28,7 +28,7 @@
       "category": "correctness",
       "severity": "high",
       "title": "String fast path breaks lazily translated routes",
-      "description": "The new string fast path passes self._route to str.startswith()/removeprefix(), which fails for lazily translated routes (gettext_lazy), so i18n URL patterns without converters no longer resolve.\n\nRoutes can be lazy translation proxies (path(_('about/'), ...)). The previous implementation compiled a regex from str(route) at match time. `str.startswith()` and `removeprefix()` require a real str and raise TypeError for a lazy proxy, and `self._route == path` compares a proxy. The route must be coerced with str() at match time to keep translation-aware routing.",
+      "description": "The new fast path for non-endpoint routes passes self._route to str.startswith() and removeprefix(). A gettext_lazy route is a translation proxy, so matching an included URL prefix without converters raises TypeError.\n\nEndpoint routes use equality, which a lazy proxy supports, and are not affected by this particular failure. Convert the prefix with str() at match time, preserving the current language rather than caching its translation.",
       "outside_diff": false,
       "alternative_locations": [],
       "source_category": null,
@@ -36,5 +36,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/django/django/commit/f920937c8a63df6bea220e4386f59cdb45b2e355. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/d35daf8600a66c0ff20e36f82969df61a7fc4981; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/f920937c8a63df6bea220e4386f59cdb45b2e355. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/d35daf8600a66c0ff20e36f82969df61a7fc4981. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted second check recorded below; independent human release sign-off remains pending. Second check: 2026-10-02, Codex (AI-assisted static review of annotations and snapshot diff). Confirmed lazy route TypeError in non-endpoint prefix matching; endpoint equality does not require a native str. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

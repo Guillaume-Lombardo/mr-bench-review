@@ -68,7 +68,11 @@ plausible remark you decided is not an issue) in `annotator_notes` so judges can
 ## Reproduction
 
 - `planted`: `annotator_notes` must contain a reproduction (failing test or command).
-- `real` and `reverted_fix`: link the upstream fix; its regression test is the reproduction.
+- `real` and `reverted_fix`: link the upstream fix when available. Identify its regression
+  test if one exists, and say whether it was actually run against the snapshot. An upstream
+  fix alone is supporting evidence, not an executed reproduction. For a newly discovered
+  defect without a known upstream fix, record the source-level evidence and an executable
+  reproducer when feasible. Never invent a test or claim an unexecuted test passed/failed.
 
 ## Imported corpora
 
@@ -81,3 +85,8 @@ minor version bump.
 Every curated case is annotated by one person and checked by a second before `v1.0.0`. The
 checker re-reads the diff, confirms each issue (real, located, correctly categorised), looks
 for missing issues, and records the result at the end of `annotator_notes` ("Second check: …").
+
+An AI-assisted check must identify the checker as AI and state its scope and execution limits.
+It can complete the annotation audit, but does not count as the independent second person
+required for release sign-off. Record any focused reproductions separately from full upstream
+test-suite execution.
