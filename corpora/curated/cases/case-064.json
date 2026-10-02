@@ -4,7 +4,7 @@
   "id": "case-064",
   "language": "python",
   "size": "medium",
-  "kind": "clean",
+  "kind": "real",
   "tier": "core",
   "base_branch": "bench/curated/case-064/base",
   "head_branch": "bench/curated/case-064/head",
@@ -19,7 +19,22 @@
     "source_case": null,
     "source_url": null
   },
-  "expected_issues": [],
+  "expected_issues": [
+    {
+      "id": "i1",
+      "file": "src/_pytest/_code/source.py",
+      "line_start": 83,
+      "line_end": 83,
+      "category": "correctness",
+      "severity": "low",
+      "title": "Source.strip() leaves raw and displayed lines misaligned",
+      "description": "strip() slices lines to remove leading/trailing blank lines but copies the entire raw_lines list. After stripping a leading blank line, raw_lines[0] is still empty while lines[0] contains code. The new traceback highlighting reads both using the same index, so column conversion can compute zero carets or use the wrong indentation. Apply the same slice to raw_lines. The mismatch is reproduced by corpora/curated/audit/reproduce.py.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    }
+  ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/pytest-dev/pytest/commit/a0e3a49f194175bec96a551791b2b02b23e06a09. No known defect: at least 90% of its added lines were still unchanged upstream on 2026-09-30 and no later commit reports it as faulty. This is not proof of absence. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/pytest-dev/pytest/commit/a0e3a49f194175bec96a551791b2b02b23e06a09. Originally selected as clean because at least 90% of its added lines were still unchanged upstream on 2026-09-30 and no later commit reports it as faulty. That heuristic did not establish correctness; this audit found a defect. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted audit recorded below; independent human release sign-off remains pending. AI audit (2026-10-02): Codex (AI-assisted static review of annotations and snapshot diff). Reclassified as real: source-level execution confirms strip() leaves raw_lines unsliced while displayed lines lose leading blanks. PR follow-up: corrected the issue location to strip() line 83; the probe now verifies the annotation against the source AST. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off. Focused executable evidence: uv run python corpora/curated/audit/reproduce.py."
 }

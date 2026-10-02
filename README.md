@@ -21,7 +21,7 @@ Suspend the destination CI before mirroring, since snapshots include upstream wo
 | Corpus | Created | Default | Cases | Clean | Issues | Location | Severity | Licence |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
 | `aacr` | 2026-09-30 | no | 177 | 4 | 1297 | lines | no | Apache-2.0 annotations; upstream code per case, see cases/*.json |
-| `curated` | 2026-09-30 | yes | 113 | 18 | 106 | lines | yes | CC-BY-4.0 original annotations; upstream code per case, see cases/*.json |
+| `curated` | 2026-09-30 | yes | 113 | 16 | 115 | lines | yes | CC-BY-4.0 original annotations; upstream code per case, see cases/*.json |
 | `martian-offline` | 2026-09-30 | no | 30 | 0 | 96 | none | yes | MIT golden comments; upstream code per case, see cases/*.json |
 | `review-bench` | 2026-09-30 | no | 27 | 10 | 17 | lines | no | CC-BY-4.0 annotations; upstream code per case (MIT, BSD-3-Clause, Apache-2.0) |
 
@@ -42,10 +42,10 @@ Suspend the destination CI before mirroring, since snapshots include upstream wo
 | --- | --- |
 | language | python 42, java 35, typescript 35, javascript 1 |
 | size | small 59, medium 44, large 10 |
-| kind | real 95, clean 18 |
+| kind | real 97, clean 16 |
 | tier | extended 78, core 30, pilot 5 |
-| category | correctness 85, tests 10, maintainability 6, security 5 |
-| severity | high 50, medium 45, low 9, critical 2 |
+| category | correctness 93, tests 10, maintainability 7, security 5 |
+| severity | high 52, medium 52, low 9, critical 2 |
 
 ### `martian-offline`
 
@@ -72,8 +72,8 @@ Suspend the destination CI before mirroring, since snapshots include upstream wo
 
 The curated target mix is roughly 40% Python, 30% Java and 30% Angular/TypeScript, 15–20%
 clean cases, at least ten large cases and all four categories. The actual curated mix is 42
-Python, 35 Java, 35 TypeScript (25 of them from Angular projects) and 1 JavaScript; 18 clean
-cases (16%); 10 large cases. See each corpus's `SOURCE.md` for provenance, licences,
+Python, 35 Java, 35 TypeScript (25 of them from Angular projects) and 1 JavaScript; 16 clean
+cases (14.2%, below the 15–20% target); 10 large cases. See each corpus's `SOURCE.md` for provenance, licences,
 conversion choices and known gaps, and `EXCLUDED.md` for cases that were dropped and why.
 
 The upstream snapshots of 24 imported cases (23 `aacr`, 1 `martian-offline`) contain public

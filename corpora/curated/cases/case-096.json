@@ -27,8 +27,8 @@
       "line_end": 250,
       "category": "correctness",
       "severity": "medium",
-      "title": "--cert always forced on build subprocesses, bypassing system trust stores",
-      "description": "--cert is now always passed to the build-dependency subprocess (defaulting to certifi's bundle), which silently disables truststore/system certificates there and breaks installs behind corporate TLS-inspecting proxies.\n\nWhen --cert is given pip uses that bundle; otherwise it may use truststore (system CAs). Forcing `--cert <certifi bundle>` on the nested pip call makes the subprocess ignore system trust stores, so build dependencies fail to download in environments that rely on an OS-installed corporate CA even though the parent pip works. Only forward --cert when the user specified it.",
+      "title": "Implicit certificate bundle overrides subprocess CA selection",
+      "description": "The build-dependency subprocess now always receives --cert, substituting certifi's bundle when the user supplied no custom certificate. This changes the child's default certificate selection instead of merely forwarding an explicit parent option.\n\nThe linked upstream correction reports loss of system-CA support and failures in environments relying on corporate CAs; it removes the implicit bundle argument and forwards --cert only when explicitly configured. That correction explicitly contains no truststore regression test. The unconditional argument is verified in this snapshot, but the TLS integration outcome was not reproduced in this audit; do not equate the presence of --cert with the truststore SSLContext never being constructed.",
       "outside_diff": false,
       "alternative_locations": [],
       "source_category": null,
@@ -36,5 +36,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/pypa/pip/commit/34fc0e20bd91f7facd1ba735c892a487309003f3. Primary issue confirmed by the later upstream fix https://github.com/pypa/pip/commit/ebd0a52e123af8f89b0f3e8e18627653f4c83bfe; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/pypa/pip/commit/34fc0e20bd91f7facd1ba735c892a487309003f3. Primary issue confirmed by the later upstream fix https://github.com/pypa/pip/commit/ebd0a52e123af8f89b0f3e8e18627653f4c83bfe. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted audit recorded below; independent human release sign-off remains pending. AI audit (2026-10-02): Codex (AI-assisted static review of annotations and snapshot diff). Confirmed unconditional forwarding of a certifi bundle. The upstream fix reports loss of system-CA support and explicitly says it adds no truststore test; TLS integration behavior was not executed in this audit. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

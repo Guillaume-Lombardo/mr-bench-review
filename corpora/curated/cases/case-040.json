@@ -56,7 +56,7 @@
       "category": "tests",
       "severity": "medium",
       "title": "No test for the built-in Karma configuration path",
-      "description": "Making karmaConfig optional adds a new default code path (getBuiltInKarmaConfig, coverage folder naming, plugin resolution) and changes the builder schema, but no builder test runs without karmaConfig.",
+      "description": "Making karmaConfig optional adds a new default code path (getBuiltInKarmaConfig, coverage folder naming, plugin resolution) and changes the builder schema, but no added builder test runs without karmaConfig.",
       "outside_diff": false,
       "alternative_locations": [],
       "source_category": null,
@@ -64,5 +64,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/angular/angular-cli/commit/2b602924538bf987e92f806c25c2a3d008a3f0a9. Primary issue confirmed by the later upstream fix https://github.com/angular/angular-cli/commit/5954d240fa8033b7a4e8fac4395517ea2c82762d; its regression test reproduces the problem on this head. Curator difficulty: medium. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/angular/angular-cli/commit/2b602924538bf987e92f806c25c2a3d008a3f0a9. Primary issue confirmed by the later upstream fix https://github.com/angular/angular-cli/commit/5954d240fa8033b7a4e8fac4395517ea2c82762d. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: medium. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted audit recorded below; independent human release sign-off remains pending. AI audit (2026-10-02): Codex (AI-assisted static review of annotations and snapshot diff). Confirmed eager optional-dependency loading, degraded missing-plugin diagnostics, and missing added regression coverage. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

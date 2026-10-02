@@ -28,7 +28,7 @@
       "category": "correctness",
       "severity": "medium",
       "title": "Slider re-layouts on resize even while a thumb is being dragged",
-      "description": "Removing the skip of the first ResizeObserver emission makes the slider re-run _layout() (with a cached rect) on every resize, including while the user is dragging a thumb, which makes the thumb jump.\n\nThe resize callback now triggers a debounced layout for any size change and caches entries[0].contentRect as the host rect. Size changes that occur during a drag (ripples, value indicators, scrollbars appearing) re-layout the slider mid-gesture and recompute thumb positions from a possibly stale rect, so the thumb jumps away from the pointer. Layout should be skipped while a thumb is active.",
+      "description": "The new ResizeObserver callback caches contentRect and invokes _layout() without checking whether a thumb is active. A resize emission during dragging can therefore recompute thumb positions mid-gesture and make the thumb jump.\n\nThe base already handled later resize emissions, so removing skip(1) must not be described as newly enabling all resize callbacks. The changed callback needs an active-thumb guard, as in the linked upstream correction; that correction does not add a regression test.",
       "outside_diff": false,
       "alternative_locations": [],
       "source_category": null,
@@ -36,5 +36,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/angular/components/commit/43bfbac51514dcb64fc227512adfdadf84567f31. Primary issue confirmed by the later upstream fix https://github.com/angular/components/commit/394b93f18032e8d05e48c07bd36dbe44a83b87f5; its regression test reproduces the problem on this head. Curator difficulty: hard. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/angular/components/commit/43bfbac51514dcb64fc227512adfdadf84567f31. Primary issue confirmed by the later upstream fix https://github.com/angular/components/commit/394b93f18032e8d05e48c07bd36dbe44a83b87f5. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: hard. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted audit recorded below; independent human release sign-off remains pending. AI audit (2026-10-02): Codex (AI-assisted static review of annotations and snapshot diff). Upstream correction confirms active-drag layout guard; fix adds no test. Existing resize callback already handled subsequent resizes; first-emission change should not be described as enabling every resize. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

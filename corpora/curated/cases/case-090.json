@@ -48,7 +48,7 @@
       "category": "tests",
       "severity": "medium",
       "title": "Registration refactor has no tests for host directives or detached templates",
-      "description": "The helper directives switch from content queries to DI registration to support hostDirectives, but no test covers CdkDrag used as a host directive, nor preview/placeholder templates outside a cdkDrag (which now throw).",
+      "description": "The helper directives switch from content queries to DI registration to support hostDirectives, but no test added by this change covers CdkDrag used as a host directive, nor preview/placeholder templates outside a cdkDrag (which now throw).",
       "outside_diff": false,
       "alternative_locations": [],
       "source_category": null,
@@ -56,5 +56,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/angular/components/commit/4af777a189ca0bd80a5158dafa3d9cf4f60b6bf2. Primary issue confirmed by the later upstream fix https://github.com/angular/components/commit/31e30883a33d89d277d710a97f81b26b1972c8ba; its regression test reproduces the problem on this head. Curator difficulty: medium. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/angular/components/commit/4af777a189ca0bd80a5158dafa3d9cf4f60b6bf2. Primary issue confirmed by the later upstream fix https://github.com/angular/components/commit/31e30883a33d89d277d710a97f81b26b1972c8ba. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: medium. Angular. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted audit recorded below; independent human release sign-off remains pending. AI audit (2026-10-02): Codex (AI-assisted static review of annotations and snapshot diff). Confirmed newly required preview/placeholder dependencies and absence of added tests for the affected construction path. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

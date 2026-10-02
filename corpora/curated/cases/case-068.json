@@ -33,8 +33,36 @@
       "alternative_locations": [],
       "source_category": null,
       "source_text": null
+    },
+    {
+      "id": "i2",
+      "file": "django/contrib/auth/management/__init__.py",
+      "line_start": 130,
+      "line_end": 130,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Substring model matching renames unrelated model permissions",
+      "description": "Renaming Book also selects content types such as Notebook in the same app because model__icontains is a substring lookup. Their permissions are rewritten with the new Book model suffix, breaking authorization checks for unrelated models. Match the exact old model name.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
+    },
+    {
+      "id": "i3",
+      "file": "django/contrib/auth/management/__init__.py",
+      "line_start": 135,
+      "line_end": 135,
+      "category": "correctness",
+      "severity": "high",
+      "title": "Model rename overwrites custom permission codenames",
+      "description": "Every permission for a matching content type is rewritten from its first underscore-delimited token. A custom permission publish_special becomes publish_<newmodel>, losing its application-defined codename and display name. Multiple custom permissions sharing a prefix can also collide. Limit automatic rewriting to recognized generated model permissions, preserving custom permissions.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/django/django/commit/f02b49d2f3bf84f5225de920ca510149f1f9f1da. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/6e89271a8507fe272d11814975500a1b40303a04; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/f02b49d2f3bf84f5225de920ca510149f1f9f1da. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/6e89271a8507fe272d11814975500a1b40303a04. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted audit recorded below; independent human release sign-off remains pending. AI audit (2026-10-02): Codex (AI-assisted static review of annotations and snapshot diff). Confirmed missing database alias propagation, substring content-type selection, and rewriting of custom permission names. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

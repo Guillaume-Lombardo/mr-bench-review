@@ -28,7 +28,7 @@
       "category": "correctness",
       "severity": "high",
       "title": "__setstate__ no longer accepts tuple state from older pickles",
-      "description": "__setstate__ now only accepts a dict, so instances pickled by earlier attrs versions (whose state is a tuple) unpickle with none of their attributes set.\n\nSlotted attrs classes previously pickled their state as a tuple of values. The new __setstate__ checks `name in state` for each attribute; for an old tuple state this membership test is against values, so nothing is restored and later attribute access raises AttributeError. Persisted pickles (caches, queues) break on upgrade; __setstate__ must keep accepting the tuple format.",
+      "description": "__setstate__ now only accepts a dict, so instances pickled by earlier attrs versions (whose state is a tuple) can unpickle with missing attributes or fail with TypeError.\n\nSlotted attrs classes previously pickled their state as a tuple of values. The new __setstate__ checks `name in state` for each attribute; for an old tuple state this membership test is against values, so attributes whose names are absent from the values are not restored. If a tuple value equals an attribute name, state[name] instead raises TypeError because tuple indices must be integers. Persisted pickles (caches, queues) break on upgrade; __setstate__ must keep accepting the tuple format.",
       "outside_diff": false,
       "alternative_locations": [],
       "source_category": null,
@@ -36,5 +36,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/python-attrs/attrs/commit/89a890a3262273514619d1881c6a8b0fe26c66ac. Primary issue confirmed by the later upstream fix https://github.com/python-attrs/attrs/commit/c9150d278ced32056d73c239ff64034e5056bcb6; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/python-attrs/attrs/commit/89a890a3262273514619d1881c6a8b0fe26c66ac. Primary issue confirmed by the later upstream fix https://github.com/python-attrs/attrs/commit/c9150d278ced32056d73c239ff64034e5056bcb6. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted audit recorded below; independent human release sign-off remains pending. AI audit (2026-10-02): Codex (AI-assisted static review of annotations and snapshot diff). Confirmed old tuple state incompatible with dict indexing; missing attributes or TypeError depending on tuple values. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

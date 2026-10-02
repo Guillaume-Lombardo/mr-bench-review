@@ -28,7 +28,7 @@
       "category": "correctness",
       "severity": "high",
       "title": "from_db() always called with fetch_mode, breaking documented overrides",
-      "description": "Model.from_db() is now always called with a new fetch_mode keyword, which raises TypeError for models overriding from_db() with the documented signature from_db(cls, db, field_names, values).\n\nfrom_db() is a documented, overridable classmethod. ModelIterable, RawModelIterable and RelatedPopulator now pass `fetch_mode=` unconditionally, so any project overriding from_db() with the previously documented four-argument signature crashes on every query of that model. A backward-compatible path (detect whether the override accepts fetch_mode/**kwargs, call the old signature and emit a deprecation warning) is needed.",
+      "description": "Model.from_db() is now always called with a new fetch_mode keyword, which raises TypeError for models overriding from_db() with the documented signature from_db(cls, db, field_names, values).\n\nfrom_db() is a documented, overridable classmethod. ModelIterable and RawModelIterable now pass `fetch_mode=` unconditionally, so any project overriding from_db() with the previously documented four-argument signature crashes on every query of that model. A backward-compatible path (detect whether the override accepts fetch_mode/**kwargs, call the old signature and emit a deprecation warning) is needed.",
       "outside_diff": false,
       "alternative_locations": [
         {
@@ -39,8 +39,22 @@
       ],
       "source_category": null,
       "source_text": null
+    },
+    {
+      "id": "i2",
+      "file": "django/db/models/query_utils.py",
+      "line_start": 293,
+      "line_end": 293,
+      "category": "correctness",
+      "severity": "high",
+      "title": "FETCH_PEERS assigns one-element tuples to scalar fields",
+      "description": "fetch_many() calls values_list(attname) without flat=True. This snapshot supports in_bulk() on values-list querysets and removes its added key column, leaving a one-element tuple as each value. setattr() therefore stores (value,) in the deferred scalar field rather than value when peer fetching runs. Use flat=True so bulk-loaded scalar fields retain their normal types.",
+      "outside_diff": false,
+      "alternative_locations": [],
+      "source_category": null,
+      "source_text": null
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/django/django/commit/e097e8a12f21a4e92594830f1ad1942b31916d0f. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/d992705f9eb56199dc474b77af16474e5ce3d2ab; its regression test reproduces the problem on this head. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/django/django/commit/e097e8a12f21a4e92594830f1ad1942b31916d0f. Primary issue confirmed by the later upstream fix https://github.com/django/django/commit/d992705f9eb56199dc474b77af16474e5ce3d2ab. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: hard. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted audit recorded below; independent human release sign-off remains pending. AI audit (2026-10-02): Codex (AI-assisted static review of annotations and snapshot diff). Confirmed incompatible from_db keyword calls in ModelIterable/RawModelIterable. Also found scalar peer fields assigned tuples; this snapshot explicitly supports values_list().in_bulk(), so rejection of values_list itself would be a false finding. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

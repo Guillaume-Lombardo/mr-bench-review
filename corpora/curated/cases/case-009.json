@@ -42,7 +42,7 @@
       "category": "tests",
       "severity": "low",
       "title": "Separator normalisation added without a test",
-      "description": "The setter now strips trailing separators on every platform, but no test covers a static_folder with a trailing slash or backslash, nor non-string values such as pathlib.Path.",
+      "description": "The setter now strips trailing separators on every platform, but no test added by this change covers a static_folder with a trailing slash or backslash, nor non-string values such as pathlib.Path.",
       "outside_diff": false,
       "alternative_locations": [],
       "source_category": null,
@@ -50,5 +50,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/pallets/flask/commit/e6178fe489b7828acc2bb8fd4b56a70b11ab6c6a. Primary issue confirmed by the later upstream fix https://github.com/pallets/flask/commit/7ba35c4d4fe99418cee9c87900bd0d3b38cf5bd0; its regression test reproduces the problem on this head. Curator difficulty: easy. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/pallets/flask/commit/e6178fe489b7828acc2bb8fd4b56a70b11ab6c6a. Primary issue confirmed by the later upstream fix https://github.com/pallets/flask/commit/7ba35c4d4fe99418cee9c87900bd0d3b38cf5bd0. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: easy. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted audit recorded below; independent human release sign-off remains pending. AI audit (2026-10-02): Codex (AI-assisted static review of annotations and snapshot diff). Confirmed Path.rstrip failure and no tests added in this diff; existing tests require separate wording from absence of new regression coverage. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }

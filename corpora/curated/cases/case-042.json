@@ -28,7 +28,7 @@
       "category": "correctness",
       "severity": "high",
       "title": "excludedKeys.contains(null) can throw for anonymous objects and arrays",
-      "description": "startObject/startArray call excludedKeys.contains(key) with a key that JBoss LogManager may pass as null (anonymous objects/arrays); with an immutable Set this throws NullPointerException and log records are lost.\n\nThe generator API allows a null key for unnamed structures. Sets created with Set.of()/Set.copyOf() throw NPE on contains(null), so enabling exclusion of nested keys makes JSON logging crash for records containing arrays or nested objects. The key must be null-checked before the lookup (in all four overrides).",
+      "description": "startObject/startArray call excludedKeys.contains(key) with a key that JBoss LogManager may pass as null (anonymous objects/arrays); with an immutable Set this throws NullPointerException and log records are lost.\n\nThe generator API allows a null key for unnamed structures. Sets created with Set.of()/Set.copyOf() throw NPE on contains(null), so enabling exclusion of nested keys makes JSON logging crash for records containing arrays or nested objects. The key must be null-checked before the lookup in the startObject/startArray overrides.",
       "outside_diff": false,
       "alternative_locations": [
         {
@@ -42,5 +42,5 @@
     }
   ],
   "known_false_positives": [],
-  "annotator_notes": "Upstream change https://github.com/quarkusio/quarkus/commit/84fef0ca82ce4c7a88017f3e3218764a2ddb85b7. Primary issue confirmed by the later upstream fix https://github.com/quarkusio/quarkus/commit/f0de360849c399c551a2f278b0cc22f64271dfa9; its regression test reproduces the problem on this head. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); second check pending."
+  "annotator_notes": "Upstream change https://github.com/quarkusio/quarkus/commit/84fef0ca82ce4c7a88017f3e3218764a2ddb85b7. Primary issue confirmed by the later upstream fix https://github.com/quarkusio/quarkus/commit/f0de360849c399c551a2f278b0cc22f64271dfa9. The upstream correction is supporting evidence; its tests have not been executed against this snapshot. Curator difficulty: medium. Annotation: first pass by the curator (complete review of the diff for pilot and core cases, primary issue only for extended cases); AI-assisted audit recorded below; independent human release sign-off remains pending. AI audit (2026-10-02): Codex (AI-assisted static review of annotations and snapshot diff). Confirmed null-key contains() failure in startObject/startArray; corrected the number of affected overrides. Location/category checks use the repository validator. Upstream project test suites were not run; this is not independent human release sign-off."
 }
